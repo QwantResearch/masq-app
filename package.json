@@ -3,9 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "hyperdb": "^3.5.0",
+    "pump": "^3.0.0",
+    "random-access-idb": "^1.0.4",
+    "random-access-memory": "^3.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.4"
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "react-scripts": "^2.0.4",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "signalhub": "^4.9.0",
+    "signalhubws": "^1.0.4",
+    "typeface-asap": "0.0.54",
+    "webrtc-swarm": "^2.9.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,6 +46,8 @@
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "node-sass": "^4.9.3",
+    "qwant-research-components": "git+https://github.com/QwantResearch/qwant-research-components.git"
   }
 }

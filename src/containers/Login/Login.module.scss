@@ -1,0 +1,39 @@
+@import '../../colors.scss';
+
+.App {
+  background-color: $color-background;
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 0;
+  
+  .title {
+    margin-bottom: 32px;
+  }
+
+  .Logo {
+    margin-top: 95px;
+    margin-bottom: 95px;
+    width: 316px;
+    height: 124px;
+  }
+
+  .users {
+    display: flex;
+    :not(:last-child) {
+      margin-right: 64px;
+    }
+    .PlusSquare {
+      cursor: pointer;
+    }
+  }
+  
+  .Background {
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+

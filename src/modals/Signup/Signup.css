@@ -1,0 +1,42 @@
+.Signup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 32px;
+  height: 100%;
+  width: 100%;
+}
+
+.Signup h1 {
+  margin-bottom: 32px;
+}
+
+.Signup .user {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.11;
+  letter-spacing: normal;
+  text-align: center;
+  color: var(--blue-500);
+}
+
+.Signup .Avatar {
+  margin-bottom: 24px;
+}
+
+.Signup .buttons {
+  bottom: 0;
+  display: grid;
+  position: absolute;
+  margin-bottom: 48px;
+  grid-column-gap: 16px;
+  grid-template-columns: auto auto;
+}
+
+.Signup .TextField {
+  width: 300px;
+  margin-bottom: 16px;
+}
