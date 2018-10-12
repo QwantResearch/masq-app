@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "classnames": "^2.2.6",
     "hyperdb": "^3.5.0",
     "i18next": "^11.9.1",
     "pump": "^3.0.0",

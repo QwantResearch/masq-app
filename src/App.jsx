@@ -6,7 +6,25 @@ import swarm from 'webrtc-swarm'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import { Login, Apps } from './containers'
+import { Login, Apps, Sidebar } from './containers'
+
+const authenticatedRoutes = [
+  {
+    path: '/apps',
+    sidebar: Sidebar,
+    main: Apps
+  },
+  {
+    path: '/devices',
+    sidebar: Sidebar,
+    main: Apps
+  },
+  {
+    path: '/settings',
+    sidebar: Sidebar,
+    main: Apps
+  }
+]
 
 class App extends Component {
   constructor () {
@@ -121,7 +139,24 @@ class App extends Component {
       <Router>
         <div>
           <Route exact path='/' component={Login} />
-          <Route path='/apps' component={Apps} />
+
+          <div style={{ display: 'flex' }}>
+            {authenticatedRoutes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                component={route.sidebar}
+              />
+            ))}
+
+            {authenticatedRoutes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                component={route.main}
+              />
+            ))}
+          </div>
         </div>
       </Router>
     )
