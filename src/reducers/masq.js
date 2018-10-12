@@ -1,5 +1,8 @@
 const masq = (state = {
   users: [],
+  apps: [{
+    title: 'Qwant Maps', description: 'Maps by Qwant', color: '#a3005c'
+  }],
   currentUser: null
 }, action) => {
   console.log(action.type)
