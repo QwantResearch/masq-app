@@ -3,6 +3,7 @@ import signalhub from 'signalhub'
 import hyperdb from 'hyperdb'
 import swarm from 'webrtc-swarm'
 import pump from 'pump'
+import uuidv4 from 'uuid/v4'
 
 const HUB_URL = 'localhost:8080'
 
@@ -80,23 +81,55 @@ class Masq {
   addUser (user) {
     return new Promise((resolve, reject) => {
       console.log('masq addUser()', user)
-      this.dbMasqPrivate.get('users', (err, nodes) => {
+      this.dbMasqPrivate.get('/users', (err, nodes) => {
         if (err) return reject(err)
 
-        const users = nodes[0] ? nodes[0].value : []
-        this.dbMasqPrivate.put('users', [...users, user])
-        resolve()
+        const ids = nodes[0] ? nodes[0].value : []
+        const id = uuidv4()
+        user['id'] = id
+        const batch = [{
+          type: 'put',
+          key: '/users',
+          value: [...ids, id]
+        }, {
+          type: 'put',
+          key: `/users/${id}`,
+          value: user
+        }]
+
+        this.dbMasqPrivate.batch(batch, (err) => {
+          if (err) return reject(err)
+          resolve()
+        })
       })
     })
   }
 
   getUsers () {
     return new Promise((resolve, reject) => {
-      this.dbMasqPrivate.get('users', (err, nodes) => {
+      this.dbMasqPrivate.get('/users', (err, nodes) => {
         if (err) return reject(err)
-
         if (!nodes[0]) return resolve([])
-        resolve(nodes[0].value)
+
+        const ids = nodes[0].value
+        const users = []
+
+        for (let id of ids) {
+          this.dbMasqPrivate.get(`/users/${id}`, (err, nodes) => {
+            users.push(nodes[0].value)
+            if (err) return reject(err)
+            if (ids.length === users.length) return resolve(users)
+          })
+        }
+      })
+    })
+  }
+
+  updateUser (id, user) {
+    return new Promise((resolve, reject) => {
+      this.dbMasqPrivate.put(`/users/${id}`, user, (err) => {
+        if (err) return reject(err)
+        return resolve()
       })
     })
   }

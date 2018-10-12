@@ -6,7 +6,7 @@ import swarm from 'webrtc-swarm'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import { Login, Apps, Sidebar } from './containers'
+import { Login, Apps, Settings, Sidebar } from './containers'
 
 const authenticatedRoutes = [
   {
@@ -22,7 +22,7 @@ const authenticatedRoutes = [
   {
     path: '/settings',
     sidebar: Sidebar,
-    main: Apps
+    main: Settings
   }
 ]
 

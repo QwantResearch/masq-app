@@ -23,6 +23,7 @@
   .users {
     display: flex;
     text-align: center;
+    cursor: pointer;
 
     >:not(:last-child) {
       margin-right: 64px;
