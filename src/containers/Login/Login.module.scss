@@ -22,9 +22,12 @@
 
   .users {
     display: flex;
-    :not(:last-child) {
+    text-align: center;
+
+    >:not(:last-child) {
       margin-right: 64px;
     }
+
     .PlusSquare {
       cursor: pointer;
     }

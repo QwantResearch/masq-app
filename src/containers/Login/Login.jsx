@@ -46,7 +46,12 @@ class Login extends Component {
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>
-          {users.map(user => <Avatar key={user.username} {...user} />)}
+          {users.map(user => (
+            <div key={user.username}>
+              <Avatar {...user} />
+              <h2>{user.username}</h2>
+            </div>
+          ))}
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
         </div>
         <Background className={styles.Background} />
