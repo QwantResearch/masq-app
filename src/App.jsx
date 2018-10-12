@@ -4,8 +4,9 @@ import hyperdb from 'hyperdb'
 import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 import { connect } from 'react-redux'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import { Login } from './containers'
+import { Login, Apps } from './containers'
 
 class App extends Component {
   constructor () {
@@ -115,16 +116,20 @@ class App extends Component {
 
   render () {
     console.log(this.props)
+
     return (
-      <div>
-        <Login />
-      </div>
+      <Router>
+        <div>
+          <Route exact path='/' component={Login} />
+          <Route path='/apps' component={Apps} />
+        </div>
+      </Router>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.masq.user,
+  currentUser: state.masq.currentUser,
   users: state.masq.users
 })
 

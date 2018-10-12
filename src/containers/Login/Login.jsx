@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { signup, fetchUsers } from '../../actions'
+import { signin, signup, fetchUsers } from '../../actions'
+import { Redirect } from 'react-router-dom'
 
 import styles from './Login.module.scss'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
@@ -14,7 +15,8 @@ class Login extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isSignupModalOpened: false
+      isSignupModalOpened: false,
+      isLoggedIn: false
     }
 
     this.handleSignup = this.handleSignup.bind(this)
@@ -31,6 +33,11 @@ class Login extends Component {
     })
   }
 
+  handleSignIn (user) {
+    this.props.signin(user)
+    this.setState({ isLoggedIn: true })
+  }
+
   handleSignup (user) {
     const { signup } = this.props
     signup(user)
@@ -38,16 +45,19 @@ class Login extends Component {
   }
 
   render () {
-    const { users } = this.props
+    const { users, user } = this.props
     console.log('users', users)
     const { isSignupModalOpened } = this.state
+
+    if (user) return <Redirect to='/apps' />
+
     return (
       <div className={styles.App}>
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>
           {users.map(user => (
-            <div key={user.username}>
+            <div to='/apps' key={user.username} className={styles.user} onClick={() => this.handleSignIn(user)}>
               <Avatar {...user} />
               <h2>{user.username}</h2>
             </div>
@@ -62,11 +72,12 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.masq.user,
+  user: state.masq.currentUser,
   users: state.masq.users
 })
 
 const mapDispatchToProps = dispatch => ({
+  signin: user => dispatch(signin(user)),
   signup: user => dispatch(signup(user)),
   fetchUsers: user => dispatch(fetchUsers(user))
 })

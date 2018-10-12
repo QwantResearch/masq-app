@@ -50,7 +50,7 @@ export default class Avatar extends React.Component {
     return image
       ? <AvatarBase src={image} width={size} height={size} />
       : (
-        <div className='Avatar initials' style={{ backgroundColor: '#458bf8', position: 'relative' }}>
+        <div className='Avatar initials' style={{ backgroundColor: '#458bf8', position: 'relative', width: size, height: size }}>
           <p>{firstname[0].toUpperCase() + lastname[0].toUpperCase()}</p>
         </div>
       )
