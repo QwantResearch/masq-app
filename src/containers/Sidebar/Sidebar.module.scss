@@ -14,12 +14,11 @@
   >:not(:last-child) {
     margin-bottom: 40px;
   }
-
 }
 
 .navElement {
   display: flex;
-  margin-left: 64px;
+  margin-left: 70px;
   align-items: center;
   cursor: pointer;
   &:hover * {
@@ -35,6 +34,18 @@
 .active * {
   color: #458bf8;
   fill: #458bf8;
+}
+
+.active.navElement {
+  &::before {
+    position: absolute;
+    content: '';
+    left: 44px;
+    height: 21px;
+    width: 2px;
+    border-radius: 1px;
+    background-color: #458bf8;
+  }
 }
 
 .logout {
