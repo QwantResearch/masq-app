@@ -52,7 +52,7 @@ class Login extends Component {
     if (user) return <Redirect to='/apps' />
 
     return (
-      <div className={styles.App}>
+      <div className={styles.Login}>
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>

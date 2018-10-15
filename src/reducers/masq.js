@@ -1,8 +1,6 @@
 const masq = (state = {
   users: [],
-  apps: [{
-    title: 'Qwant Maps', description: 'Maps by Qwant', color: '#a3005c'
-  }],
+  apps: [],
   currentUser: null
 }, action) => {
   console.log(action.type)
@@ -30,6 +28,18 @@ const masq = (state = {
       return {
         ...state,
         users: action.users
+      }
+    case 'SET_CURRENT_APP_REQUEST':
+      console.log('SET_CURRENT_APP_REQUEST', action.app)
+      return {
+        ...state,
+        currentAppRequest: action.app
+      }
+    case 'ADD_APP':
+      console.log('ADD APP', action.app)
+      return {
+        ...state,
+        apps: [...state.apps, action.app]
       }
     default:
       return state
