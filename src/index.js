@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker'
 import rootReducer from './reducers'
 import App from './App'
 
-import './index.scss'
+import './styles/index.scss'
 import 'typeface-asap'
 
 const store = createStore(

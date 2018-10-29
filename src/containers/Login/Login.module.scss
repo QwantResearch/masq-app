@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@import '../../styles/colors.scss';
 
 .Login {
   background-color: $color-background;
@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   z-index: 0;
-  
+
   .title {
     margin-bottom: 32px;
   }
@@ -37,7 +37,7 @@
       text-decoration: none;
     }
   }
-  
+
   .Background {
     position: absolute;
     bottom: 0;
