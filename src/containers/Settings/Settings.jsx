@@ -141,7 +141,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 Settings.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  updateUser: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

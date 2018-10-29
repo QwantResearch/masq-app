@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 // import rai from 'random-access-idb'
 // import hyperdb from 'hyperdb'
 // import signalhub from 'signalhubws'
@@ -105,5 +106,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps())
 })
+
+App.propTypes = {
+  fetchApps: PropTypes.func
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Card, BurgerMenu, Icon } from 'qwant-research-components'
@@ -35,5 +36,10 @@ const mapStateToProps = (state) => ({
   user: state.masq.currentUser,
   apps: state.masq.apps
 })
+
+Apps.propTypes = {
+  apps: PropTypes.array,
+  user: PropTypes.object
+}
 
 export default connect(mapStateToProps)(Apps)
