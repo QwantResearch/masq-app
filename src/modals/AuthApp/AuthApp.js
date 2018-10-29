@@ -60,7 +60,8 @@ AuthApp.defaultProps = {
 AuthApp.propTypes = {
   app: PropTypes.object.isRequired,
   setCurrentAppRequest: PropTypes.func,
-  createAppDB: PropTypes.func
+  createAppDB: PropTypes.func,
+  match: PropTypes.object
 }
 
 const mapStateToProps = state => ({

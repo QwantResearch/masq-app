@@ -25,5 +25,6 @@ export default function Modal ({ onClose, width, height, children }) {
 Modal.propTypes = {
   onClose: PropTypes.func,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  children: PropTypes.func
 }

@@ -9,6 +9,11 @@ import './Avatar.css'
 const Replace = ({ image, onClick }) =>
   <AvatarBase upload src={image} width={192} height={192} onClick={onClick} />
 
+Replace.propTypes = {
+  image: PropTypes.string.isRequired,
+  onClick: PropTypes.func
+}
+
 const NewUpload = ({ style, onClick }) => (
   <CameraSquare
     className='Avatar upload'
@@ -17,6 +22,11 @@ const NewUpload = ({ style, onClick }) => (
     onClick={onClick}
   />
 )
+
+NewUpload.propTypes = {
+  style: PropTypes.object,
+  onClick: PropTypes.func
+}
 
 export default class Avatar extends React.Component {
   constructor (props) {

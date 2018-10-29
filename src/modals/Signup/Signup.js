@@ -1,11 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 
 import './Signup.css'
 
-export default class Signup extends React.Component {
+class Signup extends React.Component {
   constructor (props) {
     super(props)
 
@@ -200,3 +201,10 @@ export default class Signup extends React.Component {
     )
   }
 }
+
+Signup.propTypes = {
+  onSignup: PropTypes.func,
+  onClose: PropTypes.func
+}
+
+export default Signup
