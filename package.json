@@ -28,8 +28,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "eslint ./src",
-    "lint": "eslint --fix ./src",
+    "test": "eslint --ext .js,.jsx ./src",
+    "lint": "eslint --fix --ext .js,.jsx ./src",
     "eject": "react-scripts eject"
   },
   "browserslist": [
