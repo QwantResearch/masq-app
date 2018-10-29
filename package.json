@@ -28,15 +28,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "eslint .",
-    "lint": "eslint --fix .",
+    "test": "eslint ./src",
+    "lint": "eslint --fix ./src",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "standard",
-      "standard-react"
-    ]
   },
   "browserslist": [
     ">0.2%",
