@@ -19,8 +19,6 @@ class Masq {
     this.dbMasqPublic = hyperdb(rai('masq-public'), { valueEncoding: 'json' })
 
     this.dbMasqPrivate.on('ready', () => {
-      console.log('masq-private db ready')
-
       this.dbMasqPrivate.get('apps', (err, nodes) => {
         if (err) return console.error(err)
 
@@ -32,7 +30,6 @@ class Masq {
     })
 
     this.dbMasqPublic.on('ready', () => {
-      console.log('masq-public db ready')
       this.replicate(this.dbMasqPublic)
     })
   }
@@ -43,7 +40,6 @@ class Masq {
         if (err) return reject(err)
 
         if (nodes[0]) {
-          console.log('masq getApps', nodes[0].value)
           return resolve(nodes[0].value)
         }
       })
@@ -63,10 +59,7 @@ class Masq {
     const hub = signalhub(discoveryKey, [HUB_URL])
     const sw = swarm(hub)
 
-    console.log(`will replicate db with discoveryKey ${discoveryKey}`)
-
     sw.on('peer', peer => {
-      console.log('replicate!!!', db.discoveryKey.toString('hex'))
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
     })
@@ -79,12 +72,10 @@ class Masq {
 
   // SWARM to authorize new apps
   joinSwarm (channel, app) {
-    console.log('joinSwarm', channel)
     this.hub = signalhub(channel, ['localhost:8080'])
     this.sw = swarm(this.hub)
 
     this.sw.on('peer', (peer, id) => {
-      console.log(`peer ${id} joined.`)
       peer.on('data', data => this.handleData(data, peer, app))
     })
 
@@ -107,7 +98,6 @@ class Masq {
 
     const cmd = json.cmd
     // const app = json.app
-    console.log('app name', app)
 
     if (cmd === 'requestDB') {
       this.createAppDB(app, (err, db) => {
@@ -126,21 +116,17 @@ class Masq {
   }
 
   authorize (key, peer, app) {
-    console.log('masq authorize', app)
     this.dbs[app].authorize(Buffer.from(key), err => {
       if (err) return console.error(err)
-      console.log('write access authorized')
       peer.send(JSON.stringify({ cmd: 'success' }))
     })
   }
 
   createApp (app, channel) {
-    console.log('####', app, channel)
     this.joinSwarm(channel, app)
   }
 
   createAppDB (name, cb) {
-    console.log('masq createAppDB', name)
     if (this.dbs[name]) {
       // app DB is already shared
       return cb(null, this.dbs[name])
@@ -152,7 +138,6 @@ class Masq {
     this.dbMasqPrivate.put('apps', [name])
     // this.setState({ apps: [...this.state.apps, name] })
     db.on('ready', () => {
-      console.log('db', name, 'success')
       this.replicate(db)
       cb(null, db)
     })
@@ -160,7 +145,6 @@ class Masq {
 
   addUser (user) {
     return new Promise((resolve, reject) => {
-      console.log('masq addUser()', user)
       this.dbMasqPrivate.get('/users', (err, nodes) => {
         if (err) return reject(err)
 

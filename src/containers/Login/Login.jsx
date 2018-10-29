@@ -46,7 +46,6 @@ class Login extends Component {
 
   render () {
     const { users, user } = this.props
-    console.log('users', users)
     const { isSignupModalOpened } = this.state
 
     if (user) return <Redirect to='/apps' />

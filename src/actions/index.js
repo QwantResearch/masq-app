@@ -28,7 +28,6 @@ export const signout = () => ({
 })
 
 export const updateUser = (id, user) => {
-  console.log('action updateUser', id, user)
   return function (dispatch) {
     return masq.updateUser(id, user)
       .then(() => dispatch(signin(user)))
@@ -43,7 +42,6 @@ export const signup = user => {
 }
 
 export const fetchUsers = () => {
-  console.log('action fetchUsers')
   return function (dispatch) {
     return masq.getUsers()
       .then(users => dispatch(receiveUsers(users)))
@@ -51,7 +49,6 @@ export const fetchUsers = () => {
 }
 
 export const fetchApps = () => {
-  console.log('action fetchApps')
   return function (dispatch) {
     return masq.getApps()
       .then(apps => {
@@ -61,7 +58,6 @@ export const fetchApps = () => {
 }
 
 export const setCurrentAppRequest = app => {
-  console.log('setCurrentAppRequest')
   return {
     type: 'SET_CURRENT_APP_REQUEST',
     app
@@ -69,7 +65,6 @@ export const setCurrentAppRequest = app => {
 }
 
 export const createAppDB = (name, channel) => {
-  console.log('createAppDB', name, channel)
   return function (dispatch) {
     return masq.createApp(name, channel, () => {
       console.log('okok')
