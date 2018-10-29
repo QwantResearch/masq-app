@@ -26,21 +26,21 @@ const Apps = ({ user, signout, ...props }) => {
       </div>
       <div className={styles.nav}>
         <Link to='/devices' className={cx(styles.navElement, { [styles.active]: path === '/devices' })}>
-          <PhoneIcon fill='white' opacity={0.8} />
+          <PhoneIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Appareils</p>
         </Link>
         <Link to='/apps' className={cx(styles.navElement, { [styles.active]: path === '/apps' })}>
-          <AppsIcon fill='white' opacity={0.8} />
+          <AppsIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Applications</p>
         </Link>
         <Link to='/settings' className={cx(styles.navElement, { [styles.active]: path === '/settings' })}>
-          <SettingsIcon fill='white' opacity={0.8} />
+          <SettingsIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Paramètres</p>
         </Link>
       </div>
       <div className={styles.logout} onClick={signout}>
         <Link to='/' className={styles.navElement}>
-          <LogoutIcon fill='white' opacity={0.8} />
+          <LogoutIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Déconnexion</p>
         </Link>
       </div>
