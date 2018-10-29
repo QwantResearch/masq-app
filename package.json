@@ -27,10 +27,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "lint": "eslint .",
-    "lint-fix": "eslint --fix .",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "eslint .",
+    "lint": "eslint --fix .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
