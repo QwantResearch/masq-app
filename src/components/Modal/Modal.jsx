@@ -26,5 +26,5 @@ Modal.propTypes = {
   onClose: PropTypes.func,
   width: PropTypes.number,
   height: PropTypes.number,
-  children: PropTypes.func
+  children: PropTypes.object
 }
