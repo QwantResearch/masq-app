@@ -7,17 +7,18 @@
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 2;
 }
+
 .Modal .modal {
+  position: absolute;
   z-index: 2;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  position: absolute;
   background-color: white;
   box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.16);
   opacity: 1;
-  padding-bottom: 32px;
 }
+
 .Modal .close {
   float: right;
   margin-top: 20px;
@@ -25,4 +26,5 @@
   color: #191919;
   opacity: 0.4;
   cursor: pointer;
+  margin-bottom: 44px;
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { ReactCompoent as Close } from '../../assets/close.svg'
+import { ReactComponent as Close } from '../../assets/close.svg'
 
-import './Modal.css'
+import './Modal.scss'
 
 export default function Modal ({ onClose, width, height, children }) {
   const modalStyle = {

@@ -4,7 +4,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 
-import './Signup.css'
+import './Signup.scss'
 
 class Signup extends React.Component {
   constructor (props) {
@@ -122,7 +122,7 @@ class Signup extends React.Component {
     return (
       <Modal onClose={this.props.onClose} height={670} width={511}>
         <div className='Signup'>
-          <h1>Add a user</h1>
+          <span className='title-modal'>Add a user</span>
 
           {this.currentStep === 0 && (
             <React.Fragment>
@@ -132,7 +132,7 @@ class Signup extends React.Component {
                 onChange={(e) => this.onImageChange(e)}
                 image={this.state.image || null}
               />
-              <Button secondary label='importphoto' onClick={this.openDialog} />
+              <Button secondary label='import a photo' onClick={this.openDialog} />
               <div style={{ paddingBottom: 32 }} />
 
               <TextField

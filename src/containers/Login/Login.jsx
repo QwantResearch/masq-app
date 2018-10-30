@@ -33,6 +33,10 @@ class Login extends Component {
     })
   }
 
+  handleClose () {
+    this.setState({ isSignupModalOpened: false })
+  }
+
   handleSignIn (user) {
     this.props.signin(user)
     this.setState({ isLoggedIn: true })
@@ -64,7 +68,7 @@ class Login extends Component {
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
         </div>
         <Background className={styles.Background} />
-        {isSignupModalOpened && <Signup onSignup={this.handleSignup} />}
+        {isSignupModalOpened && <Signup onSignup={this.handleSignup} onClose={this.handleClickNewUser} />}
       </div>
     )
   }
