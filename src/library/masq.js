@@ -9,17 +9,17 @@ const HUB_URL = 'localhost:8080'
 
 class Masq {
   constructor () {
-    this.dbMasqPrivate = null
-    this.dbMasqPublic = null
+    this.dbMasqCore = null
+    this.dbMasqProfiles = null
     this.dbs = {}
   }
 
   initDatabases () {
-    this.dbMasqPrivate = hyperdb(rai('masq-private'), { valueEncoding: 'json' })
-    this.dbMasqPublic = hyperdb(rai('masq-public'), { valueEncoding: 'json' })
+    this.dbMasqCore = hyperdb(rai('masq-core'), { valueEncoding: 'json' })
+    this.dbMasqProfiles = hyperdb(rai('masq-profiles'), { valueEncoding: 'json' })
 
-    this.dbMasqPrivate.on('ready', () => {
-      this.dbMasqPrivate.get('apps', (err, nodes) => {
+    this.dbMasqCore.on('ready', () => {
+      this.dbMasqCore.get('apps', (err, nodes) => {
         if (err) return console.error(err)
 
         if (nodes[0]) {
@@ -29,14 +29,14 @@ class Masq {
       })
     })
 
-    this.dbMasqPublic.on('ready', () => {
-      this.replicate(this.dbMasqPublic)
+    this.dbMasqProfiles.on('ready', () => {
+      this.replicate(this.dbMasqProfiles)
     })
   }
 
   getApps () {
     return new Promise((resolve, reject) => {
-      this.dbMasqPrivate.get('apps', (err, nodes) => {
+      this.dbMasqCore.get('apps', (err, nodes) => {
         if (err) return reject(err)
 
         if (nodes[0]) {
@@ -135,7 +135,7 @@ class Masq {
     const db = hyperdb(rai(name), { valueEncoding: 'json' })
 
     this.dbs[name] = db
-    this.dbMasqPrivate.put('apps', [name])
+    this.dbMasqCore.put('apps', [name])
     // this.setState({ apps: [...this.state.apps, name] })
     db.on('ready', () => {
       this.replicate(db)
@@ -145,7 +145,7 @@ class Masq {
 
   addUser (user) {
     return new Promise((resolve, reject) => {
-      this.dbMasqPrivate.get('/users', (err, nodes) => {
+      this.dbMasqCore.get('/users', (err, nodes) => {
         if (err) return reject(err)
 
         const ids = nodes[0] ? nodes[0].value : []
@@ -161,7 +161,7 @@ class Masq {
           value: user
         }]
 
-        this.dbMasqPrivate.batch(batch, (err) => {
+        this.dbMasqCore.batch(batch, (err) => {
           if (err) return reject(err)
           resolve()
         })
@@ -171,7 +171,7 @@ class Masq {
 
   getUsers () {
     return new Promise((resolve, reject) => {
-      this.dbMasqPrivate.get('/users', (err, nodes) => {
+      this.dbMasqCore.get('/users', (err, nodes) => {
         if (err) return reject(err)
         if (!nodes[0]) return resolve([])
 
@@ -179,7 +179,7 @@ class Masq {
         const users = []
 
         for (let id of ids) {
-          this.dbMasqPrivate.get(`/users/${id}`, (err, nodes) => {
+          this.dbMasqCore.get(`/users/${id}`, (err, nodes) => {
             users.push(nodes[0].value)
             if (err) return reject(err)
             if (ids.length === users.length) return resolve(users)
@@ -191,7 +191,7 @@ class Masq {
 
   updateUser (id, user) {
     return new Promise((resolve, reject) => {
-      this.dbMasqPrivate.put(`/users/${id}`, user, (err) => {
+      this.dbMasqCore.put(`/users/${id}`, user, (err) => {
         if (err) return reject(err)
         return resolve()
       })
