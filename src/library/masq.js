@@ -190,6 +190,7 @@ class Masq {
   }
 
   updateUser (id, user) {
+    user.id = id
     return new Promise((resolve, reject) => {
       this.dbMasqCore.put(`/users/${id}`, user, (err) => {
         if (err) return reject(err)
