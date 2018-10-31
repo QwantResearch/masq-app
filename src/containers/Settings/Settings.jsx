@@ -100,7 +100,7 @@ class Settings extends React.Component {
           </div>
 
           <div className='profile'>
-            <Avatar upload image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+            <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
             <div className='inputs'>
               <TextField
                 label={'Last Name'}

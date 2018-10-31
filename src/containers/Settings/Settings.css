@@ -11,19 +11,12 @@
   margin-bottom: 32px;
 }
 
-.Settings .Avatar {
-  width: 192px;
-  height: 192px;
-}
-
 .Settings .profile {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  align-items: start;
-  grid-gap: 32px;
+  display: flex;
 }
 
 .Settings .inputs {
+  margin-left: 64px;
   display: flex;
   flex-direction: column;
   height: 192px;
