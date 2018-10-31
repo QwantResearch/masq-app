@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import rai from 'random-access-idb'
-// import hyperdb from 'hyperdb'
-// import signalhub from 'signalhubws'
-// import swarm from 'webrtc-swarm'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 

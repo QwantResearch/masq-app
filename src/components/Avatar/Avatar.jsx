@@ -6,10 +6,11 @@ import { ReactComponent as CameraSquare } from '../../assets/camera-square.svg'
 
 import './Avatar.css'
 
-const Replace = ({ image, onClick }) =>
-  <AvatarBase upload src={image} width={192} height={192} onClick={onClick} />
+const Replace = ({ size, image, onClick }) =>
+  <AvatarBase upload src={image} width={size} height={size} onClick={onClick} />
 
 Replace.propTypes = {
+  size: PropTypes.number,
   image: PropTypes.string.isRequired,
   onClick: PropTypes.func
 }
@@ -51,7 +52,7 @@ export default class Avatar extends React.Component {
           />
 
           {image
-            ? <Replace image={image} onClick={this.openDialog} />
+            ? <Replace size={size} image={image} onClick={this.openDialog} />
             : <NewUpload style={style} onClick={this.openDialog} />
           }
         </div>)

@@ -127,11 +127,14 @@ class Signup extends React.Component {
           {this.currentStep === 0 && (
             <React.Fragment>
               <Avatar
+                size={120}
                 upload
                 ref={this.refAvatar}
                 onChange={(e) => this.onImageChange(e)}
                 image={this.state.image || null}
               />
+
+              <div style={{ paddingTop: 24 }} />
               <Button secondary label='import a photo' onClick={this.openDialog} />
               <div style={{ paddingBottom: 32 }} />
 
@@ -166,7 +169,12 @@ class Signup extends React.Component {
 
           {this.currentStep === 1 && (
             <React.Fragment>
-              <Avatar image={this.state.image} firstname={this.state.firstname} lastname={this.state.lastname} />
+              <Avatar
+                size={120}
+                image={this.state.image}
+                firstname={this.state.firstname}
+                lastname={this.state.lastname}
+              />
               <p className='user'>{this.state.username}</p>
               <TextField
                 className='TextField'
