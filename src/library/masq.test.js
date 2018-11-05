@@ -37,7 +37,7 @@ test('update an existing profile', async () => {
 
 test('should throw if there is no id in profile', async () => {
   expect.assertions(1)
-  let profiles = await masq.getProfiles()
+  const profiles = await masq.getProfiles()
   let profile = profiles[0]
   delete profile.id
 
@@ -46,4 +46,27 @@ test('should throw if there is no id in profile', async () => {
   } catch (e) {
     expect(e.message).toBe('Missing id')
   }
+})
+
+test('add an app and retrieve it', async () => {
+  const app = { name: 'myapp' }
+  const profiles = await masq.getProfiles()
+
+  await masq.addApp(profiles[0].id, app)
+  const apps = await masq.getApps()
+  expect(apps).toHaveLength(1)
+  expect(apps[0].id).toBeDefined()
+  expect(apps[0]).toEqual(app)
+})
+
+test('update an app', async () => {
+  const profileId = await masq.getProfiles()
+  let apps = await masq.getApps()
+  const app = apps[0]
+  app.name = 'new name'
+
+  await masq.updateApp(profileId, app)
+  apps = await masq.getApps()
+  expect(apps).toHaveLength(1)
+  expect(apps[0]).toEqual(app)
 })

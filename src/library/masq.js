@@ -56,14 +56,14 @@ class Masq {
   }
 
   // Add a new profile to the core and profiles databases
-  addProfile (user) {
+  addProfile (profile) {
     return new Promise((resolve, reject) => {
       this.dbs.core.get('/profiles', (err, node) => {
         if (err) return reject(err)
 
         const ids = node ? node.value : []
         const id = uuidv4()
-        user['id'] = id
+        profile['id'] = id
         const batch = [{
           type: 'put',
           key: '/profiles',
@@ -71,7 +71,7 @@ class Masq {
         }, {
           type: 'put',
           key: `/profiles/${id}`,
-          value: user
+          value: profile
         }]
 
         this.dbs.core.batch(batch, (err) => {
@@ -115,18 +115,64 @@ class Masq {
     })
   }
 
-  // getApps () {
-  //   return new Promise((resolve, reject) => {
-  //     this.dbs.core.get('apps', (err, nodes) => {
-  //       if (err) return reject(err)
+  addApp (profileId, app) {
+    return new Promise((resolve, reject) => {
+      this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
+        if (err) return reject(err)
 
-  //       if (nodes[0]) {
-  //         return resolve(nodes[0].value)
-  //       }
-  //     })
-  //   })
-  // }
+        const ids = node ? node.value : []
+        const id = uuidv4()
+        app['id'] = id
 
+        const batch = [{
+          type: 'put',
+          key: `/profiles/${profileId}/apps`,
+          value: [...ids, id]
+        }, {
+          type: 'put',
+          key: `/profiles/${profileId}/apps/${id}`,
+          value: app
+        }]
+
+        this.dbs.core.batch(batch, (err) => {
+          if (err) return reject(err)
+          resolve()
+        })
+      })
+    })
+  }
+
+  getApps (profileId) {
+    return new Promise((resolve, reject) => {
+      this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
+        if (err) return reject(err)
+        if (!node) return resolve([])
+
+        const ids = node.value
+        const apps = []
+
+        for (let id of ids) {
+          this.dbs.core.get(`/profiles/${profileId}/apps/${id}`, (err, node) => {
+            apps.push(node.value)
+            if (err) return reject(err)
+            if (ids.length === apps.length) return resolve(apps)
+          })
+        }
+      })
+    })
+  }
+
+  updateApp (profileId, app) {
+    const id = app.id
+    if (!id) throw Error('Missing id')
+
+    return new Promise((resolve, reject) => {
+      this.dbs.core.put(`/profiles/${profileId}/apps/${id}`, app, (err) => {
+        if (err) return reject(err)
+        return resolve()
+      })
+    })
+  }
   // SWARM to authorize new apps
   // joinSwarm (channel, app) {
   //   this.hub = signalhub(channel, ['localhost:8080'])
