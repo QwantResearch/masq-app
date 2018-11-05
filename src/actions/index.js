@@ -1,7 +1,7 @@
 import { Masq } from '../library'
 
 const masq = new Masq()
-masq.initDatabases()
+masq.init()
 
 const addUser = user => ({
   type: 'ADD_USER',
@@ -29,21 +29,21 @@ export const signout = () => ({
 
 export const updateUser = (id, user) => {
   return function (dispatch) {
-    return masq.updateUser(id, user)
+    return masq.updateProfile(id, user)
       .then(() => dispatch(signin(user)))
   }
 }
 
 export const signup = user => {
   return function (dispatch) {
-    return masq.addUser(user)
+    return masq.addProfile(user)
       .then(() => dispatch(addUser(user)))
   }
 }
 
 export const fetchUsers = () => {
   return function (dispatch) {
-    return masq.getUsers()
+    return masq.getProfiles()
       .then(users => dispatch(receiveUsers(users)))
   }
 }
