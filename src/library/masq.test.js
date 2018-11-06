@@ -1,4 +1,4 @@
-const Masq = require('./masq')
+import Masq from './masq'
 
 // use an in memory random-access-storage instead
 jest.mock('random-access-idb', () =>

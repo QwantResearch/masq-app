@@ -1,9 +1,9 @@
-const rai = require('random-access-idb')
-const signalhub = require('signalhubws')
-const hyperdb = require('hyperdb')
-const swarm = require('webrtc-swarm')
-const pump = require('pump')
-const uuidv4 = require('uuid/v4')
+import rai from 'random-access-idb'
+import signalhub from 'signalhubws'
+import hyperdb from 'hyperdb'
+import swarm from 'webrtc-swarm'
+import pump from 'pump'
+import uuidv4 from 'uuid/v4'
 
 const HUB_URLS = ['localhost:8080']
 
@@ -279,4 +279,4 @@ class Masq {
   // }
 }
 
-module.exports = Masq
+export default Masq
