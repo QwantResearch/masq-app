@@ -122,7 +122,7 @@ class Signup extends React.Component {
     return (
       <Modal onClose={this.props.onClose} height={670} width={511}>
         <div className='Signup'>
-          <span className='title-modal'>Add a user</span>
+          <span className='title-modal'>Ajouter un nouvel utilisateur</span>
 
           {this.currentStep === 0 && (
             <React.Fragment>
@@ -135,34 +135,34 @@ class Signup extends React.Component {
               />
 
               <div style={{ paddingTop: 24 }} />
-              <Button secondary label='import a photo' onClick={this.openDialog} />
+              <Button secondary label='Importer une photo' onClick={this.openDialog} />
               <div style={{ paddingBottom: 32 }} />
 
               <TextField
                 className='TextField'
                 defaultValue={this.state.lastname}
-                label='Last Name'
+                label='Nom'
                 error={!this.isValid('lastname')}
                 onChange={(e) => this.onChange('lastname', e)}
               />
               <TextField
                 className='TextField'
                 defaultValue={this.state.firstname}
-                label='First Name'
+                label='Prénom'
                 error={!this.isValid('firstname')}
                 onChange={(e) => this.onChange('firstname', e)}
               />
               <TextField
                 className='TextField'
                 defaultValue={this.state.username}
-                label='Username (displayed)'
+                label='Pseudo (affiché)'
                 error={!this.isValid('username')}
                 onChange={(e) => this.onChange('username', e)}
                 onKeyUp={this.handleKeyUp}
               />
 
               <div className='buttons'>
-                <Button label='Next' onClick={this.next} width={185} />
+                <Button label='Suivant' onClick={this.next} width={185} />
               </div>
             </React.Fragment>
           )}
@@ -181,8 +181,8 @@ class Signup extends React.Component {
                 autoFocus
                 type='password'
                 label={this.isValid('password')
-                  ? 'Password'
-                  : 'Password must be at least 8 characters long'}
+                  ? 'Mot de passe'
+                  : 'Le mot de passe doit être composé d\'au moins 8 caractères.'}
                 error={!this.isValid('password')}
                 onChange={(e) => this.onChange('password', e)}
               />
@@ -191,16 +191,16 @@ class Signup extends React.Component {
                 className='TextField'
                 type='password'
                 label={this.isValid('passwordConfirmation')
-                  ? 'Password confirmation'
-                  : 'Passwords do not match'}
+                  ? 'Mot de passe (confirmation)'
+                  : 'Les mots de passe ne correspondent pas.'}
                 error={!this.isValid('passwordConfirmation')}
                 onKeyUp={this.handleKeyUp}
                 onChange={(e) => this.onChange('passwordConfirmation', e)}
               />
 
               <div className='buttons'>
-                <Button label='Previous' onClick={this.previous} width={185} />
-                <Button label='Finish' onClick={this.finish} width={185} />
+                <Button label='Précédent' onClick={this.previous} width={185} />
+                <Button label='Terminer' onClick={this.finish} width={185} />
               </div>
             </React.Fragment>
           )}

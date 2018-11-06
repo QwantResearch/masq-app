@@ -95,27 +95,27 @@ class Settings extends React.Component {
       <div className='Settings'>
         <div>
           <div className='title-container'>
-            <p className='title'>Your profile</p>
-            <p className='subtitle'>Edit your personal informations</p>
+            <p className='title'>Vos paramètres d'utilisateur</p>
+            <p className='subtitle'>Changez vos informations personnelles</p>
           </div>
 
           <div className='profile'>
             <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
             <div className='inputs'>
               <TextField
-                label={'Last Name'}
+                label={'Nom'}
                 error={!this.isValid('lastname')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.lastname} onChange={(e) => this.onChange('lastname', e)}
               />
               <TextField
-                label={'First Name'}
+                label={'Prénom'}
                 error={!this.isValid('firstname')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.firstname} onChange={(e) => this.onChange('firstname', e)}
               />
               <TextField
-                label={'Username (displayed)'}
+                label={'Pseudo (affiché)'}
                 error={!this.isValid('username')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.username} onChange={(e) => this.onChange('username', e)}
