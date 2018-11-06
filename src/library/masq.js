@@ -7,6 +7,10 @@ const uuidv4 = require('uuid/v4')
 
 const HUB_URLS = ['localhost:8080']
 
+/**
+ * Open or create a hyperdb instance
+ * @param {string} name The indexeddb store name
+ */
 const openOrCreateDB = (name) => {
   return hyperdb(rai(name), {
     valueEncoding: 'json',
@@ -14,7 +18,11 @@ const openOrCreateDB = (name) => {
   })
 }
 
-// Replicate a db indefinitely
+/**
+ * Replicate a database in a swarm indefinitely,
+ * using db.discoveryKey as channel name
+ * @param {object} db
+ */
 const replicateDB = db => {
   const discoveryKey = db.discoveryKey.toString('hex')
   const hub = signalhub(discoveryKey, HUB_URLS)
@@ -36,6 +44,7 @@ class Masq {
 
   /**
    * Initialize Masq: Open core and profiles databases
+   * and replicate them in their respective swarms.
    */
   init () {
     return new Promise((resolve, reject) => {
@@ -55,7 +64,10 @@ class Masq {
     })
   }
 
-  // Add a new profile to the core and profiles databases
+  /**
+   * Add a new profile to the core and profiles databases
+   * @param {object} profile The new profile to add
+   */
   addProfile (profile) {
     return new Promise((resolve, reject) => {
       this.dbs.core.get('/profiles', (err, node) => {
@@ -82,7 +94,9 @@ class Masq {
     })
   }
 
-  // get private profiles from core db
+  /**
+   * Get private profiles from core db
+   */
   getProfiles () {
     return new Promise((resolve, reject) => {
       this.dbs.core.get('/profiles', (err, node) => {
@@ -103,6 +117,10 @@ class Masq {
     })
   }
 
+  /**
+   * Update an existing profile
+   * @param {object} profile The updated profile
+   */
   updateProfile (profile) {
     const id = profile.id
     if (!id) throw Error('Missing id')
@@ -115,6 +133,11 @@ class Masq {
     })
   }
 
+  /**
+   * Add an app to a specified profile
+   * @param {number} profileId The profile id the app belongs to
+   * @param {object} app The app
+   */
   addApp (profileId, app) {
     return new Promise((resolve, reject) => {
       this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
@@ -142,6 +165,10 @@ class Masq {
     })
   }
 
+  /**
+   * Get alls apps attached to a profile id
+   * @param {number} profileId The profile id for which we get the apps
+   */
   getApps (profileId) {
     return new Promise((resolve, reject) => {
       this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
@@ -162,6 +189,11 @@ class Masq {
     })
   }
 
+  /**
+   * Update an app
+   * @param {number} profileId The profile id to which the app is attached
+   * @param {object} app The updated app
+   */
   updateApp (profileId, app) {
     const id = app.id
     if (!id) throw Error('Missing id')
