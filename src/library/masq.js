@@ -139,22 +139,75 @@ class Masq {
    * @param {object} app The app
    */
   addApp (profileId, app) {
+    return this._createResource(profileId, 'apps', app)
+  }
+
+  /**
+   * Add an app to a specified profile
+   * @param {number} profileId The profile id the app belongs to
+   * @param {object} device The app
+   */
+  addDevice (profileId, device) {
+    return this._createResource(profileId, 'devices', device)
+  }
+
+  /**
+   * Get all apps attached to a profile id
+   * @param {number} profileId The profile id for which we get the apps
+   */
+  getApps (profileId) {
+    return this._getResources(profileId, 'apps')
+  }
+
+  /**
+   * Get all devices attached to a profile id
+   * @param {number} profileId The profile id for which we get the devices
+   */
+  getDevices (profileId) {
+    return this._getResources(profileId, 'devices')
+  }
+
+  /**
+   * Update an app
+   * @param {number} profileId The profile id to which the app is attached
+   * @param {object} app The updated app
+   */
+  updateApp (profileId, app) {
+    return this._updateResource(profileId, 'apps', app)
+  }
+
+  /**
+   * Update a device
+   * @param {number} profileId The profile id to which the device is attached
+   * @param {object} device The updated device
+   */
+  updateDevice (profileId, device) {
+    this._updateResource(profileId, 'devices', device)
+  }
+
+  /**
+   * Private methods
+   */
+
+  _createResource (profileId, name, res) {
+    if (!profileId) return Error('missing profileId')
+
     return new Promise((resolve, reject) => {
-      this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
+      this.dbs.core.get(`/profiles/${profileId}/${name}`, (err, node) => {
         if (err) return reject(err)
 
         const ids = node ? node.value : []
         const id = uuidv4()
-        app['id'] = id
+        res['id'] = id
 
         const batch = [{
           type: 'put',
-          key: `/profiles/${profileId}/apps`,
+          key: `/profiles/${profileId}/${name}`,
           value: [...ids, id]
         }, {
           type: 'put',
-          key: `/profiles/${profileId}/apps/${id}`,
-          value: app
+          key: `/profiles/${profileId}/${name}/${id}`,
+          value: res
         }]
 
         this.dbs.core.batch(batch, (err) => {
@@ -165,41 +218,36 @@ class Masq {
     })
   }
 
-  /**
-   * Get alls apps attached to a profile id
-   * @param {number} profileId The profile id for which we get the apps
-   */
-  getApps (profileId) {
+  _getResources (profileId, name) {
+    if (!profileId) return Error('missing profileId')
+
     return new Promise((resolve, reject) => {
-      this.dbs.core.get(`/profiles/${profileId}/apps`, (err, node) => {
+      this.dbs.core.get(`/profiles/${profileId}/${name}`, (err, node) => {
         if (err) return reject(err)
         if (!node) return resolve([])
 
         const ids = node.value
-        const apps = []
+        const resources = []
 
         for (let id of ids) {
-          this.dbs.core.get(`/profiles/${profileId}/apps/${id}`, (err, node) => {
-            apps.push(node.value)
+          this.dbs.core.get(`/profiles/${profileId}/${name}/${id}`, (err, node) => {
+            resources.push(node.value)
             if (err) return reject(err)
-            if (ids.length === apps.length) return resolve(apps)
+            if (ids.length === resources.length) return resolve(resources)
           })
         }
       })
     })
   }
 
-  /**
-   * Update an app
-   * @param {number} profileId The profile id to which the app is attached
-   * @param {object} app The updated app
-   */
-  updateApp (profileId, app) {
-    const id = app.id
+  _updateResource (profileId, name, res) {
+    if (!profileId) return Error('missing profileId')
+
+    const id = res.id
     if (!id) throw Error('Missing id')
 
     return new Promise((resolve, reject) => {
-      this.dbs.core.put(`/profiles/${profileId}/apps/${id}`, app, (err) => {
+      this.dbs.core.put(`/profiles/${profileId}/${name}/${id}`, res, (err) => {
         if (err) return reject(err)
         return resolve()
       })
