@@ -50,7 +50,7 @@ export const fetchUsers = () => {
 
 export const fetchApps = () => {
   return function (dispatch) {
-    return masq.getApps()
+    return masq.getApps('profileId')
       .then(apps => {
         apps.forEach(app => dispatch(addApp(app)))
       })

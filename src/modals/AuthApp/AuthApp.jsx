@@ -2,13 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button } from 'qwant-research-components'
-// import { Redirect } from 'react-router-dom'
 
 import { Modal } from '../../components'
-
 import { createAppDB, setCurrentAppRequest } from '../../actions'
 
-import './AuthApp.css'
+import styles from './AuthApp.module.scss'
 
 class AuthApp extends React.Component {
   constructor (props) {
@@ -31,19 +29,19 @@ class AuthApp extends React.Component {
 
     return (
       <Modal width={511}>
-        <div className='AuthApp'>
-          <p className='title'>New connection request from</p>
-          <p className='appTitle'>{app.name}</p>
-          <p className='description'>
+        <div className={styles.AuthApp}>
+          <p className={styles.title}>New connection request from</p>
+          <p className={styles.appTitle}>{app.name}</p>
+          <p className={styles.description}>
             This notification appears because that application asks permission
             to use your Masq storage. Please verify that the security code match with the one of the app.
           </p>
-          <p className='description'>
+          <p className={styles.description}>
             If you are not at the origin of this request or if you have question,
             please contact our help center.
           </p>
 
-          <div className='buttons'>
+          <div className={styles.buttons}>
             <Button label={'Reject'} color={'var(--red-100)'} colorShadow={'var(--red-100-shadow)'} />
             <Button label={'Accept'} onClick={this.handleAccept} color={'var(--green-100)'} colorShadow={'var(--green-100-shadow)'} />
           </div>

@@ -8,12 +8,19 @@
   width: 100%;
 }
 
-.Signup .title-modal {
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.04;
+  letter-spacing: normal;
+  text-align: center;
   margin-bottom: 32px;
   color: $color-background;
 }
 
-.Signup .user {
+.user {
   margin-top: 16px;
   font-size: 18px;
   font-weight: 600;
@@ -25,7 +32,7 @@
   color: var(--blue-500);
 }
 
-.Signup .buttons {
+.buttons {
   bottom: 0;
   display: grid;
   position: absolute;
@@ -34,7 +41,7 @@
   grid-template-columns: auto auto;
 }
 
-.Signup .TextField {
+.TextField {
   width: 300px;
   margin-bottom: 16px;
 }

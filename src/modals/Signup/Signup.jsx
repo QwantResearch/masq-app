@@ -4,7 +4,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 
-import './Signup.scss'
+import styles from './Signup.module.scss'
 
 class Signup extends React.Component {
   constructor (props) {
@@ -33,7 +33,7 @@ class Signup extends React.Component {
 
   isValid (fieldName) {
     if (!this.validationEnabled) {
-      // Don't show error as long as the user do not click Finish btn
+      // Don't show error as long as the user does not click Finish btn
       return true
     }
 
@@ -121,8 +121,8 @@ class Signup extends React.Component {
   render () {
     return (
       <Modal onClose={this.props.onClose} height={670} width={511}>
-        <div className='Signup'>
-          <span className='title-modal'>Ajouter un nouvel utilisateur</span>
+        <div className={styles.Signup}>
+          <span className={styles.title}>Ajouter un nouvel utilisateur</span>
 
           {this.currentStep === 0 && (
             <React.Fragment>
@@ -139,21 +139,21 @@ class Signup extends React.Component {
               <div style={{ paddingBottom: 32 }} />
 
               <TextField
-                className='TextField'
+                className={styles.TextField}
                 defaultValue={this.state.lastname}
                 label='Nom'
                 error={!this.isValid('lastname')}
                 onChange={(e) => this.onChange('lastname', e)}
               />
               <TextField
-                className='TextField'
+                className={styles.TextField}
                 defaultValue={this.state.firstname}
                 label='Prénom'
                 error={!this.isValid('firstname')}
                 onChange={(e) => this.onChange('firstname', e)}
               />
               <TextField
-                className='TextField'
+                className={styles.TextField}
                 defaultValue={this.state.username}
                 label='Pseudo (affiché)'
                 error={!this.isValid('username')}
@@ -161,7 +161,7 @@ class Signup extends React.Component {
                 onKeyUp={this.handleKeyUp}
               />
 
-              <div className='buttons'>
+              <div className={styles.buttons}>
                 <Button label='Suivant' onClick={this.next} width={185} />
               </div>
             </React.Fragment>
@@ -175,9 +175,9 @@ class Signup extends React.Component {
                 firstname={this.state.firstname}
                 lastname={this.state.lastname}
               />
-              <p className='user'>{this.state.username}</p>
+              <p className={styles.user}>{this.state.username}</p>
               <TextField
-                className='TextField'
+                className={styles.TextField}
                 autoFocus
                 type='password'
                 label={this.isValid('password')
@@ -188,7 +188,7 @@ class Signup extends React.Component {
               />
 
               <TextField
-                className='TextField'
+                className={styles.TextField}
                 type='password'
                 label={this.isValid('passwordConfirmation')
                   ? 'Mot de passe (confirmation)'
@@ -198,7 +198,7 @@ class Signup extends React.Component {
                 onChange={(e) => this.onChange('passwordConfirmation', e)}
               />
 
-              <div className='buttons'>
+              <div className={styles.buttons}>
                 <Button label='Précédent' onClick={this.previous} width={185} />
                 <Button label='Terminer' onClick={this.finish} width={185} />
               </div>
