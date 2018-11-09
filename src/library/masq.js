@@ -58,6 +58,7 @@ class Masq {
       Object.values(this.dbs).forEach(db => {
         db.on('ready', () => {
           replicateDB(db)
+          console.log(db.key.toString('hex'))
           if (++readyCount === 2) return resolve()
         })
       })
@@ -89,6 +90,10 @@ class Masq {
         this.dbs.core.batch(batch, (err) => {
           if (err) return reject(err)
           resolve()
+          this.dbs.profiles.batch(batch, (err) => {
+            if (err) return reject(err)
+            resolve()
+          })
         })
       })
     })
@@ -128,7 +133,10 @@ class Masq {
     return new Promise((resolve, reject) => {
       this.dbs.core.put(`/profiles/${id}`, profile, (err) => {
         if (err) return reject(err)
-        return resolve()
+        this.dbs.profiles.put(`/profiles/${id}`, profile, (err) => {
+          if (err) return reject(err)
+          return resolve()
+        })
       })
     })
   }
@@ -183,6 +191,30 @@ class Masq {
    */
   updateDevice (profileId, device) {
     this._updateResource(profileId, 'devices', device)
+  }
+
+  syncProfiles (channel, challenge) {
+    console.log('syncProfiles', channel, challenge)
+    const hub = signalhub(channel, HUB_URLS)
+    const sw = swarm(hub)
+
+    sw.on('close', () => {
+      hub.close()
+      sw.close()
+    })
+
+    sw.on('peer', (peer) => {
+      peer.on('data', data => {
+        console.log('data', data)
+        sw.close()
+      })
+
+      peer.send(JSON.stringify({
+        msg: 'sendProfilesKey',
+        challenge: challenge,
+        key: this.dbs.profiles.key.toString('hex')
+      }))
+    })
   }
 
   /**

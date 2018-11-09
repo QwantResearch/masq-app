@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
-import { AuthApp } from './modals'
-import { fetchApps } from './actions'
+// import { AuthApp } from './modals'
+import { fetchApps, syncProfiles } from './actions'
 
 const authenticatedRoutes = [
   {
@@ -46,7 +46,13 @@ class App extends Component {
   }
 
   async componentDidMount () {
-    this.props.fetchApps()
+    await this.props.fetchApps()
+    const url = new URL(window.location.href)
+    const channel = url.searchParams.get('channel')
+    const challenge = url.searchParams.get('challenge')
+    if (channel && challenge) {
+      this.props.syncProfiles(channel, challenge)
+    }
   }
 
   appendMessage (msg) {
@@ -67,7 +73,7 @@ class App extends Component {
         <div>
           <Route exact path='/' component={Login} />
 
-          <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} />
+          {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
 
           <div style={{ display: 'flex' }}>
             {authenticatedRoutes.map((route, index) => (
@@ -98,7 +104,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchApps: () => dispatch(fetchApps())
+  fetchApps: () => dispatch(fetchApps()),
+  syncProfiles: (channel, challenge) => dispatch(syncProfiles(channel, challenge))
 })
 
 App.propTypes = {

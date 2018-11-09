@@ -28,8 +28,9 @@ export const signout = () => ({
 })
 
 export const updateUser = (id, user) => {
+  user.id = id
   return function (dispatch) {
-    return masq.updateProfile(id, user)
+    return masq.updateProfile(user)
       .then(() => dispatch(signin(user)))
   }
 }
@@ -68,6 +69,14 @@ export const createAppDB = (name, channel) => {
   return function (dispatch) {
     return masq.createApp(name, channel, () => {
       console.log('okok')
+    })
+  }
+}
+
+export const syncProfiles = (channel, challenge) => {
+  return function (dispatch) {
+    return masq.syncProfiles(channel, challenge, () => {
+      console.log('okok sync')
     })
   }
 }
