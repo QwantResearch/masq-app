@@ -109,6 +109,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 App.propTypes = {
+  syncProfiles: PropTypes.func,
   fetchApps: PropTypes.func
 }
 
