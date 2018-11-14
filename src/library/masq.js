@@ -58,7 +58,6 @@ class Masq {
       Object.values(this.dbs).forEach(db => {
         db.on('ready', () => {
           replicateDB(db)
-          console.log(db.key.toString('hex'))
           if (++readyCount === 2) return resolve()
         })
       })
@@ -194,7 +193,6 @@ class Masq {
   }
 
   syncProfiles (channel, challenge) {
-    console.log('syncProfiles', channel, challenge)
     const hub = signalhub(channel, HUB_URLS)
     const sw = swarm(hub)
 
