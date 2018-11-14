@@ -1,9 +1,9 @@
 const masq = (state = {
   users: [],
   apps: [],
+  devices: [],
   currentUser: null
 }, action) => {
-  console.log(action.type)
   switch (action.type) {
     case 'ADD_USER':
       return {
@@ -34,6 +34,11 @@ const masq = (state = {
       return {
         ...state,
         apps: [...state.apps, action.app]
+      }
+    case 'ADD_DEVICE':
+      return {
+        ...state,
+        devices: [...state.devices, action.device]
       }
     default:
       return state

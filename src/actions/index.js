@@ -49,6 +49,11 @@ export const fetchUsers = () => {
   }
 }
 
+export const addDevice = device => ({
+  type: 'ADD_DEVICE',
+  device
+})
+
 export const fetchApps = () => {
   return function (dispatch) {
     return masq.getApps('profileId')

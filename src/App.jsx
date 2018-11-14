@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 // import { AuthApp } from './modals'
-import { fetchApps, syncProfiles } from './actions'
+import { fetchApps, addDevice, syncProfiles } from './actions'
 
 const authenticatedRoutes = [
   {
@@ -47,6 +47,16 @@ class App extends Component {
 
   async componentDidMount () {
     await this.props.fetchApps()
+
+    if (!this.props.devices.length) {
+      const { name, os } = require('detect-browser').detect()
+      this.props.addDevice({
+        name: `${name} sur ${os}`,
+        description: 'Cet appareil',
+        color: '#40ae6c'
+      })
+    }
+
     const url = new URL(window.location.href)
     const channel = url.searchParams.get('channel')
     const challenge = url.searchParams.get('challenge')
@@ -100,17 +110,21 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   currentUser: state.masq.currentUser,
+  devices: state.masq.devices,
   users: state.masq.users
 })
 
 const mapDispatchToProps = dispatch => ({
+  addDevice: (profileId, device) => dispatch(addDevice(profileId, device)),
   fetchApps: () => dispatch(fetchApps()),
   syncProfiles: (channel, challenge) => dispatch(syncProfiles(channel, challenge))
 })
 
 App.propTypes = {
   syncProfiles: PropTypes.func,
-  fetchApps: PropTypes.func
+  addDevice: PropTypes.func,
+  fetchApps: PropTypes.func,
+  devices: PropTypes.arrayOf(PropTypes.object)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

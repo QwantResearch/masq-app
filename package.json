@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "classnames": "^2.2.6",
+    "detect-browser": "^3.0.1",
     "hyperdb": "^3.5.0",
     "pump": "^3.0.0",
     "qwant-research-components": "git+https://github.com/QwantResearch/qwant-research-components.git",
