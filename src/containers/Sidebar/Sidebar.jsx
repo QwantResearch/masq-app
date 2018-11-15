@@ -22,13 +22,13 @@ const Apps = ({ user, signout, ...props }) => {
         <h2>{user.username}</h2>
       </div>
       <div className={styles.nav}>
-        <NavLink to='/devices' className={styles.navElement} activeClassName={styles.active}>
-          <PhoneIcon fill='white' opacity={0.8} width={24} />
-          <p className='label'>Appareils</p>
-        </NavLink>
         <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>
           <AppsIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Applications</p>
+        </NavLink>
+        <NavLink to='/devices' className={styles.navElement} activeClassName={styles.active}>
+          <PhoneIcon fill='white' opacity={0.8} width={24} />
+          <p className='label'>Appareils</p>
         </NavLink>
         <NavLink to='/settings' className={styles.navElement} activeClassName={styles.active}>
           <SettingsIcon fill='white' opacity={0.8} width={24} />
