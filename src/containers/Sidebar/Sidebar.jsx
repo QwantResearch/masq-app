@@ -2,8 +2,7 @@ import React from 'react'
 import { Sidebar } from 'qwant-research-components'
 import { Avatar } from '../../components'
 import { connect } from 'react-redux'
-import { Link, Redirect } from 'react-router-dom'
-import cx from 'classnames'
+import { Link, Redirect, NavLink } from 'react-router-dom'
 
 import { signout } from '../../actions'
 
@@ -14,8 +13,6 @@ import { ReactComponent as SettingsIcon } from '../../assets/settings.svg'
 import { ReactComponent as LogoutIcon } from '../../assets/logout.svg'
 
 const Apps = ({ user, signout, ...props }) => {
-  const path = props.location.pathname
-
   if (!user) return <Redirect to='/' />
 
   return (
@@ -25,18 +22,18 @@ const Apps = ({ user, signout, ...props }) => {
         <h2>{user.username}</h2>
       </div>
       <div className={styles.nav}>
-        <Link to='/devices' className={cx(styles.navElement, { [styles.active]: path === '/devices' })}>
+        <NavLink to='/devices' className={styles.navElement} activeClassName={styles.active}>
           <PhoneIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Appareils</p>
-        </Link>
-        <Link to='/apps' className={cx(styles.navElement, { [styles.active]: path === '/apps' })}>
+        </NavLink>
+        <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>
           <AppsIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Applications</p>
-        </Link>
-        <Link to='/settings' className={cx(styles.navElement, { [styles.active]: path === '/settings' })}>
+        </NavLink>
+        <NavLink to='/settings' className={styles.navElement} activeClassName={styles.active}>
           <SettingsIcon fill='white' opacity={0.8} width={24} />
           <p className='label'>Paramètres</p>
-        </Link>
+        </NavLink>
       </div>
       <div className={styles.logout} onClick={signout}>
         <Link to='/' className={styles.navElement}>
