@@ -5,7 +5,7 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 
-import hyperdbUtils from './hyperdbUtils'
+import promiseHyperdb from './promiseHyperdb'
 
 const HUB_URLS = ['localhost:8080']
 
@@ -71,7 +71,7 @@ class Masq {
    * @param {object} profile The new profile to add
    */
   async addProfile (profile) {
-    const node = await hyperdbUtils.promiseGet(this.dbs.core, '/profiles')
+    const node = await promiseHyperdb.get(this.dbs.core, '/profiles')
     const ids = node ? node.value : []
     const id = uuidv4()
     profile['id'] = id
@@ -85,20 +85,20 @@ class Masq {
       value: profile
     }]
 
-    await hyperdbUtils.promiseBatch(this.dbs.core, batch)
-    await hyperdbUtils.promiseBatch(this.dbs.profiles, batch)
+    await promiseHyperdb.batch(this.dbs.core, batch)
+    await promiseHyperdb.batch(this.dbs.profiles, batch)
   }
 
   /**
    * Get private profiles from core db
    */
   async getProfiles () {
-    const node = await hyperdbUtils.promiseGet(this.dbs.core, '/profiles')
+    const node = await promiseHyperdb.get(this.dbs.core, '/profiles')
     if (!node) return []
 
     const ids = node.value
     const profilePromises = ids.map(
-      id => hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${id}`)
+      id => promiseHyperdb.get(this.dbs.core, `/profiles/${id}`)
     )
     const profileNodes = await Promise.all(profilePromises)
     const profiles = profileNodes.map(n => n.value)
@@ -113,8 +113,8 @@ class Masq {
     const id = profile.id
     if (!id) throw Error('Missing id')
 
-    await hyperdbUtils.promisePut(this.dbs.core, `/profile/${id}`, profile)
-    await hyperdbUtils.promisePut(this.dbs.profiles, `/profiles/${id}`, profile)
+    await promiseHyperdb.put(this.dbs.core, `/profile/${id}`, profile)
+    await promiseHyperdb.put(this.dbs.profiles, `/profiles/${id}`, profile)
   }
 
   /**
@@ -165,7 +165,7 @@ class Masq {
    * @param {number} profileId The profile id to which the device is attached
    * @param {object} device The updated device
    */
-  updateDevice (profileId, device) {
+  async updateDevice (profileId, device) {
     this._updateResource(profileId, 'devices', device)
   }
 
@@ -199,7 +199,7 @@ class Masq {
   async _createResource (profileId, name, res) {
     if (!profileId) throw Error('missing profileId')
 
-    const node = await hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}`)
+    const node = await promiseHyperdb.get(this.dbs.core, `/profiles/${profileId}/${name}`)
     const ids = node ? node.value : []
     const id = uuidv4()
     res['id'] = id
@@ -214,18 +214,18 @@ class Masq {
       value: res
     }]
 
-    await hyperdbUtils.promiseBatch(this.dbs.core, batch)
+    await promiseHyperdb.batch(this.dbs.core, batch)
   }
 
   async _getResources (profileId, name) {
     if (!profileId) throw Error('missing profileId')
 
-    const node = await hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}`)
+    const node = await promiseHyperdb.get(this.dbs.core, `/profiles/${profileId}/${name}`)
     if (!node) return []
 
     const ids = node.value
     const resourcePromises = ids.map(
-      id => hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}/${id}`)
+      id => promiseHyperdb.get(this.dbs.core, `/profiles/${profileId}/${name}/${id}`)
     )
     const resourceNodes = await Promise.all(resourcePromises)
     const resources = resourceNodes.map(n => n.value)
@@ -238,7 +238,7 @@ class Masq {
     const id = res.id
     if (!id) throw Error('Missing id')
 
-    return hyperdbUtils.promisePut(this.dbs.core, `/profiles/${profileId}/${name}/${id}`, res)
+    return promiseHyperdb.put(this.dbs.core, `/profiles/${profileId}/${name}/${id}`, res)
   }
 }
 
