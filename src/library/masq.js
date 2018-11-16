@@ -127,9 +127,9 @@ class Masq {
   }
 
   /**
-   * Add an app to a specified profile
+   * Add a device to a specified profile
    * @param {number} profileId The profile id the app belongs to
-   * @param {object} device The app
+   * @param {object} device The device
    */
   addDevice (profileId, device) {
     return this._createResource(profileId, 'devices', device)
