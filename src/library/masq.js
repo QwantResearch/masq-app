@@ -5,6 +5,8 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 
+import hyperdbUtils from './hyperdbUtils'
+
 const HUB_URLS = ['localhost:8080']
 
 /**
@@ -68,76 +70,51 @@ class Masq {
    * Add a new profile to the core and profiles databases
    * @param {object} profile The new profile to add
    */
-  addProfile (profile) {
-    return new Promise((resolve, reject) => {
-      this.dbs.core.get('/profiles', (err, node) => {
-        if (err) return reject(err)
+  async addProfile (profile) {
+    const node = await hyperdbUtils.promiseGet(this.dbs.core, '/profiles')
+    const ids = node ? node.value : []
+    const id = uuidv4()
+    profile['id'] = id
+    const batch = [{
+      type: 'put',
+      key: '/profiles',
+      value: [...ids, id]
+    }, {
+      type: 'put',
+      key: `/profiles/${id}`,
+      value: profile
+    }]
 
-        const ids = node ? node.value : []
-        const id = uuidv4()
-        profile['id'] = id
-        const batch = [{
-          type: 'put',
-          key: '/profiles',
-          value: [...ids, id]
-        }, {
-          type: 'put',
-          key: `/profiles/${id}`,
-          value: profile
-        }]
-
-        this.dbs.core.batch(batch, (err) => {
-          if (err) return reject(err)
-          resolve()
-          this.dbs.profiles.batch(batch, (err) => {
-            if (err) return reject(err)
-            resolve()
-          })
-        })
-      })
-    })
+    await hyperdbUtils.promiseBatch(this.dbs.core, batch)
+    await hyperdbUtils.promiseBatch(this.dbs.profiles, batch)
   }
 
   /**
    * Get private profiles from core db
    */
-  getProfiles () {
-    return new Promise((resolve, reject) => {
-      this.dbs.core.get('/profiles', (err, node) => {
-        if (err) return reject(err)
-        if (!node) return resolve([])
+  async getProfiles () {
+    const node = await hyperdbUtils.promiseGet(this.dbs.core, '/profiles')
+    if (!node) return []
 
-        const ids = node.value
-        const profiles = []
-
-        for (let id of ids) {
-          this.dbs.core.get(`/profiles/${id}`, (err, node) => {
-            profiles.push(node.value)
-            if (err) return reject(err)
-            if (ids.length === profiles.length) return resolve(profiles)
-          })
-        }
-      })
-    })
+    const ids = node.value
+    const profilePromises = ids.map(
+      id => hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${id}`)
+    )
+    const profileNodes = await Promise.all(profilePromises)
+    const profiles = profileNodes.map(n => n.value)
+    return profiles
   }
 
   /**
    * Update an existing profile
    * @param {object} profile The updated profile
    */
-  updateProfile (profile) {
+  async updateProfile (profile) {
     const id = profile.id
     if (!id) throw Error('Missing id')
 
-    return new Promise((resolve, reject) => {
-      this.dbs.core.put(`/profiles/${id}`, profile, (err) => {
-        if (err) return reject(err)
-        this.dbs.profiles.put(`/profiles/${id}`, profile, (err) => {
-          if (err) return reject(err)
-          return resolve()
-        })
-      })
-    })
+    await hyperdbUtils.promisePut(this.dbs.core, `/profile/${id}`, profile)
+    await hyperdbUtils.promisePut(this.dbs.profiles, `/profiles/${id}`, profile)
   }
 
   /**
@@ -219,69 +196,49 @@ class Masq {
    * Private methods
    */
 
-  _createResource (profileId, name, res) {
-    if (!profileId) return Error('missing profileId')
+  async _createResource (profileId, name, res) {
+    if (!profileId) throw Error('missing profileId')
 
-    return new Promise((resolve, reject) => {
-      this.dbs.core.get(`/profiles/${profileId}/${name}`, (err, node) => {
-        if (err) return reject(err)
+    const node = await hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}`)
+    const ids = node ? node.value : []
+    const id = uuidv4()
+    res['id'] = id
 
-        const ids = node ? node.value : []
-        const id = uuidv4()
-        res['id'] = id
+    const batch = [{
+      type: 'put',
+      key: `/profiles/${profileId}/${name}`,
+      value: [...ids, id]
+    }, {
+      type: 'put',
+      key: `/profiles/${profileId}/${name}/${id}`,
+      value: res
+    }]
 
-        const batch = [{
-          type: 'put',
-          key: `/profiles/${profileId}/${name}`,
-          value: [...ids, id]
-        }, {
-          type: 'put',
-          key: `/profiles/${profileId}/${name}/${id}`,
-          value: res
-        }]
-
-        this.dbs.core.batch(batch, (err) => {
-          if (err) return reject(err)
-          resolve()
-        })
-      })
-    })
+    await hyperdbUtils.promiseBatch(this.dbs.core, batch)
   }
 
-  _getResources (profileId, name) {
-    if (!profileId) return Error('missing profileId')
+  async _getResources (profileId, name) {
+    if (!profileId) throw Error('missing profileId')
 
-    return new Promise((resolve, reject) => {
-      this.dbs.core.get(`/profiles/${profileId}/${name}`, (err, node) => {
-        if (err) return reject(err)
-        if (!node) return resolve([])
+    const node = await hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}`)
+    if (!node) return []
 
-        const ids = node.value
-        const resources = []
-
-        for (let id of ids) {
-          this.dbs.core.get(`/profiles/${profileId}/${name}/${id}`, (err, node) => {
-            resources.push(node.value)
-            if (err) return reject(err)
-            if (ids.length === resources.length) return resolve(resources)
-          })
-        }
-      })
-    })
+    const ids = node.value
+    const resourcePromises = ids.map(
+      id => hyperdbUtils.promiseGet(this.dbs.core, `/profiles/${profileId}/${name}/${id}`)
+    )
+    const resourceNodes = await Promise.all(resourcePromises)
+    const resources = resourceNodes.map(n => n.value)
+    return resources
   }
 
-  _updateResource (profileId, name, res) {
-    if (!profileId) return Error('missing profileId')
+  async _updateResource (profileId, name, res) {
+    if (!profileId) throw Error('missing profileId')
 
     const id = res.id
     if (!id) throw Error('Missing id')
 
-    return new Promise((resolve, reject) => {
-      this.dbs.core.put(`/profiles/${profileId}/${name}/${id}`, res, (err) => {
-        if (err) return reject(err)
-        return resolve()
-      })
-    })
+    return hyperdbUtils.promisePut(this.dbs.core, `/profiles/${profileId}/${name}/${id}`, res)
   }
 }
 
