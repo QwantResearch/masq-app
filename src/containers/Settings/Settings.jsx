@@ -7,7 +7,7 @@ import { Button, TextField } from 'qwant-research-components'
 import { updateUser } from '../../actions'
 import { Avatar } from '../../components'
 
-import './Settings.css'
+import styles from './Settings.module.scss'
 
 class Settings extends React.Component {
   constructor (props) {
@@ -92,16 +92,16 @@ class Settings extends React.Component {
     if (!this.props.user) return <Redirect to='/' />
 
     return (
-      <div className='Settings'>
+      <div className={styles.Settings}>
         <div>
-          <div className='title-container'>
+          <div className={styles.titleContainer}>
             <p className='title'>Vos paramètres d'utilisateur</p>
             <p className='subtitle'>Changez vos informations personnelles</p>
           </div>
 
-          <div className='profile'>
+          <div className={styles.profile}>
             <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
-            <div className='inputs'>
+            <div className={styles.inputs}>
               <TextField
                 label={'Nom'}
                 error={!this.isValid('lastname')}
@@ -124,7 +124,7 @@ class Settings extends React.Component {
           </div>
         </div>
 
-        <div className='sidebar'>
+        <div className={styles.sidebar}>
           <Button width={200} secondary={!this.hasChanged} label='SAUVEGARDER' onClick={this.validate} />
         </div>
       </div>

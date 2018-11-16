@@ -1,0 +1,66 @@
+.Settings {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto 300px;
+  margin-top: 48px;
+  margin-left: 48px;
+
+  .titleContainer {
+    margin-bottom: 32px;
+  }
+
+  .profile {
+    display: flex;
+  }
+  .inputs {
+    margin-left: 64px;
+    display: flex;
+    flex-direction: column;
+    height: 192px;
+    justify-content: space-between;
+  }
+
+  .fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .TextInput {
+    width: 224px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .parameters p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.29;
+    letter-spacing: 0.7px;
+    text-align: left;
+    color: var(--grey3-color);
+    max-width: 277px;
+  }
+
+  .sidebar {
+    text-align: center;
+  }
+
+  .appSettings {
+    margin-top: 32px;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .exportButton {
+    margin-right: 32px;
+  }
+}
+
+
