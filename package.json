@@ -2,12 +2,15 @@
   "name": "masq-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://qwantresearch.github.io/masq-app",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "eslint --ext .js,.jsx ./src && react-scripts test",
     "lint": "eslint --fix --ext .js,.jsx ./src",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": [
     ">0.2%",
@@ -45,6 +48,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
+    "gh-pages": "^2.0.1",
     "node-sass": "^4.9.4",
     "random-access-memory": "^3.0.0"
   }
