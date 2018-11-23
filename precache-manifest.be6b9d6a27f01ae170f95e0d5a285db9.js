@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-700.7c6db4a2.woff"
   },
   {
-    "revision": "ed05ddd711279a9e0cd2",
+    "revision": "bef60c06984274baeb81",
     "url": "/masq-app/static/css/main.3fafe38b.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/logout.d4c1276a.svg"
   },
   {
-    "revision": "fb48bf4166609c51024f",
-    "url": "/masq-app/static/js/1.fb48bf41.chunk.js"
+    "revision": "30d38949bff5c42fc364",
+    "url": "/masq-app/static/js/1.30d38949.chunk.js"
   },
   {
     "revision": "4339acbd2671eeee1026",
@@ -40,16 +40,16 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-500.65d14561.woff"
   },
   {
+    "revision": "41264f825ce4cbac1f12a380291cf4d4",
+    "url": "/masq-app/static/media/asap-latin-600.41264f82.woff2"
+  },
+  {
     "revision": "a835e9ea118497fe4836af2959877e87",
     "url": "/masq-app/static/media/asap-latin-500italic.a835e9ea.woff2"
   },
   {
     "revision": "2c3ee5ad63d94580f78a9401f3e1deb4",
     "url": "/masq-app/static/media/asap-latin-600.2c3ee5ad.woff"
-  },
-  {
-    "revision": "41264f825ce4cbac1f12a380291cf4d4",
-    "url": "/masq-app/static/media/asap-latin-600.41264f82.woff2"
   },
   {
     "revision": "33f2a6e873d57cbcf5352482c1d9ee60",
@@ -60,8 +60,8 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
   },
   {
-    "revision": "ed05ddd711279a9e0cd2",
-    "url": "/masq-app/static/js/main.ed05ddd7.chunk.js"
+    "revision": "bef60c06984274baeb81",
+    "url": "/masq-app/static/js/main.bef60c06.chunk.js"
   },
   {
     "revision": "7d030e1434133b8c04548bd18c87adae",
@@ -116,11 +116,11 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/settings.14755d32.svg"
   },
   {
-    "revision": "fb48bf4166609c51024f",
+    "revision": "30d38949bff5c42fc364",
     "url": "/masq-app/static/css/1.14fc7596.chunk.css"
   },
   {
-    "revision": "f9448ecfcf3d0de5b9fa8b693920dc88",
+    "revision": "03e61d180bc270649f9b0e748157ec2d",
     "url": "/masq-app/index.html"
   }
 ];
