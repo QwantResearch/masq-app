@@ -36,6 +36,11 @@ const replicateDB = db => {
   })
 }
 
+const dbReady = db =>
+  new Promise(resolve =>
+    db.on('ready', () => resolve())
+  )
+
 class Masq {
   constructor () {
     this.dbs = {
@@ -48,20 +53,24 @@ class Masq {
    * Initialize Masq: Open core and profiles databases
    * and replicate them in their respective swarms.
    */
-  init () {
-    return new Promise((resolve, reject) => {
-      let readyCount = 0
+  async init () {
+    // create or open core and profiles databases
+    this.dbs.core = openOrCreateDB('masq-core')
+    this.dbs.profiles = openOrCreateDB('masq-profiles')
 
-      // create or open core and profiles databases
-      this.dbs.core = openOrCreateDB('masq-core')
-      this.dbs.profiles = openOrCreateDB('masq-profiles')
+    Object.values(this.dbs).forEach(db =>
+      db.on('ready', () => replicateDB(db))
+    )
 
-      // Sync
-      Object.values(this.dbs).forEach(db => {
-        db.on('ready', () => {
-          replicateDB(db)
-          if (++readyCount === 2) return resolve()
-        })
+    const profiles = await this.getProfiles()
+    const profilesIds = profiles.map(p => p.id)
+    profilesIds.forEach(async (id) => {
+      const apps = await this.getApps(id)
+      apps.forEach(app => {
+        const dbName = id + '-' + app.name
+        const db = openOrCreateDB(dbName)
+        this.dbs[dbName] = db
+        db.on('ready', () => replicateDB(db))
       })
     })
   }
@@ -169,18 +178,15 @@ class Masq {
     this._updateResource(profileId, 'devices', device)
   }
 
-  syncProfiles (channel, challenge) {
+  async syncProfiles (channel, challenge) {
+    await dbReady(this.dbs.profiles)
     const hub = signalhub(channel, HUB_URLS)
     const sw = swarm(hub)
 
-    sw.on('close', () => {
-      hub.close()
-      sw.close()
-    })
+    sw.on('close', () => hub.close())
 
     sw.on('peer', (peer) => {
       peer.on('data', data => {
-        console.log('data', data)
         sw.close()
       })
 
@@ -189,6 +195,57 @@ class Masq {
         challenge: challenge,
         key: this.dbs.profiles.key.toString('hex')
       }))
+    })
+  }
+
+  createApp (channel, challenge, appName, profileId) {
+    return new Promise(async (resolve, reject) => {
+      const dbName = profileId + '-' + appName
+      const apps = await this.getApps(profileId)
+      if (apps.find(app => app.name === app)) {
+        return resolve()
+      }
+
+      const hub = signalhub(channel, HUB_URLS)
+      const sw = swarm(hub)
+
+      sw.on('close', () => hub.close())
+
+      sw.on('peer', async (peer) => {
+        let db = null
+
+        peer.on('data', async (data) => {
+          const json = JSON.parse(data)
+          if (json.msg === 'appInfo') {
+            await this.addApp(profileId, {
+              name: json.name,
+              description: json.description,
+              image: json.image
+            })
+          }
+
+          if (json.msg === 'requestWriteAccess') {
+            // authorize local key & start replication
+            db.authorize(Buffer.from(json.key, 'hex'), (err) => {
+              if (err) throw err
+              peer.send(JSON.stringify({ msg: 'ready' }))
+              sw.close()
+              resolve()
+            })
+          }
+        })
+
+        db = openOrCreateDB(dbName)
+        this.dbs[dbName] = db
+
+        db.on('ready', () => {
+          peer.send(JSON.stringify({
+            msg: 'sendDataKey',
+            challenge: challenge,
+            key: db.key.toString('hex')
+          }))
+        })
+      })
     })
   }
 

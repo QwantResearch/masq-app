@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Button } from 'qwant-research-components'
 
 import { Modal } from '../../components'
-import { createAppDB, setCurrentAppRequest } from '../../actions'
+import { createApp, setCurrentAppRequest } from '../../actions'
 
 import styles from './AuthApp.module.scss'
 
@@ -21,7 +21,7 @@ class AuthApp extends React.Component {
 
   handleAccept () {
     const channel = this.props.match.params.channel
-    this.props.createAppDB(this.props.match.params.app, channel)
+    this.props.createApp(this.props.match.params.app, channel)
   }
 
   render () {
@@ -58,7 +58,7 @@ AuthApp.defaultProps = {
 AuthApp.propTypes = {
   app: PropTypes.object.isRequired,
   setCurrentAppRequest: PropTypes.func,
-  createAppDB: PropTypes.func,
+  createApp: PropTypes.func,
   match: PropTypes.object
 }
 
@@ -68,7 +68,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createAppDB: (app, channel) => dispatch(createAppDB(app, channel)),
+  createApp: (channel, challenge, app) => dispatch(createApp(channel, challenge, app)),
   setCurrentAppRequest: (app) => dispatch(setCurrentAppRequest(app))
 })
 

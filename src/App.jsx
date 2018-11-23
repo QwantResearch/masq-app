@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 // import { AuthApp } from './modals'
-import { fetchApps, addDevice, syncProfiles } from './actions'
+import { addDevice, syncProfiles, createApp } from './actions'
 
 const authenticatedRoutes = [
   {
@@ -42,12 +42,9 @@ class App extends Component {
     }
 
     this.handleInput = this.handleInput.bind(this)
-    this.handleClick = this.handleClick.bind(this)
   }
 
   async componentDidMount () {
-    await this.props.fetchApps()
-
     if (!this.props.devices.length) {
       const { name, os } = require('detect-browser').detect()
       this.props.addDevice({
@@ -60,8 +57,15 @@ class App extends Component {
     const url = new URL(window.location.href)
     const channel = url.searchParams.get('channel')
     const challenge = url.searchParams.get('challenge')
-    if (channel && challenge) {
+    const app = url.searchParams.get('appName')
+    const profileId = url.searchParams.get('profileID')
+
+    if (channel && challenge && !app) {
       this.props.syncProfiles(channel, challenge)
+    }
+
+    if (channel && challenge && app && profileId) {
+      this.props.createApp(channel, challenge, app, profileId)
     }
   }
 
@@ -71,10 +75,6 @@ class App extends Component {
 
   handleInput (e) {
     this.setState({ input: e.target.value })
-  }
-
-  handleClick () {
-    this.createApp(this.state.input)
   }
 
   render () {
@@ -116,15 +116,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addDevice: (profileId, device) => dispatch(addDevice(profileId, device)),
-  fetchApps: () => dispatch(fetchApps()),
-  syncProfiles: (channel, challenge) => dispatch(syncProfiles(channel, challenge))
+  syncProfiles: (channel, challenge) => dispatch(syncProfiles(channel, challenge)),
+  createApp: (channel, challenge, app, profileId) => dispatch(createApp(channel, challenge, app, profileId))
 })
 
 App.propTypes = {
   syncProfiles: PropTypes.func,
   addDevice: PropTypes.func,
-  fetchApps: PropTypes.func,
-  devices: PropTypes.arrayOf(PropTypes.object)
+  devices: PropTypes.arrayOf(PropTypes.object),
+  createApp: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

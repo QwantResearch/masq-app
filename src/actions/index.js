@@ -13,9 +13,9 @@ const receiveUsers = users => ({
   users
 })
 
-const addApp = (name) => ({
-  type: 'ADD_APP',
-  app: { title: name, description: 'Maps by Qwant', color: '#a3005c' }
+const receiveApps = apps => ({
+  type: 'RECEIVE_APPS',
+  apps
 })
 
 export const signin = user => ({
@@ -54,12 +54,10 @@ export const addDevice = device => ({
   device
 })
 
-export const fetchApps = () => {
+export const fetchApps = (profileId) => {
   return function (dispatch) {
-    return masq.getApps('profileId')
-      .then(apps => {
-        apps.forEach(app => dispatch(addApp(app)))
-      })
+    return masq.getApps(profileId)
+      .then(apps => dispatch(receiveApps(apps)))
   }
 }
 
@@ -70,11 +68,10 @@ export const setCurrentAppRequest = app => {
   }
 }
 
-export const createAppDB = (name, channel) => {
+export const createApp = (channel, challenge, app, profileId) => {
   return function (dispatch) {
-    return masq.createApp(name, channel, () => {
-      console.log('okok')
-    })
+    return masq.createApp(channel, challenge, app, profileId)
+      .then(() => dispatch(fetchApps(profileId)))
   }
 }
 
