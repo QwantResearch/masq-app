@@ -1,14 +1,14 @@
 {
   "main.css": "/masq-app/static/css/main.3fafe38b.chunk.css",
-  "main.js": "/masq-app/static/js/main.bef60c06.chunk.js",
-  "main.js.map": "/masq-app/static/js/main.bef60c06.chunk.js.map",
+  "main.js": "/masq-app/static/js/main.8da38f93.chunk.js",
+  "main.js.map": "/masq-app/static/js/main.8da38f93.chunk.js.map",
   "static/css/1.14fc7596.chunk.css": "/masq-app/static/css/1.14fc7596.chunk.css",
   "static/js/1.30d38949.chunk.js": "/masq-app/static/js/1.30d38949.chunk.js",
   "static/js/1.30d38949.chunk.js.map": "/masq-app/static/js/1.30d38949.chunk.js.map",
   "runtime~main.js": "/masq-app/static/js/runtime~main.4339acbd.js",
   "runtime~main.js.map": "/masq-app/static/js/runtime~main.4339acbd.js.map",
   "static/media/camera-square.75a605b6.svg": "/masq-app/static/media/camera-square.75a605b6.svg",
-  "static/media/index.css": "/masq-app/static/media/asap-latin-400.20495aa2.woff",
+  "static/media/index.css": "/masq-app/static/media/asap-latin-400italic.87a02118.woff2",
   "static/media/logo.c061ba54.svg": "/masq-app/static/media/logo.c061ba54.svg",
   "static/media/background.0b1d9619.svg": "/masq-app/static/media/background.0b1d9619.svg",
   "static/media/plus-square.e518f822.svg": "/masq-app/static/media/plus-square.e518f822.svg",
@@ -20,6 +20,6 @@
   "static/css/main.3fafe38b.chunk.css.map": "/masq-app/static/css/main.3fafe38b.chunk.css.map",
   "static/css/1.14fc7596.chunk.css.map": "/masq-app/static/css/1.14fc7596.chunk.css.map",
   "index.html": "/masq-app/index.html",
-  "precache-manifest.be6b9d6a27f01ae170f95e0d5a285db9.js": "/masq-app/precache-manifest.be6b9d6a27f01ae170f95e0d5a285db9.js",
+  "precache-manifest.dfa4367455abfd31828adc5c7fca46df.js": "/masq-app/precache-manifest.dfa4367455abfd31828adc5c7fca46df.js",
   "service-worker.js": "/masq-app/service-worker.js"
 }
