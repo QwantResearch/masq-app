@@ -5,7 +5,7 @@ import { HashRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 // import { AuthApp } from './modals'
-import { addDevice, syncProfiles, createApp } from './actions'
+import { addDevice, createApp } from './actions'
 
 const authenticatedRoutes = [
   {
@@ -35,8 +35,6 @@ class App extends Component {
     this.sw = null
 
     this.state = {
-      apps: [],
-      user: '',
       messages: [],
       hash: null
     }
@@ -59,10 +57,6 @@ class App extends Component {
     const challenge = url.searchParams.get('challenge')
     const app = url.searchParams.get('appName')
     const profileId = url.searchParams.get('profileID')
-
-    if (channel && challenge && !app) {
-      this.props.syncProfiles(channel, challenge)
-    }
 
     if (channel && challenge && app && profileId) {
       this.props.createApp(channel, challenge, app, profileId)
@@ -115,13 +109,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addDevice: (profileId, device) => dispatch(addDevice(profileId, device)),
-  syncProfiles: (channel, challenge) => dispatch(syncProfiles(channel, challenge)),
+  addDevice: (device) => dispatch(addDevice(device)),
   createApp: (channel, challenge, app, profileId) => dispatch(createApp(channel, challenge, app, profileId))
 })
 
 App.propTypes = {
-  syncProfiles: PropTypes.func,
   addDevice: PropTypes.func,
   devices: PropTypes.arrayOf(PropTypes.object),
   createApp: PropTypes.func

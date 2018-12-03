@@ -141,7 +141,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 Settings.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   updateUser: PropTypes.func
 }
 

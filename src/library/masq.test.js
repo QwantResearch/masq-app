@@ -6,8 +6,8 @@ jest.mock('random-access-idb', () =>
 
 const masq = new Masq()
 
-test('init', async () => {
-  await masq.init()
+afterAll(() => {
+  masq.closeProfile()
 })
 
 test('add a new profile and retrieve it', async () => {
@@ -20,25 +20,42 @@ test('add a new profile and retrieve it', async () => {
   await masq.addProfile(profile)
   const profiles = await masq.getProfiles()
   expect(profiles).toHaveLength(1)
-  expect(profiles[0]).toEqual(profile)
   expect(profiles[0].id).toBeDefined()
+  expect(profiles[0].username).toEqual(profile.username)
+})
+
+test('should throw if there is no opened (logged) profile', async () => {
+  expect.assertions(1)
+  const profiles = await masq.getProfiles()
+  const profile = { ...profiles[0] }
+  profile.username = 'updatedUsername'
+
+  try {
+    await masq.updateProfile(profile)
+  } catch (e) {
+    expect(e.message).toBe('Open a profile first')
+  }
 })
 
 test('update an existing profile', async () => {
-  let profiles = await masq.getProfiles()
-  let profile = profiles[0]
+  const profiles = await masq.getProfiles()
+  const profile = { ...profiles[0] }
   profile.username = 'updatedUsername'
 
+  // Open a profile (login)
+  masq.openProfile(profile.id)
+
   await masq.updateProfile(profile)
-  profiles = await masq.getProfiles()
-  expect(profiles).toHaveLength(1)
-  expect(profiles[0]).toEqual(profile)
+  const updatedProfiles = await masq.getProfiles()
+  expect(updatedProfiles).toHaveLength(1)
+  expect(updatedProfiles[0].id).toBeDefined()
+  expect(updatedProfiles[0].username).toEqual(profile.username)
 })
 
 test('should throw if there is no id in profile', async () => {
   expect.assertions(1)
   const profiles = await masq.getProfiles()
-  let profile = profiles[0]
+  const profile = { ...profiles[0] }
   delete profile.id
 
   try {
@@ -50,36 +67,33 @@ test('should throw if there is no id in profile', async () => {
 
 test('add an app and retrieve it', async () => {
   const app = { name: 'myapp' }
-  const profileId = 'profileId'
 
-  await masq.addApp(profileId, app)
-  const apps = await masq.getApps(profileId)
+  await masq.addApp(app)
+  const apps = await masq.getApps()
   expect(apps).toHaveLength(1)
   expect(apps[0].id).toBeDefined()
   expect(apps[0]).toEqual(app)
 })
 
 test('update an app', async () => {
-  const profileId = 'profileId'
-  let apps = await masq.getApps(profileId)
+  let apps = await masq.getApps()
   const app = apps[0]
   app.name = 'new name'
 
-  await masq.updateApp(profileId, app)
-  apps = await masq.getApps(profileId)
+  await masq.updateApp(app)
+  apps = await masq.getApps()
   expect(apps).toHaveLength(1)
   expect(apps[0]).toEqual(app)
 })
 
 test('should throw if there is no id in app', async () => {
   expect.assertions(1)
-  const profileId = 'profileId'
-  const apps = await masq.getApps(profileId)
-  let app = apps[0]
+  const apps = await masq.getApps()
+  const app = { ...apps[0] }
   delete app.id
 
   try {
-    await masq.updateApp(profileId, app)
+    await masq.updateApp(app)
   } catch (e) {
     expect(e.message).toBe('Missing id')
   }
@@ -87,36 +101,33 @@ test('should throw if there is no id in app', async () => {
 
 test('add a device and retrieve it', async () => {
   const device = { name: 'mydevice' }
-  const profileId = 'profileId'
 
-  await masq.addDevice(profileId, device)
-  const devices = await masq.getDevices(profileId)
+  await masq.addDevice(device)
+  const devices = await masq.getDevices()
   expect(devices).toHaveLength(1)
   expect(devices[0].id).toBeDefined()
   expect(devices[0]).toEqual(device)
 })
 
 test('update a device', async () => {
-  const profileId = 'profileId'
-  let devices = await masq.getDevices(profileId)
+  let devices = await masq.getDevices()
   const device = devices[0]
   device.name = 'new name'
 
-  await masq.updateDevice(profileId, device)
-  devices = await masq.getDevices(profileId)
+  await masq.updateDevice(device)
+  devices = await masq.getDevices()
   expect(devices).toHaveLength(1)
   expect(devices[0]).toEqual(device)
 })
 
 test('should throw if there is no id in device', async () => {
   expect.assertions(1)
-  const profileId = 'profileId'
-  const devices = await masq.getDevices(profileId)
-  let device = devices[0]
+  const devices = await masq.getDevices()
+  const device = { ...devices[0] }
   delete device.id
 
   try {
-    await masq.updateApp(profileId, device)
+    await masq.updateApp(device)
   } catch (e) {
     expect(e.message).toBe('Missing id')
   }

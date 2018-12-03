@@ -19,6 +19,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "bluebird": "^3.5.3",
     "classnames": "^2.2.6",
     "detect-browser": "^3.0.1",
     "hyperdb": "^3.5.0",

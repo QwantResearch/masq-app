@@ -40,7 +40,7 @@ export default class Avatar extends React.Component {
   }
 
   render () {
-    const { size, image, firstname, lastname, upload, onChange } = this.props
+    const { size, image, username, upload, onChange } = this.props
     const style = { backgroundImage: 'url(' + image + ')' }
 
     if (upload) {
@@ -62,7 +62,7 @@ export default class Avatar extends React.Component {
       ? <AvatarBase src={image} width={size} height={size} />
       : (
         <div className='Avatar initials' style={{ backgroundColor: '#458bf8', position: 'relative', width: size, height: size }}>
-          <p>{firstname[0].toUpperCase() + lastname[0].toUpperCase()}</p>
+          <p>{username[0].toUpperCase()}</p>
         </div>
       )
   }
@@ -74,8 +74,7 @@ Avatar.defaultProps = {
 
 Avatar.propTypes = {
   size: PropTypes.number,
-  firstname: PropTypes.string,
-  lastname: PropTypes.string,
+  username: PropTypes.string,
   upload: PropTypes.bool,
   image: PropTypes.string,
   onChange: PropTypes.func

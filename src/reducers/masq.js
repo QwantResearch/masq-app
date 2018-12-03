@@ -13,7 +13,7 @@ const masq = (state = {
     case 'SIGNIN':
       return {
         ...state,
-        currentUser: action.user
+        currentUser: action.profile
       }
     case 'SIGNOUT':
       return {

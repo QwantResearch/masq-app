@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -18,12 +18,9 @@ import styles from './Apps.module.scss'
 //   </div>
 // )
 
-class Apps extends Component {
+class Apps extends PureComponent {
   componentDidMount () {
-    const { user } = this.props
-    if (!user) return
-
-    this.props.fetchApps(user.id)
+    this.props.fetchApps()
   }
 
   render () {
@@ -52,7 +49,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchApps: (profileId) => dispatch(fetchApps(profileId))
+  fetchApps: () => dispatch(fetchApps())
 })
 
 Apps.propTypes = {

@@ -60,7 +60,7 @@ class Login extends Component {
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>
           {users.map(user => (
-            <div to='/apps' key={user.username} className={styles.user} onClick={() => this.handleSignIn(user)}>
+            <div key={user.username} className={styles.user} onClick={() => this.handleSignIn(user)}>
               <Avatar {...user} />
               <h2>{user.username}</h2>
             </div>

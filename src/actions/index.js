@@ -1,7 +1,6 @@
 import { Masq } from '../library'
 
 const masq = new Masq()
-masq.init()
 
 const addUser = user => ({
   type: 'ADD_USER',
@@ -18,14 +17,24 @@ const receiveApps = apps => ({
   apps
 })
 
-export const signin = user => ({
-  type: 'SIGNIN',
-  user
-})
+export const signin = user => {
+  return function (dispatch) {
+    return masq.openProfile(user.id)
+      .then((profile) => dispatch({
+        type: 'SIGNIN',
+        profile
+      }))
+  }
+}
 
-export const signout = () => ({
-  type: 'SIGNOUT'
-})
+export const signout = () => {
+  return function (dispatch) {
+    return masq.closeProfile()
+      .then(() => dispatch({
+        type: 'SIGNOUT'
+      }))
+  }
+}
 
 export const updateUser = (id, user) => {
   user.id = id
@@ -54,9 +63,9 @@ export const addDevice = device => ({
   device
 })
 
-export const fetchApps = (profileId) => {
+export const fetchApps = () => {
   return function (dispatch) {
-    return masq.getApps(profileId)
+    return masq.getApps()
       .then(apps => dispatch(receiveApps(apps)))
   }
 }
@@ -68,17 +77,9 @@ export const setCurrentAppRequest = app => {
   }
 }
 
-export const createApp = (channel, challenge, app, profileId) => {
+export const createApp = (channel, challenge, app) => {
   return function (dispatch) {
-    return masq.createApp(channel, challenge, app, profileId)
-      .then(() => dispatch(fetchApps(profileId)))
-  }
-}
-
-export const syncProfiles = (channel, challenge) => {
-  return function (dispatch) {
-    return masq.syncProfiles(channel, challenge, () => {
-      console.log('okok sync')
-    })
+    return masq.createApp(channel, challenge, app)
+      .then(() => dispatch(fetchApps()))
   }
 }
