@@ -6,7 +6,7 @@ import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import { promisifyAll } from 'bluebird'
 
-const HUB_URLS = ['localhost:8080']
+const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 /**
  * Open or create a hyperdb instance
