@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Button } from 'qwant-research-components'
 
 import { Modal } from '../../components'
-import { createApp, setCurrentAppRequest } from '../../actions'
+import { createApp } from '../../actions'
 
 import styles from './AuthApp.module.scss'
 
@@ -14,36 +14,29 @@ class AuthApp extends React.Component {
     this.handleAccept = this.handleAccept.bind(this)
   }
 
-  componentDidMount () {
-    const appName = this.props.match.params.app
-    this.props.setCurrentAppRequest({ name: appName })
-  }
-
   handleAccept () {
-    const channel = this.props.match.params.channel
-    this.props.createApp(this.props.match.params.app, channel)
+    // const channel = this.props.match.params.channel
+    // this.props.createApp(this.props.match.params.app, channel)
   }
 
   render () {
-    const { app } = this.props
+    const { app, onClose } = this.props
 
     return (
-      <Modal width={511}>
+      <Modal width={511} onClose={onClose}>
         <div className={styles.AuthApp}>
-          <p className={styles.title}>New connection request from</p>
+          <p className={styles.title}>Nouvelle requête de connexion de:</p>
           <p className={styles.appTitle}>{app.name}</p>
           <p className={styles.description}>
-            This notification appears because that application asks permission
-            to use your Masq storage. Please verify that the security code match with the one of the app.
+          Cette notification apparait car cette application demande un accès à votre stockage Masq.
           </p>
           <p className={styles.description}>
-            If you are not at the origin of this request or if you have question,
-            please contact our help center.
+          Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
           </p>
 
           <div className={styles.buttons}>
-            <Button label={'Reject'} color={'var(--red-100)'} colorShadow={'var(--red-100-shadow)'} />
-            <Button label={'Accept'} onClick={this.handleAccept} color={'var(--green-100)'} colorShadow={'var(--green-100-shadow)'} />
+            <Button label={'Refuser'} onClick={onClose} color='#e53b5b' />
+            <Button label={'Valider'} onClick={this.handleAccept} color='#40ae6c' />
           </div>
         </div>
       </Modal>
@@ -57,19 +50,15 @@ AuthApp.defaultProps = {
 
 AuthApp.propTypes = {
   app: PropTypes.object.isRequired,
-  setCurrentAppRequest: PropTypes.func,
-  createApp: PropTypes.func,
-  match: PropTypes.object
+  onClose: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.masq.currentUser,
-  app: state.masq.currentAppRequest
+  currentUser: state.masq.currentUser
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createApp: (channel, challenge, app) => dispatch(createApp(channel, challenge, app)),
-  setCurrentAppRequest: (app) => dispatch(setCurrentAppRequest(app))
+  createApp: (channel, challenge, app) => dispatch(createApp(channel, challenge, app))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthApp)

@@ -20,6 +20,7 @@ import styles from './Apps.module.scss'
 
 class Apps extends PureComponent {
   componentDidMount () {
+    if (!this.props.user) return
     this.props.fetchApps()
   }
 

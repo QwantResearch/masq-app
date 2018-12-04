@@ -120,7 +120,7 @@ class Signup extends React.Component {
 
   render () {
     return (
-      <Modal onClose={this.props.onClose} height={670} width={511}>
+      <Modal onClose={this.props.onClose} height={650} width={511}>
         <div className={styles.Signup}>
           <span className={styles.title}>Ajouter un nouvel utilisateur</span>
 

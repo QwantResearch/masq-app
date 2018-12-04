@@ -2,7 +2,8 @@ const masq = (state = {
   users: [],
   apps: [],
   devices: [],
-  currentUser: null
+  currentUser: null,
+  currentAppRequest: null
 }, action) => {
   switch (action.type) {
     case 'ADD_USER':

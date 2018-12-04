@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { HashRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
-// import { AuthApp } from './modals'
-import { addDevice, createApp } from './actions'
+import { addDevice, createApp, setCurrentAppRequest } from './actions'
+import { AuthApp } from './modals'
 
 const authenticatedRoutes = [
   {
@@ -43,6 +43,8 @@ class App extends Component {
   }
 
   async componentDidMount () {
+    this.props.setCurrentAppRequest({ name: 'Test app' })
+
     if (!this.props.devices.length) {
       const { name, os } = require('detect-browser').detect()
       this.props.addDevice({
@@ -72,9 +74,16 @@ class App extends Component {
   }
 
   render () {
+    const { currentUser, currentAppRequest } = this.props
     return (
       <Router>
         <div>
+          {currentUser && currentAppRequest &&
+            <AuthApp
+              onClose={() => this.props.setCurrentAppRequest(null)}
+              app={currentAppRequest}
+            />
+          }
           <Route exact path='/' component={Login} />
 
           {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
@@ -103,6 +112,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  currentAppRequest: state.masq.currentAppRequest,
   currentUser: state.masq.currentUser,
   devices: state.masq.devices,
   users: state.masq.users
@@ -110,10 +120,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addDevice: (device) => dispatch(addDevice(device)),
+  setCurrentAppRequest: (app) => dispatch(setCurrentAppRequest(app)),
   createApp: (channel, challenge, app, profileId) => dispatch(createApp(channel, challenge, app, profileId))
 })
 
 App.propTypes = {
+  currentUser: PropTypes.object,
+  currentAppRequest: PropTypes.object,
+  setCurrentAppRequest: PropTypes.func,
   addDevice: PropTypes.func,
   devices: PropTypes.arrayOf(PropTypes.object),
   createApp: PropTypes.func

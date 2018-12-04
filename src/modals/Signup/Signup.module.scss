@@ -11,10 +11,7 @@
 .title {
   font-size: 24px;
   font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
   line-height: 1.04;
-  letter-spacing: normal;
   text-align: center;
   margin-bottom: 32px;
   color: $color-background;
@@ -24,19 +21,14 @@
   margin-top: 16px;
   font-size: 18px;
   font-weight: 600;
-  font-style: normal;
-  font-stretch: normal;
   line-height: 1.11;
-  letter-spacing: normal;
   text-align: center;
   color: var(--blue-500);
 }
 
 .buttons {
-  bottom: 0;
   display: grid;
-  position: absolute;
-  margin-bottom: 48px;
+  margin-top: 32px;
   grid-column-gap: 16px;
   grid-template-columns: auto auto;
 }
