@@ -6,7 +6,13 @@ import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import { promisifyAll } from 'bluebird'
 
+import { dbReady, encryptMessage, decryptMessage, importKey } from './utils'
+
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
+
+const swarmOpts = process.env.NODE_ENV === 'test'
+  ? { wrtc: require('wrtc') }
+  : {}
 
 /**
  * Open or create a hyperdb instance
@@ -18,11 +24,6 @@ const openOrCreateDB = (name) => {
     firstNode: true
   }))
 }
-
-const dbReady = db =>
-  new Promise(resolve =>
-    db.on('ready', () => resolve())
-  )
 
 class Masq {
   constructor () {
@@ -48,7 +49,7 @@ class Masq {
 
     const apps = await this.getApps()
     apps.forEach(app => {
-      const dbName = profileId + '-' + app.name
+      const dbName = profileId + '-' + app.appId
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', () => this._startReplicate(db))
@@ -62,7 +63,7 @@ class Masq {
     this._stopAllReplicates()
     this.profileDB = null
     this.profileId = null
-    this.dbs = {}
+    this.appsDBs = {}
   }
 
   /**
@@ -151,55 +152,108 @@ class Masq {
     this._updateResource('devices', device)
   }
 
-  createApp (channel, challenge, appName, profileId) {
-    return new Promise(async (resolve, reject) => {
-      const dbName = profileId + '-' + appName
+  /**
+   * Connect to a user-app channel and answer if
+   * the user-app is authorized or not.
+   * This method should be called only once the user is logged in
+   * @param {string} channel The channel to connect
+   * @param {string} rawKey The encryption key, base64 encoded
+   * @param {string} appId The app id (url for instance)
+   */
+  async handleUserAppLogin (channel, rawKey, appId) {
+    this._checkProfile()
+    const key = await importKey(Buffer.from(rawKey, 'base64'))
+
+    const sendAuthorized = async (peer, id) => {
+      const data = { msg: 'authorized', id }
+      const msg = await encryptMessage(key, data)
+      peer.send(msg)
+    }
+
+    const sendNotAuthorized = async (peer) => {
+      const data = { msg: 'notAuthorized' }
+      const msg = await encryptMessage(key, data)
+      peer.send(msg)
+    }
+
+    const hub = signalhub(channel, HUB_URLS)
+    const sw = swarm(hub, swarmOpts)
+
+    sw.on('disconnect', () => sw.close())
+
+    sw.on('peer', async (peer) => {
       const apps = await this.getApps()
-      if (apps.find(app => app.name === app)) {
-        return resolve()
+      const app = apps.find(app => app.appId === appId)
+      if (app) {
+        sendAuthorized(peer, app.id)
+        return sw.close()
       }
 
-      const hub = signalhub(channel, HUB_URLS)
-      const sw = swarm(hub)
-
-      sw.on('close', () => hub.close())
-
-      sw.on('peer', async (peer) => {
-        let db = null
-
-        peer.on('data', async (data) => {
-          const json = JSON.parse(data)
-          if (json.msg === 'appInfo') {
-            await this.addApp({
-              name: json.name,
-              description: json.description,
-              image: json.image
-            })
-          }
-
-          if (json.msg === 'requestWriteAccess') {
-            // authorize local key & start replication
-            db.authorize(Buffer.from(json.key, 'hex'), (err) => {
-              if (err) throw err
-              peer.send(JSON.stringify({ msg: 'ready' }))
-              sw.close()
-              resolve()
-            })
-          }
-        })
-
-        db = openOrCreateDB(dbName)
-        this.appsDBs[dbName] = db
-
-        db.on('ready', () => {
-          peer.send(JSON.stringify({
-            msg: 'sendDataKey',
-            challenge: challenge,
-            key: db.key.toString('hex')
-          }))
-        })
-      })
+      sendNotAuthorized(peer)
+      // sw.close()
+      this.handleUserAppRegister(sw, key, peer, appId)
     })
+  }
+
+  /**
+   * Exchange messages with a user-app to register it.
+   * It will create a new hyperdb with a given id.
+   * Then, the user-app send its local key to authorize.
+   * This method should be called only once the user is logged in
+   * @param {string} channel The channel to connect
+   * @param {string} rawKey The encryption key, base64 encoded
+   * @param {string} appId The app id (url for instance)
+   */
+  async handleUserAppRegister (sw, key, peer, appId) {
+    this._checkProfile()
+    sw.on('disconnect', () => sw.close())
+
+    let dbName = ''
+
+    const sendAccessGranted = async (peer, dbKey, id) => {
+      const data = { msg: 'masqAccessGranted', key: dbKey, id: id }
+      const msg = await encryptMessage(key, data)
+      peer.send(msg)
+    }
+
+    const sendWriteAccessGranted = async (peer) => {
+      const data = { msg: 'writeAccessGranted' }
+      const msg = await encryptMessage(key, data)
+      peer.send(msg)
+    }
+
+    const handleData = async (peer, data) => {
+      const json = await decryptMessage(key, data)
+      const { msg } = json
+      // TODO: Error if  missing params
+
+      if (msg === 'registerUserApp') {
+        const apps = await this.getApps()
+        const app = apps.find(app => app.appId === appId)
+        let id = app ? app.id : await this.addApp({ ...json, appId })
+
+        dbName = this.profileId + '-' + id
+        const db = openOrCreateDB(dbName)
+        this.appsDBs[dbName] = db
+        db.on('ready', () => {
+          this._startReplicate(db)
+          sendAccessGranted(peer, db.key.toString('hex'), id)
+        })
+      }
+
+      if (msg === 'requestWriteAccess') {
+        const userAppKey = Buffer.from(json.key, 'hex')
+        this.appsDBs[dbName].authorize(userAppKey, (err) => {
+          if (err) throw err
+          sendWriteAccessGranted(peer)
+          sw.close()
+        })
+      }
+    }
+
+    // sw.on('peer', peer => {
+    peer.on('data', (data) => handleData(peer, data))
+    // })
   }
 
   /**
@@ -224,6 +278,7 @@ class Masq {
     }]
 
     await this.profileDB.batchAsync(batch)
+    return id
   }
 
   async _getResources (name) {
@@ -274,7 +329,7 @@ class Masq {
   _startReplicate (db) {
     const discoveryKey = db.discoveryKey.toString('hex')
     this.hubs[discoveryKey] = signalhub(discoveryKey, HUB_URLS)
-    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey])
+    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
     this.swarms[discoveryKey].on('peer', peer => {
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)

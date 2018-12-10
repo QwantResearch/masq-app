@@ -77,9 +77,16 @@ export const setCurrentAppRequest = app => {
   }
 }
 
-export const createApp = (channel, challenge, app) => {
+export const handleUserAppLogin = (channel, key, appId) => {
   return function (dispatch) {
-    return masq.createApp(channel, challenge, app)
+    return masq.handleUserAppLogin(channel, key, appId)
+      .then(() => dispatch(fetchApps()))
+  }
+}
+
+export const handleUserAppRegister = (channel, key, appId) => {
+  return function (dispatch) {
+    return masq.handleUserAppRegister(channel, key, appId)
       .then(() => dispatch(fetchApps()))
   }
 }

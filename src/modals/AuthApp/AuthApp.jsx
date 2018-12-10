@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Button } from 'qwant-research-components'
 
 import { Modal } from '../../components'
-import { createApp } from '../../actions'
+import { handleUserAppLogin } from '../../actions'
 
 import styles from './AuthApp.module.scss'
 
@@ -14,19 +14,21 @@ class AuthApp extends React.Component {
     this.handleAccept = this.handleAccept.bind(this)
   }
 
-  handleAccept () {
-    // const channel = this.props.match.params.channel
-    // this.props.createApp(this.props.match.params.app, channel)
+  async handleAccept () {
+    const { onClose } = this.props
+    const { channel, key, appId } = this.props.appRequest
+    await this.props.handleUserAppLogin(channel, key, appId)
+    onClose()
   }
 
   render () {
-    const { app, onClose } = this.props
+    const { appRequest, onClose } = this.props
 
     return (
       <Modal width={511} onClose={onClose}>
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
-          <p className={styles.appTitle}>{app.name}</p>
+          <p className={styles.appTitle}>{appRequest.appId}</p>
           <p className={styles.description}>
           Cette notification apparait car cette application demande un accès à votre stockage Masq.
           </p>
@@ -44,12 +46,9 @@ class AuthApp extends React.Component {
   }
 }
 
-AuthApp.defaultProps = {
-  app: { name: 'app test' }
-}
-
 AuthApp.propTypes = {
-  app: PropTypes.object.isRequired,
+  handleUserAppLogin: PropTypes.func.isRequired,
+  appRequest: PropTypes.object.isRequired,
   onClose: PropTypes.func
 }
 
@@ -58,7 +57,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createApp: (channel, challenge, app) => dispatch(createApp(channel, challenge, app))
+  handleUserAppLogin: (channel, key, appId) => dispatch(handleUserAppLogin(channel, key, appId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthApp)

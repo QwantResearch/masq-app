@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { HashRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
-import { addDevice, createApp, setCurrentAppRequest } from './actions'
+import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp } from './modals'
 
 const authenticatedRoutes = [
@@ -43,8 +43,6 @@ class App extends Component {
   }
 
   async componentDidMount () {
-    this.props.setCurrentAppRequest({ name: 'Test app' })
-
     if (!this.props.devices.length) {
       const { name, os } = require('detect-browser').detect()
       this.props.addDevice({
@@ -54,14 +52,15 @@ class App extends Component {
       })
     }
 
-    const url = new URL(window.location.href)
-    const channel = url.searchParams.get('channel')
-    const challenge = url.searchParams.get('challenge')
-    const app = url.searchParams.get('appName')
-    const profileId = url.searchParams.get('profileID')
+    const hash = window.location.hash.substr(2) // ignore #/ characters
+    if (!hash.length) return
 
-    if (channel && challenge && app && profileId) {
-      this.props.createApp(channel, challenge, app, profileId)
+    const decoded = Buffer.from(hash, 'base64')
+    try {
+      const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
+      this.props.setCurrentAppRequest({ appId, channel, key })
+    } catch (e) {
+      // Incorrect urls parameters
     }
   }
 
@@ -81,10 +80,10 @@ class App extends Component {
           {currentUser && currentAppRequest &&
             <AuthApp
               onClose={() => this.props.setCurrentAppRequest(null)}
-              app={currentAppRequest}
+              appRequest={currentAppRequest}
             />
           }
-          <Route exact path='/' component={Login} />
+          <Route path='/' component={Login} />
 
           {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
 
@@ -119,9 +118,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addDevice: (device) => dispatch(addDevice(device)),
-  setCurrentAppRequest: (app) => dispatch(setCurrentAppRequest(app)),
-  createApp: (channel, challenge, app, profileId) => dispatch(createApp(channel, challenge, app, profileId))
+  addDevice: device => dispatch(addDevice(device)),
+  setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app))
 })
 
 App.propTypes = {
@@ -129,8 +127,7 @@ App.propTypes = {
   currentAppRequest: PropTypes.object,
   setCurrentAppRequest: PropTypes.func,
   addDevice: PropTypes.func,
-  devices: PropTypes.arrayOf(PropTypes.object),
-  createApp: PropTypes.func
+  devices: PropTypes.arrayOf(PropTypes.object)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
