@@ -186,11 +186,10 @@ class Masq {
       const app = apps.find(app => app.appId === appId)
       if (app) {
         sendAuthorized(peer, app.id)
-        return sw.close()
+      } else {
+        sendNotAuthorized(peer)
       }
 
-      sendNotAuthorized(peer)
-      // sw.close()
       this.handleUserAppRegister(sw, key, peer, appId)
     })
   }
