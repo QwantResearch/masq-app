@@ -33,6 +33,12 @@ class Masq {
     this.appsDBs = {}
     this.swarms = {}
     this.hubs = {}
+
+    this.sw = null // sw used during login and registration
+    this.hub = null
+    this.key = null
+    this.peer = null
+    this.app = null
   }
 
   /**
@@ -161,36 +167,52 @@ class Masq {
    * @param {string} appId The app id (url for instance)
    */
   async handleUserAppLogin (channel, rawKey, appId) {
-    this._checkProfile()
-    const key = await importKey(Buffer.from(rawKey, 'base64'))
+    return new Promise(async (resolve, reject) => {
+      this.appId = appId
+      this._checkProfile()
+      this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-    const sendAuthorized = async (peer, id) => {
-      const data = { msg: 'authorized', id }
-      const msg = await encryptMessage(key, data)
-      peer.send(msg)
-    }
-
-    const sendNotAuthorized = async (peer) => {
-      const data = { msg: 'notAuthorized' }
-      const msg = await encryptMessage(key, data)
-      peer.send(msg)
-    }
-
-    const hub = signalhub(channel, HUB_URLS)
-    const sw = swarm(hub, swarmOpts)
-
-    sw.on('disconnect', () => sw.close())
-
-    sw.on('peer', async (peer) => {
-      const apps = await this.getApps()
-      const app = apps.find(app => app.appId === appId)
-      if (app) {
-        sendAuthorized(peer, app.id)
-      } else {
-        sendNotAuthorized(peer)
+      const sendAuthorized = async (peer, id) => {
+        const data = { msg: 'authorized', id }
+        const msg = await encryptMessage(this.key, data)
+        peer.send(msg)
       }
 
-      this.handleUserAppRegister(sw, key, peer, appId)
+      const sendNotAuthorized = async (peer) => {
+        const data = { msg: 'notAuthorized' }
+        const msg = await encryptMessage(this.key, data)
+        peer.send(msg)
+      }
+
+      this.hub = signalhub(channel, HUB_URLS)
+      this.sw = swarm(this.hub, swarmOpts)
+
+      this.sw.on('disconnect', () => {
+        this._closeUserAppConnection()
+        return resolve(true)
+      })
+
+      this.sw.on('peer', async (peer) => {
+        this.peer = peer
+        const apps = await this.getApps()
+        const app = apps.find(app => app.appId === appId)
+        if (app) {
+          sendAuthorized(peer, app.id)
+        } else {
+          sendNotAuthorized(peer)
+        }
+
+        peer.once('data', async (data) => {
+          const json = await decryptMessage(this.key, data)
+          if (json.msg === 'registerUserApp') {
+            const { name, description, imageURL } = json
+            this.app = { name, description, imageURL }
+            resolve(false)
+          } else {
+            reject(new Error('Invalid data'))
+          }
+        })
+      })
     })
   }
 
@@ -203,56 +225,68 @@ class Masq {
    * @param {string} rawKey The encryption key, base64 encoded
    * @param {string} appId The app id (url for instance)
    */
-  async handleUserAppRegister (sw, key, peer, appId) {
-    this._checkProfile()
-    sw.on('disconnect', () => sw.close())
+  async handleUserAppRegister (isGranted) {
+    return new Promise(async (resolve, reject) => {
+      this._checkProfile()
 
-    let dbName = ''
+      let dbName = ''
 
-    const sendAccessGranted = async (peer, dbKey, id) => {
-      const data = { msg: 'masqAccessGranted', key: dbKey, id: id }
-      const msg = await encryptMessage(key, data)
-      peer.send(msg)
-    }
-
-    const sendWriteAccessGranted = async (peer) => {
-      const data = { msg: 'writeAccessGranted' }
-      const msg = await encryptMessage(key, data)
-      peer.send(msg)
-    }
-
-    const handleData = async (peer, data) => {
-      const json = await decryptMessage(key, data)
-      const { msg } = json
-      // TODO: Error if  missing params
-
-      if (msg === 'registerUserApp') {
-        const apps = await this.getApps()
-        const app = apps.find(app => app.appId === appId)
-        let id = app ? app.id : await this.addApp({ ...json, appId })
-
-        dbName = this.profileId + '-' + id
-        const db = openOrCreateDB(dbName)
-        this.appsDBs[dbName] = db
-        db.on('ready', () => {
-          this._startReplicate(db)
-          sendAccessGranted(peer, db.key.toString('hex'), id)
-        })
+      const sendAccessRefused = async (peer) => {
+        const data = { msg: 'masqAccessRefused' }
+        const msg = await encryptMessage(this.key, data)
+        peer.send(msg)
       }
 
-      if (msg === 'requestWriteAccess') {
-        const userAppKey = Buffer.from(json.key, 'hex')
-        this.appsDBs[dbName].authorize(userAppKey, (err) => {
-          if (err) throw err
-          sendWriteAccessGranted(peer)
-          sw.close()
-        })
+      const sendAccessGranted = async (peer, dbKey, id) => {
+        const data = { msg: 'masqAccessGranted', key: dbKey, id: id }
+        const msg = await encryptMessage(this.key, data)
+        peer.send(msg)
       }
-    }
 
-    // sw.on('peer', peer => {
-    peer.on('data', (data) => handleData(peer, data))
-    // })
+      const sendWriteAccessGranted = async (peer) => {
+        const data = { msg: 'writeAccessGranted' }
+        const msg = await encryptMessage(this.key, data)
+        peer.send(msg)
+      }
+
+      const handleData = async (peer, data) => {
+        const json = await decryptMessage(this.key, data)
+        const { msg } = json
+        // TODO: Error if  missing params
+
+        if (msg === 'requestWriteAccess') {
+          const userAppKey = Buffer.from(json.key, 'hex')
+          this.appsDBs[dbName].authorize(userAppKey, (err) => {
+            if (err) throw err
+            sendWriteAccessGranted(peer)
+            this.sw.close()
+            return resolve()
+          })
+        }
+      }
+
+      if (!isGranted) {
+        sendAccessRefused(this.peer)
+        this.sw.close()
+        return resolve()
+      }
+
+      const apps = await this.getApps()
+      const app = apps.find(app => app.appId === this.appId)
+      const id = app ? app.id : await this.addApp({
+        ...this.app, appId: this.appId
+      })
+
+      dbName = this.profileId + '-' + id
+      const db = openOrCreateDB(dbName)
+      this.appsDBs[dbName] = db
+      db.on('ready', () => {
+        this._startReplicate(db)
+        sendAccessGranted(this.peer, db.key.toString('hex'), id)
+      })
+
+      this.peer.on('data', (data) => handleData(this.peer, data))
+    })
   }
 
   /**
@@ -343,6 +377,17 @@ class Masq {
 
   _checkProfile () {
     if (!this.profileDB) throw Error('Open a profile first')
+  }
+
+  _closeUserAppConnection () {
+    this.sw.on('close', () => {
+      this.hub = null
+      this.peer = null
+      this.app = null
+      // FIXME: do not clear this.key , as messages could
+      // could still be sending while the connection is closing
+    })
+    this.sw.close()
   }
 }
 

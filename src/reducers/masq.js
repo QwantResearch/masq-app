@@ -36,6 +36,11 @@ const masq = (state = {
         ...state,
         currentAppRequest: action.app
       }
+    case 'UPDATE_CURRENT_APP_REQUEST':
+      return {
+        ...state,
+        currentAppRequest: { ...state.currentAppRequest, ...action.update }
+      }
     case 'ADD_APP':
       return {
         ...state,

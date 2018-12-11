@@ -178,10 +178,44 @@ describe('masq protocol', async () => {
     sw.on('close', done)
 
     sw.on('peer', () => sw.close())
-    masq.handleUserAppLogin('channel', keyBase64, 'appId')
+    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
 
-  test('handleUserAppLogin should send notAuthorized, and authorize', done => {
+  test('should send masqAccessRefused', done => {
+    expect.assertions(2)
+    const hub = signalhub('channel', 'localhost:8080')
+    const sw = swarm(hub, { wrtc })
+
+    sw.on('close', done)
+
+    sw.on('peer', peer => {
+      peer.once('data', async (data) => {
+        const decrypted = await decryptMessage(cryptoKey, data)
+        expect(decrypted.msg).toBe('notAuthorized')
+
+        masq.handleUserAppRegister(false) // Access is not granted by the user
+
+        peer.once('data', async (data) => {
+          const { msg } = await decryptMessage(cryptoKey, data)
+          expect(msg).toBe('masqAccessRefused')
+          sw.close()
+        })
+
+        const encData = await encryptMessage(cryptoKey, {
+          msg: 'registerUserApp',
+          name: 'test app',
+          description: 'description goes here',
+          imageUrl: ''
+        })
+
+        peer.send(encData)
+      })
+    })
+
+    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+  })
+
+  test('should send notAuthorized, and give write access', done => {
     expect.assertions(5)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
@@ -193,11 +227,14 @@ describe('masq protocol', async () => {
         const decrypted = await decryptMessage(cryptoKey, data)
         expect(decrypted.msg).toBe('notAuthorized')
 
+        masq.handleUserAppRegister(true)
+
         peer.once('data', async (data) => {
           const { msg, key, id } = await decryptMessage(cryptoKey, data)
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
           expect(id).toBeDefined()
+
           const encData = await encryptMessage(cryptoKey, {
             msg: 'requestWriteAccess',
             key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
@@ -222,10 +259,10 @@ describe('masq protocol', async () => {
       })
     })
 
-    masq.handleUserAppLogin('channel', keyBase64, 'appId')
+    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
 
-  test('handleUserAppLogin should send authorized', done => {
+  test('should send authorized', done => {
     expect.assertions(2)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
@@ -241,6 +278,6 @@ describe('masq protocol', async () => {
       })
     })
 
-    masq.handleUserAppLogin('channel', keyBase64, 'appId')
+    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
 })

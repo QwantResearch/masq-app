@@ -70,6 +70,10 @@ export const fetchApps = () => {
   }
 }
 
+export const fetchCurrentAppRequestStatus = () => ({
+  type: 'FETCH_CURRENT_APP_REQUEST_STATUS'
+})
+
 export const setCurrentAppRequest = app => {
   return {
     type: 'SET_CURRENT_APP_REQUEST',
@@ -77,16 +81,27 @@ export const setCurrentAppRequest = app => {
   }
 }
 
-export const handleUserAppLogin = (channel, key, appId) => {
-  return function (dispatch) {
-    return masq.handleUserAppLogin(channel, key, appId)
-      .then(() => dispatch(fetchApps()))
+export const updateCurrentAppRequest = update => {
+  return {
+    type: 'UPDATE_CURRENT_APP_REQUEST',
+    update
   }
 }
 
-export const handleUserAppRegister = (channel, key, appId) => {
+export const handleUserAppLogin = (channel, key, appId) => {
   return function (dispatch) {
-    return masq.handleUserAppRegister(channel, key, appId)
-      .then(() => dispatch(fetchApps()))
+    return masq.handleUserAppLogin(channel, key, appId)
+      .then((isConnected) => dispatch(updateCurrentAppRequest({
+        isConnected: isConnected
+      })))
+  }
+}
+
+export const handleUserAppRegister = (isAccepted) => {
+  return function (dispatch) {
+    return masq.handleUserAppRegister(isAccepted)
+      .then(() => dispatch(updateCurrentAppRequest({
+        isConnected: isAccepted
+      })))
   }
 }

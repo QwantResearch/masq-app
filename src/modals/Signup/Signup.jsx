@@ -172,6 +172,7 @@ class Signup extends React.Component {
               <Avatar
                 size={120}
                 image={this.state.image}
+                username={this.state.username}
                 firstname={this.state.firstname}
                 lastname={this.state.lastname}
               />
