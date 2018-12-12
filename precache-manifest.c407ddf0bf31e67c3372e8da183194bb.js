@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400.20495aa2.woff"
   },
   {
-    "revision": "16a64d0c5c3dc0b15b8b",
+    "revision": "78e53d0f3206874e15af",
     "url": "/masq-app/static/css/main.a9cc1746.chunk.css"
   },
   {
@@ -60,8 +60,8 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400.90269013.woff2"
   },
   {
-    "revision": "16a64d0c5c3dc0b15b8b",
-    "url": "/masq-app/static/js/main.16a64d0c.chunk.js"
+    "revision": "78e53d0f3206874e15af",
+    "url": "/masq-app/static/js/main.78e53d0f.chunk.js"
   },
   {
     "revision": "87a02118d118efbd8c75a30d4424e47a",
@@ -72,12 +72,12 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-500.bba1b4a3.woff2"
   },
   {
-    "revision": "a835e9ea118497fe4836af2959877e87",
-    "url": "/masq-app/static/media/asap-latin-500italic.a835e9ea.woff2"
-  },
-  {
     "revision": "65d145615910281f0ef14ba1f81f150c",
     "url": "/masq-app/static/media/asap-latin-500.65d14561.woff"
+  },
+  {
+    "revision": "a835e9ea118497fe4836af2959877e87",
+    "url": "/masq-app/static/media/asap-latin-500italic.a835e9ea.woff2"
   },
   {
     "revision": "41264f825ce4cbac1f12a380291cf4d4",
@@ -92,12 +92,12 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-600italic.33f2a6e8.woff2"
   },
   {
-    "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",
-    "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
-  },
-  {
     "revision": "7c6db4a2e14fd6e946d199f38510926b",
     "url": "/masq-app/static/media/asap-latin-700.7c6db4a2.woff"
+  },
+  {
+    "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",
+    "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
   },
   {
     "revision": "7d030e1434133b8c04548bd18c87adae",
@@ -120,7 +120,7 @@ self.__precacheManifest = [
     "url": "/masq-app/static/css/1.49af59bc.chunk.css"
   },
   {
-    "revision": "221724ee3314455af70d4fc9ff52341e",
+    "revision": "a37260a567f1262b0cb56496ad315706",
     "url": "/masq-app/index.html"
   }
 ];
