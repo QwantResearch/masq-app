@@ -172,8 +172,8 @@ class Masq {
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-      const sendAuthorized = async (peer, id) => {
-        const data = { msg: 'authorized', id }
+      const sendAuthorized = async (peer, userAppDbId) => {
+        const data = { msg: 'authorized', userAppDbId }
         const msg = await encryptMessage(this.key, data)
         peer.send(msg)
       }
@@ -242,8 +242,8 @@ class Masq {
         peer.send(msg)
       }
 
-      const sendAccessGranted = async (peer, dbKey, id) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, id: id }
+      const sendAccessGranted = async (peer, dbKey, userAppDbId) => {
+        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId }
         const msg = await encryptMessage(this.key, data)
         peer.send(msg)
       }

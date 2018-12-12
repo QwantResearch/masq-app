@@ -230,10 +230,10 @@ describe('masq protocol', async () => {
         masq.handleUserAppRegister(true)
 
         peer.once('data', async (data) => {
-          const { msg, key, id } = await decryptMessage(cryptoKey, data)
+          const { msg, key, userAppDbId } = await decryptMessage(cryptoKey, data)
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
-          expect(id).toBeDefined()
+          expect(userAppDbId).toBeDefined()
 
           const encData = await encryptMessage(cryptoKey, {
             msg: 'requestWriteAccess',
@@ -272,11 +272,11 @@ describe('masq protocol', async () => {
       sw.close()
     })
 
-    sw.once('peer', peer => {
-      peer.once('data', async (data) => {
-        const { msg, id } = await decryptMessage(cryptoKey, data)
+    sw.on('peer', peer => {
+      peer.on('data', async (data) => {
+        const { msg, userAppDbId } = await decryptMessage(cryptoKey, data)
         expect(msg).toBe('authorized')
-        expect(id).toBeDefined()
+        expect(userAppDbId).toBeDefined()
 
         // sw.close()
         const encData = await encryptMessage(cryptoKey, {
