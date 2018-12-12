@@ -55,7 +55,7 @@ class Masq {
 
     const apps = await this.getApps()
     apps.forEach(app => {
-      const dbName = profileId + '-' + app.appId
+      const dbName = profileId + '-' + app.id
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', () => this._startReplicate(db))
