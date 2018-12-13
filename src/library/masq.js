@@ -196,6 +196,7 @@ class Masq {
         this.peer = peer
         const apps = await this.getApps()
         const app = apps.find(app => app.appId === appId)
+
         if (app) {
           sendAuthorized(peer, app.id)
         } else {
@@ -204,7 +205,11 @@ class Masq {
 
         peer.once('data', async (data) => {
           const json = await decryptMessage(this.key, data)
-          if (json.msg === 'registerUserApp') {
+
+          if (json.msg === 'connectionEstablished') {
+            this._closeUserAppConnection()
+            return resolve(true)
+          } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
             resolve(false)

@@ -262,18 +262,28 @@ describe('masq protocol', async () => {
     masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
 
-  test('should send authorized', done => {
+  test('should send authorized and close connection', done => {
     expect.assertions(2)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
     sw.on('close', done)
+    sw.on('disconnect', () => {
+      sw.close()
+    })
 
-    sw.on('peer', peer => {
-      peer.on('data', async (data) => {
+    sw.once('peer', peer => {
+      peer.once('data', async (data) => {
         const { msg, id } = await decryptMessage(cryptoKey, data)
         expect(msg).toBe('authorized')
         expect(id).toBeDefined()
+
+        // sw.close()
+        const encData = await encryptMessage(cryptoKey, {
+          msg: 'connectionEstablished'
+        })
+
+        peer.send(encData)
         sw.close()
       })
     })
