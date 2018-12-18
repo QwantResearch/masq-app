@@ -6,7 +6,9 @@ const swarm = require('webrtc-swarm')
 const wrtc = require('wrtc')
 window.crypto = require('@trust/webcrypto')
 
-const { encryptMessage, decryptMessage } = require('./utils')
+const common = require('masq-common')
+
+const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 
 // use an in memory random-access-storage instead
 jest.mock('random-access-idb', () =>
@@ -160,16 +162,9 @@ describe('masq protocol', async () => {
   let keyBase64
 
   beforeAll(async () => {
-    cryptoKey = await window.crypto.subtle.generateKey(
-      {
-        name: 'AES-GCM',
-        length: 128
-      },
-      true,
-      ['encrypt', 'decrypt']
-    )
-    key = await window.crypto.subtle.exportKey('raw', cryptoKey)
-    keyBase64 = key.toString('base64')
+    cryptoKey = await genAESKey(true, 'AES-GCM', 128)
+    key = await exportKey(cryptoKey)
+    keyBase64 = Buffer.from(key).toString('base64')
   })
 
   test('handleUserAppLogin should connect to the swarm', done => {
@@ -190,25 +185,26 @@ describe('masq protocol', async () => {
 
     sw.on('peer', peer => {
       peer.once('data', async (data) => {
-        const decrypted = await decryptMessage(cryptoKey, data)
-        expect(decrypted.msg).toBe('notAuthorized')
+        const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('notAuthorized')
 
         masq.handleUserAppRegister(false) // Access is not granted by the user
 
         peer.once('data', async (data) => {
-          const { msg } = await decryptMessage(cryptoKey, data)
+          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+
           expect(msg).toBe('masqAccessRefused')
           sw.close()
         })
 
-        const encData = await encryptMessage(cryptoKey, {
+        const message = {
           msg: 'registerUserApp',
           name: 'test app',
           description: 'description goes here',
           imageUrl: ''
-        })
-
-        peer.send(encData)
+        }
+        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       })
     })
 
@@ -224,38 +220,39 @@ describe('masq protocol', async () => {
 
     sw.on('peer', peer => {
       peer.once('data', async (data) => {
-        const decrypted = await decryptMessage(cryptoKey, data)
-        expect(decrypted.msg).toBe('notAuthorized')
+        const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('notAuthorized')
 
         masq.handleUserAppRegister(true)
 
         peer.once('data', async (data) => {
-          const { msg, key, userAppDbId } = await decryptMessage(cryptoKey, data)
+          const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
           expect(userAppDbId).toBeDefined()
 
-          const encData = await encryptMessage(cryptoKey, {
+          const message = {
             msg: 'requestWriteAccess',
             key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
-          })
-          peer.send(encData)
+          }
+          const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+          peer.send(JSON.stringify(encryptedMsg))
 
           peer.once('data', async (data) => {
-            const { msg } = await decryptMessage(cryptoKey, data)
+            const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
             expect(msg).toBe('writeAccessGranted')
             sw.close()
           })
         })
 
-        const encData = await encryptMessage(cryptoKey, {
+        const message = {
           msg: 'registerUserApp',
           name: 'test app',
           description: 'description goes here',
           imageUrl: ''
-        })
-
-        peer.send(encData)
+        }
+        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       })
     })
 
@@ -274,16 +271,16 @@ describe('masq protocol', async () => {
 
     sw.on('peer', peer => {
       peer.on('data', async (data) => {
-        const { msg, userAppDbId } = await decryptMessage(cryptoKey, data)
+        const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('authorized')
         expect(userAppDbId).toBeDefined()
 
         // sw.close()
-        const encData = await encryptMessage(cryptoKey, {
+        const message = {
           msg: 'connectionEstablished'
-        })
-
-        peer.send(encData)
+        }
+        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
         sw.close()
       })
     })

@@ -5,8 +5,10 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import { promisifyAll } from 'bluebird'
+import common from 'masq-common'
 
-import { dbReady, encryptMessage, decryptMessage, importKey } from './utils'
+const { encrypt, decrypt, importKey } = common.crypto
+const { dbReady } = common.utils
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
@@ -174,14 +176,14 @@ class Masq {
 
       const sendAuthorized = async (peer, userAppDbId) => {
         const data = { msg: 'authorized', userAppDbId }
-        const msg = await encryptMessage(this.key, data)
-        peer.send(msg)
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       }
 
       const sendNotAuthorized = async (peer) => {
         const data = { msg: 'notAuthorized' }
-        const msg = await encryptMessage(this.key, data)
-        peer.send(msg)
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       }
 
       this.hub = signalhub(channel, HUB_URLS)
@@ -204,7 +206,7 @@ class Masq {
         }
 
         peer.once('data', async (data) => {
-          const json = await decryptMessage(this.key, data)
+          const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
           if (json.msg === 'connectionEstablished') {
             this._closeUserAppConnection()
@@ -238,24 +240,24 @@ class Masq {
 
       const sendAccessRefused = async (peer) => {
         const data = { msg: 'masqAccessRefused' }
-        const msg = await encryptMessage(this.key, data)
-        peer.send(msg)
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       }
 
       const sendAccessGranted = async (peer, dbKey, userAppDbId) => {
         const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId }
-        const msg = await encryptMessage(this.key, data)
-        peer.send(msg)
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       }
 
       const sendWriteAccessGranted = async (peer) => {
         const data = { msg: 'writeAccessGranted' }
-        const msg = await encryptMessage(this.key, data)
-        peer.send(msg)
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
       }
 
       const handleData = async (peer, data) => {
-        const json = await decryptMessage(this.key, data)
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
         const { msg } = json
         // TODO: Error if  missing params
 
