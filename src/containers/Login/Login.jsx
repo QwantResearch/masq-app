@@ -9,18 +9,23 @@ import { ReactComponent as Background } from '../../assets/background.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar } from '../../components'
 
-import { Signup } from '../../modals'
+import { Signup, AddProfile, SyncDevice } from '../../modals'
 
 class Login extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isSignupModalOpened: false,
-      isLoggedIn: false
+      isModalOpened: false,
+      isLoggedIn: false,
+      signup: false,
+      sync: false
     }
 
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClickNewUser = this.handleClickNewUser.bind(this)
+    this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
+    this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   componentDidMount () {
@@ -29,12 +34,16 @@ class Login extends Component {
 
   handleClickNewUser () {
     this.setState({
-      isSignupModalOpened: !this.state.isSignupModalOpened
+      isModalOpened: !this.state.isModalOpened
     })
   }
 
   handleClose () {
-    this.setState({ isSignupModalOpened: false })
+    this.setState({
+      isModalOpened: false,
+      signup: false,
+      sync: false
+    })
   }
 
   handleSignIn (user) {
@@ -45,12 +54,20 @@ class Login extends Component {
   handleSignup (user) {
     const { signup } = this.props
     signup(user)
-    this.setState({ isSignupModalOpened: false })
+    this.setState({ isModalOpened: false })
+  }
+
+  handleClickNewProfile () {
+    this.setState({ isModalOpened: false, signup: true })
+  }
+
+  handleClickSyncProfile () {
+    this.setState({ isModalOpened: false, sync: true })
   }
 
   render () {
     const { users, user } = this.props
-    const { isSignupModalOpened } = this.state
+    const { isModalOpened, signup, sync } = this.state
 
     if (user) return <Redirect to='/apps' />
 
@@ -68,7 +85,15 @@ class Login extends Component {
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
         </div>
         <Background className={styles.Background} />
-        {isSignupModalOpened && <Signup onSignup={this.handleSignup} onClose={this.handleClickNewUser} />}
+        {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
+        {sync && <SyncDevice onClose={this.handleClose} />}
+        {isModalOpened && (
+          <AddProfile
+            onClose={this.handleClose}
+            onNewProfile={this.handleClickNewProfile}
+            onSyncProfile={this.handleClickSyncProfile}
+          />
+        )}
       </div>
     )
   }

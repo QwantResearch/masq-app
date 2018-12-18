@@ -1,4 +1,5 @@
 const masq = (state = {
+  syncStep: 0,
   users: [],
   apps: [],
   devices: [],
@@ -7,50 +8,25 @@ const masq = (state = {
 }, action) => {
   switch (action.type) {
     case 'ADD_USER':
-      return {
-        ...state,
-        users: [...state.users, action.user]
-      }
+      return { ...state, users: [...state.users, action.user] }
     case 'SIGNIN':
-      return {
-        ...state,
-        currentUser: action.profile
-      }
+      return { ...state, currentUser: action.profile }
     case 'SIGNOUT':
-      return {
-        ...state,
-        currentUser: null
-      }
+      return { ...state, currentUser: null }
     case 'RECEIVE_USERS':
-      return {
-        ...state,
-        users: action.users
-      }
+      return { ...state, users: action.users }
     case 'RECEIVE_APPS':
-      return {
-        ...state,
-        apps: action.apps
-      }
+      return { ...state, apps: action.apps }
     case 'SET_CURRENT_APP_REQUEST':
-      return {
-        ...state,
-        currentAppRequest: action.app
-      }
+      return { ...state, currentAppRequest: action.app }
     case 'UPDATE_CURRENT_APP_REQUEST':
-      return {
-        ...state,
-        currentAppRequest: { ...state.currentAppRequest, ...action.update }
-      }
+      return { ...state, currentAppRequest: { ...state.currentAppRequest, ...action.update } }
     case 'ADD_APP':
-      return {
-        ...state,
-        apps: [...state.apps, action.app]
-      }
+      return { ...state, apps: [...state.apps, action.app] }
     case 'ADD_DEVICE':
-      return {
-        ...state,
-        devices: [...state.devices, action.device]
-      }
+      return { ...state, devices: [...state.devices, action.device] }
+    case 'SET_SYNC_STEP':
+      return { ...state, syncStep: action.syncStep }
     default:
       return state
   }

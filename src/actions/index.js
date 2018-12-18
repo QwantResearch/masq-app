@@ -17,6 +17,13 @@ const receiveApps = apps => ({
   apps
 })
 
+export const setSyncStep = syncStep => {
+  return {
+    type: 'SET_SYNC_STEP',
+    syncStep
+  }
+}
+
 export const signin = user => {
   return function (dispatch) {
     return masq.openProfile(user.id)
