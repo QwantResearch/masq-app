@@ -6,6 +6,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { updateUser } from '../../actions'
 import { Avatar } from '../../components'
+import { isName, isUsername } from '../../library/validators'
 
 import styles from './Settings.module.scss'
 
@@ -39,8 +40,14 @@ class Settings extends React.Component {
   }
 
   isValid (fieldName) {
-    if (fieldName === 'image') return true
-    return this.state[fieldName].length > 0
+    const field = this.state[fieldName]
+    switch (fieldName) {
+      case 'lastname': return isName(field)
+      case 'firstname': return isName(field)
+      case 'image': return true
+      case 'username': return isUsername(field)
+      default: return false
+    }
   }
 
   onChange (field, event) {
@@ -103,22 +110,28 @@ class Settings extends React.Component {
             <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
             <div className={styles.inputs}>
               <TextField
-                label={'Nom'}
                 error={!this.isValid('lastname')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.lastname} onChange={(e) => this.onChange('lastname', e)}
+                label={this.isValid('lastname')
+                  ? 'Nom'
+                  : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
               />
               <TextField
-                label={'Prénom'}
                 error={!this.isValid('firstname')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.firstname} onChange={(e) => this.onChange('firstname', e)}
+                label={this.isValid('firstname')
+                  ? 'Prénom'
+                  : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
               />
               <TextField
-                label={'Pseudo (affiché)'}
                 error={!this.isValid('username')}
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.username} onChange={(e) => this.onChange('username', e)}
+                label={this.isValid('username')
+                  ? 'Pseudo (affiché)'
+                  : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'}
               />
             </div>
           </div>

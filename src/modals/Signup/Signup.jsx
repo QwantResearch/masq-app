@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
+import { isName, isUsername, isPassword } from '../../library/validators'
 
 import styles from './Signup.module.scss'
 
@@ -32,20 +33,22 @@ class Signup extends React.Component {
   }
 
   isValid (fieldName) {
+    const field = this.state[fieldName]
+
     if (!this.validationEnabled) {
       // Don't show error as long as the user does not click Finish btn
       return true
     }
 
-    if (fieldName === 'image') return true
-    if (fieldName === 'password') {
-      return this.state[fieldName].length >= 8
+    switch (fieldName) {
+      case 'image': return true
+      case 'firstname': return isName(field)
+      case 'lastname': return isName(field)
+      case 'username': return isUsername(field)
+      case 'password': return isPassword(field)
+      case 'passwordConfirmation': return field === this.state.password
+      default: return false
     }
-    if (fieldName === 'passwordConfirmation') {
-      return this.state[fieldName] === this.state.password
-    }
-
-    return this.state[fieldName].length > 0
   }
 
   onChange (field, event) {
@@ -98,7 +101,7 @@ class Signup extends React.Component {
     const { onSignup } = this.props
     this.validationEnabled = true
 
-    if (!this.isValid('password')) {
+    if (!this.isValid('password') || !this.isValid('passwordConfirmation')) {
       // forceUpdate to show errors
       return this.forceUpdate()
     }
@@ -141,24 +144,30 @@ class Signup extends React.Component {
               <TextField
                 className={styles.TextField}
                 defaultValue={this.state.lastname}
-                label='Nom'
+                label={this.isValid('lastname')
+                  ? 'Nom'
+                  : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
                 error={!this.isValid('lastname')}
                 onChange={(e) => this.onChange('lastname', e)}
               />
               <TextField
                 className={styles.TextField}
                 defaultValue={this.state.firstname}
-                label='Prénom'
+                label={this.isValid('firstname')
+                  ? 'Prénom'
+                  : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
                 error={!this.isValid('firstname')}
                 onChange={(e) => this.onChange('firstname', e)}
               />
               <TextField
                 className={styles.TextField}
                 defaultValue={this.state.username}
-                label='Pseudo (affiché)'
                 error={!this.isValid('username')}
                 onChange={(e) => this.onChange('username', e)}
                 onKeyUp={this.handleKeyUp}
+                label={this.isValid('username')
+                  ? 'Pseudo (affiché)'
+                  : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'}
               />
 
               <div className={styles.buttons}>
@@ -183,7 +192,7 @@ class Signup extends React.Component {
                 type='password'
                 label={this.isValid('password')
                   ? 'Mot de passe'
-                  : 'Le mot de passe doit être composé d\'au moins 8 caractères.'}
+                  : 'Le mot de passe doit être composé d\'au moins 8 caractères, et contenir au moins un chiffre et un caractère spécial (!?$#@()-*)'}
                 error={!this.isValid('password')}
                 onChange={(e) => this.onChange('password', e)}
               />

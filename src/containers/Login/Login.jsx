@@ -54,7 +54,7 @@ class Login extends Component {
   handleSignup (user) {
     const { signup } = this.props
     signup(user)
-    this.setState({ isModalOpened: false })
+    this.setState({ isModalOpened: false, signup: false })
   }
 
   handleClickNewProfile () {
