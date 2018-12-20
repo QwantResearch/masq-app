@@ -5,10 +5,41 @@ const signalhub = require('signalhubws')
 const swarm = require('webrtc-swarm')
 const wrtc = require('wrtc')
 window.crypto = require('@trust/webcrypto')
-
 const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
+jest.mock('masq-common', () => {
+  const original = require.requireActual('masq-common')
+  let dbList = {}
+  let originalCreate = original.utils.createPromisifiedHyperDB
+  let modified = { ...original }
+  modified.utils.dbExists = (name) => {
+    return Promise.resolve(!!dbList[name])
+  }
+  modified.utils.createPromisifiedHyperDB = (name, hexKey) => {
+    if (!dbList[name]) {
+      dbList[name] = originalCreate(name, hexKey)
+    }
+    return dbList[name]
+  }
+  modified.utils.resetDbList = () => {
+    dbList = {}
+  }
+  modified.crypto.derivePassphrase = async (passphrase) => {
+    const hashedPassphrase = {
+      salt: '81570bf99c0134985d7d975b69e123ce',
+      iterations: 100000,
+      hashAlgo: 'SHA-256',
+      storedHash: Buffer.from(passphrase).toString('hex')
+    }
+    return Promise.resolve(hashedPassphrase)
+  }
+  modified.crypto.checkPassphrase = async (passphrase, hashedPassphrase) => {
+    const res = Buffer.from(passphrase).toString('hex') === hashedPassphrase.storedHash
+    return Promise.resolve(res)
+  }
+  return modified
+})
 
 // use an in memory random-access-storage instead
 jest.mock('random-access-idb', () =>
@@ -32,15 +63,18 @@ afterAll((done) => {
 })
 
 describe('masq internal operations', () => {
-  test('add a new profile and retrieve it', async () => {
+  test('add a new profile and retrieve it from localstorage', async () => {
     const profile = {
       username: 'JDoe',
       firstname: 'John',
-      lastname: 'Doe'
+      lastname: 'Doe',
+      password: 'secret',
+      image: ''
     }
 
     await masq.addProfile(profile)
     const profiles = await masq.getProfiles()
+
     expect(profiles).toHaveLength(1)
     expect(profiles[0].id).toBeDefined()
     expect(profiles[0].username).toEqual(profile.username)
@@ -59,19 +93,42 @@ describe('masq internal operations', () => {
     }
   })
 
+  test('should get the newly added private profile', async () => {
+    const profiles = await masq.getProfiles()
+    const profile = { ...profiles[0] }
+
+    // Open a profile (login)
+    const privateProfile = await masq.openProfile(profile.id)
+    expect(privateProfile.id).toBeDefined()
+    expect(privateProfile.username).toEqual(profile.username)
+    expect(privateProfile.hashedPassphrase.salt).toBeDefined()
+    expect(privateProfile.hashedPassphrase.iterations).toBeDefined()
+    expect(privateProfile.hashedPassphrase.hashAlgo).toBeDefined()
+    expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
+  })
+
   test('update an existing profile', async () => {
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
-    profile.username = 'updatedUsername'
-
-    // Open a profile (login)
-    masq.openProfile(profile.id)
+    const updatedName = 'updatedUsername'
+    profile.username = updatedName
 
     await masq.updateProfile(profile)
-    const updatedProfiles = await masq.getProfiles()
-    expect(updatedProfiles).toHaveLength(1)
-    expect(updatedProfiles[0].id).toBeDefined()
-    expect(updatedProfiles[0].username).toEqual(profile.username)
+
+    // Check public profile
+    const updatedPublicProfiles = await masq.getProfiles()
+    expect(updatedPublicProfiles).toHaveLength(1)
+    expect(updatedPublicProfiles[0].id).toEqual(profile.id)
+    expect(updatedPublicProfiles[0].username).toEqual(updatedName)
+
+    // Check private profile
+    const privateProfile = await masq.getProfile(profile.id)
+    expect(privateProfile.id).toEqual(profile.id)
+    expect(privateProfile.username).toEqual(updatedName)
+    expect(privateProfile.hashedPassphrase.salt).toBeDefined()
+    expect(privateProfile.hashedPassphrase.iterations).toBeDefined()
+    expect(privateProfile.hashedPassphrase.hashAlgo).toBeDefined()
+    expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
   })
 
   test('should throw if there is no id in profile', async () => {

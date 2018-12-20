@@ -2,11 +2,6 @@ import { Masq } from '../library'
 
 const masq = new Masq()
 
-const addUser = user => ({
-  type: 'ADD_USER',
-  user
-})
-
 const receiveUsers = users => ({
   type: 'RECEIVE_USERS',
   users
@@ -54,7 +49,7 @@ export const updateUser = (id, user) => {
 export const signup = user => {
   return function (dispatch) {
     return masq.addProfile(user)
-      .then(() => dispatch(addUser(user)))
+      .then(() => dispatch(fetchUsers()))
   }
 }
 

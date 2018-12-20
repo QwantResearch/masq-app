@@ -7,8 +7,6 @@ const masq = (state = {
   currentAppRequest: null
 }, action) => {
   switch (action.type) {
-    case 'ADD_USER':
-      return { ...state, users: [...state.users, action.user] }
     case 'SIGNIN':
       return { ...state, currentUser: action.profile }
     case 'SIGNOUT':

@@ -1,14 +1,11 @@
-import rai from 'random-access-idb'
 import signalhub from 'signalhubws'
-import hyperdb from 'hyperdb'
 import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
-import { promisifyAll } from 'bluebird'
 import common from 'masq-common'
 
-const { encrypt, decrypt, importKey } = common.crypto
-const { dbReady } = common.utils
+const { encrypt, decrypt, importKey, derivePassphrase } = common.crypto
+const { dbReady, createPromisifiedHyperDB } = common.utils
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
@@ -21,10 +18,7 @@ const swarmOpts = process.env.NODE_ENV === 'test'
  * @param {string} name The indexeddb store name
  */
 const openOrCreateDB = (name) => {
-  return promisifyAll(hyperdb(rai(name), {
-    valueEncoding: 'json',
-    firstNode: true
-  }))
+  return createPromisifiedHyperDB(name)
 }
 
 class Masq {
@@ -52,6 +46,7 @@ class Masq {
     this.closeProfile()
 
     this.profileId = profileId
+
     this.profileDB = openOrCreateDB(profileId)
     this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
 
@@ -81,14 +76,24 @@ class Masq {
   async addProfile (profile) {
     // TODO: Check profile properties
     const id = uuidv4()
-    profile.id = id
+    const hashedPassphrase = await derivePassphrase(profile.password)
+    const publicProfile = {
+      username: profile.username,
+      image: profile.image,
+      id: id
+    }
+    const privateProfile = {
+      ...publicProfile,
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      hashedPassphrase: hashedPassphrase
+    }
 
     // Create a DB for this profile
     const db = openOrCreateDB(id)
     await dbReady(db)
-    await db.putAsync('/', profile)
-
-    this._setProfileToLocalStorage(profile)
+    await db.putAsync('/', privateProfile)
+    this._setProfileToLocalStorage(publicProfile)
   }
 
   /**
@@ -96,6 +101,15 @@ class Masq {
    */
   async getProfiles () {
     return this._getProfilesFromLocalStorage()
+  }
+
+  /**
+   * Get private profile from hyperdb
+   */
+  async getProfile (profileId) {
+    this._checkProfile()
+    const profile = (await this.profileDB.getAsync('/')).value
+    return profile
   }
 
   /**
@@ -107,8 +121,19 @@ class Masq {
     this._checkProfile()
     const id = profile.id
     if (!id) throw Error('Missing id')
-    await this.profileDB.putAsync('/', profile)
-    this._setProfileToLocalStorage(profile)
+
+    const privateProfile = await this.getProfile(id)
+    // First update private profile
+    const updatedPrivateProfile = { ...privateProfile, ...profile }
+    // Extract public profile from up-to-date profile
+    const updatePublicProfile = {
+      username: updatedPrivateProfile.username,
+      image: updatedPrivateProfile.image,
+      id: id
+    }
+
+    await this.profileDB.putAsync('/', updatedPrivateProfile)
+    this._setProfileToLocalStorage(updatePublicProfile)
   }
 
   /**
