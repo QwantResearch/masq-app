@@ -25,6 +25,10 @@ const authenticatedRoutes = [
   }
 ]
 
+function capitalize (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 class App extends Component {
   constructor () {
     super()
@@ -46,7 +50,7 @@ class App extends Component {
     if (!this.props.devices.length) {
       const { name, os } = require('detect-browser').detect()
       this.props.addDevice({
-        name: `${name} sur ${os}`,
+        name: `${capitalize(name)} sur ${os}`,
         description: 'Cet appareil',
         color: '#40ae6c'
       })
