@@ -38,7 +38,7 @@
     "signalhubws": "^1.0.7",
     "typeface-asap": "0.0.54",
     "uuid": "^3.3.2",
-    "webrtc-swarm": "^2.9.0",
+    "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq",
     "masq-common": "git+https://github.com/QwantResearch/masq-common"
   },
   "devDependencies": {
@@ -54,6 +54,6 @@
     "gh-pages": "^2.0.1",
     "node-sass": "^4.9.4",
     "random-access-memory": "^3.0.0",
-    "wrtc": "^0.3.2"
+    "wrtc": "^0.3.3"
   }
 }

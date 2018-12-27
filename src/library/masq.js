@@ -214,13 +214,19 @@ class Masq {
       this.hub = signalhub(channel, HUB_URLS)
       this.sw = swarm(this.hub, swarmOpts)
 
-      this.sw.on('disconnect', () => {
-        this._closeUserAppConnection()
-        return resolve(true)
+      this.sw.on('disconnect', async () => {
+        await this._closeUserAppConnection()
+        return reject(new Error('Disconnected'))
       })
 
-      this.sw.on('peer', async (peer) => {
+      this.sw.once('peer', async (peer) => {
         this.peer = peer
+
+        peer.on('error', async (err) => {
+          await this._closeUserAppConnection()
+          return reject(err)
+        })
+
         const apps = await this.getApps()
         const app = apps.find(app => app.appId === appId)
 
@@ -234,13 +240,14 @@ class Masq {
           const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
           if (json.msg === 'connectionEstablished') {
-            this._closeUserAppConnection()
+            await this._closeUserAppConnection()
             return resolve(true)
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
             resolve(false)
           } else {
+            await this._closeUserAppConnection()
             reject(new Error('Invalid data'))
           }
         })
@@ -299,7 +306,7 @@ class Masq {
 
       if (!isGranted) {
         sendAccessRefused(this.peer)
-        this.sw.close()
+        await this._closeUserAppConnection()
         return resolve()
       }
 
@@ -412,14 +419,17 @@ class Masq {
   }
 
   _closeUserAppConnection () {
-    this.sw.on('close', () => {
-      this.hub = null
-      this.peer = null
-      this.app = null
-      // FIXME: do not clear this.key , as messages could
-      // could still be sending while the connection is closing
+    return new Promise((resolve, reject) => {
+      this.sw.on('close', () => {
+        this.hub = null
+        this.peer = null
+        this.app = null
+        // FIXME: do not clear this.key , as messages could
+        // could still be sending while the connection is closing
+        return resolve()
+      })
+      this.sw.close()
     })
-    this.sw.close()
   }
 }
 

@@ -8,6 +8,9 @@ window.crypto = require('@trust/webcrypto')
 const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
+
+jest.setTimeout(30000)
+
 jest.mock('masq-common', () => {
   const original = require.requireActual('masq-common')
   let dbList = {}
@@ -224,13 +227,18 @@ describe('masq protocol', async () => {
     keyBase64 = Buffer.from(key).toString('base64')
   })
 
-  test('handleUserAppLogin should connect to the swarm', done => {
+  test('handleUserAppLogin should connect to the swarm', async () => {
+    expect.assertions(1)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
-    sw.on('close', done)
 
     sw.on('peer', () => sw.close())
-    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+
+    try {
+      await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+    } catch (e) {
+      expect(e.message).toBe('Disconnected')
+    }
   })
 
   test('should send masqAccessRefused', done => {
@@ -238,14 +246,14 @@ describe('masq protocol', async () => {
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
-    sw.on('close', done)
+    sw.on('close', () => setTimeout(done, 1000))
 
     sw.on('peer', peer => {
+      peer.on('error', err => console.error('###', err))
+
       peer.once('data', async (data) => {
         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('notAuthorized')
-
-        masq.handleUserAppRegister(false) // Access is not granted by the user
 
         peer.once('data', async (data) => {
           const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
@@ -262,6 +270,8 @@ describe('masq protocol', async () => {
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
+
+        masq.handleUserAppRegister(false) // Access is not granted by the user
       })
     })
 
@@ -273,14 +283,12 @@ describe('masq protocol', async () => {
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
-    sw.on('close', done)
+    sw.on('close', () => setTimeout(done, 1000))
 
-    sw.on('peer', peer => {
+    sw.once('peer', peer => {
       peer.once('data', async (data) => {
         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('notAuthorized')
-
-        masq.handleUserAppRegister(true)
 
         peer.once('data', async (data) => {
           const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
@@ -310,6 +318,8 @@ describe('masq protocol', async () => {
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
+
+        await masq.handleUserAppRegister(true)
       })
     })
 
@@ -322,12 +332,9 @@ describe('masq protocol', async () => {
     const sw = swarm(hub, { wrtc })
 
     sw.on('close', done)
-    sw.on('disconnect', () => {
-      sw.close()
-    })
 
-    sw.on('peer', peer => {
-      peer.on('data', async (data) => {
+    sw.once('peer', peer => {
+      peer.once('data', async (data) => {
         const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('authorized')
         expect(userAppDbId).toBeDefined()
