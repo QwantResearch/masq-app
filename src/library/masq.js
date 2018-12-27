@@ -389,6 +389,58 @@ class Masq {
   }
 
   /**
+   * Exchange messages with a Masq-app instance and sync Masq-profile.
+   * The public key of Masq-profile is received, a Masq-profile is created.
+   * Then the local key is sent to ask write access.
+   * @param {string} channel The channel to connect
+   * @param {string} rawKey The encryption key, base64 encoded
+   */
+  async handleSyncProfilePull (channel, rawKey) {
+    return new Promise(async (resolve, reject) => {
+      this.key = await importKey(Buffer.from(rawKey, 'base64'))
+      this.hub = signalhub(channel, HUB_URLS)
+      this.sw = swarm(this.hub, swarmOpts)
+
+      this.sw.on('disconnect', async () => {
+        await this._closeUserAppConnection()
+        return reject(new Error('Disconnected'))
+      })
+
+      const requestMasqAppWriteAccess = async (peer, localDbKey) => {
+        const data = { msg: 'masqAppRequestWriteAccess', key: localDbKey }
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
+      }
+
+      this.sw.on('peer', async (peer) => {
+        this.peer = peer
+
+        peer.on('error', async (err) => {
+          await this._closeUserAppConnection()
+          return reject(err)
+        })
+        this.peer.on('data', (data) => handleData(this.peer, data))
+      })
+
+      const handleData = async (peer, data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+        const { msg } = json
+        // TODO: Error if  missing params
+        if (msg === 'masqAppAccessGranted') {
+          // this.profileDB.local.key.toString('hex')
+          // const userAppKey = Buffer.from(json.key, 'hex')
+          // this.appsDBs[dbName].authorize(userAppKey, (err) => {
+          //   if (err) throw err
+          requestMasqAppWriteAccess(peer, '0x1245')
+          this.sw.close()
+          return resolve()
+          // })
+        }
+      }
+    })
+  }
+
+  /**
    * Private methods
    */
 

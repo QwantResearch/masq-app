@@ -252,7 +252,7 @@ describe('masq protocol', async () => {
    * - We mock Masq-app 2
    * - We call handleSyncProfilePush
    */
-  test('should receive public key and get write access', async (done) => {
+  test('should send the public key and give write access', async (done) => {
     expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
@@ -260,12 +260,6 @@ describe('masq protocol', async () => {
     sw.on('close', done)
 
     sw.on('peer', async (peer) => {
-      // const message = {
-      //   msg: 'masqAppSyncProfile'
-      // }
-      // const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-      // peer.send(JSON.stringify(encryptedMsg))
-
       peer.once('data', async (data) => {
         const { msg, key } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppAccessGranted')
@@ -287,6 +281,44 @@ describe('masq protocol', async () => {
     })
 
     await masq.handleSyncProfilePush('channel', keyBase64)
+  })
+
+  /**
+   * Scenario 1:
+   * - We mock Masq-app 1
+   * - We call handleSyncProfilePull
+   */
+  test('should receive public key and get write access', async (done) => {
+    expect.assertions(2)
+    const hub = signalhub('channel', 'localhost:8080')
+    const sw = swarm(hub, { wrtc })
+
+    sw.on('close', done)
+
+    sw.on('peer', async (peer) => {
+      const message = {
+        msg: 'masqAppAccessGranted',
+        key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
+      }
+      const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
+
+      peer.once('data', async (data) => {
+        const { msg, key } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('masqAppRequestWriteAccess')
+        expect(key).toBeDefined()
+
+        const message = {
+          msg: 'masqAppWriteAccessGranted'
+        }
+        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
+
+        sw.close()
+      })
+    })
+
+    await masq.handleSyncProfilePull('channel', keyBase64)
   })
 
   // test('should send masqAccessRefused', done => {
