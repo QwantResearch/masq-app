@@ -241,114 +241,162 @@ describe('masq protocol', async () => {
     }
   })
 
-  test('should send masqAccessRefused', done => {
-    expect.assertions(2)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
+  /**
+   * Definitions:
+   * - Masq-app 1: contains a profile and call handleSyncProfilePush
+   * - Masq-app 2: is empty and wants to get Masq-profil (call handleSyncProfilePull)
+   */
 
-    sw.on('close', () => setTimeout(done, 1000))
-
-    sw.on('peer', peer => {
-      peer.on('error', err => console.error('###', err))
-
-      peer.once('data', async (data) => {
-        const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('notAuthorized')
-
-        peer.once('data', async (data) => {
-          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-
-          expect(msg).toBe('masqAccessRefused')
-          sw.close()
-        })
-
-        const message = {
-          msg: 'registerUserApp',
-          name: 'test app',
-          description: 'description goes here',
-          imageUrl: ''
-        }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
-        masq.handleUserAppRegister(false) // Access is not granted by the user
-      })
-    })
-
-    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
-  })
-
-  test('should send notAuthorized, and give write access', done => {
-    expect.assertions(5)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
-
-    sw.on('close', () => setTimeout(done, 1000))
-
-    sw.once('peer', peer => {
-      peer.once('data', async (data) => {
-        const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('notAuthorized')
-
-        peer.once('data', async (data) => {
-          const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-          expect(msg).toBe('masqAccessGranted')
-          expect(key).toBeDefined()
-          expect(userAppDbId).toBeDefined()
-
-          const message = {
-            msg: 'requestWriteAccess',
-            key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
-          }
-          const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-          peer.send(JSON.stringify(encryptedMsg))
-
-          peer.once('data', async (data) => {
-            const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-            expect(msg).toBe('writeAccessGranted')
-            sw.close()
-          })
-        })
-
-        const message = {
-          msg: 'registerUserApp',
-          name: 'test app',
-          description: 'description goes here',
-          imageUrl: ''
-        }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
-        await masq.handleUserAppRegister(true)
-      })
-    })
-
-    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
-  })
-
-  test('should send authorized and close connection', done => {
-    expect.assertions(2)
+  /**
+   * Scenario 1:
+   * - We mock Masq-app 2
+   * - We call handleSyncProfilePush
+   */
+  test('should receive public key and get write access', async (done) => {
+    expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
     sw.on('close', done)
 
-    sw.once('peer', peer => {
-      peer.once('data', async (data) => {
-        const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('authorized')
-        expect(userAppDbId).toBeDefined()
+    sw.on('peer', async (peer) => {
+      // const message = {
+      //   msg: 'masqAppSyncProfile'
+      // }
+      // const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+      // peer.send(JSON.stringify(encryptedMsg))
 
-        // sw.close()
+      peer.once('data', async (data) => {
+        const { msg, key } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('masqAppAccessGranted')
+        expect(key).toBeDefined()
+
         const message = {
-          msg: 'connectionEstablished'
+          msg: 'masqAppRequestWriteAccess',
+          key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
-        sw.close()
+
+        peer.once('data', async (data) => {
+          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          expect(msg).toBe('masqAppWriteAccessGranted')
+          sw.close()
+        })
       })
     })
 
-    masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+    await masq.handleSyncProfilePush('channel', keyBase64)
   })
+
+  // test('should send masqAccessRefused', done => {
+  //   expect.assertions(2)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+
+  //   sw.on('close', () => setTimeout(done, 1000))
+
+  //   sw.on('peer', peer => {
+  //     peer.on('error', err => console.error('###', err))
+
+  //     peer.once('data', async (data) => {
+  //       const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('notAuthorized')
+
+  //       peer.once('data', async (data) => {
+  //         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+
+  //         expect(msg).toBe('masqAccessRefused')
+  //         sw.close()
+  //       })
+
+  //       const message = {
+  //         msg: 'registerUserApp',
+  //         name: 'test app',
+  //         description: 'description goes here',
+  //         imageUrl: ''
+  //       }
+  //       const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  //       peer.send(JSON.stringify(encryptedMsg))
+
+  //       masq.handleUserAppRegister(false) // Access is not granted by the user
+  //     })
+  //   })
+
+  //   masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+  // })
+
+  // test('should send notAuthorized, and give write access', done => {
+  //   expect.assertions(5)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+
+  //   sw.on('close', () => setTimeout(done, 1000))
+
+  //   sw.once('peer', peer => {
+  //     peer.once('data', async (data) => {
+  //       const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('notAuthorized')
+
+  //       peer.once('data', async (data) => {
+  //         const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //         expect(msg).toBe('masqAccessGranted')
+  //         expect(key).toBeDefined()
+  //         expect(userAppDbId).toBeDefined()
+
+  //         const message = {
+  //           msg: 'requestWriteAccess',
+  //           key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
+  //         }
+  //         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  //         peer.send(JSON.stringify(encryptedMsg))
+
+  //         peer.once('data', async (data) => {
+  //           const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //           expect(msg).toBe('writeAccessGranted')
+  //           sw.close()
+  //         })
+  //       })
+
+  //       const message = {
+  //         msg: 'registerUserApp',
+  //         name: 'test app',
+  //         description: 'description goes here',
+  //         imageUrl: ''
+  //       }
+  //       const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  //       peer.send(JSON.stringify(encryptedMsg))
+
+  //       await masq.handleUserAppRegister(true)
+  //     })
+  //   })
+
+  //   masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+  // })
+
+  // test('should send authorized and close connection', done => {
+  //   expect.assertions(2)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+
+  //   sw.on('close', done)
+
+  //   sw.once('peer', peer => {
+  //     peer.once('data', async (data) => {
+  //       const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('authorized')
+  //       expect(userAppDbId).toBeDefined()
+
+  //       // sw.close()
+  //       const message = {
+  //         msg: 'connectionEstablished'
+  //       }
+  //       const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  //       peer.send(JSON.stringify(encryptedMsg))
+  //       sw.close()
+  //     })
+  //   })
+
+  //   masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+  // })
 })

@@ -329,6 +329,66 @@ class Masq {
   }
 
   /**
+   * Exchange messages with a Masq-app instance and sync Masq-profile.
+   * The public key of Masq-profile is sent, based on the received
+   * local key, a write access is given.
+   * @param {string} channel The channel to connect
+   * @param {string} rawKey The encryption key, base64 encoded
+   */
+  async handleSyncProfilePush (channel, rawKey) {
+    return new Promise(async (resolve, reject) => {
+      this.key = await importKey(Buffer.from(rawKey, 'base64'))
+      this.hub = signalhub(channel, HUB_URLS)
+      this.sw = swarm(this.hub, swarmOpts)
+
+      this.sw.on('disconnect', async () => {
+        await this._closeUserAppConnection()
+        return reject(new Error('Disconnected'))
+      })
+
+      const sendMasqAppAccessGranted = async (peer) => {
+        const data = { msg: 'masqAppAccessGranted', key: this.profileDB.key.toString('hex') }
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
+      }
+
+      const sendWriteMasqAppAccessGranted = async (peer) => {
+        const data = { msg: 'masqAppWriteAccessGranted' }
+        const encryptedMsg = await encrypt(this.key, data, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
+      }
+
+      this.sw.on('peer', async (peer) => {
+        this.peer = peer
+
+        peer.on('error', async (err) => {
+          await this._closeUserAppConnection()
+          return reject(err)
+        })
+
+        this.peer.on('data', (data) => handleData(this.peer, data))
+
+        sendMasqAppAccessGranted(this.peer)
+      })
+
+      const handleData = async (peer, data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+        const { msg } = json
+        // TODO: Error if  missing params
+        if (msg === 'masqAppRequestWriteAccess') {
+          // const userAppKey = Buffer.from(json.key, 'hex')
+          // this.appsDBs[dbName].authorize(userAppKey, (err) => {
+          //   if (err) throw err
+          sendWriteMasqAppAccessGranted(peer)
+          this.sw.close()
+          return resolve()
+          // })
+        }
+      }
+    })
+  }
+
+  /**
    * Private methods
    */
 
