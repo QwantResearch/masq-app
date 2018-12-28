@@ -474,15 +474,6 @@ class Masq {
    * Private methods
    */
 
-  async _createDB (dbName, publicKey) {
-    const db = openOrCreateDB(dbName)
-    this.appsDBs[dbName] = db
-    db.on('ready', () => {
-      this._startReplicate(db)
-      sendAccessGranted(this.peer, db.key.toString('hex'), id)
-    })
-  }
-
   async _createResource (name, res) {
     this._checkProfile()
     const node = await this.profileDB.getAsync(`/${name}`)
