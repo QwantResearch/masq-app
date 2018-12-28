@@ -230,10 +230,14 @@ class Masq {
         const apps = await this.getApps()
         const app = apps.find(app => app.appId === appId)
 
-        if (app) {
-          sendAuthorized(peer, app.id)
-        } else {
-          sendNotAuthorized(peer)
+        try {
+          if (app) {
+            sendAuthorized(peer, app.id)
+          } else {
+            sendNotAuthorized(peer)
+          }
+        } catch (e) {
+          return reject(new Error('Disconnected'))
         }
 
         peer.once('data', async (data) => {
