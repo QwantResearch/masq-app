@@ -387,16 +387,19 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppRequestWriteAccess') {
-          // const { profileLocalKey, userAppsLocalKeys } = json
+          const { profileLocalKey, userAppsLocalKeys } = json
           // authorize profileLocalKey
-          // iterate over keys and
-          // const userAppKey = Buffer.from(json.key, 'hex')
-          // this.appsDBs[dbName].authorize(userAppKey, (err) => {
-          //   if (err) throw err
+          const profileLocalKeyBuffer = Buffer.from(profileLocalKey, 'hex')
+          await this.profileDB.authorizeAsync(profileLocalKeyBuffer)
+
+          for (let app in userAppsLocalKeys) {
+            const userAppKey = Buffer.from(app.localKey, 'hex')
+            await this.appsDBs[app.dbName].authorizeAsync(userAppKey)
+          }
+
           sendWriteMasqAppAccessGranted(peer)
           this.sw.close()
           return resolve()
-          // })
         }
       }
     })
@@ -447,6 +450,7 @@ class Masq {
 
           // const profileLocalKey = this.profileDB.local.key.toString('hex')
           const profileLocalKey = '0x1122'
+          // [{dbName: '1122', localKey: '0x2253'}]
           const userAppsLocalKeys = []
           // const userAppKey = Buffer.from(json.key, 'hex')
           // this.appsDBs[dbName].authorize(userAppKey, (err) => {
