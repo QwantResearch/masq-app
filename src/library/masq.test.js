@@ -242,101 +242,6 @@ describe('masq protocol', async () => {
     }
   })
 
-  /**
-   * Definitions:
-   * - Masq-app 1: contains a profile and call handleSyncProfilePush
-   * - Masq-app 2: is empty and wants to get Masq-profil (call handleSyncProfilePull)
-   */
-
-  /**
-   * Scenario 1:
-   * - We mock Masq-app 2
-   * - We call handleSyncProfilePush
-   */
-  test('should send the public key and give write access', async (done) => {
-    expect.assertions(8)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
-    const userProfile = await masq.getProfile()
-    const apps = await masq.getApps()
-
-    sw.on('close', done)
-
-    sw.on('peer', async (peer) => {
-      peer.once('data', async (data) => {
-        const { msg, profile, userAppsPublickeys } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('masqAppAccessGranted')
-        expect(profile.username).toBe(userProfile.username)
-        expect(profile.image).toBe(userProfile.image)
-        expect(profile.publicKey).toBeDefined()
-        expect(profile.dbName).toBe(userProfile.id)
-        expect(userAppsPublickeys[0].publicKey).toBeDefined()
-        expect(userAppsPublickeys[0].dbName).toBe(apps[0].id)
-
-        const message = {
-          msg: 'masqAppRequestWriteAccess',
-          profileLocalKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b',
-          userAppsLocalKeys: []
-        }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
-        peer.once('data', async (data) => {
-          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-          expect(msg).toBe('masqAppWriteAccessGranted')
-          sw.close()
-        })
-      })
-    })
-
-    await masq.handleSyncProfilePush('channel', keyBase64)
-  })
-
-  /**
-   * Scenario 1:
-   * - We mock Masq-app 1
-   * - We call handleSyncProfilePull
-   */
-  test('should receive public key and get write access', async (done) => {
-    expect.assertions(3)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
-
-    sw.on('close', done)
-
-    sw.on('peer', async (peer) => {
-      const message = {
-        msg: 'masqAppAccessGranted',
-        profile: {
-          username: 'username',
-          image: '',
-          publicKey: '0x2233',
-          dbName: '4569'
-        },
-        userAppsPublickeys: []
-      }
-      const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
-
-      peer.once('data', async (data) => {
-        const { msg, profileLocalKey, userAppsLocalKeys } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('masqAppRequestWriteAccess')
-        expect(profileLocalKey).toBeDefined()
-        expect(userAppsLocalKeys).toBeDefined()
-
-        const message = {
-          msg: 'masqAppWriteAccessGranted'
-        }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
-        sw.close()
-      })
-    })
-
-    await masq2.handleSyncProfilePull('channel', keyBase64)
-  })
-
   test('should send masqAccessRefused', async done => {
     expect.assertions(2)
     const hub = signalhub('channel', 'localhost:8080')
@@ -422,29 +327,119 @@ describe('masq protocol', async () => {
     await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
 
-  test('should send authorized and close connection', async done => {
-    expect.assertions(2)
+  /**
+   * Definitions:
+   * - Masq-app 1: contains a profile and call handleSyncProfilePush
+   * - Masq-app 2: is empty and wants to get Masq-profil (call handleSyncProfilePull)
+   */
+
+  /**
+   * Scenario 1:
+   * - We mock Masq-app 2
+   * - We call handleSyncProfilePush
+   */
+  test('should send the public key and give write access', async (done) => {
+    expect.assertions(6)
+    const hub = signalhub('channel', 'localhost:8080')
+    const sw = swarm(hub, { wrtc })
+    const userProfile = await masq.getProfile()
+
+    sw.on('close', done)
+
+    sw.on('peer', async (peer) => {
+      peer.once('data', async (data) => {
+        const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('masqAppAccessGranted')
+        expect(profile.username).toBe(userProfile.username)
+        expect(profile.image).toBe(userProfile.image)
+        expect(profile.publicKey).toBeDefined()
+        expect(profile.dbName).toBe(userProfile.id)
+
+        const message = {
+          msg: 'masqAppRequestWriteAccess',
+          profileLocalKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
+        }
+        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+        peer.send(JSON.stringify(encryptedMsg))
+
+        peer.once('data', async (data) => {
+          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          expect(msg).toBe('masqAppWriteAccessGranted')
+          sw.close()
+        })
+      })
+    })
+
+    await masq.handleSyncProfilePush('channel', keyBase64)
+  })
+
+  /**
+   * Scenario 1:
+   * - We mock Masq-app 1
+   * - We call handleSyncProfilePull
+   */
+  test('should receive public key and get write access', async (done) => {
+    expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
     sw.on('close', done)
 
-    sw.once('peer', peer => {
-      peer.once('data', async (data) => {
-        const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('authorized')
-        expect(userAppDbId).toBeDefined()
+    sw.on('peer', async (peer) => {
+      const message = {
+        msg: 'masqAppAccessGranted',
+        profile: {
+          username: 'username',
+          image: '',
+          publicKey: '0x2233',
+          dbName: '4569'
+        }
+      }
+      const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
 
-        // sw.close()
+      peer.once('data', async (data) => {
+        const { msg, profileLocalKey, userAppsLocalKeys } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('masqAppRequestWriteAccess')
+        expect(profileLocalKey).toBeDefined()
+        expect(userAppsLocalKeys).toBeDefined()
+
         const message = {
-          msg: 'connectionEstablished'
+          msg: 'masqAppWriteAccessGranted'
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
+
         sw.close()
       })
     })
 
-    await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+    await masq2.handleSyncProfilePull('channel', keyBase64)
   })
+
+  // test('should send authorized and close connection', async done => {
+  //   expect.assertions(2)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+
+  //   sw.on('close', done)
+
+  //   sw.once('peer', peer => {
+  //     peer.once('data', async (data) => {
+  //       const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('authorized')
+  //       expect(userAppDbId).toBeDefined()
+
+  //       // sw.close()
+  //       const message = {
+  //         msg: 'connectionEstablished'
+  //       }
+  //       const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  //       peer.send(JSON.stringify(encryptedMsg))
+  //       sw.close()
+  //     })
+  //   })
+
+  //   await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
+  // })
 })

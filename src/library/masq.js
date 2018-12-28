@@ -319,7 +319,13 @@ class Masq {
       dbName = this.profileId + '-' + id
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
-      db.on('ready', () => {
+      db.on('ready', async () => {
+        this.updateApp({
+          id,
+          ...this.app,
+          appId: this.appId,
+          publicKey: db.key.toString('hex')
+        })
         this._startReplicate(db)
         sendAccessGranted(this.peer, db.key.toString('hex'), id)
       })
@@ -348,7 +354,6 @@ class Masq {
 
       const sendMasqAppAccessGranted = async (peer) => {
         const profile = await this.getProfile()
-        const apps = await this.getApps()
         const data = {
           msg: 'masqAppAccessGranted',
           profile: {
@@ -356,8 +361,7 @@ class Masq {
             image: profile.image,
             publicKey: this.profileDB.key.toString('hex'),
             dbName: profile.id
-          },
-          userAppsPublickeys: apps.map(app => ({ dbName: app.id, publicKey: '112233' }))
+          }
         }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
@@ -444,8 +448,10 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
-          // const { profile, keys }
+          // const { profile, userAppsPublickeys }
           // openOrCreate profile
+          // this._createDB(profile.dbName, Buffer.from(pro))
+
           // openOrCreate user app dbs
 
           // const profileLocalKey = this.profileDB.local.key.toString('hex')
@@ -467,6 +473,15 @@ class Masq {
   /**
    * Private methods
    */
+
+  async _createDB (dbName, publicKey) {
+    const db = openOrCreateDB(dbName)
+    this.appsDBs[dbName] = db
+    db.on('ready', () => {
+      this._startReplicate(db)
+      sendAccessGranted(this.peer, db.key.toString('hex'), id)
+    })
+  }
 
   async _createResource (name, res) {
     this._checkProfile()
