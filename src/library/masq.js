@@ -387,7 +387,7 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppRequestWriteAccess') {
-          // const { profileLocalKey, keys } = json
+          // const { profileLocalKey, userAppsLocalKeys } = json
           // authorize profileLocalKey
           // iterate over keys and
           // const userAppKey = Buffer.from(json.key, 'hex')

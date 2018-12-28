@@ -276,7 +276,7 @@ describe('masq protocol', async () => {
         const message = {
           msg: 'masqAppRequestWriteAccess',
           profileLocalKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b',
-          keys: []
+          userAppsLocalKeys: []
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
