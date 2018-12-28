@@ -347,7 +347,16 @@ class Masq {
       })
 
       const sendMasqAppAccessGranted = async (peer) => {
-        const data = { msg: 'masqAppAccessGranted', key: this.profileDB.key.toString('hex') }
+        const profile = await this.getProfile()
+        const data = {
+          msg: 'masqAppAccessGranted',
+          profile: {
+            username: profile.username,
+            image: profile.image,
+            key: this.profileDB.key.toString('hex'),
+            id: profile.id
+          }
+        }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }

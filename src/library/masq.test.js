@@ -49,6 +49,7 @@ jest.mock('random-access-idb', () =>
   () => require('random-access-memory'))
 
 let masq = new Masq()
+let masq2 = new Masq()
 let server = null
 
 beforeAll((done) => {
@@ -261,9 +262,10 @@ describe('masq protocol', async () => {
 
     sw.on('peer', async (peer) => {
       peer.once('data', async (data) => {
-        const { msg, key } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppAccessGranted')
-        expect(key).toBeDefined()
+        expect(profile).toBeDefined()
+        expect(profile.username).toBeDefined()
 
         const message = {
           msg: 'masqAppRequestWriteAccess',
