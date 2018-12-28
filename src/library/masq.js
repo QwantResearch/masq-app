@@ -215,7 +215,7 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
-        await this._closeUserAppConnection()
+        await this._closeConnection()
         return reject(new Error('Disconnected'))
       })
 
@@ -223,7 +223,7 @@ class Masq {
         this.peer = peer
 
         peer.on('error', async (err) => {
-          await this._closeUserAppConnection()
+          await this._closeConnection()
           return reject(err)
         })
 
@@ -240,14 +240,14 @@ class Masq {
           const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
           if (json.msg === 'connectionEstablished') {
-            await this._closeUserAppConnection()
+            await this._closeConnection()
             return resolve(true)
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
             resolve(false)
           } else {
-            await this._closeUserAppConnection()
+            await this._closeConnection()
             reject(new Error('Invalid data'))
           }
         })
@@ -306,7 +306,7 @@ class Masq {
 
       if (!isGranted) {
         sendAccessRefused(this.peer)
-        await this._closeUserAppConnection()
+        await this._closeConnection()
         return resolve()
       }
 
@@ -342,7 +342,7 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
-        await this._closeUserAppConnection()
+        await this._closeConnection()
         return reject(new Error('Disconnected'))
       })
 
@@ -373,7 +373,7 @@ class Masq {
         this.peer = peer
 
         peer.on('error', async (err) => {
-          await this._closeUserAppConnection()
+          await this._closeConnection()
           return reject(err)
         })
 
@@ -419,7 +419,7 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
-        await this._closeUserAppConnection()
+        await this._closeConnection()
         return reject(new Error('Disconnected'))
       })
 
@@ -433,7 +433,7 @@ class Masq {
         this.peer = peer
 
         peer.on('error', async (err) => {
-          await this._closeUserAppConnection()
+          await this._closeConnection()
           return reject(err)
         })
         this.peer.on('data', (data) => handleData(this.peer, data))
@@ -554,7 +554,7 @@ class Masq {
     if (!this.profileDB) throw Error('Open a profile first')
   }
 
-  _closeUserAppConnection () {
+  _closeConnection () {
     return new Promise((resolve, reject) => {
       this.sw.on('close', () => {
         this.hub = null
