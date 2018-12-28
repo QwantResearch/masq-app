@@ -348,14 +348,16 @@ class Masq {
 
       const sendMasqAppAccessGranted = async (peer) => {
         const profile = await this.getProfile()
+        const apps = await this.getApps()
         const data = {
           msg: 'masqAppAccessGranted',
           profile: {
             username: profile.username,
             image: profile.image,
-            key: this.profileDB.key.toString('hex'),
-            id: profile.id
-          }
+            publicKey: this.profileDB.key.toString('hex'),
+            dbName: profile.id
+          },
+          userAppsPublickeys: apps.map(app => ({ dbName: app.id, publicKey: '112233' }))
         }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
@@ -385,6 +387,9 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppRequestWriteAccess') {
+          // const { profileLocalKey, keys } = json
+          // authorize profileLocalKey
+          // iterate over keys and
           // const userAppKey = Buffer.from(json.key, 'hex')
           // this.appsDBs[dbName].authorize(userAppKey, (err) => {
           //   if (err) throw err
@@ -415,8 +420,8 @@ class Masq {
         return reject(new Error('Disconnected'))
       })
 
-      const requestMasqAppWriteAccess = async (peer, localDbKey) => {
-        const data = { msg: 'masqAppRequestWriteAccess', key: localDbKey }
+      const requestMasqAppWriteAccess = async (peer, profileLocalKey, userAppsLocalKeys) => {
+        const data = { msg: 'masqAppRequestWriteAccess', profileLocalKey: profileLocalKey, userAppsLocalKeys: userAppsLocalKeys }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -436,11 +441,17 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
-          // this.profileDB.local.key.toString('hex')
+          // const { profile, keys }
+          // openOrCreate profile
+          // openOrCreate user app dbs
+
+          // const profileLocalKey = this.profileDB.local.key.toString('hex')
+          const profileLocalKey = '0x1122'
+          const userAppsLocalKeys = []
           // const userAppKey = Buffer.from(json.key, 'hex')
           // this.appsDBs[dbName].authorize(userAppKey, (err) => {
           //   if (err) throw err
-          requestMasqAppWriteAccess(peer, '0x1245')
+          requestMasqAppWriteAccess(peer, profileLocalKey, userAppsLocalKeys)
           this.sw.close()
           return resolve()
           // })
