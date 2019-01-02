@@ -75,7 +75,7 @@ class Masq {
    */
   async addProfile (profile) {
     // TODO: Check profile properties
-    const id = uuidv4()
+    const id = profile.id ? profile.id : uuidv4()
     const hashedPassphrase = await derivePassphrase(profile.password)
     const publicProfile = {
       username: profile.username,
@@ -106,7 +106,7 @@ class Masq {
   /**
    * Get private profile from hyperdb
    */
-  async getProfile (profileId) {
+  async getProfile () {
     this._checkProfile()
     const profile = (await this.profileDB.getAsync('/')).value
     return profile
@@ -122,7 +122,7 @@ class Masq {
     const id = profile.id
     if (!id) throw Error('Missing id')
 
-    const privateProfile = await this.getProfile(id)
+    const privateProfile = await this.getProfile()
     // First update private profile
     const updatedPrivateProfile = { ...privateProfile, ...profile }
     // Extract public profile from up-to-date profile
@@ -441,13 +441,15 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
-          // const { profile, userAppsPublickeys }
-          // openOrCreate profile
+          // create DB, the profile, and send the local key.
+
+          // Create profile
           // this._createDB(profile.dbName, Buffer.from(pro))
 
           // openOrCreate user app dbs
+          // console.log('this', this)
 
-          // const profileLocalKey = this.profileDB.local.key.toString('hex')
+          // const localKey = this.profileDB.local.key.toString('hex')
           const localKey = '0x1122'
           // [{dbName: '1122', localKey: '0x2253'}]
           // const userAppKey = Buffer.from(json.key, 'hex')

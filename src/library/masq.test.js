@@ -126,7 +126,7 @@ describe('masq internal operations', () => {
     expect(updatedPublicProfiles[0].username).toEqual(updatedName)
 
     // Check private profile
-    const privateProfile = await masq.getProfile(profile.id)
+    const privateProfile = await masq.getProfile()
     expect(privateProfile.id).toEqual(profile.id)
     expect(privateProfile.username).toEqual(updatedName)
     expect(privateProfile.hashedPassphrase.salt).toBeDefined()
