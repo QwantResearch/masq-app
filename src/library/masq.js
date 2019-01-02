@@ -453,13 +453,24 @@ class Masq {
           const db = openOrCreateDB(profile.id, Buffer.from(profile.key, 'hex'))
           await dbReady(db)
           const localKey = db.key.toString('hex')
+          console.log('localKey', localKey)
 
           // wait for replication ???
+          // const watcher = db.watch('/', async () => {
+          //   console.log('on watch###')
+          //   const profile = await db.get('/')
+          //   if (!profile.id) return
+          //   // once the profile is retrieved, we can add the
+          //   // public profile to the localstorage
+          //   await this.addPublicProfile(profile)
+          //   // open profile ?
+          //   watcher.destroy()
+          // })
 
-          // create public profile in localstorage once the profile can be opened
-          // this.addPublicProfile()
           requestMasqAppWriteAccess(peer, localKey)
-          this.sw.close()
+          this._closeConnection()
+
+          this._startReplicate(db)
           return resolve()
         }
       }

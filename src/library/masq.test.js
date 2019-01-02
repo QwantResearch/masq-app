@@ -61,6 +61,7 @@ beforeAll((done) => {
 })
 
 afterAll((done) => {
+  console.log('afterAll!')
   server.close()
   masq.closeProfile()
   setTimeout(done, 1000) // Wait to be sure server.close has finished
@@ -386,6 +387,9 @@ describe('Masq synchronisation protocol', () => {
     expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
+    const key = masq.profileDB.key.toString('hex')
+    const profile = await masq.getProfile()
+    console.log('profile', profile)
 
     sw.on('close', done)
 
@@ -394,9 +398,10 @@ describe('Masq synchronisation protocol', () => {
         msg: 'masqAppAccessGranted',
         profile: {
           id: '4569', // profile id
-          key: 'ab82524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
+          key
         }
       }
+
       await encryptAndSendJson(cryptoKey, message, peer)
       peer.once('data', async (data) => {
         const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
