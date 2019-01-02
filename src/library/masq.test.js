@@ -217,7 +217,7 @@ describe('masq internal operations', () => {
   })
 })
 
-describe('masq protocol', async () => {
+describe('masq user-app protocol', async () => {
   let cryptoKey
   let key
   let keyBase64
@@ -258,7 +258,6 @@ describe('masq protocol', async () => {
 
         peer.once('data', async (data) => {
           const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-
           expect(msg).toBe('masqAccessRefused')
           sw.close()
         })
@@ -269,9 +268,7 @@ describe('masq protocol', async () => {
           description: 'description goes here',
           imageUrl: ''
         }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
+        await encryptAndSendJson(cryptoKey, message, peer)
         masq.handleUserAppRegister(false) // Access is not granted by the user
       })
     })
@@ -301,8 +298,7 @@ describe('masq protocol', async () => {
             msg: 'requestWriteAccess',
             key: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
           }
-          const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-          peer.send(JSON.stringify(encryptedMsg))
+          await encryptAndSendJson(cryptoKey, message, peer)
 
           peer.once('data', async (data) => {
             const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
@@ -317,16 +313,25 @@ describe('masq protocol', async () => {
           description: 'description goes here',
           imageUrl: ''
         }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-
+        await encryptAndSendJson(cryptoKey, message, peer)
         await masq.handleUserAppRegister(true)
       })
     })
 
     await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   })
+})
 
+describe('Masq synchronisation protocol', () => {
+  let cryptoKey
+  let key
+  let keyBase64
+
+  beforeAll(async () => {
+    cryptoKey = await genAESKey(true, 'AES-GCM', 128)
+    key = await exportKey(cryptoKey)
+    keyBase64 = Buffer.from(key).toString('base64')
+  })
   /**
    * Definitions:
    * - Masq-app 1: contains a profile and call handleSyncProfilePush
@@ -339,7 +344,7 @@ describe('masq protocol', async () => {
    * - We call handleSyncProfilePush
    */
   test('should send the public key and give write access', async (done) => {
-    expect.assertions(6)
+    expect.assertions(4)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
     const userProfile = await masq.getProfile()
@@ -350,17 +355,14 @@ describe('masq protocol', async () => {
       peer.once('data', async (data) => {
         const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppAccessGranted')
-        expect(profile.username).toBe(userProfile.username)
-        expect(profile.image).toBe(userProfile.image)
-        expect(profile.publicKey).toBeDefined()
-        expect(profile.dbName).toBe(userProfile.id)
+        expect(profile.key).toBeDefined()
+        expect(profile.id).toBe(userProfile.id)
 
         const message = {
           msg: 'masqAppRequestWriteAccess',
           profileLocalKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
         }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        await encryptAndSendJson(cryptoKey, message, peer)
 
         peer.once('data', async (data) => {
           const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
@@ -389,14 +391,11 @@ describe('masq protocol', async () => {
       const message = {
         msg: 'masqAppAccessGranted',
         profile: {
-          username: 'username',
-          image: '',
-          publicKey: '0x2233',
-          dbName: '4569'
+          id: '4569', // profile id
+          key: '0x2233'
         }
       }
-      const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
+      await encryptAndSendJson(cryptoKey, message, peer)
 
       peer.once('data', async (data) => {
         const { msg, profileLocalKey, userAppsLocalKeys } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
@@ -407,8 +406,7 @@ describe('masq protocol', async () => {
         const message = {
           msg: 'masqAppWriteAccessGranted'
         }
-        const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        await encryptAndSendJson(cryptoKey, message, peer)
 
         sw.close()
       })
@@ -443,3 +441,8 @@ describe('masq protocol', async () => {
   //   await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
   // })
 })
+
+async function encryptAndSendJson (cryptoKey, message, peer) {
+  const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
+  peer.send(JSON.stringify(encryptedMsg))
+}

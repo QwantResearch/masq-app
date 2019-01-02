@@ -357,10 +357,10 @@ class Masq {
         const data = {
           msg: 'masqAppAccessGranted',
           profile: {
-            username: profile.username,
-            image: profile.image,
-            publicKey: this.profileDB.key.toString('hex'),
-            dbName: profile.id
+            // username: profile.username,
+            // image: profile.image,
+            key: this.profileDB.key.toString('hex'),
+            id: profile.id
           }
         }
         this.encryptAndSendJson(peer, data)
@@ -426,7 +426,11 @@ class Masq {
       })
 
       const requestMasqAppWriteAccess = async (peer, profileLocalKey, userAppsLocalKeys) => {
-        const data = { msg: 'masqAppRequestWriteAccess', profileLocalKey: profileLocalKey, userAppsLocalKeys: userAppsLocalKeys }
+        const data = {
+          msg: 'masqAppRequestWriteAccess',
+          profileLocalKey,
+          userAppsLocalKeys
+        }
         this.encryptAndSendJson(peer, data)
       }
 
