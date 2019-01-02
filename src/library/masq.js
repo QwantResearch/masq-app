@@ -357,8 +357,6 @@ class Masq {
         const data = {
           msg: 'masqAppAccessGranted',
           profile: {
-            // username: profile.username,
-            // image: profile.image,
             key: this.profileDB.key.toString('hex'),
             id: profile.id
           }
@@ -389,15 +387,10 @@ class Masq {
         const { msg } = json
         // TODO: Error if  missing params
         if (msg === 'masqAppRequestWriteAccess') {
-          const { profileLocalKey, userAppsLocalKeys } = json
+          const { localKey } = json
           // authorize profileLocalKey
-          const profileLocalKeyBuffer = Buffer.from(profileLocalKey, 'hex')
+          const profileLocalKeyBuffer = Buffer.from(localKey, 'hex')
           await this.profileDB.authorizeAsync(profileLocalKeyBuffer)
-
-          for (let app in userAppsLocalKeys) {
-            const userAppKey = Buffer.from(app.localKey, 'hex')
-            await this.appsDBs[app.dbName].authorizeAsync(userAppKey)
-          }
 
           sendWriteMasqAppAccessGranted(peer)
           this.sw.close()
@@ -425,11 +418,10 @@ class Masq {
         return reject(new Error('Disconnected'))
       })
 
-      const requestMasqAppWriteAccess = async (peer, profileLocalKey, userAppsLocalKeys) => {
+      const requestMasqAppWriteAccess = async (peer, localKey) => {
         const data = {
           msg: 'masqAppRequestWriteAccess',
-          profileLocalKey,
-          userAppsLocalKeys
+          localKey
         }
         this.encryptAndSendJson(peer, data)
       }
@@ -456,13 +448,12 @@ class Masq {
           // openOrCreate user app dbs
 
           // const profileLocalKey = this.profileDB.local.key.toString('hex')
-          const profileLocalKey = '0x1122'
+          const localKey = '0x1122'
           // [{dbName: '1122', localKey: '0x2253'}]
-          const userAppsLocalKeys = []
           // const userAppKey = Buffer.from(json.key, 'hex')
           // this.appsDBs[dbName].authorize(userAppKey, (err) => {
           //   if (err) throw err
-          requestMasqAppWriteAccess(peer, profileLocalKey, userAppsLocalKeys)
+          requestMasqAppWriteAccess(peer, localKey)
           this.sw.close()
           return resolve()
           // })
