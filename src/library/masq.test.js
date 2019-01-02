@@ -277,7 +277,7 @@ describe('masq user-app protocol', async () => {
   })
 
   test('should send notAuthorized, and give write access', async done => {
-    expect.assertions(5)
+    expect.assertions(6)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -292,6 +292,7 @@ describe('masq user-app protocol', async () => {
           const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
+          expect(key).toHaveLength(64)
           expect(userAppDbId).toBeDefined()
 
           const message = {
@@ -344,7 +345,7 @@ describe('Masq synchronisation protocol', () => {
    * - We call handleSyncProfilePush
    */
   test('should send the public key and give write access', async (done) => {
-    expect.assertions(4)
+    expect.assertions(5)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
     const userProfile = await masq.getProfile()
@@ -356,6 +357,7 @@ describe('Masq synchronisation protocol', () => {
         const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppAccessGranted')
         expect(profile.key).toBeDefined()
+        expect(profile.key).toHaveLength(64)
         expect(profile.id).toBe(userProfile.id)
 
         const message = {
