@@ -185,6 +185,11 @@ class Masq {
     this._updateResource('devices', device)
   }
 
+  async encryptAndSendJson (peer, json) {
+    const encryptedJson = await encrypt(this.key, json, 'base64')
+    peer.send(JSON.stringify(encryptedJson))
+  }
+
   /**
    * Connect to a user-app channel and answer if
    * the user-app is authorized or not.
@@ -201,14 +206,12 @@ class Masq {
 
       const sendAuthorized = async (peer, userAppDbId) => {
         const data = { msg: 'authorized', userAppDbId }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       const sendNotAuthorized = async (peer) => {
         const data = { msg: 'notAuthorized' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       this.hub = signalhub(channel, HUB_URLS)
@@ -272,20 +275,17 @@ class Masq {
 
       const sendAccessRefused = async (peer) => {
         const data = { msg: 'masqAccessRefused' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       const sendAccessGranted = async (peer, dbKey, userAppDbId) => {
         const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       const sendWriteAccessGranted = async (peer) => {
         const data = { msg: 'writeAccessGranted' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       const handleData = async (peer, data) => {
@@ -363,14 +363,12 @@ class Masq {
             dbName: profile.id
           }
         }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       const sendWriteMasqAppAccessGranted = async (peer) => {
         const data = { msg: 'masqAppWriteAccessGranted' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       this.sw.on('peer', async (peer) => {
@@ -429,8 +427,7 @@ class Masq {
 
       const requestMasqAppWriteAccess = async (peer, profileLocalKey, userAppsLocalKeys) => {
         const data = { msg: 'masqAppRequestWriteAccess', profileLocalKey: profileLocalKey, userAppsLocalKeys: userAppsLocalKeys }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
+        this.encryptAndSendJson(peer, data)
       }
 
       this.sw.on('peer', async (peer) => {
