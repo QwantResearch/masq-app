@@ -16,9 +16,10 @@ const swarmOpts = process.env.NODE_ENV === 'test'
 /**
  * Open or create a hyperdb instance
  * @param {string} name The indexeddb store name
+ * @param {Buffer} key: An optional key
  */
-const openOrCreateDB = (name) => {
-  return createPromisifiedHyperDB(name)
+const openOrCreateDB = (name, key) => {
+  return createPromisifiedHyperDB(name, key)
 }
 
 class Masq {
@@ -69,6 +70,13 @@ class Masq {
     this.appsDBs = {}
   }
 
+  addPublicProfile (profile) {
+    const { username, image, id } = profile
+    if (!username || !id) throw new Error('Missing data')
+
+    this._setProfileToLocalStorage({ username, image, id })
+  }
+
   /**
    * Create a new profile DB
    * @param {object} profile The new profile to add
@@ -77,13 +85,10 @@ class Masq {
     // TODO: Check profile properties
     const id = profile.id ? profile.id : uuidv4()
     const hashedPassphrase = await derivePassphrase(profile.password)
-    const publicProfile = {
+    const privateProfile = {
+      id: id,
       username: profile.username,
       image: profile.image,
-      id: id
-    }
-    const privateProfile = {
-      ...publicProfile,
       firstname: profile.firstname,
       lastname: profile.lastname,
       hashedPassphrase: hashedPassphrase
@@ -93,7 +98,7 @@ class Masq {
     const db = openOrCreateDB(id)
     await dbReady(db)
     await db.putAsync('/', privateProfile)
-    this._setProfileToLocalStorage(publicProfile)
+    this.addPublicProfile(privateProfile)
   }
 
   /**
@@ -438,27 +443,24 @@ class Masq {
 
       const handleData = async (peer, data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
-        const { msg } = json
+        const { msg, profile } = json
+
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
           // create DB, the profile, and send the local key.
 
-          // Create profile
-          // this._createDB(profile.dbName, Buffer.from(pro))
+          // Create profile db
+          const db = openOrCreateDB(profile.id, Buffer.from(profile.key, 'hex'))
+          await dbReady(db)
+          const localKey = db.key.toString('hex')
 
-          // openOrCreate user app dbs
-          // console.log('this', this)
+          // wait for replication ???
 
-          // const localKey = this.profileDB.local.key.toString('hex')
-          const localKey = '0x1122'
-          // [{dbName: '1122', localKey: '0x2253'}]
-          // const userAppKey = Buffer.from(json.key, 'hex')
-          // this.appsDBs[dbName].authorize(userAppKey, (err) => {
-          //   if (err) throw err
+          // create public profile in localstorage once the profile can be opened
+          // this.addPublicProfile()
           requestMasqAppWriteAccess(peer, localKey)
           this.sw.close()
           return resolve()
-          // })
         }
       }
     })

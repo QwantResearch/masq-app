@@ -381,7 +381,7 @@ describe('Masq synchronisation protocol', () => {
    * - We call handleSyncProfilePull
    */
   test('should receive public key and get write access', async (done) => {
-    expect.assertions(2)
+    expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -392,15 +392,15 @@ describe('Masq synchronisation protocol', () => {
         msg: 'masqAppAccessGranted',
         profile: {
           id: '4569', // profile id
-          key: '0x2233'
+          key: 'ab82524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
         }
       }
       await encryptAndSendJson(cryptoKey, message, peer)
-
       peer.once('data', async (data) => {
         const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppRequestWriteAccess')
         expect(localKey).toBeDefined()
+        expect(localKey).toHaveLength(64)
 
         const message = {
           msg: 'masqAppWriteAccessGranted'
