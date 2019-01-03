@@ -456,22 +456,28 @@ class Masq {
           console.log('localKey', localKey)
 
           // wait for replication ???
-          // const watcher = db.watch('/', async () => {
-          //   console.log('on watch###')
-          //   const profile = await db.get('/')
-          //   if (!profile.id) return
-          //   // once the profile is retrieved, we can add the
-          //   // public profile to the localstorage
-          //   await this.addPublicProfile(profile)
-          //   // open profile ?
-          //   watcher.destroy()
-          // })
+          const watcher = db.watch('/', async () => {
+            console.log('on watch###')
+            const profile = await db.get('/')
+            if (!profile.id) return
+            // once the profile is retrieved, we can add the
+            // public profile to the localstorage
+            await this.addPublicProfile(profile)
+            // open profile ?
+            watcher.destroy()
 
-          requestMasqAppWriteAccess(peer, localKey)
-          this._closeConnection()
+            requestMasqAppWriteAccess(peer, localKey)
+            this._closeConnection()
+
+            // this._startReplicate(db)
+            return resolve()
+          })
+
+          watcher.on('error', () => {
+            console.error('watcher error!')
+          })
 
           this._startReplicate(db)
-          return resolve()
         }
       }
     })

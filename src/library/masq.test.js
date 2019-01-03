@@ -63,7 +63,7 @@ beforeAll((done) => {
 afterAll((done) => {
   console.log('afterAll!')
   server.close()
-  masq.closeProfile()
+  // masq.closeProfile()
   setTimeout(done, 1000) // Wait to be sure server.close has finished
 })
 
@@ -324,7 +324,7 @@ describe('masq user-app protocol', async () => {
   })
 })
 
-describe('Masq synchronisation protocol', () => {
+describe('Masq synchronisation protocol', async () => {
   let cryptoKey
   let key
   let keyBase64
@@ -345,38 +345,38 @@ describe('Masq synchronisation protocol', () => {
    * - We mock Masq-app 2
    * - We call handleSyncProfilePush
    */
-  test('should send the public key and give write access', async (done) => {
-    expect.assertions(5)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
-    const userProfile = await masq.getProfile()
+  // test('should send the public key and give write access', async (done) => {
+  //   expect.assertions(5)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+  //   const userProfile = await masq.getProfile()
 
-    sw.on('close', done)
+  //   sw.on('close', done)
 
-    sw.on('peer', async (peer) => {
-      peer.once('data', async (data) => {
-        const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('masqAppAccessGranted')
-        expect(profile.key).toBeDefined()
-        expect(profile.key).toHaveLength(64)
-        expect(profile.id).toBe(userProfile.id)
+  //   sw.on('peer', async (peer) => {
+  //     peer.once('data', async (data) => {
+  //       const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('masqAppAccessGranted')
+  //       expect(profile.key).toBeDefined()
+  //       expect(profile.key).toHaveLength(64)
+  //       expect(profile.id).toBe(userProfile.id)
 
-        const message = {
-          msg: 'masqAppRequestWriteAccess',
-          localKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
-        }
-        await encryptAndSendJson(cryptoKey, message, peer)
+  //       const message = {
+  //         msg: 'masqAppRequestWriteAccess',
+  //         localKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
+  //       }
+  //       await encryptAndSendJson(cryptoKey, message, peer)
 
-        peer.once('data', async (data) => {
-          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-          expect(msg).toBe('masqAppWriteAccessGranted')
-          sw.close()
-        })
-      })
-    })
+  //       peer.once('data', async (data) => {
+  //         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //         expect(msg).toBe('masqAppWriteAccessGranted')
+  //         sw.close()
+  //       })
+  //     })
+  //   })
 
-    await masq.handleSyncProfilePush('channel', keyBase64)
-  })
+  //   await masq.handleSyncProfilePush('channel', keyBase64)
+  // })
 
   /**
    * Scenario 1:
@@ -389,6 +389,7 @@ describe('Masq synchronisation protocol', () => {
     const sw = swarm(hub, { wrtc })
     const key = masq.profileDB.key.toString('hex')
     const profile = await masq.getProfile()
+    console.log('profile Id', masq.profileId)
     console.log('profile', profile)
 
     sw.on('close', done)
@@ -397,12 +398,13 @@ describe('Masq synchronisation protocol', () => {
       const message = {
         msg: 'masqAppAccessGranted',
         profile: {
-          id: '4569', // profile id
+          id: profile.id,
           key
         }
       }
 
       await encryptAndSendJson(cryptoKey, message, peer)
+
       peer.once('data', async (data) => {
         const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppRequestWriteAccess')
@@ -412,6 +414,7 @@ describe('Masq synchronisation protocol', () => {
         const message = {
           msg: 'masqAppWriteAccessGranted'
         }
+
         await encryptAndSendJson(cryptoKey, message, peer)
 
         sw.close()
