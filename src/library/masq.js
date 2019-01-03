@@ -19,6 +19,8 @@ const swarmOpts = process.env.NODE_ENV === 'test'
  * @param {Buffer} key: An optional key
  */
 const openOrCreateDB = (name, key) => {
+  console.log('8.91')
+
   return createPromisifiedHyperDB(name, key)
 }
 
@@ -43,13 +45,13 @@ class Masq {
    */
   async openProfile (profileId) {
     if (!profileId) throw Error('Missing profileId')
-
     this.closeProfile()
 
     this.profileId = profileId
 
     this.profileDB = openOrCreateDB(profileId)
-    this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
+    await dbReady(this.profileDB)
+    this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
     apps.forEach(app => {
@@ -445,29 +447,37 @@ class Masq {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
         const { msg, profile } = json
 
+        if (msg === 'masqAppWriteAccessGranted') {
+          this._closeConnection()
+        }
+
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
           // create DB, the profile, and send the local key.
 
           // Create profile db
-          const db = openOrCreateDB(profile.id, Buffer.from(profile.key, 'hex'))
-          await dbReady(db)
-          const localKey = db.key.toString('hex')
-          console.log('localKey', localKey)
+          console.log('received profile', profile)
 
-          // wait for replication ???
+          // openOrCreateDB call function createPromisifiedHyperDB (name, hexKey)
+          // but this function is already calling Buffer.from, we need to send directly the hex key
+          const db = openOrCreateDB(profile.id, profile.key)
+
+          // dbReady must be mocked because the promisifyAll takes to much time
+          await dbReady(db)
+
+          const localKey = db.key.toString('hex')
+
           const watcher = db.watch('/', async () => {
             console.log('on watch###')
-            const profile = await db.get('/')
+            const profile = (await db.getAsync('/')).value
             if (!profile.id) return
             // once the profile is retrieved, we can add the
             // public profile to the localstorage
-            await this.addPublicProfile(profile)
+            // await this.addPublicProfile(profile)
             // open profile ?
-            watcher.destroy()
+            // watcher.destroy()
 
             requestMasqAppWriteAccess(peer, localKey)
-            this._closeConnection()
 
             // this._startReplicate(db)
             return resolve()

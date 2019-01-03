@@ -28,6 +28,19 @@ jest.mock('masq-common', () => {
   modified.utils.resetDbList = () => {
     dbList = {}
   }
+  /**
+   * This is needed because in the following code :
+   * this.profileDB = openOrCreateDB(profileId)
+   * await dbReady(this.profileDB)
+   * this._startReplicate(this.profileDB)
+   * dbReady never resolves the promise
+   * A possible reason is that the promisifyAll
+   * layer takes too much time, as a consequence
+   * the db is already "ready" before the call to dbReady :-)
+   */
+  modified.utils.dbReady = (db) => {
+    return Promise.resolve()
+  }
   modified.crypto.derivePassphrase = async (passphrase) => {
     const hashedPassphrase = {
       salt: '81570bf99c0134985d7d975b69e123ce',
@@ -388,9 +401,11 @@ describe('Masq synchronisation protocol', async () => {
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
     const key = masq.profileDB.key.toString('hex')
+    console.log('1.1 : 1', key)
+
     const profile = await masq.getProfile()
     console.log('profile Id', masq.profileId)
-    console.log('profile', profile)
+    // console.log('profile', profile)
 
     sw.on('close', done)
 
@@ -398,7 +413,7 @@ describe('Masq synchronisation protocol', async () => {
       const message = {
         msg: 'masqAppAccessGranted',
         profile: {
-          id: profile.id,
+          id: profile.id + 'a',
           key
         }
       }
@@ -406,6 +421,8 @@ describe('Masq synchronisation protocol', async () => {
       await encryptAndSendJson(cryptoKey, message, peer)
 
       peer.once('data', async (data) => {
+        console.log('receive message granted')
+
         const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('masqAppRequestWriteAccess')
         expect(localKey).toBeDefined()
