@@ -26,6 +26,7 @@ const openOrCreateDB = (name, key) => {
 
 class Masq {
   constructor () {
+    this.deviceId = null
     this.profileId = null
     this.profileDB = null
 
@@ -61,6 +62,18 @@ class Masq {
       db.on('ready', () => this._startReplicate(db))
     })
 
+    const publicProfile = this._getProfileFromLocalStorage(profileId)
+    if (publicProfile.deviceId) {
+      this.deviceId = publicProfile.deviceId
+    } else {
+      // Create a new device
+      await this._createCurrentDevice()
+      this._setProfileToLocalStorage({
+        ...publicProfile,
+        deviceId: this.deviceId
+      })
+    }
+
     const profile = (await this.profileDB.getAsync('/')).value
     return profile
   }
@@ -72,11 +85,17 @@ class Masq {
     this.appsDBs = {}
   }
 
-  addPublicProfile (profile) {
+  /**
+   * Create a public profile containing username, image, and id,
+   * and a device.
+   * This method should be called only once.
+   * @param {*} profile
+   */
+  async addPublicProfile (profile) {
     const { username, image, id } = profile
     if (!username || !id) throw new Error('Missing data')
 
-    this._setProfileToLocalStorage({ username, image, id })
+    this._setProfileToLocalStorage({ username, image, id, deviceId: this.deviceId })
   }
 
   /**
@@ -100,7 +119,7 @@ class Masq {
     const db = openOrCreateDB(id)
     await dbReady(db)
     await db.putAsync('/', privateProfile)
-    this.addPublicProfile(privateProfile)
+    await this.addPublicProfile(privateProfile)
   }
 
   /**
@@ -497,6 +516,19 @@ class Masq {
    * Private methods
    */
 
+  /**
+   * Create and add the current device to the DB
+   */
+  async _createCurrentDevice (name) {
+    if (this.deviceId) return // Device already exist
+
+    this.deviceId = await this.addDevice({
+      name,
+      localKey: this.profileDB.local.key.toString('hex'),
+      apps: []
+    })
+  }
+
   async _createResource (name, res) {
     this._checkProfile()
     const node = await this.profileDB.getAsync(`/${name}`)
@@ -544,7 +576,8 @@ class Masq {
     window.localStorage.setItem(id, JSON.stringify({
       id: id,
       username: profile.username,
-      image: profile.image
+      image: profile.image,
+      deviceId: profile.deviceId || null
     }))
   }
 
@@ -557,6 +590,11 @@ class Masq {
     )
 
     return profiles
+  }
+
+  _getProfileFromLocalStorage (id) {
+    const profile = JSON.parse(window.localStorage.getItem(id))
+    return profile
   }
 
   /**

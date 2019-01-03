@@ -125,6 +125,12 @@ describe('masq internal operations', () => {
     expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
   })
 
+  test('current device should be created', async () => {
+    const devices = await masq.getDevices()
+    expect(devices).toHaveLength(1)
+    expect(devices[0].id).toBeDefined()
+  })
+
   test('update an existing profile', async () => {
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
@@ -201,20 +207,20 @@ describe('masq internal operations', () => {
 
     await masq.addDevice(device)
     const devices = await masq.getDevices()
-    expect(devices).toHaveLength(1)
-    expect(devices[0].id).toBeDefined()
-    expect(devices[0]).toEqual(device)
+    expect(devices).toHaveLength(2)
+    expect(devices[1].id).toBeDefined()
+    expect(devices[1]).toEqual(device)
   })
 
   test('update a device', async () => {
     let devices = await masq.getDevices()
-    const device = devices[0]
+    const device = devices[1]
     device.name = 'new name'
 
     await masq.updateDevice(device)
     devices = await masq.getDevices()
-    expect(devices).toHaveLength(1)
-    expect(devices[0]).toEqual(device)
+    expect(devices).toHaveLength(2)
+    expect(devices[1]).toEqual(device)
   })
 
   test('should throw if there is no id in device', async () => {
