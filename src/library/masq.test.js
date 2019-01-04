@@ -189,7 +189,7 @@ describe('masq internal operations', () => {
     expect(apps[0]).toEqual(app)
   })
 
-  test('update an device app list', async () => {
+  test('update apps in current device (add the newly added localKey) ', async () => {
     await wait(2000)
     let device = await masq.getDevice()
     console.log(device)
