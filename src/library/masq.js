@@ -3,6 +3,7 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import common from 'masq-common'
+import detectBrowser from 'detect-browser'
 
 const { encrypt, decrypt, importKey, derivePassphrase } = common.crypto
 const { dbReady, createPromisifiedHyperDB } = common.utils
@@ -22,6 +23,10 @@ const openOrCreateDB = (name, key) => {
   console.log('8.91')
 
   return createPromisifiedHyperDB(name, key)
+}
+
+function capitalize (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 class Masq {
@@ -519,11 +524,12 @@ class Masq {
   /**
    * Create and add the current device to the DB
    */
-  async _createCurrentDevice (name) {
+  async _createCurrentDevice () {
+    const { browser, os } = detectBrowser.detect()
     if (this.deviceId) return // Device already exist
 
     this.deviceId = await this.addDevice({
-      name,
+      name: `${capitalize(browser)} - ${os}`,
       localKey: this.profileDB.local.key.toString('hex'),
       apps: []
     })
