@@ -472,7 +472,8 @@ class Masq {
         const { msg, profile } = json
 
         if (msg === 'masqAppWriteAccessGranted') {
-          this._closeConnection()
+          await this._closeConnection()
+          return resolve()
         }
 
         // TODO: Error if  missing params
@@ -499,16 +500,19 @@ class Masq {
             // public profile to the localstorage
             // await this.addPublicProfile(profile)
             // open profile ?
-            // watcher.destroy()
+            watcher.destroy()
 
             requestMasqAppWriteAccess(peer, localKey)
 
             // this._startReplicate(db)
+            await this._closeConnection()
             return resolve()
           })
 
-          watcher.on('error', () => {
-            console.error('watcher error!')
+          watcher.on('error', async (err) => {
+            watcher.destroy()
+            await this._closeConnection()
+            return reject(err)
           })
 
           this._startReplicate(db)
