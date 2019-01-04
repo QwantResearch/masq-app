@@ -20,8 +20,6 @@ const swarmOpts = process.env.NODE_ENV === 'test'
  * @param {Buffer} key: An optional key
  */
 const openOrCreateDB = (name, key) => {
-  console.log('8.91')
-
   return createPromisifiedHyperDB(name, key)
 }
 
@@ -79,7 +77,7 @@ class Masq {
       })
     }
 
-    const profile = (await this.profileDB.getAsync('/')).value
+    const profile = (await this.profileDB.getAsync('/profile')).value
     return profile
   }
 
@@ -123,7 +121,7 @@ class Masq {
     // Create a DB for this profile
     const db = openOrCreateDB(id)
     await dbReady(db)
-    await db.putAsync('/', privateProfile)
+    await db.putAsync('/profile', privateProfile)
     await this.addPublicProfile(privateProfile)
   }
 
@@ -139,7 +137,7 @@ class Masq {
    */
   async getProfile () {
     this._checkProfile()
-    const profile = (await this.profileDB.getAsync('/')).value
+    const profile = (await this.profileDB.getAsync('/profile')).value
     return profile
   }
 
@@ -163,7 +161,7 @@ class Masq {
       id: id
     }
 
-    await this.profileDB.putAsync('/', updatedPrivateProfile)
+    await this.profileDB.putAsync('/profile', updatedPrivateProfile)
     this._setProfileToLocalStorage(updatePublicProfile)
   }
 
@@ -420,11 +418,10 @@ class Masq {
         if (msg === 'masqAppRequestWriteAccess') {
           const { localKey } = json
           // authorize profileLocalKey
-          const profileLocalKeyBuffer = Buffer.from(localKey, 'hex')
+          const profileLocalKeyBuffer = Buffer.from(localKey, 'hex') // Buffer.from(localKey, 'hex')
           await this.profileDB.authorizeAsync(profileLocalKeyBuffer)
-
           sendWriteMasqAppAccessGranted(peer)
-          this.sw.close()
+          await this._closeConnection()
           return resolve()
         }
       }
@@ -472,15 +469,13 @@ class Masq {
         const { msg, profile } = json
 
         if (msg === 'masqAppWriteAccessGranted') {
-          this._closeConnection()
+          await this._closeConnection()
+          return resolve()
         }
 
         // TODO: Error if  missing params
         if (msg === 'masqAppAccessGranted') {
           // create DB, the profile, and send the local key.
-
-          // Create profile db
-          console.log('received profile', profile)
 
           // openOrCreateDB call function createPromisifiedHyperDB (name, hexKey)
           // but this function is already calling Buffer.from, we need to send directly the hex key
@@ -491,24 +486,26 @@ class Masq {
 
           const localKey = db.key.toString('hex')
 
-          const watcher = db.watch('/', async () => {
-            console.log('on watch###')
-            const profile = (await db.getAsync('/')).value
+          const watcher = db.watch('/profile', async () => {
+            const profile = (await db.getAsync('/profile')).value
             if (!profile.id) return
             // once the profile is retrieved, we can add the
             // public profile to the localstorage
             // await this.addPublicProfile(profile)
             // open profile ?
-            // watcher.destroy()
+            watcher.destroy()
 
             requestMasqAppWriteAccess(peer, localKey)
 
             // this._startReplicate(db)
+            await this._closeConnection()
             return resolve()
           })
 
-          watcher.on('error', () => {
-            console.error('watcher error!')
+          watcher.on('error', async (err) => {
+            watcher.destroy()
+            await this._closeConnection()
+            return reject(err)
           })
 
           this._startReplicate(db)

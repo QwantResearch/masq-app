@@ -8,6 +8,7 @@ window.crypto = require('@trust/webcrypto')
 const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
+// const { createPromisifiedHyperDB } = common.utils
 
 jest.setTimeout(30000)
 
@@ -66,7 +67,7 @@ jest.mock('random-access-idb', () =>
   () => require('random-access-memory'))
 
 let masq = new Masq()
-let masq2 = new Masq()
+// let masq2 = new Masq()
 let server = null
 
 beforeAll((done) => {
@@ -78,9 +79,8 @@ beforeAll((done) => {
 })
 
 afterAll((done) => {
-  console.log('afterAll!')
   server.close()
-  // masq.closeProfile()
+  masq.closeProfile()
   setTimeout(done, 1000) // Wait to be sure server.close has finished
 })
 
@@ -368,88 +368,79 @@ describe('Masq synchronisation protocol', async () => {
    * - We mock Masq-app 2
    * - We call handleSyncProfilePush
    */
-  // test('should send the public key and give write access', async (done) => {
-  //   expect.assertions(5)
-  //   const hub = signalhub('channel', 'localhost:8080')
-  //   const sw = swarm(hub, { wrtc })
-  //   const userProfile = await masq.getProfile()
+  test('should send the public key and give write access', async (done) => {
+    expect.assertions(5)
+    const hub = signalhub('channel', 'localhost:8080')
+    const sw = swarm(hub, { wrtc })
+    const userProfile = await masq.getProfile()
+    const key = masq.profileDB.key.toString('hex')
 
-  //   sw.on('close', done)
+    sw.on('close', done)
 
-  //   sw.on('peer', async (peer) => {
-  //     peer.once('data', async (data) => {
-  //       const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-  //       expect(msg).toBe('masqAppAccessGranted')
-  //       expect(profile.key).toBeDefined()
-  //       expect(profile.key).toHaveLength(64)
-  //       expect(profile.id).toBe(userProfile.id)
+    sw.on('peer', async (peer) => {
+      peer.once('data', async (data) => {
+        const { msg, profile } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        expect(msg).toBe('masqAppAccessGranted')
+        expect(profile.key).toBe(key)
+        expect(profile.id).toBe(userProfile.id)
 
-  //       const message = {
-  //         msg: 'masqAppRequestWriteAccess',
-  //         localKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3b'
-  //       }
-  //       await encryptAndSendJson(cryptoKey, message, peer)
+        const message = {
+          msg: 'masqAppRequestWriteAccess',
+          localKey: '1982524189cae29354879cfe2d219628a8a057f2569a0f2ccf11253cf2b55f3c'
+        }
+        await encryptAndSendJson(cryptoKey, message, peer)
 
-  //       peer.once('data', async (data) => {
-  //         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-  //         expect(msg).toBe('masqAppWriteAccessGranted')
-  //         sw.close()
-  //       })
-  //     })
-  //   })
+        peer.once('data', async (data) => {
+          const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          expect(msg).toBe('masqAppWriteAccessGranted')
+          const dbProfile = await masq.getProfile()
+          expect(userProfile.id).toBe(dbProfile.id)
+          sw.close()
+        })
+      })
+    })
 
-  //   await masq.handleSyncProfilePush('channel', keyBase64)
-  // })
+    await masq.handleSyncProfilePush('channel', keyBase64)
+  })
 
   /**
    * Scenario 1:
    * - We mock Masq-app 1
    * - We call handleSyncProfilePull
    */
-  test('should receive public key and get write access', async (done) => {
-    expect.assertions(3)
-    const hub = signalhub('channel', 'localhost:8080')
-    const sw = swarm(hub, { wrtc })
-    const key = masq.profileDB.key.toString('hex')
-    console.log('1.1 : 1', key)
+  // test('should receive public key and get write access', async (done) => {
+  //   expect.assertions(3)
+  //   const hub = signalhub('channel', 'localhost:8080')
+  //   const sw = swarm(hub, { wrtc })
+  //   const key = masq.profileDB.key.toString('hex')
+  //   const profile = await masq.getProfile()
 
-    const profile = await masq.getProfile()
-    console.log('profile Id', masq.profileId)
-    // console.log('profile', profile)
+  //   sw.on('close', done)
 
-    sw.on('close', done)
+  //   sw.on('peer', async (peer) => {
+  //     const message = {
+  //       msg: 'masqAppAccessGranted',
+  //       profile: {
+  //         id: profile.id + 'a',
+  //         key
+  //       }
+  //     }
 
-    sw.on('peer', async (peer) => {
-      const message = {
-        msg: 'masqAppAccessGranted',
-        profile: {
-          id: profile.id + 'a',
-          key
-        }
-      }
+  //     await encryptAndSendJson(cryptoKey, message, peer)
 
-      await encryptAndSendJson(cryptoKey, message, peer)
+  //     peer.once('data', async (data) => {
+  //       const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+  //       expect(msg).toBe('masqAppRequestWriteAccess')
+  //       expect(localKey).toBeDefined()
+  //       expect(localKey).toHaveLength(64)
+  //       const message = { msg: 'masqAppWriteAccessGranted' }
+  //       await encryptAndSendJson(cryptoKey, message, peer)
+  //     })
+  //   })
 
-      peer.once('data', async (data) => {
-        console.log('receive message granted')
-
-        const { msg, localKey } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
-        expect(msg).toBe('masqAppRequestWriteAccess')
-        expect(localKey).toBeDefined()
-        expect(localKey).toHaveLength(64)
-
-        const message = {
-          msg: 'masqAppWriteAccessGranted'
-        }
-
-        await encryptAndSendJson(cryptoKey, message, peer)
-
-        sw.close()
-      })
-    })
-
-    await masq2.handleSyncProfilePull('channel', keyBase64)
-  })
+  //   await masq2.handleSyncProfilePull('channel', keyBase64)
+  //   sw.close()
+  // })
 })
 
 async function encryptAndSendJson (cryptoKey, message, peer) {
