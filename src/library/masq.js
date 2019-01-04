@@ -57,6 +57,37 @@ class Masq {
 
     this.profileDB = openOrCreateDB(profileId)
     await dbReady(this.profileDB)
+    const appsWatcher = this.profileDB.watch('/apps', async () => {
+      console.log('apps on watch###')
+
+      const apps = await this.getApps()
+      const device = await this.getDevice()
+      for (let app of apps) {
+      // apps.forEach(app => {
+        const dbName = profileId + '-' + app.id
+        if (!this.appsDBs[dbName]) {
+          const db = openOrCreateDB(dbName)
+          db.on('ready', async () => {
+            this.appsDBs[dbName] = db
+            // If any of the apps is not registered in devices app, we add the local key
+            const deviceAppExist = device.apps.find(deviceApp => deviceApp.appId === app.id)
+            if (!deviceAppExist) {
+              const updatedApps = [...device.apps, { id: app.id, localKey: db.local.key.toString('hex') }]
+              await this.updateCurrentDevice({
+                ...device,
+                apps: updatedApps
+              })
+              console.log(await this.getDevice())
+            }
+          })
+        }
+      }
+    })
+
+    appsWatcher.on('error', async () => {
+      console.error('watcher error!')
+    })
+
     this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
@@ -197,6 +228,23 @@ class Masq {
   getDevices () {
     this._checkProfile()
     return this._getResources('devices')
+  }
+
+  /**
+   * Get the current device
+   */
+  async getDevice () {
+    this._checkProfile()
+    const devices = await this._getResources('devices')
+    return devices.filter(device => device.id === this.deviceId)[0]
+  }
+
+  /**
+   * Update current device
+   */
+  updateCurrentDevice (device) {
+    this._checkProfile()
+    return this._updateResource('devices', device)
   }
 
   /**

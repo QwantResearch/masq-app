@@ -9,6 +9,14 @@ const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 
+const wait = (delay = 3000) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve()
+    }, delay)
+  })
+}
+
 jest.setTimeout(30000)
 
 jest.mock('detect-browser', () => ({
@@ -130,9 +138,8 @@ describe('masq internal operations', () => {
   })
 
   test('current device should be created', async () => {
-    const devices = await masq.getDevices()
-    expect(devices).toHaveLength(1)
-    expect(devices[0].id).toBeDefined()
+    const device = await masq.getDevice()
+    expect(device.id).toBeDefined()
   })
 
   test('update an existing profile', async () => {
@@ -180,6 +187,15 @@ describe('masq internal operations', () => {
     expect(apps).toHaveLength(1)
     expect(apps[0].id).toBeDefined()
     expect(apps[0]).toEqual(app)
+  })
+
+  test('update an device app list', async () => {
+    await wait(2000)
+    let device = await masq.getDevice()
+    console.log(device)
+    expect(device.apps).toHaveLength(1)
+    expect(device.apps[0].id).toBeDefined()
+    expect(device.apps[0].localKey).toBeDefined()
   })
 
   test('update an app', async () => {
