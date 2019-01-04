@@ -11,6 +11,10 @@ const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 
 jest.setTimeout(30000)
 
+jest.mock('detect-browser', () => ({
+  detect: () => ({ browser: 'mockBrowser', os: 'Linux' })
+}))
+
 jest.mock('masq-common', () => {
   const original = require.requireActual('masq-common')
   let dbList = {}
