@@ -10,7 +10,7 @@ const AddProfile = ({ onClose, onNewProfile, onSyncProfile }) => (
   <Modal height={370} width={511} onClose={onClose}>
     <div className={styles.AddProfile}>
       <Button label='Nouveau profil' onClick={onNewProfile} />
-      <Button label='Synchroniser un profil existant' onClick={onSyncProfile} />
+      <Button secondary label='Synchroniser un profil existant (bientôt)' />
     </div>
   </Modal>
 )
