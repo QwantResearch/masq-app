@@ -1,7 +1,7 @@
 {
-  "main.css": "/masq-app/static/css/main.f4a1e24f.chunk.css",
-  "main.js": "/masq-app/static/js/main.76fc2453.chunk.js",
-  "main.js.map": "/masq-app/static/js/main.76fc2453.chunk.js.map",
+  "main.css": "/masq-app/static/css/main.47ea3c88.chunk.css",
+  "main.js": "/masq-app/static/js/main.ebd10a5f.chunk.js",
+  "main.js.map": "/masq-app/static/js/main.ebd10a5f.chunk.js.map",
   "static/css/1.83a4ed32.chunk.css": "/masq-app/static/css/1.83a4ed32.chunk.css",
   "static/js/1.8bbe2a57.chunk.js": "/masq-app/static/js/1.8bbe2a57.chunk.js",
   "static/js/1.8bbe2a57.chunk.js.map": "/masq-app/static/js/1.8bbe2a57.chunk.js.map",
@@ -18,9 +18,9 @@
   "static/media/settings.14755d32.svg": "/masq-app/static/media/settings.14755d32.svg",
   "static/media/logout.d4c1276a.svg": "/masq-app/static/media/logout.d4c1276a.svg",
   "static/media/close.56b2bac8.svg": "/masq-app/static/media/close.56b2bac8.svg",
-  "static/css/main.f4a1e24f.chunk.css.map": "/masq-app/static/css/main.f4a1e24f.chunk.css.map",
   "static/css/1.83a4ed32.chunk.css.map": "/masq-app/static/css/1.83a4ed32.chunk.css.map",
+  "static/css/main.47ea3c88.chunk.css.map": "/masq-app/static/css/main.47ea3c88.chunk.css.map",
   "index.html": "/masq-app/index.html",
-  "precache-manifest.5a21530b7f1f0c335a0c9a51aab8df23.js": "/masq-app/precache-manifest.5a21530b7f1f0c335a0c9a51aab8df23.js",
+  "precache-manifest.b2b7d98f1285a2232f6f2e5d04a26036.js": "/masq-app/precache-manifest.b2b7d98f1285a2232f6f2e5d04a26036.js",
   "service-worker.js": "/masq-app/service-worker.js"
 }
