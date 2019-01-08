@@ -4,16 +4,16 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400.20495aa2.woff"
   },
   {
-    "revision": "78e53d0f3206874e15af",
-    "url": "/masq-app/static/css/main.a9cc1746.chunk.css"
+    "revision": "76fc245385037176e9ea",
+    "url": "/masq-app/static/css/main.f4a1e24f.chunk.css"
   },
   {
     "revision": "cdabf0089155e8595773c806e692d7a7",
     "url": "/masq-app/static/media/asap-latin-700italic.cdabf008.woff"
   },
   {
-    "revision": "174c6b3dde74c7fd418c",
-    "url": "/masq-app/static/js/1.174c6b3d.chunk.js"
+    "revision": "8bbe2a577e4138a0adf3",
+    "url": "/masq-app/static/js/1.8bbe2a57.chunk.js"
   },
   {
     "revision": "4339acbd2671eeee1026",
@@ -26,6 +26,10 @@ self.__precacheManifest = [
   {
     "revision": "56b2bac8245b84b2f4b522d3d29b0a38",
     "url": "/masq-app/static/media/close.56b2bac8.svg"
+  },
+  {
+    "revision": "ce63c0459a272d8301b186ec73db37e7",
+    "url": "/masq-app/static/media/check-circle.ce63c045.svg"
   },
   {
     "revision": "c061ba542fae938fb1674a60c0b9b3b9",
@@ -60,8 +64,8 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400.90269013.woff2"
   },
   {
-    "revision": "78e53d0f3206874e15af",
-    "url": "/masq-app/static/js/main.78e53d0f.chunk.js"
+    "revision": "76fc245385037176e9ea",
+    "url": "/masq-app/static/js/main.76fc2453.chunk.js"
   },
   {
     "revision": "87a02118d118efbd8c75a30d4424e47a",
@@ -92,12 +96,12 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-600italic.33f2a6e8.woff2"
   },
   {
-    "revision": "7c6db4a2e14fd6e946d199f38510926b",
-    "url": "/masq-app/static/media/asap-latin-700.7c6db4a2.woff"
-  },
-  {
     "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",
     "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
+  },
+  {
+    "revision": "7c6db4a2e14fd6e946d199f38510926b",
+    "url": "/masq-app/static/media/asap-latin-700.7c6db4a2.woff"
   },
   {
     "revision": "7d030e1434133b8c04548bd18c87adae",
@@ -116,11 +120,11 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-600italic.a8604808.woff"
   },
   {
-    "revision": "174c6b3dde74c7fd418c",
-    "url": "/masq-app/static/css/1.49af59bc.chunk.css"
+    "revision": "8bbe2a577e4138a0adf3",
+    "url": "/masq-app/static/css/1.83a4ed32.chunk.css"
   },
   {
-    "revision": "a37260a567f1262b0cb56496ad315706",
+    "revision": "a3118254745cf6caf4a2d6fdc12f2cee",
     "url": "/masq-app/index.html"
   }
 ];
