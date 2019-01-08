@@ -72,12 +72,12 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400italic.87a02118.woff2"
   },
   {
-    "revision": "bba1b4a3ecc109fad44534cdaea6e634",
-    "url": "/masq-app/static/media/asap-latin-500.bba1b4a3.woff2"
-  },
-  {
     "revision": "65d145615910281f0ef14ba1f81f150c",
     "url": "/masq-app/static/media/asap-latin-500.65d14561.woff"
+  },
+  {
+    "revision": "bba1b4a3ecc109fad44534cdaea6e634",
+    "url": "/masq-app/static/media/asap-latin-500.bba1b4a3.woff2"
   },
   {
     "revision": "a835e9ea118497fe4836af2959877e87",
@@ -88,12 +88,12 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-600.41264f82.woff2"
   },
   {
-    "revision": "2c3ee5ad63d94580f78a9401f3e1deb4",
-    "url": "/masq-app/static/media/asap-latin-600.2c3ee5ad.woff"
-  },
-  {
     "revision": "33f2a6e873d57cbcf5352482c1d9ee60",
     "url": "/masq-app/static/media/asap-latin-600italic.33f2a6e8.woff2"
+  },
+  {
+    "revision": "2c3ee5ad63d94580f78a9401f3e1deb4",
+    "url": "/masq-app/static/media/asap-latin-600.2c3ee5ad.woff"
   },
   {
     "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",

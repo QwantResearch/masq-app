@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/masq-app/precache-manifest.915c78b3ea249be7d4f08d57f0db808f.js"
+  "/masq-app/precache-manifest.5a21530b7f1f0c335a0c9a51aab8df23.js"
 );
 
 workbox.clientsClaim();
