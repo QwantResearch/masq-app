@@ -19,10 +19,10 @@ export const setSyncStep = syncStep => {
   }
 }
 
-export const signin = user => {
+export const signin = (user, passphrase) => {
   return function (dispatch) {
-    return masq.openProfile(user.id)
-      .then((profile) => dispatch({
+    return masq.openProfile(user.id, passphrase)
+      .then(profile => dispatch({
         type: 'SIGNIN',
         profile
       }))

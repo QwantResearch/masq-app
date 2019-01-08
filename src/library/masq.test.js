@@ -9,6 +9,8 @@ const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 
+const PASSPHRASE = 'secret'
+
 jest.setTimeout(30000)
 
 jest.mock('masq-common', () => {
@@ -71,7 +73,7 @@ describe('masq internal operations', () => {
       username: 'JDoe',
       firstname: 'John',
       lastname: 'Doe',
-      password: 'secret',
+      password: PASSPHRASE,
       image: ''
     }
 
@@ -101,7 +103,7 @@ describe('masq internal operations', () => {
     const profile = { ...profiles[0] }
 
     // Open a profile (login)
-    const privateProfile = await masq.openProfile(profile.id)
+    const privateProfile = await masq.openProfile(profile.id, PASSPHRASE)
     expect(privateProfile.id).toBeDefined()
     expect(privateProfile.username).toEqual(profile.username)
     expect(privateProfile.hashedPassphrase.salt).toBeDefined()

@@ -47,5 +47,20 @@
   h1 {
     color: white;
   }
+
+  p {
+    color: white;
+  }
+
+  .goback {
+    text-decoration: none;
+    display: grid;
+    color: white;
+    grid-column-gap: 8px;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: auto auto;
+    margin-bottom: 16px;
+  }
 }
 

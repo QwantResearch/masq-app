@@ -87,7 +87,8 @@ class App extends Component {
               appRequest={currentAppRequest}
             />
           }
-          <Route path='/' component={Login} />
+
+          <Route exact path='/' component={Login} />
 
           {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
 

@@ -4,7 +4,7 @@ import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import common from 'masq-common'
 
-const { encrypt, decrypt, importKey, derivePassphrase } = common.crypto
+const { encrypt, decrypt, importKey, derivePassphrase, checkPassphrase } = common.crypto
 const { dbReady, createPromisifiedHyperDB } = common.utils
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
@@ -40,14 +40,23 @@ class Masq {
   /**
    * Open and replicate a profile database
    */
-  async openProfile (profileId) {
+  async openProfile (profileId, passphrase) {
     if (!profileId) throw Error('Missing profileId')
 
+    // close existing profile, if any
     this.closeProfile()
 
     this.profileId = profileId
-
     this.profileDB = openOrCreateDB(profileId)
+
+    const { hashedPassphrase } = await this.getProfile()
+    const isCorrectPass = await checkPassphrase(passphrase, hashedPassphrase)
+
+    if (!isCorrectPass) {
+      this.closeProfile()
+      throw new Error('Invalid passphrase')
+    }
+
     this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
 
     const apps = await this.getApps()
