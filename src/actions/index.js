@@ -38,11 +38,14 @@ export const signout = () => {
   }
 }
 
-export const updateUser = (id, user) => {
-  user.id = id
+export const updateUser = (id, update) => {
+  const profile = { ...update, id }
   return function (dispatch) {
-    return masq.updateProfile(user)
-      .then(() => dispatch(signin(user)))
+    return masq.updateProfile(profile)
+      .then(() => dispatch({
+        type: 'SIGNIN',
+        profile
+      }))
   }
 }
 

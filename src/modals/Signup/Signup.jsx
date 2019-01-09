@@ -4,6 +4,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
+import { isUsernameAlreadyTaken } from '../../library/utils'
 
 import styles from './Signup.module.scss'
 
@@ -44,11 +45,23 @@ class Signup extends React.Component {
       case 'image': return true
       case 'firstname': return isName(field)
       case 'lastname': return isName(field)
-      case 'username': return isUsername(field)
+      case 'username': return isUsername(field) && !isUsernameAlreadyTaken(field)
       case 'password': return isPassword(field)
       case 'passwordConfirmation': return field === this.state.password
       default: return false
     }
+  }
+
+  getUsernameLabel () {
+    const username = this.state['username']
+
+    if (this.isValid('username')) {
+      return 'Pseudo (affiché)'
+    }
+
+    return isUsernameAlreadyTaken(username)
+      ? 'Pseudo déjà utilisé. Veuillez en choisir un autre.'
+      : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
   }
 
   onChange (field, event) {
@@ -165,9 +178,7 @@ class Signup extends React.Component {
                 error={!this.isValid('username')}
                 onChange={(e) => this.onChange('username', e)}
                 onKeyUp={this.handleKeyUp}
-                label={this.isValid('username')
-                  ? 'Pseudo (affiché)'
-                  : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'}
+                label={this.getUsernameLabel()}
               />
 
               <div className={styles.buttons}>

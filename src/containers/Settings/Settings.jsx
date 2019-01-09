@@ -7,6 +7,7 @@ import { Button, TextField } from 'qwant-research-components'
 import { updateUser } from '../../actions'
 import { Avatar } from '../../components'
 import { isName, isUsername } from '../../library/validators'
+import { isUsernameAlreadyTaken } from '../../library/utils'
 
 import styles from './Settings.module.scss'
 
@@ -40,14 +41,27 @@ class Settings extends React.Component {
   }
 
   isValid (fieldName) {
+    const { id } = this.props.user
     const field = this.state[fieldName]
     switch (fieldName) {
       case 'lastname': return isName(field)
       case 'firstname': return isName(field)
+      case 'username': return isUsername(field) && !isUsernameAlreadyTaken(field, id)
       case 'image': return true
-      case 'username': return isUsername(field)
       default: return false
     }
+  }
+
+  getUsernameLabel () {
+    const username = this.state['username']
+
+    if (this.isValid('username')) {
+      return 'Pseudo (affiché)'
+    }
+
+    return isUsernameAlreadyTaken(username)
+      ? 'Pseudo déjà utilisé. Veuillez en choisir un autre.'
+      : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
   }
 
   onChange (field, event) {
@@ -112,7 +126,8 @@ class Settings extends React.Component {
               <TextField
                 error={!this.isValid('lastname')}
                 onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.lastname} onChange={(e) => this.onChange('lastname', e)}
+                defaultValue={this.state.lastname}
+                onChange={(e) => this.onChange('lastname', e)}
                 label={this.isValid('lastname')
                   ? 'Nom'
                   : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
@@ -120,7 +135,8 @@ class Settings extends React.Component {
               <TextField
                 error={!this.isValid('firstname')}
                 onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.firstname} onChange={(e) => this.onChange('firstname', e)}
+                defaultValue={this.state.firstname}
+                onChange={(e) => this.onChange('firstname', e)}
                 label={this.isValid('firstname')
                   ? 'Prénom'
                   : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
@@ -128,10 +144,9 @@ class Settings extends React.Component {
               <TextField
                 error={!this.isValid('username')}
                 onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.username} onChange={(e) => this.onChange('username', e)}
-                label={this.isValid('username')
-                  ? 'Pseudo (affiché)'
-                  : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'}
+                defaultValue={this.state.username}
+                onChange={(e) => this.onChange('username', e)}
+                label={this.getUsernameLabel()}
               />
             </div>
           </div>

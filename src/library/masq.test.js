@@ -85,6 +85,22 @@ describe('masq internal operations', () => {
     expect(profiles[0].username).toEqual(profile.username)
   })
 
+  test('trying to register a profile with an existing username should fail', async () => {
+    expect.assertions(1)
+    const profile = {
+      username: 'JDoe',
+      firstname: 'John',
+      lastname: 'Doe',
+      password: PASSPHRASE,
+      image: ''
+    }
+    try {
+      await masq.addProfile(profile)
+    } catch (e) {
+      expect(e.message).toBe('username already taken')
+    }
+  })
+
   test('should throw if there is no opened (logged) profile', async () => {
     expect.assertions(1)
     const profiles = await masq.getProfiles()
@@ -134,6 +150,28 @@ describe('masq internal operations', () => {
     expect(privateProfile.hashedPassphrase.iterations).toBeDefined()
     expect(privateProfile.hashedPassphrase.hashAlgo).toBeDefined()
     expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
+  })
+
+  test('trying to update a profile with an existing username should fail', async () => {
+    const newProfile = {
+      username: 'secondUsername',
+      firstname: 'John',
+      lastname: 'Doe',
+      password: PASSPHRASE,
+      image: ''
+    }
+
+    await masq.addProfile(newProfile)
+
+    expect.assertions(1)
+    const profiles = await masq.getProfiles()
+    const profile = { ...profiles[1], username: profiles[0].username }
+
+    try {
+      await masq.updateProfile(profile)
+    } catch (e) {
+      expect(e.message).toBe('username already taken')
+    }
   })
 
   test('should throw if there is no id in profile', async () => {

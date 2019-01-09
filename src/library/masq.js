@@ -4,6 +4,8 @@ import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import common from 'masq-common'
 
+import { isUsernameAlreadyTaken } from './utils'
+
 const { encrypt, decrypt, importKey, derivePassphrase, checkPassphrase } = common.crypto
 const { dbReady, createPromisifiedHyperDB } = common.utils
 
@@ -84,6 +86,10 @@ class Masq {
    */
   async addProfile (profile) {
     // TODO: Check profile properties
+
+    const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
+    if (isUsernameTaken) { throw new Error('username already taken') }
+
     const id = uuidv4()
     const hashedPassphrase = await derivePassphrase(profile.password)
     const publicProfile = {
@@ -130,6 +136,9 @@ class Masq {
     this._checkProfile()
     const id = profile.id
     if (!id) throw Error('Missing id')
+
+    const isUsernameTaken = await isUsernameAlreadyTaken(profile.username, id)
+    if (isUsernameTaken) { throw new Error('username already taken') }
 
     const privateProfile = await this.getProfile(id)
     // First update private profile
