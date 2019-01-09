@@ -114,6 +114,18 @@ describe('masq internal operations', () => {
     }
   })
 
+  test('should throw when trying to open profile with bad passphrase', async () => {
+    expect.assertions(1)
+    const profiles = await masq.getProfiles()
+    const profile = { ...profiles[0] }
+
+    try {
+      await masq.openProfile(profile.id, 'badpassphrase')
+    } catch (e) {
+      expect(e.message).toBe('Invalid passphrase')
+    }
+  })
+
   test('should get the newly added private profile', async () => {
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
