@@ -52,16 +52,14 @@ class Settings extends React.Component {
     }
   }
 
-  getUsernameLabel () {
+  getUsernameLabel (...labels) {
     const username = this.state['username']
 
     if (this.isValid('username')) {
-      return 'Pseudo (affiché)'
+      return labels[0]
     }
 
-    return isUsernameAlreadyTaken(username)
-      ? 'Pseudo déjà utilisé. Veuillez en choisir un autre.'
-      : 'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+    return isUsernameAlreadyTaken(username) ? labels[1] : labels[2]
   }
 
   onChange (field, event) {
@@ -146,7 +144,11 @@ class Settings extends React.Component {
                 onKeyUp={this.handleKeyUp}
                 defaultValue={this.state.username}
                 onChange={(e) => this.onChange('username', e)}
-                label={this.getUsernameLabel()}
+                label={this.getUsernameLabel(
+                  'Pseudo (affiché)',
+                  'Pseudo déjà utilisé. Veuillez en choisir un autre.',
+                  'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+                )}
               />
             </div>
           </div>
