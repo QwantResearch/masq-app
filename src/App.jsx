@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { HashRouter as Router, Route } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
+import { NotificationMasq } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp } from './modals'
 
@@ -77,10 +78,11 @@ class App extends Component {
   }
 
   render () {
-    const { currentUser, currentAppRequest } = this.props
+    const { currentUser, currentAppRequest, notification } = this.props
     return (
       <Router>
         <div>
+          {notification && <NotificationMasq {...notification} />}
           {currentUser && currentAppRequest &&
             <AuthApp
               onClose={() => this.props.setCurrentAppRequest(null)}
@@ -119,7 +121,8 @@ const mapStateToProps = state => ({
   currentAppRequest: state.masq.currentAppRequest,
   currentUser: state.masq.currentUser,
   devices: state.masq.devices,
-  users: state.masq.users
+  users: state.masq.users,
+  notification: state.notification.currentNotification
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -132,7 +135,8 @@ App.propTypes = {
   currentAppRequest: PropTypes.object,
   setCurrentAppRequest: PropTypes.func,
   addDevice: PropTypes.func,
-  devices: PropTypes.arrayOf(PropTypes.object)
+  devices: PropTypes.arrayOf(PropTypes.object),
+  notification: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

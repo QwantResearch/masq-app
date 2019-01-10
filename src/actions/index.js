@@ -107,3 +107,8 @@ export const handleUserAppRegister = (isAccepted) => {
       })))
   }
 }
+
+export const setNotification = (notification) => ({
+  type: 'SET_NOTIFICATION',
+  notification
+})
