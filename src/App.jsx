@@ -88,7 +88,7 @@ class App extends Component {
             />
           }
 
-          <Route exact path='/' component={Login} />
+          <Route path='/' component={Login} />
 
           {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
 
