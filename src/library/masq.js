@@ -9,6 +9,8 @@ import { isUsernameAlreadyTaken } from './utils'
 const { encrypt, decrypt, importKey, derivePassphrase, checkPassphrase } = common.crypto
 const { dbReady, createPromisifiedHyperDB } = common.utils
 
+const { ERRORS, MasqError } = common.errors
+
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const swarmOpts = process.env.NODE_ENV === 'test'
@@ -43,7 +45,7 @@ class Masq {
    * Open and replicate a profile database
    */
   async openProfile (profileId, passphrase) {
-    if (!profileId) throw Error('Missing profileId')
+    if (!profileId) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
 
     // close existing profile, if any
     this.closeProfile()
@@ -56,7 +58,7 @@ class Masq {
 
     if (!isCorrectPass) {
       this.closeProfile()
-      throw new Error('Invalid passphrase')
+      throw new MasqError(ERRORS.INVALID_PASSPHRASE)
     }
 
     this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
@@ -88,7 +90,7 @@ class Masq {
     // TODO: Check profile properties
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
-    if (isUsernameTaken) { throw new Error('username already taken') }
+    if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
 
     const id = uuidv4()
     const hashedPassphrase = await derivePassphrase(profile.password)
@@ -135,10 +137,10 @@ class Masq {
     // TODO: Check profile
     this._checkProfile()
     const id = profile.id
-    if (!id) throw Error('Missing id')
+    if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username, id)
-    if (isUsernameTaken) { throw new Error('username already taken') }
+    if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
 
     const privateProfile = await this.getProfile(id)
     // First update private profile
@@ -234,7 +236,7 @@ class Masq {
 
       this.sw.on('disconnect', async () => {
         await this._closeUserAppConnection()
-        return reject(new Error('Disconnected'))
+        return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
       })
 
       this.sw.once('peer', async (peer) => {
@@ -255,7 +257,7 @@ class Masq {
             await sendNotAuthorized(peer)
           }
         } catch (e) {
-          return reject(new Error('Disconnected'))
+          return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
         }
 
         peer.once('data', async (data) => {
@@ -270,7 +272,7 @@ class Masq {
             resolve(false)
           } else {
             await this._closeUserAppConnection()
-            reject(new Error('Invalid data'))
+            reject(new MasqError(ERRORS.INVALID_DATA))
           }
         })
       })
@@ -320,7 +322,7 @@ class Masq {
           try {
             await this.appsDBs[dbName].authorizeAsync(userAppKey)
           } catch (err) {
-            throw err
+            throw new MasqError(ERRORS.AUTHORIZE_DB_KEY_FAILED)
           }
           await sendWriteAccessGranted(peer)
           this.sw.close()
@@ -392,13 +394,13 @@ class Masq {
 
   async _updateResource (name, res) {
     const id = res.id
-    if (!id) throw Error('Missing id')
+    if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
     return this.profileDB.putAsync(`/${name}/${id}`, res)
   }
 
   _setProfileToLocalStorage (profile) {
     const id = profile.id
-    if (!id) throw Error('missing id')
+    if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
 
     window.localStorage.setItem(id, JSON.stringify({
       id: id,
@@ -439,7 +441,7 @@ class Masq {
   }
 
   _checkProfile () {
-    if (!this.profileDB) throw Error('Open a profile first')
+    if (!this.profileDB) throw new MasqError(ERRORS.PROFILE_NOT_OPENED)
   }
 
   _closeUserAppConnection () {

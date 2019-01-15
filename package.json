@@ -23,6 +23,7 @@
     "classnames": "^2.2.6",
     "detect-browser": "^3.0.1",
     "hyperdb": "^3.5.0",
+    "masq-common": "git+https://github.com/QwantResearch/masq-common",
     "pump": "^3.0.0",
     "qwant-research-components": "git+https://github.com/QwantResearch/qwant-research-components.git",
     "random-access-idb": "^1.2.0",
@@ -38,8 +39,7 @@
     "signalhubws": "^1.0.7",
     "typeface-asap": "0.0.54",
     "uuid": "^3.3.2",
-    "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq",
-    "masq-common": "git+https://github.com/QwantResearch/masq-common"
+    "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq"
   },
   "devDependencies": {
     "@trust/webcrypto": "^0.9.2",

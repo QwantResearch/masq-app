@@ -8,6 +8,7 @@ window.crypto = require('@trust/webcrypto')
 const common = require('masq-common')
 
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
+const { ERRORS } = common.errors
 
 const PASSPHRASE = 'secret'
 
@@ -86,7 +87,6 @@ describe('masq internal operations', () => {
   })
 
   test('trying to register a profile with an existing username should fail', async () => {
-    expect.assertions(1)
     const profile = {
       username: 'JDoe',
       firstname: 'John',
@@ -94,36 +94,40 @@ describe('masq internal operations', () => {
       password: PASSPHRASE,
       image: ''
     }
+    let err
     try {
       await masq.addProfile(profile)
     } catch (e) {
-      expect(e.message).toBe('username already taken')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.USERNAME_ALREADY_TAKEN)
   })
 
   test('should throw if there is no opened (logged) profile', async () => {
-    expect.assertions(1)
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
     profile.username = 'updatedUsername'
 
+    let err
     try {
       await masq.updateProfile(profile)
     } catch (e) {
-      expect(e.message).toBe('Open a profile first')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.PROFILE_NOT_OPENED)
   })
 
   test('should throw when trying to open profile with bad passphrase', async () => {
-    expect.assertions(1)
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
 
+    let err
     try {
       await masq.openProfile(profile.id, 'badpassphrase')
     } catch (e) {
-      expect(e.message).toBe('Invalid passphrase')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.INVALID_PASSPHRASE)
   })
 
   test('should get the newly added private profile', async () => {
@@ -175,28 +179,30 @@ describe('masq internal operations', () => {
 
     await masq.addProfile(newProfile)
 
-    expect.assertions(1)
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[1], username: profiles[0].username }
 
+    let err
     try {
       await masq.updateProfile(profile)
     } catch (e) {
-      expect(e.message).toBe('username already taken')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.USERNAME_ALREADY_TAKEN)
   })
 
   test('should throw if there is no id in profile', async () => {
-    expect.assertions(1)
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
     delete profile.id
 
+    let err
     try {
       await masq.updateProfile(profile)
     } catch (e) {
-      expect(e.message).toBe('Missing id')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.MISSING_PROFILE_ID)
   })
 
   test('add an app and retrieve it', async () => {
@@ -221,16 +227,17 @@ describe('masq internal operations', () => {
   })
 
   test('should throw if there is no id in app', async () => {
-    expect.assertions(1)
     const apps = await masq.getApps()
     const app = { ...apps[0] }
     delete app.id
 
+    let err
     try {
       await masq.updateApp(app)
     } catch (e) {
-      expect(e.message).toBe('Missing id')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.MISSING_RESOURCE_ID)
   })
 
   test('add a device and retrieve it', async () => {
@@ -255,16 +262,17 @@ describe('masq internal operations', () => {
   })
 
   test('should throw if there is no id in device', async () => {
-    expect.assertions(1)
     const devices = await masq.getDevices()
     const device = { ...devices[0] }
     delete device.id
 
+    let err
     try {
       await masq.updateApp(device)
     } catch (e) {
-      expect(e.message).toBe('Missing id')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.MISSING_RESOURCE_ID)
   })
 })
 
@@ -280,17 +288,18 @@ describe('masq protocol', async () => {
   })
 
   test('handleUserAppLogin should connect to the swarm', async () => {
-    expect.assertions(1)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
     sw.on('peer', () => sw.close())
 
+    let err
     try {
       await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
     } catch (e) {
-      expect(e.message).toBe('Disconnected')
+      err = e
     }
+    expect(err.type).toBe(ERRORS.DISCONNECTED_DURING_LOGIN)
   })
 
   test('should send masqAccessRefused', done => {
