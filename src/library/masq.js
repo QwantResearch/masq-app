@@ -250,9 +250,9 @@ class Masq {
 
         try {
           if (app) {
-            sendAuthorized(peer, app.id)
+            await sendAuthorized(peer, app.id)
           } else {
-            sendNotAuthorized(peer)
+            await sendNotAuthorized(peer)
           }
         } catch (e) {
           return reject(new Error('Disconnected'))
@@ -317,17 +317,19 @@ class Masq {
 
         if (msg === 'requestWriteAccess') {
           const userAppKey = Buffer.from(json.key, 'hex')
-          this.appsDBs[dbName].authorize(userAppKey, (err) => {
-            if (err) throw err
-            sendWriteAccessGranted(peer)
-            this.sw.close()
-            return resolve()
-          })
+          try {
+            await this.appsDBs[dbName].authorizeAsync(userAppKey)
+          } catch (err) {
+            throw err
+          }
+          await sendWriteAccessGranted(peer)
+          this.sw.close()
+          return resolve()
         }
       }
 
       if (!isGranted) {
-        sendAccessRefused(this.peer)
+        await sendAccessRefused(this.peer)
         await this._closeUserAppConnection()
         return resolve()
       }
