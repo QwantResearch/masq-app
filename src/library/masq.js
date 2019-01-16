@@ -6,8 +6,8 @@ import common from 'masq-common'
 
 import { isUsernameAlreadyTaken } from './utils'
 
-const { encrypt, decrypt, importKey, derivePassphrase, checkPassphrase } = common.crypto
-const { dbReady, createPromisifiedHyperDB } = common.utils
+const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey, decryptMasterKey } = common.crypto
+const { dbReady, createPromisifiedHyperDB, put, get } = common.utils
 
 const { ERRORS, MasqError } = common.errors
 
@@ -53,10 +53,11 @@ class Masq {
     this.profileId = profileId
     this.profileDB = openOrCreateDB(profileId)
 
-    const { hashedPassphrase } = await this.getProfile()
-    const isCorrectPass = await checkPassphrase(passphrase, hashedPassphrase)
-
-    if (!isCorrectPass) {
+    const protectedMK = await this._getProtectedMK()
+    try {
+      const MK = await decryptMasterKey(passphrase, protectedMK)
+      this.masterKey = await importKey(MK)
+    } catch (error) {
       this.closeProfile()
       throw new MasqError(ERRORS.INVALID_PASSPHRASE)
     }
@@ -71,13 +72,14 @@ class Masq {
       db.on('ready', () => this._startReplicate(db))
     })
 
-    const profile = (await this.profileDB.getAsync('/')).value
+    const profile = await this.getAndDecrypt('/profile')
     return profile
   }
 
   async closeProfile () {
     this._stopAllReplicates()
     this.profileDB = null
+    this.masterKey = null
     this.profileId = null
     this.appsDBs = {}
   }
@@ -93,7 +95,10 @@ class Masq {
     if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
 
     const id = uuidv4()
-    const hashedPassphrase = await derivePassphrase(profile.password)
+    const protectedMK = await genEncryptedMasterKey(profile.password)
+    const MK = await decryptMasterKey(profile.password, protectedMK)
+    this.masterKey = await importKey(MK)
+
     const publicProfile = {
       username: profile.username,
       image: profile.image,
@@ -102,15 +107,44 @@ class Masq {
     const privateProfile = {
       ...publicProfile,
       firstname: profile.firstname,
-      lastname: profile.lastname,
-      hashedPassphrase: hashedPassphrase
+      lastname: profile.lastname
     }
 
     // Create a DB for this profile
     const db = openOrCreateDB(id)
     await dbReady(db)
-    await db.putAsync('/', privateProfile)
+
+    // we do not use this.encryptAndPut because this value is not encrypted
+    await db.putAsync('/profile/protectedMK', protectedMK)
+    // We do not use this.encryptAndPut method because the master key
+    // is not stored in this.profileDB (only set in openProfile)
+    await put(db, this.masterKey, '/profile', privateProfile)
     this._setProfileToLocalStorage(publicProfile)
+  }
+
+  /**
+   * Get a value
+   * @param {string} key - Key
+   * @returns {Promise<Object>}
+   */
+  async getAndDecrypt (key) {
+    this._checkProfile()
+    this._checkMK()
+    const dec = await get(this.profileDB, this.masterKey, key)
+    return dec
+  }
+
+  /**
+   * Put a new value in the current profile database
+   * The db parameter is only needed when this.profileDB is not set
+   * @param {string} key - Key
+   * @param {Object} value - The value to insert
+   * @returns {Promise}
+   */
+  async encryptAndPut (key, value) {
+    this._checkProfile()
+    this._checkMK()
+    await put(this.profileDB, this.masterKey, key, value)
   }
 
   /**
@@ -124,8 +158,7 @@ class Masq {
    * Get private profile from hyperdb
    */
   async getProfile (profileId) {
-    this._checkProfile()
-    const profile = (await this.profileDB.getAsync('/')).value
+    const profile = await this.getAndDecrypt('/profile')
     return profile
   }
 
@@ -152,7 +185,7 @@ class Masq {
       id: id
     }
 
-    await this.profileDB.putAsync('/', updatedPrivateProfile)
+    await this.encryptAndPut('/profile', updatedPrivateProfile)
     this._setProfileToLocalStorage(updatePublicProfile)
   }
 
@@ -202,7 +235,7 @@ class Masq {
    * @param {object} device The updated device
    */
   async updateDevice (device) {
-    this._updateResource('devices', device)
+    await this._updateResource('devices', device)
   }
 
   /**
@@ -219,8 +252,8 @@ class Masq {
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-      const sendAuthorized = async (peer, userAppDbId) => {
-        const data = { msg: 'authorized', userAppDbId }
+      const sendAuthorized = async (peer, userAppDbId, userAppDEK) => {
+        const data = { msg: 'authorized', userAppDbId, userAppDEK }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -252,7 +285,7 @@ class Masq {
 
         try {
           if (app) {
-            await sendAuthorized(peer, app.id)
+            await sendAuthorized(peer, app.id, app.appDEK)
           } else {
             await sendNotAuthorized(peer)
           }
@@ -300,8 +333,8 @@ class Masq {
         peer.send(JSON.stringify(encryptedMsg))
       }
 
-      const sendAccessGranted = async (peer, dbKey, userAppDbId) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId }
+      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK) => {
+        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -338,16 +371,17 @@ class Masq {
 
       const apps = await this.getApps()
       const app = apps.find(app => app.appId === this.appId)
+      const appDEK = app ? app.appDEK : await this._genAppDEK()
       const id = app ? app.id : await this.addApp({
-        ...this.app, appId: this.appId
+        ...this.app, appId: this.appId, appDEK
       })
 
       dbName = this.profileId + '-' + id
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
-      db.on('ready', () => {
+      db.on('ready', async () => {
         this._startReplicate(db)
-        sendAccessGranted(this.peer, db.key.toString('hex'), id)
+        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK)
       })
 
       this.peer.on('data', (data) => handleData(this.peer, data))
@@ -358,44 +392,67 @@ class Masq {
    * Private methods
    */
 
-  async _createResource (name, res) {
+  /**
+   * Generate a User app Data Encryption Key, during the register
+   * of a new app, this info is added alongside this the appId (user
+   * app database id) during the masqAccessGranted message and authorized
+   * message
+   * @returns {String} -The secret key in hex format
+   */
+  async _genAppDEK () {
+    const key = await genAESKey(true, 'AES-GCM', 128)
+    const extractedKey = await exportKey(key)
+    const hexKey = Buffer.from(extractedKey).toString('hex')
+    return hexKey
+  }
+
+  async _decryptValue (ciphertext) {
+    let decryptedMsg = await decrypt(this.masterKey, ciphertext)
+    return decryptedMsg
+  }
+
+  async _encryptValue (plaintext) {
+    let encryptedMsg = await encrypt(this.masterKey, plaintext)
+    return encryptedMsg
+  }
+
+  async _getProtectedMK () {
     this._checkProfile()
-    const node = await this.profileDB.getAsync(`/${name}`)
-    const ids = node ? node.value : []
+    const protectedMK = await this.profileDB.getAsync('/profile/protectedMK')
+    return protectedMK.value
+  }
+
+  async _createResource (name, res) {
+    const node = await this.getAndDecrypt(`/${name}`)
+    const ids = node || []
     const id = uuidv4()
     res['id'] = id
 
-    const batch = [{
-      type: 'put',
-      key: `/${name}`,
-      value: [...ids, id]
-    }, {
-      type: 'put',
-      key: `/${name}/${id}`,
-      value: res
-    }]
+    /* TODO: define a batch method to encrypt and batch in masq-common */
+    await this.encryptAndPut(`/${name}`, [...ids, id])
+    await this.encryptAndPut(`/${name}/${id}`, res)
 
-    await this.profileDB.batchAsync(batch)
     return id
   }
 
   async _getResources (name) {
-    const node = await this.profileDB.getAsync(`/${name}`)
+    const node = await this.getAndDecrypt(`/${name}`)
     if (!node) return []
 
-    const ids = node.value
-    const resourcePromises = ids.map(
-      id => this.profileDB.getAsync(`/${name}/${id}`)
-    )
-    const resourceNodes = await Promise.all(resourcePromises)
-    const resources = resourceNodes.map(n => n.value)
+    const ids = node
+
+    const resourcePromises = ids.map(async (id) => {
+      const val = await this.getAndDecrypt(`/${name}/${id}`)
+      return val
+    })
+    const resources = await Promise.all(resourcePromises)
     return resources
   }
 
-  async _updateResource (name, res) {
+  _updateResource (name, res) {
     const id = res.id
     if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
-    return this.profileDB.putAsync(`/${name}/${id}`, res)
+    return this.encryptAndPut(`/${name}/${id}`, res)
   }
 
   _setProfileToLocalStorage (profile) {
@@ -442,6 +499,10 @@ class Masq {
 
   _checkProfile () {
     if (!this.profileDB) throw new MasqError(ERRORS.PROFILE_NOT_OPENED)
+  }
+
+  _checkMK () {
+    if (!this.masterKey) throw Error('MasterKey is not set')
   }
 
   _closeUserAppConnection () {

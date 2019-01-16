@@ -31,18 +31,25 @@ jest.mock('masq-common', () => {
   modified.utils.resetDbList = () => {
     dbList = {}
   }
-  modified.crypto.derivePassphrase = async (passphrase) => {
-    const hashedPassphrase = {
-      salt: '81570bf99c0134985d7d975b69e123ce',
-      iterations: 100000,
-      hashAlgo: 'SHA-256',
-      storedHash: Buffer.from(passphrase).toString('hex')
+  modified.crypto.genEncryptedMasterKey = async (passphrase) => {
+    const protectedMK = {
+      derivationParams: {
+        salt: '81570bf99c0134985d7d975b69e123ce',
+        iterations: 100000,
+        hashAlgo: 'SHA-256'
+      },
+
+      encryptedMasterKey: {
+        ciphertext: Buffer.from(passphrase).toString('hex'),
+        iv: '81570bf99c0134985d7d975b69e123ce'
+      }
     }
-    return Promise.resolve(hashedPassphrase)
+    return Promise.resolve(protectedMK)
   }
-  modified.crypto.checkPassphrase = async (passphrase, hashedPassphrase) => {
-    const res = Buffer.from(passphrase).toString('hex') === hashedPassphrase.storedHash
-    return Promise.resolve(res)
+  modified.crypto.decryptMasterKey = async (passphrase, protectedMK) => {
+    const res = Buffer.from(passphrase).toString('hex') === protectedMK.encryptedMasterKey.ciphertext
+    if (res) return Promise.resolve(Buffer.from('00112233445566778899AABBCCDDEEFF', 'hex'))
+    if (!res) throw new Error('Wrong passphrase')
   }
   return modified
 })
@@ -136,12 +143,32 @@ describe('masq internal operations', () => {
 
     // Open a profile (login)
     const privateProfile = await masq.openProfile(profile.id, PASSPHRASE)
+
     expect(privateProfile.id).toBeDefined()
     expect(privateProfile.username).toEqual(profile.username)
-    expect(privateProfile.hashedPassphrase.salt).toBeDefined()
-    expect(privateProfile.hashedPassphrase.iterations).toBeDefined()
-    expect(privateProfile.hashedPassphrase.hashAlgo).toBeDefined()
-    expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
+  })
+
+  test('should get protectedMK (must be logged)', async () => {
+    const protectedMasterKey = await masq._getProtectedMK()
+
+    const { derivationParams, encryptedMasterKey } = protectedMasterKey
+    const { salt, iterations, hashAlgo } = derivationParams
+    expect(salt).toBeDefined()
+    expect(iterations).toBeDefined()
+    expect(hashAlgo).toBeDefined()
+    expect(encryptedMasterKey.iv).toBeDefined()
+    expect(encryptedMasterKey.ciphertext).toBeDefined()
+  })
+
+  test('should check if masq-profile values are encrypted', (done) => {
+    expect.assertions(2)
+    masq.profileDB.get('/profile', (err, node) => {
+      if (err) throw err
+
+      expect(node.value.iv).toBeDefined()
+      expect(node.value.ciphertext).toBeDefined()
+      done()
+    })
   })
 
   test('update an existing profile', async () => {
@@ -162,10 +189,6 @@ describe('masq internal operations', () => {
     const privateProfile = await masq.getProfile(profile.id)
     expect(privateProfile.id).toEqual(profile.id)
     expect(privateProfile.username).toEqual(updatedName)
-    expect(privateProfile.hashedPassphrase.salt).toBeDefined()
-    expect(privateProfile.hashedPassphrase.iterations).toBeDefined()
-    expect(privateProfile.hashedPassphrase.hashAlgo).toBeDefined()
-    expect(privateProfile.hashedPassphrase.storedHash).toBeDefined()
   })
 
   test('trying to update a profile with an existing username should fail', async () => {
@@ -256,9 +279,9 @@ describe('masq internal operations', () => {
     device.name = 'new name'
 
     await masq.updateDevice(device)
-    devices = await masq.getDevices()
-    expect(devices).toHaveLength(1)
-    expect(devices[0]).toEqual(device)
+    const updatedDevices = await masq.getDevices()
+    expect(updatedDevices).toHaveLength(1)
+    expect(updatedDevices[0]).toEqual(device)
   })
 
   test('should throw if there is no id in device', async () => {
@@ -340,7 +363,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send notAuthorized, and give write access', done => {
-    expect.assertions(5)
+    expect.assertions(6)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -352,10 +375,11 @@ describe('masq protocol', async () => {
         expect(msg).toBe('notAuthorized')
 
         peer.once('data', async (data) => {
-          const { msg, key, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          const { msg, key, userAppDbId, userAppDEK } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
           expect(userAppDbId).toBeDefined()
+          expect(userAppDEK).toBeDefined()
 
           const message = {
             msg: 'requestWriteAccess',
@@ -388,7 +412,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send authorized and close connection', done => {
-    expect.assertions(2)
+    expect.assertions(3)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -396,9 +420,10 @@ describe('masq protocol', async () => {
 
     sw.once('peer', peer => {
       peer.once('data', async (data) => {
-        const { msg, userAppDbId } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        const { msg, userAppDbId, userAppDEK } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('authorized')
         expect(userAppDbId).toBeDefined()
+        expect(userAppDEK).toBeDefined()
 
         // sw.close()
         const message = {
