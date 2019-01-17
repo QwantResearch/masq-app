@@ -12,8 +12,17 @@ npm install
 npm start
 ```
 
+## Deploy to Github pages
+
+```bash
+npm install
+npm run deploy
+```
+
 ## Production
+
 To deploy in production:
+
 - Edit `.env.production` to point to the correct signalhubws server(s)
 - Set the `homepage` field in `package.json` to point to the url where masq-app will be accessible, then run:
 
