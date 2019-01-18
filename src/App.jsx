@@ -90,7 +90,8 @@ class App extends Component {
             />
           }
 
-          <Route path='/' component={Login} />
+          <Route exact path='/:hash' component={Login} />
+          <Route exact path='/' component={Login} />
 
           {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
 
