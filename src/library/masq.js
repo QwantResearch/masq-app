@@ -17,6 +17,10 @@ const swarmOpts = process.env.NODE_ENV === 'test'
   ? { wrtc: require('wrtc') }
   : {}
 
+const requiredParametersDevice = [
+  'name'
+]
+
 const requiredParametersApp = [
   'name',
   'description'
@@ -103,7 +107,6 @@ class Masq {
    * @param {object} profile The new profile to add
    */
   async addProfile (profile) {
-    // TODO: Check profile properties
     checkObject(profile, requiredParametersProfile)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
@@ -218,6 +221,7 @@ class Masq {
    * @param {object} device The device
    */
   addDevice (device) {
+    checkObject(device, requiredParametersDevice)
     return this._createResource('devices', device)
   }
 
