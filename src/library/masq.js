@@ -9,13 +9,25 @@ import { isUsernameAlreadyTaken } from './utils'
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey, decryptMasterKey } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get } = common.utils
 
-const { ERRORS, MasqError } = common.errors
+const { ERRORS, MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const swarmOpts = process.env.NODE_ENV === 'test'
   ? { wrtc: require('wrtc') }
   : {}
+
+const requiredParametersApp = [
+  'name',
+  'description'
+]
+
+const requiredParametersProfile = [
+  'username',
+  'firstname',
+  'lastname',
+  'password'
+]
 
 /**
  * Open or create a hyperdb instance
@@ -37,6 +49,7 @@ class Masq {
     this.sw = null // sw used during login and registration
     this.hub = null
     this.key = null
+    this.masterKey = null
     this.peer = null
     this.app = null
   }
@@ -91,6 +104,7 @@ class Masq {
    */
   async addProfile (profile) {
     // TODO: Check profile properties
+    checkObject(profile, requiredParametersProfile)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
     if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
@@ -195,6 +209,7 @@ class Masq {
    * @param {object} app The app
    */
   addApp (app) {
+    checkObject(app, requiredParametersApp)
     return this._createResource('apps', app)
   }
 
@@ -303,6 +318,7 @@ class Masq {
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
+
             resolve(false)
           } else {
             await this._closeUserAppConnection()
@@ -371,6 +387,7 @@ class Masq {
       const apps = await this.getApps()
       const app = apps.find(app => app.appId === this.appId)
       const appDEK = app ? app.appDEK : await this._genAppDEK()
+
       const id = app ? app.id : await this.addApp({
         ...this.app, appId: this.appId, appDEK
       })
