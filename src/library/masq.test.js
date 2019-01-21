@@ -146,6 +146,9 @@ describe('masq internal operations', () => {
 
     expect(privateProfile.id).toBeDefined()
     expect(privateProfile.username).toEqual(profile.username)
+    expect(privateProfile.image).toBeDefined()
+    expect(privateProfile.firstname).toBeDefined()
+    expect(privateProfile.lastname).toBeDefined()
   })
 
   test('should get protectedMK (must be logged)', async () => {
@@ -160,15 +163,10 @@ describe('masq internal operations', () => {
     expect(encryptedMasterKey.ciphertext).toBeDefined()
   })
 
-  test('should check if masq-profile values are encrypted', (done) => {
-    expect.assertions(2)
-    masq.profileDB.get('/profile', (err, node) => {
-      if (err) throw err
-
-      expect(node.value.iv).toBeDefined()
-      expect(node.value.ciphertext).toBeDefined()
-      done()
-    })
+  test('should check if masq-profile values are encrypted', async () => {
+    const node = await masq.profileDB.getAsync('/profile')
+    expect(node.value.iv).toBeDefined()
+    expect(node.value.ciphertext).toBeDefined()
   })
 
   test('update an existing profile', async () => {
@@ -189,6 +187,9 @@ describe('masq internal operations', () => {
     const privateProfile = await masq.getProfile(profile.id)
     expect(privateProfile.id).toEqual(profile.id)
     expect(privateProfile.username).toEqual(updatedName)
+    expect(privateProfile.image).toBeDefined()
+    expect(privateProfile.firstname).toBeDefined()
+    expect(privateProfile.lastname).toBeDefined()
   })
 
   test('trying to update a profile with an existing username should fail', async () => {
@@ -350,7 +351,7 @@ describe('masq protocol', async () => {
           msg: 'registerUserApp',
           name: 'test app',
           description: 'description goes here',
-          imageUrl: ''
+          imageURL: ''
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
@@ -399,7 +400,7 @@ describe('masq protocol', async () => {
           msg: 'registerUserApp',
           name: 'test app',
           description: 'description goes here',
-          imageUrl: ''
+          imageURL: ''
         }
         const encryptedMsg = await encrypt(cryptoKey, message, 'base64')
         peer.send(JSON.stringify(encryptedMsg))

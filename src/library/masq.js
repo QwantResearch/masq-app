@@ -62,7 +62,8 @@ class Masq {
       throw new MasqError(ERRORS.INVALID_PASSPHRASE)
     }
 
-    this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
+    await dbReady(this.profileDB)
+    this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
     apps.forEach(app => {
@@ -317,9 +318,7 @@ class Masq {
    * It will create a new hyperdb with a given id.
    * Then, the user-app send its local key to authorize.
    * This method should be called only once the user is logged in
-   * @param {string} channel The channel to connect
-   * @param {string} rawKey The encryption key, base64 encoded
-   * @param {string} appId The app id (url for instance)
+   * @param {boolean} isGranted True if the app is authorized
    */
   async handleUserAppRegister (isGranted) {
     return new Promise(async (resolve, reject) => {
@@ -383,7 +382,6 @@ class Masq {
         this._startReplicate(db)
         await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK)
       })
-
       this.peer.on('data', (data) => handleData(this.peer, data))
     })
   }
