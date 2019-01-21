@@ -247,7 +247,8 @@ describe('masq internal operations', () => {
   test('add an app and retrieve it', async () => {
     const app = {
       name: 'myapp',
-      description: 'description of the app'
+      description: 'description of the app',
+      appId: 'id'
     }
 
     await masq.addApp(app)

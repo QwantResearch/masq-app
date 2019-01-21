@@ -23,14 +23,16 @@ const requiredParametersDevice = [
 
 const requiredParametersApp = [
   'name',
-  'description'
+  'description',
+  'appId'
 ]
 
 const requiredParametersProfile = [
   'username',
   'firstname',
   'lastname',
-  'password'
+  'password',
+  'image'
 ]
 
 /**
