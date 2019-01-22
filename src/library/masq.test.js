@@ -83,13 +83,9 @@ describe('masq internal operations', () => {
       password: PASSPHRASE,
       image: ''
     }
-    let err
-    try {
-      await masq.addProfile(profileWithoutFirstName)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.WRONG_PARAMETER)
+    await expect(masq.addProfile(profileWithoutFirstName))
+      .rejects
+      .toHaveProperty('type', ERRORS.WRONG_PARAMETER)
   })
   test('add a new profile and retrieve it from localstorage', async () => {
     const profile = {
@@ -116,13 +112,10 @@ describe('masq internal operations', () => {
       password: PASSPHRASE,
       image: ''
     }
-    let err
-    try {
-      await masq.addProfile(profile)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.USERNAME_ALREADY_TAKEN)
+
+    await expect(masq.addProfile(profile))
+      .rejects
+      .toHaveProperty('type', ERRORS.USERNAME_ALREADY_TAKEN)
   })
 
   test('should throw if there is no opened (logged) profile', async () => {
@@ -130,26 +123,18 @@ describe('masq internal operations', () => {
     const profile = { ...profiles[0] }
     profile.username = 'updatedUsername'
 
-    let err
-    try {
-      await masq.updateProfile(profile)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.PROFILE_NOT_OPENED)
+    await expect(masq.updateProfile(profile))
+      .rejects
+      .toHaveProperty('type', ERRORS.PROFILE_NOT_OPENED)
   })
 
   test('should throw when trying to open profile with bad passphrase', async () => {
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[0] }
 
-    let err
-    try {
-      await masq.openProfile(profile.id, 'badpassphrase')
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.INVALID_PASSPHRASE)
+    await expect(masq.openProfile(profile.id, 'badpassphrase'))
+      .rejects
+      .toHaveProperty('type', ERRORS.INVALID_PASSPHRASE)
   })
 
   test('should get the newly added private profile', async () => {
@@ -217,17 +202,12 @@ describe('masq internal operations', () => {
     }
 
     await masq.addProfile(newProfile)
-
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[1], username: profiles[0].username }
 
-    let err
-    try {
-      await masq.updateProfile(profile)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.USERNAME_ALREADY_TAKEN)
+    await expect(masq.updateProfile(profile))
+      .rejects
+      .toHaveProperty('type', ERRORS.USERNAME_ALREADY_TAKEN)
   })
 
   test('should throw if there is no id in profile', async () => {
@@ -235,13 +215,9 @@ describe('masq internal operations', () => {
     const profile = { ...profiles[0] }
     delete profile.id
 
-    let err
-    try {
-      await masq.updateProfile(profile)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.MISSING_PROFILE_ID)
+    await expect(masq.updateProfile(profile))
+      .rejects
+      .toHaveProperty('type', ERRORS.MISSING_PROFILE_ID)
   })
 
   test('add an app and retrieve it', async () => {
@@ -274,13 +250,9 @@ describe('masq internal operations', () => {
     const app = { ...apps[0] }
     delete app.id
 
-    let err
-    try {
-      await masq.updateApp(app)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.MISSING_RESOURCE_ID)
+    await expect(masq.updateApp(app))
+      .rejects
+      .toHaveProperty('type', ERRORS.MISSING_RESOURCE_ID)
   })
 
   test('add a device and retrieve it', async () => {
@@ -309,13 +281,9 @@ describe('masq internal operations', () => {
     const device = { ...devices[0] }
     delete device.id
 
-    let err
-    try {
-      await masq.updateApp(device)
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.MISSING_RESOURCE_ID)
+    await expect(masq.updateDevice(device))
+      .rejects
+      .toHaveProperty('type', ERRORS.MISSING_RESOURCE_ID)
   })
 })
 
@@ -336,13 +304,9 @@ describe('masq protocol', async () => {
 
     sw.on('peer', () => sw.close())
 
-    let err
-    try {
-      await masq.handleUserAppLogin('channel', keyBase64, 'someAppId')
-    } catch (e) {
-      err = e
-    }
-    expect(err.type).toBe(ERRORS.DISCONNECTED_DURING_LOGIN)
+    await expect(masq.handleUserAppLogin('channel', keyBase64, 'someAppId'))
+      .rejects
+      .toHaveProperty('type', ERRORS.DISCONNECTED_DURING_LOGIN)
   })
 
   test('should send masqAccessRefused', async (done) => {
