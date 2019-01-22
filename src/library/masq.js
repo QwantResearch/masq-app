@@ -9,13 +9,31 @@ import { isUsernameAlreadyTaken } from './utils'
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey, decryptMasterKey } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get } = common.utils
 
-const { ERRORS, MasqError } = common.errors
+const { ERRORS, MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const swarmOpts = process.env.NODE_ENV === 'test'
   ? { wrtc: require('wrtc') }
   : {}
+
+const requiredParametersDevice = [
+  'name'
+]
+
+const requiredParametersApp = [
+  'name',
+  'description',
+  'appId'
+]
+
+const requiredParametersProfile = [
+  'username',
+  'firstname',
+  'lastname',
+  'password',
+  'image'
+]
 
 /**
  * Open or create a hyperdb instance
@@ -37,6 +55,7 @@ class Masq {
     this.sw = null // sw used during login and registration
     this.hub = null
     this.key = null
+    this.masterKey = null
     this.peer = null
     this.app = null
   }
@@ -62,7 +81,8 @@ class Masq {
       throw new MasqError(ERRORS.INVALID_PASSPHRASE)
     }
 
-    this.profileDB.on('ready', () => this._startReplicate(this.profileDB))
+    await dbReady(this.profileDB)
+    this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
     apps.forEach(app => {
@@ -89,7 +109,7 @@ class Masq {
    * @param {object} profile The new profile to add
    */
   async addProfile (profile) {
-    // TODO: Check profile properties
+    checkObject(profile, requiredParametersProfile)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
     if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
@@ -194,6 +214,7 @@ class Masq {
    * @param {object} app The app
    */
   addApp (app) {
+    checkObject(app, requiredParametersApp)
     return this._createResource('apps', app)
   }
 
@@ -202,6 +223,7 @@ class Masq {
    * @param {object} device The device
    */
   addDevice (device) {
+    checkObject(device, requiredParametersDevice)
     return this._createResource('devices', device)
   }
 
@@ -302,6 +324,7 @@ class Masq {
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
+
             resolve(false)
           } else {
             await this._closeUserAppConnection()
@@ -317,9 +340,7 @@ class Masq {
    * It will create a new hyperdb with a given id.
    * Then, the user-app send its local key to authorize.
    * This method should be called only once the user is logged in
-   * @param {string} channel The channel to connect
-   * @param {string} rawKey The encryption key, base64 encoded
-   * @param {string} appId The app id (url for instance)
+   * @param {boolean} isGranted True if the app is authorized
    */
   async handleUserAppRegister (isGranted) {
     return new Promise(async (resolve, reject) => {
@@ -372,6 +393,7 @@ class Masq {
       const apps = await this.getApps()
       const app = apps.find(app => app.appId === this.appId)
       const appDEK = app ? app.appDEK : await this._genAppDEK()
+
       const id = app ? app.id : await this.addApp({
         ...this.app, appId: this.appId, appDEK
       })
@@ -383,7 +405,6 @@ class Masq {
         this._startReplicate(db)
         await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK)
       })
-
       this.peer.on('data', (data) => handleData(this.peer, data))
     })
   }
