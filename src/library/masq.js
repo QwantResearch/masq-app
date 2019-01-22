@@ -247,9 +247,9 @@ class Masq {
    * Update an app
    * @param {object} app The updated app
    */
-  updateApp (app) {
+  async updateApp (app) {
     this._checkProfile()
-    return this._updateResource('apps', app)
+    await this._updateResource('apps', app)
   }
 
   /**
