@@ -257,6 +257,7 @@ class Masq {
    * @param {object} device The updated device
    */
   async updateDevice (device) {
+    this._checkProfile()
     await this._updateResource('devices', device)
   }
 
