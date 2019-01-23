@@ -313,6 +313,7 @@ class Masq {
             await sendNotAuthorized(peer)
           }
         } catch (e) {
+          await this._closeUserAppConnection()
           return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
         }
 
@@ -325,7 +326,6 @@ class Masq {
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
-
             resolve(false)
           } else {
             await this._closeUserAppConnection()
