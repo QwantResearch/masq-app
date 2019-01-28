@@ -26,7 +26,6 @@
     "masq-common": "git+https://github.com/QwantResearch/masq-common",
     "pump": "^3.0.0",
     "qwant-research-components": "git+https://github.com/QwantResearch/qwant-research-components.git",
-    "random-access-idb": "^1.2.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^6.0.0",
