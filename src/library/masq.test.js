@@ -346,7 +346,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send notAuthorized, and give write access', async (done) => {
-    expect.assertions(6)
+    expect.assertions(8)
     const hub = signalhub('channel2', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -357,11 +357,13 @@ describe('masq protocol', async () => {
         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('notAuthorized')
         peer.once('data', async (data) => {
-          const { msg, key, userAppDbId, userAppDEK } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          const { msg, key, userAppDbId, userAppDEK, username, profileImage } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
           expect(userAppDbId).toBeDefined()
           expect(userAppDEK).toBeDefined()
+          expect(username).toBeDefined()
+          expect(profileImage).toBeDefined()
 
           const message = {
             msg: 'requestWriteAccess',
@@ -393,7 +395,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send authorized and close connection', done => {
-    expect.assertions(3)
+    expect.assertions(5)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -401,10 +403,12 @@ describe('masq protocol', async () => {
 
     sw.once('peer', peer => {
       peer.once('data', async (data) => {
-        const { msg, userAppDbId, userAppDEK } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        const { msg, userAppDbId, userAppDEK, username, profileImage } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('authorized')
         expect(userAppDbId).toBeDefined()
         expect(userAppDEK).toBeDefined()
+        expect(username).toBeDefined()
+        expect(profileImage).toBeDefined()
 
         // sw.close()
         const message = {

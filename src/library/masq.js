@@ -275,8 +275,8 @@ class Masq {
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-      const sendAuthorized = async (peer, userAppDbId, userAppDEK) => {
-        const data = { msg: 'authorized', userAppDbId, userAppDEK }
+      const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage) => {
+        const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -308,7 +308,8 @@ class Masq {
 
         try {
           if (app) {
-            await sendAuthorized(peer, app.id, app.appDEK)
+            const privateProfile = await this.getProfile(this.profileId)
+            await sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image)
           } else {
             await sendNotAuthorized(peer)
           }
@@ -355,8 +356,8 @@ class Masq {
         peer.send(JSON.stringify(encryptedMsg))
       }
 
-      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK }
+      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK, username, profileImage) => {
+        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -399,12 +400,14 @@ class Masq {
         ...this.app, appId: this.appId, appDEK
       })
 
+      const privateProfile = await this.getProfile(this.profileId)
+
       dbName = this.profileId + '-' + id
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
         this._startReplicate(db)
-        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK)
+        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image)
       })
       this.peer.on('data', (data) => handleData(this.peer, data))
     })
