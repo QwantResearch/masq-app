@@ -99,7 +99,7 @@ class Login extends Component {
     const { isModalOpened, signup, sync } = this.state
 
     return (
-      <div className={styles.Login}>
+      <div>
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>
@@ -111,7 +111,6 @@ class Login extends Component {
           ))}
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
         </div>
-        <Background className={styles.Background} />
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
         {sync && <SyncDevice onClose={this.handleClose} />}
         {isModalOpened && (
@@ -129,7 +128,7 @@ class Login extends Component {
     const { selectedUser } = this.state
 
     return (
-      <div className={styles.Login}>
+      <div>
         <Logo className={styles.Logo} />
 
         <div className={styles.goback} onClick={this.goBack}>
@@ -144,17 +143,17 @@ class Login extends Component {
           </div>
         </div>
 
-        <p>Entrez votre mot de passe</p>
-
-        <TextField
-          autoFocus
-          type='password'
-          onChange={this.onPasswordChange}
-          error={this.state.isWrongPassword}
-          label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
-          onKeyUp={this.onPasswordKeyUp}
-        />
-        <Background className={styles.Background} />
+        <div className={styles.passwordSection}>
+          <p>Entrez votre mot de passe</p>
+          <TextField
+            autoFocus
+            type='password'
+            onChange={this.onPasswordChange}
+            error={this.state.isWrongPassword}
+            label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
+            onKeyUp={this.onPasswordKeyUp}
+          />
+        </div>
       </div>
     )
   }
@@ -165,9 +164,14 @@ class Login extends Component {
 
     if (user) return <Redirect to='/apps' />
 
-    return selectedUser
-      ? this.renderPassword()
-      : this.renderUsersSelection()
+    return (
+      <div className={styles.Login}>
+        {selectedUser
+          ? this.renderPassword()
+          : this.renderUsersSelection()}
+        <Background className={styles.Background} />
+      </div>
+    )
   }
 }
 
