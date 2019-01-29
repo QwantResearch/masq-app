@@ -3,7 +3,7 @@
 .Login {
   background-color: $color-background;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -22,19 +22,24 @@
   }
 
   .users {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 160px));
+    grid-gap: 16px;
     text-align: center;
     justify-content: center;
 
-    >:not(:last-child) {
-      margin-right: 64px;
-    }
+    // >:not(:last-child) {
+    //   margin-right: 64px;
+    // }
 
     .PlusSquare {
+      margin-right: auto;
+      margin-left: auto;
       cursor: pointer;
     }
 
     .user {
+      margin: auto;
       cursor: pointer;
       text-decoration: none;
     }

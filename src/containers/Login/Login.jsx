@@ -99,7 +99,7 @@ class Login extends Component {
     const { isModalOpened, signup, sync } = this.state
 
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
         <div className={styles.users}>
@@ -128,7 +128,7 @@ class Login extends Component {
     const { selectedUser } = this.state
 
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         <Logo className={styles.Logo} />
 
         <div className={styles.goback} onClick={this.goBack}>
