@@ -1,0 +1,50 @@
+.Sidebar {
+  height: 100vh;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #252a39;
+  justify-content: space-between;
+
+  .header {
+    width: 100px;
+    height: 212px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .nav {
+    padding-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+    >:not(:last-child) {
+      margin-bottom: 40px;
+    }
+  }
+
+  .navElement {
+    cursor: pointer;
+    &:hover * {
+      opacity: 1;
+    }
+    text-decoration: none;
+    color: white;
+  }
+
+  .active * {
+    color: #458bf8;
+    fill: #458bf8;
+  }
+
+  .logout {
+    // position: absolute;
+    // bottom: 64px;
+  }
+}
