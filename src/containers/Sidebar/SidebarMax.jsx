@@ -1,5 +1,4 @@
 import React from 'react'
-import { Sidebar } from 'qwant-research-components'
 import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'

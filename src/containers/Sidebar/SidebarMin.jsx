@@ -1,5 +1,4 @@
 import React from 'react'
-import { Sidebar } from 'qwant-research-components'
 import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
@@ -14,7 +13,6 @@ import { ReactComponent as LogoutIcon } from '../../assets/logout.svg'
 
 class SidebarMin extends React.Component {
   render () {
-    console.log('')
     const { user, signout } = this.props
 
     if (!user) return <Redirect to='/' />
