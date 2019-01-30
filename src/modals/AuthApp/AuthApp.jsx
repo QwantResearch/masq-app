@@ -64,6 +64,34 @@ class AuthApp extends React.Component {
     }
   }
 
+  renderText () {
+    const { appRequest } = this.props
+
+    if (appRequest.isConnected === false) {
+      return (
+        <div>
+          <p className={styles.description}>
+          Cette notification apparait car cette application demande un accès à votre stockage Masq.
+          </p>
+          <p className={styles.description}>
+          Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
+          </p>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <p className={styles.description}>
+          Vous avez autorisé l'application à accéder à votre stockage Masq.
+          </p>
+          <p className={styles.description}>
+          Vous pouvez désormais utiliser l'application.
+          </p>
+        </div>
+      )
+    }
+  }
+
   render () {
     const { appRequest, onClose } = this.props
 
@@ -72,12 +100,7 @@ class AuthApp extends React.Component {
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
           <p className={styles.appTitle}>{appRequest.appId}</p>
-          <p className={styles.description}>
-          Cette notification apparait car cette application demande un accès à votre stockage Masq.
-          </p>
-          <p className={styles.description}>
-          Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
-          </p>
+          {this.renderText()}
 
           <div className={styles.buttons}>
             {this.renderButtons()}
