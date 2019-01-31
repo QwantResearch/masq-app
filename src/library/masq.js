@@ -58,6 +58,8 @@ class Masq {
     this.masterKey = null
     this.peer = null
     this.app = null
+    this.initialStepPassed = false
+    this.userRefused = false
   }
 
   /**
@@ -292,6 +294,13 @@ class Masq {
 
       this.sw.on('disconnect', async () => {
         await this._closeUserAppConnection()
+        if (!this.initialStepPassed) {
+          console.log('this.initialStepPassed = ', this.initialStepPassed)
+          console.log('intial step not passed')
+          return reject(new MasqError('Initial step not passed'))
+        }
+        console.log('if refused', this.initialStepPassed)
+        this.initialStepPassed = false
         return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
       })
 
@@ -374,6 +383,7 @@ class Masq {
         // TODO: Error if  missing params
 
         if (msg === 'requestWriteAccess') {
+          this.initialStepPassed = true
           const userAppKey = Buffer.from(json.key, 'hex')
           try {
             await this.appsDBs[dbName].authorizeAsync(userAppKey)

@@ -94,11 +94,29 @@ export const updateCurrentAppRequest = update => {
 }
 
 export const handleUserAppLogin = (channel, key, appId) => {
-  return function (dispatch) {
-    return masq.handleUserAppLogin(channel, key, appId)
-      .then((isConnected) => dispatch(updateCurrentAppRequest({
-        isConnected: isConnected
-      })))
+  return async function (dispatch) {
+    let res = null
+    for (let i = 0; i < 3; i++) {
+      console.log('step ', i)
+
+      try {
+        const isConnected = await masq.handleUserAppLogin(channel, key, appId)
+        res = isConnected
+        break
+      } catch (error) {
+        if (error.type === 'Initial step not passed') {
+          console.log('catch it !!!!')
+          console.log('try again')
+        } else {
+          console.log('original error')
+          console.log(error)
+          break
+        }
+      }
+    }
+    dispatch(updateCurrentAppRequest({
+      isConnected: res
+    }))
   }
 }
 
