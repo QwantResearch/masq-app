@@ -306,7 +306,7 @@ describe('masq protocol', async () => {
 
     await expect(masq.handleUserAppLogin('channel', keyBase64, 'someAppId'))
       .rejects
-      .toHaveProperty('type', ERRORS.DISCONNECTED_DURING_LOGIN)
+      .toHaveProperty('type', 'Initial step not passed')
   })
 
   test('should send masqAccessRefused', async (done) => {
