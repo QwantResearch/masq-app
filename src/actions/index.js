@@ -95,28 +95,28 @@ export const updateCurrentAppRequest = update => {
 
 export const handleUserAppLogin = (channel, key, appId) => {
   return async function (dispatch) {
-    let res = null
     for (let i = 0; i < 3; i++) {
       console.log('step ', i)
-
       try {
         const isConnected = await masq.handleUserAppLogin(channel, key, appId)
-        res = isConnected
+        dispatch(updateCurrentAppRequest({
+          isConnected: isConnected
+        }))
         break
       } catch (error) {
         if (error.type === 'Initial step not passed') {
           console.log('catch it !!!!')
           console.log('try again')
+        } else if (error.type === 'User refused the app') {
+          console.log('User refused the app')
+          break
         } else {
-          console.log('original error')
-          console.log(error)
+          console.log('other error')
+          console.log(error.type)
           break
         }
       }
     }
-    dispatch(updateCurrentAppRequest({
-      isConnected: res
-    }))
   }
 }
 
