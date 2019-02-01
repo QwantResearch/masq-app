@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-400.90269013.woff2"
   },
   {
-    "revision": "6237901b539fafe0ccb1",
+    "revision": "d45e2794a71f187bb7cc",
     "url": "/masq-app/static/css/main.65a67522.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-700italic.cdabf008.woff"
   },
   {
-    "revision": "c84b21d072fab34a817f",
-    "url": "/masq-app/static/js/1.c84b21d0.chunk.js"
+    "revision": "6dc2caa0b2148d962ddb",
+    "url": "/masq-app/static/js/1.6dc2caa0.chunk.js"
   },
   {
     "revision": "4339acbd2671eeee1026",
@@ -64,36 +64,32 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/check-circle.ce63c045.svg"
   },
   {
-    "revision": "6237901b539fafe0ccb1",
-    "url": "/masq-app/static/js/main.6237901b.chunk.js"
+    "revision": "d45e2794a71f187bb7cc",
+    "url": "/masq-app/static/js/main.d45e2794.chunk.js"
   },
   {
     "revision": "7cf06d21bed93dd3e1876ec9062ef0a3",
     "url": "/masq-app/static/media/asap-latin-400italic.7cf06d21.woff"
   },
   {
-    "revision": "20495aa23daf3e541c6c19a85729d9ae",
-    "url": "/masq-app/static/media/asap-latin-400.20495aa2.woff"
-  },
-  {
     "revision": "87a02118d118efbd8c75a30d4424e47a",
     "url": "/masq-app/static/media/asap-latin-400italic.87a02118.woff2"
+  },
+  {
+    "revision": "20495aa23daf3e541c6c19a85729d9ae",
+    "url": "/masq-app/static/media/asap-latin-400.20495aa2.woff"
   },
   {
     "revision": "bba1b4a3ecc109fad44534cdaea6e634",
     "url": "/masq-app/static/media/asap-latin-500.bba1b4a3.woff2"
   },
   {
-    "revision": "a835e9ea118497fe4836af2959877e87",
-    "url": "/masq-app/static/media/asap-latin-500italic.a835e9ea.woff2"
+    "revision": "e877535c1ee2fe248d940d459f2138c3",
+    "url": "/masq-app/static/media/asap-latin-500italic.e877535c.woff"
   },
   {
     "revision": "65d145615910281f0ef14ba1f81f150c",
     "url": "/masq-app/static/media/asap-latin-500.65d14561.woff"
-  },
-  {
-    "revision": "e877535c1ee2fe248d940d459f2138c3",
-    "url": "/masq-app/static/media/asap-latin-500italic.e877535c.woff"
   },
   {
     "revision": "41264f825ce4cbac1f12a380291cf4d4",
@@ -112,23 +108,27 @@ self.__precacheManifest = [
     "url": "/masq-app/static/media/asap-latin-600italic.a8604808.woff"
   },
   {
-    "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",
-    "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
+    "revision": "a835e9ea118497fe4836af2959877e87",
+    "url": "/masq-app/static/media/asap-latin-500italic.a835e9ea.woff2"
   },
   {
-    "revision": "7d030e1434133b8c04548bd18c87adae",
-    "url": "/masq-app/static/media/asap-latin-700italic.7d030e14.woff2"
+    "revision": "1e34f0625e0e1f0d02d4b2f9713327f4",
+    "url": "/masq-app/static/media/asap-latin-700.1e34f062.woff2"
   },
   {
     "revision": "7c6db4a2e14fd6e946d199f38510926b",
     "url": "/masq-app/static/media/asap-latin-700.7c6db4a2.woff"
   },
   {
-    "revision": "c84b21d072fab34a817f",
+    "revision": "7d030e1434133b8c04548bd18c87adae",
+    "url": "/masq-app/static/media/asap-latin-700italic.7d030e14.woff2"
+  },
+  {
+    "revision": "6dc2caa0b2148d962ddb",
     "url": "/masq-app/static/css/1.87093cec.chunk.css"
   },
   {
-    "revision": "f8c0dde94a8c744e5cb40892d2b98eda",
+    "revision": "eef28bcec07ff473821fbdffbc135a4b",
     "url": "/masq-app/index.html"
   }
 ];
