@@ -17,15 +17,14 @@ const Modal = ({ onClose, width, height, children }) => (
 )
 
 const ResponsiveModal = ({ onClose, width, height, children }) => (
-  <MediaQuery maxDeviceWidth={900}>
-    {(matches) => {
-      if (matches) {
-        return <Modal width='100%' onClose={onClose} height={height} children={children} />
-      } else {
-        return <Modal width={width} onClose={onClose} height={height} children={children} />
-      }
-    }}
-  </MediaQuery>
+  <div>
+    <MediaQuery maxWidth={800}>
+      <Modal width='100%' onClose={onClose} height={height} children={children} />
+    </MediaQuery>
+    <MediaQuery minWidth={801}>
+      <Modal width={width} onClose={onClose} height={height} children={children} />
+    </MediaQuery>
+  </div>
 )
 
 Modal.propTypes =
