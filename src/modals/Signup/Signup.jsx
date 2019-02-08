@@ -4,7 +4,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
-import { isUsernameAlreadyTaken } from '../../library/utils'
+import { isUsernameAlreadyTaken, compressImage } from '../../library/utils'
 
 import styles from './Signup.module.scss'
 
@@ -69,17 +69,19 @@ class Signup extends React.Component {
     })
   }
 
-  onImageChange (event) {
+  async onImageChange (event) {
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
       return
     }
+    const image = await compressImage(file)
 
     reader.addEventListener('load', () => {
       this.setState({ image: reader.result })
     })
-    reader.readAsDataURL(file)
+
+    reader.readAsDataURL(image)
   }
 
   openDialog () {
