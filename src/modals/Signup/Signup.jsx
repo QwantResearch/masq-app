@@ -4,7 +4,7 @@ import { Button, TextField } from 'qwant-research-components'
 
 import { Avatar, Modal } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
-import { isUsernameAlreadyTaken, compressImage } from '../../library/utils'
+import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 
 import styles from './Signup.module.scss'
 
@@ -75,7 +75,12 @@ class Signup extends React.Component {
     if (!file) {
       return
     }
+
     const image = await compressImage(file)
+    if (image.size > MAX_IMAGE_SIZE) {
+      console.error('Even with compression, the image size exceed 100 KB, please upload a smaller image (or resize it)')
+      return
+    }
 
     reader.addEventListener('load', () => {
       this.setState({ image: reader.result })
