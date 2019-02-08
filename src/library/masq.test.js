@@ -15,43 +15,66 @@ const PASSPHRASE = 'secret'
 jest.setTimeout(30000)
 
 jest.mock('masq-common', () => {
+  const hyperdb = require('hyperdb')
+  const ram = require('random-access-memory')
+  const { promisify } = require('es6-promisify')
   const original = require.requireActual('masq-common')
   let dbList = {}
-  let originalCreate = original.utils.createPromisifiedHyperDB
-  let modified = { ...original }
-  modified.utils.dbExists = (name) => {
-    return Promise.resolve(!!dbList[name])
-  }
-  modified.utils.createPromisifiedHyperDB = (name, hexKey) => {
-    if (!dbList[name]) {
-      dbList[name] = originalCreate(name, hexKey)
-    }
-    return dbList[name]
-  }
-  modified.utils.resetDbList = () => {
-    dbList = {}
-  }
-  modified.crypto.genEncryptedMasterKey = async (passphrase) => {
-    const protectedMK = {
-      derivationParams: {
-        salt: '81570bf99c0134985d7d975b69e123ce',
-        iterations: 100000,
-        hashAlgo: 'SHA-256'
-      },
 
-      encryptedMasterKey: {
-        ciphertext: Buffer.from(passphrase).toString('hex'),
-        iv: '81570bf99c0134985d7d975b69e123ce'
+  // Same function as original, but use ram instead
+  const createPromisifiedHyperDBMock = (name, hexKey) => {
+    const methodsToPromisify = ['version', 'put', 'get', 'del', 'batch', 'list', 'authorize', 'authorized']
+    const keyBuffer = hexKey
+      ? Buffer.from(hexKey, 'hex')
+      : null
+
+    const db = hyperdb(ram, keyBuffer, { valueEncoding: 'json', firstNode: true })
+
+    // Promisify methods with Async suffix
+    methodsToPromisify.forEach(m => {
+      db[`${m}Async`] = promisify(db[m])
+    })
+
+    return db
+  }
+
+  return {
+    ...original,
+    utils: {
+      ...original.utils,
+      dbExists: (name) => Promise.resolve(!!dbList[name]),
+      createPromisifiedHyperDB: (name, hexKey) => {
+        if (!dbList[name]) {
+          dbList[name] = createPromisifiedHyperDBMock(name, hexKey)
+        }
+        return dbList[name]
+      }
+    },
+    resetDbList: () => { dbList = {} },
+    crypto: {
+      ...original.crypto,
+      genEncryptedMasterKey: async (passphrase) => {
+        const protectedMK = {
+          derivationParams: {
+            salt: '81570bf99c0134985d7d975b69e123ce',
+            iterations: 100000,
+            hashAlgo: 'SHA-256'
+          },
+
+          encryptedMasterKey: {
+            ciphertext: Buffer.from(passphrase).toString('hex'),
+            iv: '81570bf99c0134985d7d975b69e123ce'
+          }
+        }
+        return Promise.resolve(protectedMK)
+      },
+      decryptMasterKey: async (passphrase, protectedMK) => {
+        const res = Buffer.from(passphrase).toString('hex') === protectedMK.encryptedMasterKey.ciphertext
+        if (res) return Promise.resolve(Buffer.from('00112233445566778899AABBCCDDEEFF', 'hex'))
+        if (!res) throw new Error('Wrong passphrase')
       }
     }
-    return Promise.resolve(protectedMK)
   }
-  modified.crypto.decryptMasterKey = async (passphrase, protectedMK) => {
-    const res = Buffer.from(passphrase).toString('hex') === protectedMK.encryptedMasterKey.ciphertext
-    if (res) return Promise.resolve(Buffer.from('00112233445566778899AABBCCDDEEFF', 'hex'))
-    if (!res) throw new Error('Wrong passphrase')
-  }
-  return modified
 })
 
 // use an in memory random-access-storage instead
