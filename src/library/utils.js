@@ -12,7 +12,6 @@ const isUsernameAlreadyTaken = (username, id) => {
 
 const compressImage = (file) => {
   return new Promise((resolve, reject) => {
-    console.log(file)
     const image = new Compressor(file, {
       quality: 0.8,
       width: 200,
