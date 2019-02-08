@@ -1,4 +1,7 @@
 import Compressor from 'compressorjs'
+
+const MAX_IMAGE_SIZE = 100000 // 100 KB
+
 const isUsernameAlreadyTaken = (username, id) => {
   const ids = Object.keys(window.localStorage)
   if (!ids) return false
@@ -26,4 +29,4 @@ const compressImage = (file) => {
   })
 }
 
-export { isUsernameAlreadyTaken, compressImage }
+export { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE }
