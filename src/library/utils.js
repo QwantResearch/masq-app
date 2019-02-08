@@ -12,7 +12,7 @@ const isUsernameAlreadyTaken = (username, id) => {
 
 const compressImage = (file) => {
   return new Promise((resolve, reject) => {
-    const image = new Compressor(file, {
+    const image = new Compressor(file, { // eslint-disable-line no-unused-vars
       quality: 0.8,
       width: 200,
       height: 200,
