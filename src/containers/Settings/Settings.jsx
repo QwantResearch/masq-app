@@ -7,7 +7,7 @@ import { Button, TextField } from 'qwant-research-components'
 import { updateUser } from '../../actions'
 import { Avatar } from '../../components'
 import { isName, isUsername } from '../../library/validators'
-import { isUsernameAlreadyTaken } from '../../library/utils'
+import { isUsernameAlreadyTaken, compressImage } from '../../library/utils'
 
 import styles from './Settings.module.scss'
 
@@ -70,18 +70,21 @@ class Settings extends React.Component {
     })
   }
 
-  onImageChange (event) {
+  async onImageChange (event) {
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
       return
     }
 
+    const image = await compressImage(file)
+
     reader.addEventListener('load', () => {
       this.hasChanged = true
       this.setState({ image: reader.result })
     })
-    reader.readAsDataURL(file)
+
+    reader.readAsDataURL(image)
   }
 
   validate () {
