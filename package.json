@@ -21,6 +21,7 @@
   "dependencies": {
     "bluebird": "^3.5.3",
     "classnames": "^2.2.6",
+    "compressorjs": "^1.0.5",
     "detect-browser": "^3.0.1",
     "masq-common": "git+https://github.com/QwantResearch/masq-common",
     "pump": "^3.0.0",
