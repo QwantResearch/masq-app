@@ -1,4 +1,4 @@
-
+import Compressor from 'compressorjs'
 const isUsernameAlreadyTaken = (username, id) => {
   const ids = Object.keys(window.localStorage)
   if (!ids) return false
@@ -10,4 +10,21 @@ const isUsernameAlreadyTaken = (username, id) => {
   )
 }
 
-export { isUsernameAlreadyTaken }
+const compressImage = (file) => {
+  return new Promise((resolve, reject) => {
+    console.log(file)
+    const image = new Compressor(file, {
+      quality: 0.8,
+      width: 200,
+      height: 200,
+      success (result) {
+        resolve(result)
+      },
+      error (err) {
+        reject(err.message)
+      }
+    })
+  })
+}
+
+export { isUsernameAlreadyTaken, compressImage }
