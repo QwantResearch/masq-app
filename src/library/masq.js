@@ -2,7 +2,7 @@ import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
-import common from 'masq-common'
+import * as common from 'masq-common'
 
 import { isUsernameAlreadyTaken } from './utils'
 
