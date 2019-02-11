@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { signin, signup, fetchUsers } from '../../actions'
 import { Redirect } from 'react-router-dom'
 import { TextField } from 'qwant-research-components'
+import PropTypes from 'prop-types'
 
 import styles from './Login.module.scss'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
@@ -173,6 +174,14 @@ class Login extends Component {
       </div>
     )
   }
+}
+
+Login.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.object),
+  user: PropTypes.object,
+  fetchUsers: PropTypes.func,
+  signup: PropTypes.func,
+  signin: PropTypes.func
 }
 
 const mapStateToProps = state => ({

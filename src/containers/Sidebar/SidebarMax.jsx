@@ -2,6 +2,7 @@ import React from 'react'
 import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { signout } from '../../actions'
 
@@ -11,7 +12,7 @@ import { ReactComponent as PhoneIcon } from '../../assets/phone.svg'
 import { ReactComponent as SettingsIcon } from '../../assets/settings.svg'
 import { ReactComponent as LogoutIcon } from '../../assets/logout.svg'
 
-class SidebarApp extends React.Component {
+class SidebarMax extends React.Component {
   render () {
     const { user, signout } = this.props
 
@@ -48,6 +49,11 @@ class SidebarApp extends React.Component {
   }
 }
 
+SidebarMax.propTypes = {
+  user: PropTypes.object,
+  signout: PropTypes.func
+}
+
 const mapStateToProps = (state) => ({
   user: state.masq.currentUser
 })
@@ -56,4 +62,4 @@ const mapDispatchToProps = dispatch => ({
   signout: () => dispatch(signout())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SidebarApp)
+export default connect(mapStateToProps, mapDispatchToProps)(SidebarMax)

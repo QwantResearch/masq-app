@@ -2,6 +2,7 @@ import React from 'react'
 import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { signout } from '../../actions'
 
@@ -50,6 +51,11 @@ class SidebarMin extends React.Component {
       </div>
     )
   }
+}
+
+SidebarMin.propTypes = {
+  user: PropTypes.object,
+  signout: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
