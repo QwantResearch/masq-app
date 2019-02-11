@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, TextField } from 'qwant-research-components'
+import { connect } from 'react-redux'
 
+import { setNotification } from '../../actions'
 import { Avatar, Modal } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
@@ -70,6 +72,7 @@ class Signup extends React.Component {
   }
 
   async onImageChange (event) {
+    const { setNotification } = this.props
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
@@ -78,7 +81,7 @@ class Signup extends React.Component {
 
     const image = await compressImage(file)
     if (image.size > MAX_IMAGE_SIZE) {
-      console.error('Even with compression, the image size exceed 100 KB, please upload a smaller image (or resize it)')
+      setNotification({ title: 'L\'image sélectionnée est trop lourde. Veuillez en choisir une autre.', error: true })
       return
     }
 
@@ -242,7 +245,12 @@ class Signup extends React.Component {
 
 Signup.propTypes = {
   onSignup: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  setNotification: PropTypes.func
 }
 
-export default Signup
+const mapDispatchToProps = dispatch => ({
+  setNotification: (notif) => dispatch(setNotification(notif))
+})
+
+export default connect(null, mapDispatchToProps)(Signup)

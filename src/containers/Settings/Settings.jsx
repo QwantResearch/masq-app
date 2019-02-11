@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Button, TextField } from 'qwant-research-components'
 
-import { updateUser } from '../../actions'
+import { updateUser, setNotification } from '../../actions'
 import { Avatar } from '../../components'
 import { isName, isUsername } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
@@ -71,6 +71,7 @@ class Settings extends React.Component {
   }
 
   async onImageChange (event) {
+    const { setNotification } = this.props
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
@@ -79,7 +80,7 @@ class Settings extends React.Component {
 
     const image = await compressImage(file)
     if (image.size > MAX_IMAGE_SIZE) {
-      console.error('Even with compression, the image size exceed 100 KB, please upload a smaller image (or resize it)')
+      setNotification({ title: 'L\'image sélectionnée est trop lourde. Veuillez en choisir une autre.', error: true })
       return
     }
 
@@ -174,12 +175,14 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: (id, user) => dispatch(updateUser(id, user))
+  updateUser: (id, user) => dispatch(updateUser(id, user)),
+  setNotification: (notif) => dispatch(setNotification(notif))
 })
 
 Settings.propTypes = {
   user: PropTypes.object,
-  updateUser: PropTypes.func
+  updateUser: PropTypes.func,
+  setNotification: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)
