@@ -1,9 +1,12 @@
 .Devices {
   flex: 1;
   display: grid;
-  grid-template-columns: auto 400px;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  grid-gap: 32px;
   margin-top: 48px;
   margin-left: 48px;
+  margin-right: 48px;
 
   .main {
     .Card {
@@ -13,6 +16,6 @@
   }
 
   .sidebar {
-    text-align: center;
+    text-align: left;
   }
 }
