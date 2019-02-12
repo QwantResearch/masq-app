@@ -19,6 +19,7 @@ const compressImage = (file) => {
       quality: 0.8,
       width: 512,
       height: 512,
+      convertSize: 0,
       success (result) {
         resolve(result)
       },
