@@ -78,6 +78,7 @@ class App extends Component {
   }
 
   render () {
+    console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
     const { currentUser, currentAppRequest, notification } = this.props
     return (
       <Router>
