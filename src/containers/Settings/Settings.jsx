@@ -120,46 +120,43 @@ class Settings extends React.Component {
 
     return (
       <div className={styles.Settings}>
-        <div>
-          <div className={styles.titleContainer}>
-            <p className='title'>Vos paramètres d'utilisateur</p>
-            <p className='subtitle'>Changez vos informations personnelles</p>
-          </div>
 
-          <div className={styles.profile}>
-            <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
-            <div className={styles.inputs}>
-              <TextField
-                error={!this.isValid('lastname')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.lastname}
-                onChange={(e) => this.onChange('lastname', e)}
-                label={this.isValid('lastname')
-                  ? 'Nom'
-                  : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
-              />
-              <TextField
-                error={!this.isValid('firstname')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.firstname}
-                onChange={(e) => this.onChange('firstname', e)}
-                label={this.isValid('firstname')
-                  ? 'Prénom'
-                  : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
-              />
-              <TextField
-                error={!this.isValid('username')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.username}
-                onChange={(e) => this.onChange('username', e)}
-                label={this.getUsernameLabel(
-                  'Pseudo (affiché)',
-                  'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-                  'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
-                )}
-              />
-            </div>
-          </div>
+        <div className={styles.main}>
+          <p className='title'>Vos paramètres d'utilisateur</p>
+          <p className='subtitle'>Changez vos informations personnelles</p>
+          <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+        </div>
+
+        <div className={styles.inputs}>
+          <TextField
+            error={!this.isValid('lastname')}
+            onKeyUp={this.handleKeyUp}
+            defaultValue={this.state.lastname}
+            onChange={(e) => this.onChange('lastname', e)}
+            label={this.isValid('lastname')
+              ? 'Nom'
+              : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+          />
+          <TextField
+            error={!this.isValid('firstname')}
+            onKeyUp={this.handleKeyUp}
+            defaultValue={this.state.firstname}
+            onChange={(e) => this.onChange('firstname', e)}
+            label={this.isValid('firstname')
+              ? 'Prénom'
+              : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+          />
+          <TextField
+            error={!this.isValid('username')}
+            onKeyUp={this.handleKeyUp}
+            defaultValue={this.state.username}
+            onChange={(e) => this.onChange('username', e)}
+            label={this.getUsernameLabel(
+              'Pseudo (affiché)',
+              'Pseudo déjà utilisé. Veuillez en choisir un autre.',
+              'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+            )}
+          />
         </div>
 
         <div className={styles.sidebar}>
