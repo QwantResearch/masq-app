@@ -3,7 +3,7 @@
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
   grid-row-gap: 48px;
-  grid-template-columns: repeat(auto-fit, minmax(330px, auto));
+  grid-template-columns: repeat(auto-fit, minmax(290px, auto));
   margin-top: 48px;
   margin-left: 48px;
 
@@ -12,7 +12,7 @@
   }
 
   .inputs {
-    // margin-left: 64px;
+    align-self: flex-end;
     display: flex;
     flex-direction: column;
     height: 192px;
@@ -60,6 +60,9 @@
   .exportButton {
     margin-right: 32px;
   }
-}
 
+  .avatar {
+    margin-top: 24px;
+  }
+}
 

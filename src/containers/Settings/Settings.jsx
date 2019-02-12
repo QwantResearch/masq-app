@@ -124,7 +124,9 @@ class Settings extends React.Component {
         <div className={styles.main}>
           <p className='title'>Vos paramètres d'utilisateur</p>
           <p className='subtitle'>Changez vos informations personnelles</p>
-          <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+          <div className={styles.avatar}>
+            <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+          </div>
         </div>
 
         <div className={styles.inputs}>
