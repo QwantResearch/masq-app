@@ -48,6 +48,8 @@ class App extends Component {
   }
 
   async componentDidMount () {
+    console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
+
     if (!this.props.devices.length) {
       const { name, os } = require('detect-browser').detect()
       this.props.addDevice({
@@ -78,7 +80,6 @@ class App extends Component {
   }
 
   render () {
-    console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
     const { currentUser, currentAppRequest, notification } = this.props
     return (
       <Router>
