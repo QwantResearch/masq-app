@@ -93,10 +93,10 @@ class AuthApp extends React.Component {
   }
 
   render () {
-    const { appRequest, onClose } = this.props
+    const { appRequest } = this.props
 
     return (
-      <Modal width={511} height={400} onClose={onClose}>
+      <Modal width={511} height={400}>
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
           <p className={styles.appTitle}>{appRequest.appId}</p>
