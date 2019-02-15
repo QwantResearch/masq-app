@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/static/js/runtime~main.fdfcfda2.js"
   },
   {
-    "revision": "7d030e1434133b8c04548bd18c87adae",
-    "url": "/static/media/asap-latin-700italic.7d030e14.woff2"
+    "revision": "cdabf0089155e8595773c806e692d7a7",
+    "url": "/static/media/asap-latin-700italic.cdabf008.woff"
   },
   {
     "revision": "ff4fd00dccfe3149de02",
@@ -76,6 +76,10 @@ self.__precacheManifest = [
     "url": "/static/media/asap-latin-400.20495aa2.woff"
   },
   {
+    "revision": "7cf06d21bed93dd3e1876ec9062ef0a3",
+    "url": "/static/media/asap-latin-400italic.7cf06d21.woff"
+  },
+  {
     "revision": "bba1b4a3ecc109fad44534cdaea6e634",
     "url": "/static/media/asap-latin-500.bba1b4a3.woff2"
   },
@@ -86,10 +90,6 @@ self.__precacheManifest = [
   {
     "revision": "a835e9ea118497fe4836af2959877e87",
     "url": "/static/media/asap-latin-500italic.a835e9ea.woff2"
-  },
-  {
-    "revision": "7cf06d21bed93dd3e1876ec9062ef0a3",
-    "url": "/static/media/asap-latin-400italic.7cf06d21.woff"
   },
   {
     "revision": "e877535c1ee2fe248d940d459f2138c3",
@@ -120,8 +120,8 @@ self.__precacheManifest = [
     "url": "/static/media/asap-latin-700.7c6db4a2.woff"
   },
   {
-    "revision": "cdabf0089155e8595773c806e692d7a7",
-    "url": "/static/media/asap-latin-700italic.cdabf008.woff"
+    "revision": "7d030e1434133b8c04548bd18c87adae",
+    "url": "/static/media/asap-latin-700italic.7d030e14.woff2"
   },
   {
     "revision": "ff4fd00dccfe3149de02",
