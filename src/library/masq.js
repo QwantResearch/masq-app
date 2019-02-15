@@ -140,6 +140,7 @@ class Masq {
     // is not stored in this.profileDB (only set in openProfile)
     await put(db, this.masterKey, '/profile', privateProfile)
     this._setProfileToLocalStorage(publicProfile)
+    return privateProfile
   }
 
   /**
