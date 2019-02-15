@@ -50,9 +50,10 @@ export const updateUser = (id, update) => {
 }
 
 export const signup = user => {
+  const { password } = user
   return function (dispatch) {
     return masq.addProfile(user)
-      .then(() => dispatch(fetchUsers()))
+      .then((profile) => dispatch(signin(profile, password)))
   }
 }
 
