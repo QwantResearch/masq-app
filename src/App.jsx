@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom'
+import { createHashHistory } from 'history'
+import { Router, Route, Redirect } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 import { NotificationMasq } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp } from './modals'
+
+const history = createHashHistory()
 
 const authenticatedRoutes = [
   {
@@ -61,7 +64,7 @@ class App extends Component {
   }
 
   processLink () {
-    const { setCurrentAppRequest } = this.props
+    const { setCurrentAppRequest, currentUser } = this.props
     const hash = window.location.hash.substr(7) // ignore #/link/ characters
 
     if (!hash.length) return
@@ -75,14 +78,19 @@ class App extends Component {
       console.error(e)
     }
 
-    return <Redirect to='/' />
+    if (currentUser) {
+      history.goBack()
+      return <Redirect to='/' />
+    } else {
+      return <Redirect to='/' />
+    }
   }
 
   render () {
     const { currentUser, currentAppRequest, notification, setCurrentAppRequest } = this.props
 
     return (
-      <Router>
+      <Router history={history}>
         <div>
           {notification && <NotificationMasq {...notification} />}
           {currentUser && currentAppRequest &&
