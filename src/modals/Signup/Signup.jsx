@@ -7,6 +7,7 @@ import { setNotification } from '../../actions'
 import { Avatar, Modal } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
+import defaultAvatar from '../../assets/user.png'
 
 import styles from './Signup.module.scss'
 
@@ -15,7 +16,7 @@ class Signup extends React.Component {
     super(props)
 
     this.state = {
-      image: '',
+      image: defaultAvatar,
       lastname: '',
       firstname: '',
       username: '',
@@ -204,7 +205,6 @@ class Signup extends React.Component {
               <Avatar
                 size={120}
                 image={this.state.image}
-                username={this.state.username}
                 firstname={this.state.firstname}
                 lastname={this.state.lastname}
               />
