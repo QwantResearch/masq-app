@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 import { NotificationMasq } from './components'
@@ -44,7 +44,7 @@ class App extends Component {
       hash: null
     }
 
-    this.handleInput = this.handleInput.bind(this)
+    this.processLink = this.processLink.bind(this)
   }
 
   async componentDidMount () {
@@ -58,44 +58,43 @@ class App extends Component {
         color: '#40ae6c'
       })
     }
+  }
 
-    const hash = window.location.hash.substr(2) // ignore #/ characters
+  processLink () {
+    const { setCurrentAppRequest } = this.props
+    const hash = window.location.hash.substr(7) // ignore #/link/ characters
+
     if (!hash.length) return
 
     const decoded = Buffer.from(hash, 'base64')
+
     try {
       const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
-      this.props.setCurrentAppRequest({ appId, channel, key })
+      setCurrentAppRequest({ appId, channel, key })
     } catch (e) {
-      // Incorrect urls parameters
+      console.error(e)
     }
-  }
 
-  appendMessage (msg) {
-    this.setState({ messages: [...this.state.messages, msg] })
-  }
-
-  handleInput (e) {
-    this.setState({ input: e.target.value })
+    return <Redirect to='/' />
   }
 
   render () {
-    const { currentUser, currentAppRequest, notification } = this.props
+    const { currentUser, currentAppRequest, notification, setCurrentAppRequest } = this.props
+
     return (
       <Router>
         <div>
           {notification && <NotificationMasq {...notification} />}
           {currentUser && currentAppRequest &&
             <AuthApp
-              onClose={() => this.props.setCurrentAppRequest(null)}
+              onClose={() => setCurrentAppRequest(null)}
               appRequest={currentAppRequest}
             />
           }
 
-          <Route exact path='/:hash' component={Login} />
-          <Route exact path='/' component={Login} />
+          <Route exact path='/link/:hash' component={this.processLink} />
 
-          {/* <Route path='/registerapp/:channel/:challenge/:app' component={AuthApp} /> */}
+          <Route exact path='/' component={Login} />
 
           <div style={{ display: 'flex' }}>
             {authenticatedRoutes.map((route, index) => (
