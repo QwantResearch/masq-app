@@ -64,7 +64,7 @@ class App extends Component {
   }
 
   processLink () {
-    const { setCurrentAppRequest, currentUser } = this.props
+    const { setCurrentAppRequest } = this.props
     const hash = window.location.hash.substr(7) // ignore #/link/ characters
 
     if (!hash.length) return
@@ -78,12 +78,7 @@ class App extends Component {
       console.error(e)
     }
 
-    if (currentUser) {
-      history.goBack()
-      return <Redirect to='/' />
-    } else {
-      return <Redirect to='/' />
-    }
+    return <Redirect to='/' />
   }
 
   render () {
