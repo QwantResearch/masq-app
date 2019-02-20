@@ -36,7 +36,7 @@ class Apps extends PureComponent {
         <p className='subtitle'>Retrouvez vos applications synchronisées avec Masq</p>
         {apps.map((app, index) => (
           <div key={index} className={styles.Card}>
-            <Card minHeight={64} title={app.name} image={app.image} color='#a3005c' description={app.description} />
+            <Card minHeight={64} title={app.name} image={app.imageURL} color='#a3005c' description={app.description} />
           </div>
         ))}
       </div>
