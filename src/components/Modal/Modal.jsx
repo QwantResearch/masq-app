@@ -10,7 +10,7 @@ const Modal = ({ onClose, width, height, children }) => (
   <div className='Modal'>
     <div className='overlay' onClick={onClose} />
     <div className='modal' style={{ width, height }}>
-      {onClose && <Close className='close' width={9} height={9} onClick={onClose} />}
+      {onClose && <Close className='close' width={16} height={16} onClick={onClose} />}
       {children}
     </div>
   </div>

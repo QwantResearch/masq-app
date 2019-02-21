@@ -11,7 +11,7 @@ import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { ReactComponent as Chevron } from '../../assets/chevron.svg'
 import { Avatar } from '../../components'
 
-import { Signup, AddProfile, SyncDevice } from '../../modals'
+import { Signup, AddProfile, SyncDevice, QRCode } from '../../modals'
 
 class Login extends Component {
   constructor (props) {
@@ -23,13 +23,16 @@ class Login extends Component {
       isLoggedIn: false,
       signup: false,
       sync: false,
-      password: ''
+      password: '',
+      qrcodeModal: false
     }
 
     this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
     this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
     this.handleClickNewUser = this.handleClickNewUser.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.closeQRCodeModal = this.closeQRCodeModal.bind(this)
+    this.openQRCodeModal = this.openQRCodeModal.bind(this)
     this.onPasswordKeyUp = this.onPasswordKeyUp.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -99,14 +102,29 @@ class Login extends Component {
     this.setState({ selectedUser: null })
   }
 
+  openQRCodeModal () {
+    this.setState({ qrcodeModal: true })
+  }
+
+  closeQRCodeModal () {
+    this.setState({ qrcodeModal: false })
+  }
+
   renderUsersSelection () {
-    const { users } = this.props
-    const { isModalOpened, signup, sync } = this.state
+    const { users, currentAppRequest } = this.props
+    const { isModalOpened, signup, sync, qrcodeModal } = this.state
 
     return (
       <div style={{ width: '100%' }}>
+        {qrcodeModal && <QRCode onClose={this.closeQRCodeModal} />}
+
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
+        {currentAppRequest && (
+          <div style={{ marginBottom: 32 }}>
+            <Button label='Se connecter avec un autre appareil' onClick={this.openQRCodeModal} />
+          </div>
+        )}
         <div className={styles.users}>
           {users.map(user => (
             <div key={user.username} className={styles.user} onClick={() => this.selectUser(user)}>
@@ -178,7 +196,9 @@ class Login extends Component {
       <div className={styles.Login}>
         {selectedUser
           ? this.renderPassword()
-          : this.renderUsersSelection()}
+          : this.renderUsersSelection()
+        }
+
         <Background className={styles.Background} />
       </div>
     )
@@ -191,12 +211,14 @@ Login.propTypes = {
   fetchUsers: PropTypes.func,
   signup: PropTypes.func,
   signin: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
+  currentAppRequest: PropTypes.object
 }
 
 const mapStateToProps = state => ({
   user: state.masq.currentUser,
-  users: state.masq.users
+  users: state.masq.users,
+  currentAppRequest: state.masq.currentAppRequest
 })
 
 const mapDispatchToProps = dispatch => ({

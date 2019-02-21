@@ -82,7 +82,7 @@ class App extends Component {
 
     try {
       const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
-      setCurrentAppRequest({ appId, channel, key })
+      setCurrentAppRequest({ appId, channel, key, link: window.location.href })
     } catch (e) {
       console.error(e)
     }
@@ -109,7 +109,6 @@ class App extends Component {
           }
 
           <Route exact path='/link/:hash' component={this.processLink} />
-
           <Route exact path='/' component={Login} />
 
           <div style={{ display: 'flex' }}>
