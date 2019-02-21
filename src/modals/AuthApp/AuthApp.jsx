@@ -20,9 +20,19 @@ class AuthApp extends React.Component {
   }
 
   async componentDidMount () {
+    this.setState({ loading: false })
     const { channel, key, appId } = this.props.appRequest
     await this.props.handleUserAppLogin(channel, key, appId)
-    this.setState({ loading: false })
+  }
+
+  async componentDidUpdate (prevProps) {
+    if (prevProps.appRequest.channel === this.props.appRequest.channel) {
+      return
+    }
+
+    // Another appRequest has been received
+    const { channel, key, appId } = this.props.appRequest
+    await this.props.handleUserAppLogin(channel, key, appId)
   }
 
   async handleRefuse () {

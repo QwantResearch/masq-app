@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { signin, signup, fetchUsers } from '../../actions'
-import { Redirect } from 'react-router-dom'
 import { TextField } from 'qwant-research-components'
 import PropTypes from 'prop-types'
 
@@ -159,11 +158,17 @@ class Login extends Component {
     )
   }
 
-  render () {
-    const { user } = this.props
-    const { selectedUser } = this.state
+  componentDidUpdate (prevProps) {
+    // If the user was already logged, go back to previous route
+    if (prevProps.user !== null && this.props.user === prevProps.user) {
+      this.props.history.goBack()
+    } else if (this.props.user) {
+      this.props.history.push('/apps')
+    }
+  }
 
-    if (user) return <Redirect to='/apps' />
+  render () {
+    const { selectedUser } = this.state
 
     return (
       <div className={styles.Login}>
@@ -181,7 +186,8 @@ Login.propTypes = {
   user: PropTypes.object,
   fetchUsers: PropTypes.func,
   signup: PropTypes.func,
-  signin: PropTypes.func
+  signin: PropTypes.func,
+  history: PropTypes.object
 }
 
 const mapStateToProps = state => ({
