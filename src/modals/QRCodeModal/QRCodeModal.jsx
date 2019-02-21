@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button } from 'qwant-research-components'
+import QRCode from 'qrcode.react'
 
 import { Modal } from '../../components'
 
-import styles from './QRCode.module.scss'
+import styles from './QRCodeModal.module.scss'
 
-class QRCode extends Component {
+class QRCodeModal extends Component {
   copyLink () {
     const link = document.querySelector('input')
     link.select()
@@ -18,12 +19,13 @@ class QRCode extends Component {
     const { onClose, currentAppRequest } = this.props
 
     return (
-      <Modal height={370} width={511} onClose={onClose}>
+      <Modal height={520} width={511} onClose={onClose}>
         <div className={styles.QRCode}>
           <p className={styles.title}>Connexion sur un autre appareil</p>
           <p className={styles.description}>
             Copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.
           </p>
+          <QRCode value={currentAppRequest.link} style={{ marginBottom: 16 }} />
           <input id='link' readOnly defaultValue={currentAppRequest.link} />
           <Button label='Copier' onClick={this.copyLink} />
         </div>
@@ -32,7 +34,7 @@ class QRCode extends Component {
   }
 }
 
-QRCode.propTypes = {
+QRCodeModal.propTypes = {
   onClose: PropTypes.func,
   currentAppRequest: PropTypes.object
 }
@@ -41,4 +43,4 @@ const mapStateToProps = state => ({
   currentAppRequest: state.masq.currentAppRequest
 })
 
-export default connect(mapStateToProps)(QRCode)
+export default connect(mapStateToProps)(QRCodeModal)

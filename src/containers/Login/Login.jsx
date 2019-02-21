@@ -11,7 +11,7 @@ import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { ReactComponent as Chevron } from '../../assets/chevron.svg'
 import { Avatar } from '../../components'
 
-import { Signup, AddProfile, SyncDevice, QRCode } from '../../modals'
+import { Signup, AddProfile, SyncDevice, QRCodeModal } from '../../modals'
 
 class Login extends Component {
   constructor (props) {
@@ -116,7 +116,7 @@ class Login extends Component {
 
     return (
       <div style={{ width: '100%' }}>
-        {qrcodeModal && <QRCode onClose={this.closeQRCodeModal} />}
+        {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
 
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>

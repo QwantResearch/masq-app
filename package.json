@@ -53,6 +53,7 @@
     "gh-pages": "^2.0.1",
     "hyperdb": "^3.5.0",
     "node-sass": "^4.9.4",
+    "qrcode.react": "^0.9.3",
     "random-access-memory": "^3.1.1",
     "webpack-cli": "^3.2.3",
     "wrtc": "^0.3.3"

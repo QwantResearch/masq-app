@@ -1,6 +1,6 @@
 export { default as Signup } from './Signup/Signup'
 export { default as AuthApp } from './AuthApp/AuthApp'
-export { default as QRCode } from './QRCode/QRCode'
+export { default as QRCodeModal } from './QRCodeModal/QRCodeModal'
 export { default as SyncDevice } from './SyncDevice/SyncDevice'
 export { default as AddProfile } from './AddProfile/AddProfile'
 export { default as PermanentStorageRequest } from './PermanentStorageRequest/PermanentStorageRequest'
