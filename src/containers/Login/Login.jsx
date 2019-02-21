@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { signin, signup, fetchUsers } from '../../actions'
-import { TextField } from 'qwant-research-components'
+import { Button, TextField } from 'qwant-research-components'
 import PropTypes from 'prop-types'
 
 import styles from './Login.module.scss'
@@ -33,6 +33,7 @@ class Login extends Component {
     this.onPasswordKeyUp = this.onPasswordKeyUp.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClose = this.handleClose.bind(this)
+    this.connect = this.connect.bind(this)
     this.goBack = this.goBack.bind(this)
   }
 
@@ -79,14 +80,18 @@ class Login extends Component {
   }
 
   async onPasswordKeyUp (e) {
+    if (e.key === 'Enter') {
+      this.connect()
+    }
+  }
+
+  async connect () {
     const { signin } = this.props
     const { password, selectedUser } = this.state
-    if (e.key === 'Enter') {
-      try {
-        await signin(selectedUser, password)
-      } catch (e) {
-        this.setState({ isWrongPassword: true })
-      }
+    try {
+      await signin(selectedUser, password)
+    } catch (e) {
+      this.setState({ isWrongPassword: true })
     }
   }
 
@@ -153,6 +158,8 @@ class Login extends Component {
             label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
             onKeyUp={this.onPasswordKeyUp}
           />
+          <div style={{ marginBottom: 32 }} />
+          <Button label='connexion' onClick={this.connect} />
         </div>
       </div>
     )
