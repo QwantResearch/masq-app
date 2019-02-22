@@ -44,7 +44,8 @@ class App extends Component {
 
     this.state = {
       messages: [],
-      hash: null
+      hash: null,
+      prevPath: ''
     }
 
     this.processLink = this.processLink.bind(this)
@@ -61,10 +62,18 @@ class App extends Component {
         color: '#40ae6c'
       })
     }
+
+    history.listen(location => {
+      if (location.pathname !== this.state.prevPath) {
+        this.setState({
+          prevPath: history.location.pathname
+        })
+      }
+    })
   }
 
   processLink () {
-    const { setCurrentAppRequest } = this.props
+    const { setCurrentAppRequest, currentUser } = this.props
     const hash = window.location.hash.substr(7) // ignore #/link/ characters
 
     if (!hash.length) return
@@ -76,6 +85,10 @@ class App extends Component {
       setCurrentAppRequest({ appId, channel, key })
     } catch (e) {
       console.error(e)
+    }
+
+    if (currentUser) {
+      return <Redirect to={this.state.prevPath} />
     }
 
     return <Redirect to='/' />

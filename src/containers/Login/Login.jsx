@@ -165,11 +165,8 @@ class Login extends Component {
     )
   }
 
-  componentDidUpdate (prevProps) {
-    // If the user was already logged, go back to previous route
-    if (prevProps.user !== null && this.props.user === prevProps.user) {
-      this.props.history.goBack()
-    } else if (this.props.user) {
+  componentDidUpdate () {
+    if (this.props.user) {
       this.props.history.push('/apps')
     }
   }
