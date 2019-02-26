@@ -7,7 +7,7 @@ import { Router, Route, Redirect } from 'react-router-dom'
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 import { NotificationMasq } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
-import { AuthApp } from './modals'
+import { AuthApp, PersistentStorageRequest } from './modals'
 
 const history = createHashHistory()
 
@@ -43,12 +43,26 @@ class App extends Component {
     this.sw = null
 
     this.state = {
+      persistentStorageRequest: false,
       messages: [],
       hash: null,
       prevPath: ''
     }
 
     this.processLink = this.processLink.bind(this)
+    this.handlePersistentStorageRequestClose = this.handlePersistentStorageRequestClose.bind(this)
+  }
+
+  async checkPersistentStorage () {
+    if (!navigator.storage || !navigator.storage.persist) return
+    const persistent = await navigator.storage.persisted()
+    if (persistent) { return }
+
+    this.setState({ persistentStorageRequest: true })
+    const p = await navigator.storage.persist()
+    if (p) {
+      this.setState({ persistentStorageRequest: false })
+    }
   }
 
   async componentDidMount () {
@@ -70,6 +84,8 @@ class App extends Component {
         })
       }
     })
+
+    this.checkPersistentStorage()
   }
 
   processLink () {
@@ -94,7 +110,12 @@ class App extends Component {
     return <Redirect to='/' />
   }
 
+  handlePersistentStorageRequestClose () {
+    this.setState({ PersistentStorageRequest: false })
+  }
+
   render () {
+    const { persistentStorageRequest } = this.state
     const { currentUser, currentAppRequest, notification, setCurrentAppRequest } = this.props
 
     return (
@@ -107,6 +128,8 @@ class App extends Component {
               appRequest={currentAppRequest}
             />
           }
+
+          {persistentStorageRequest && <PersistentStorageRequest onClose={this.handlePersistentStorageRequestClose} />}
 
           <Route exact path='/link/:hash' component={this.processLink} />
           <Route exact path='/' component={Login} />
