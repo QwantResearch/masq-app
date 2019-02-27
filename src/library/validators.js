@@ -1,4 +1,4 @@
-const isName = str => /^[A-zÀ-ú\- ]+$/.test(str)
+const isName = str => /^$|^[A-zÀ-ú\- ]+$/.test(str)
 
 const isUsername = str => /^[\w!?$#@()\-*]+$/.test(str)
 

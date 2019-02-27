@@ -136,8 +136,8 @@ class Settings extends React.Component {
             defaultValue={this.state.lastname}
             onChange={(e) => this.onChange('lastname', e)}
             label={this.isValid('lastname')
-              ? 'Nom'
-              : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+              ? 'Nom (facultatif)'
+              : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
           />
           <TextField
             error={!this.isValid('firstname')}
@@ -145,8 +145,8 @@ class Settings extends React.Component {
             defaultValue={this.state.firstname}
             onChange={(e) => this.onChange('firstname', e)}
             label={this.isValid('firstname')
-              ? 'Prénom'
-              : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+              ? 'Prénom (facultatif)'
+              : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
           />
           <TextField
             error={!this.isValid('username')}

@@ -10,8 +10,8 @@ describe('name validator', () => {
     expect(isName(str)).toBe(true)
   })
 
-  test('empty is forbidden', () => {
-    expect(isName('')).toBe(false)
+  test('empty is allowed', () => {
+    expect(isName('')).toBe(true)
   })
 
   test('spaces are allowed', () => {

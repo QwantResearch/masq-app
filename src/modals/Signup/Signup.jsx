@@ -167,8 +167,8 @@ class Signup extends React.Component {
                 className={styles.TextField}
                 defaultValue={this.state.lastname}
                 label={this.isValid('lastname')
-                  ? 'Nom'
-                  : 'Le nom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+                  ? 'Nom (facultatif)'
+                  : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
                 error={!this.isValid('lastname')}
                 onChange={(e) => this.onChange('lastname', e)}
               />
@@ -176,8 +176,8 @@ class Signup extends React.Component {
                 className={styles.TextField}
                 defaultValue={this.state.firstname}
                 label={this.isValid('firstname')
-                  ? 'Prénom'
-                  : 'Le prénom ne peut être vide, et ne peut contenir que des caractères alphanumériques et des espaces.'}
+                  ? 'Prénom (facultatif)'
+                  : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
                 error={!this.isValid('firstname')}
                 onChange={(e) => this.onChange('firstname', e)}
               />
