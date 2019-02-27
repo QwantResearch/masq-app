@@ -11,16 +11,12 @@ import styles from './AuthApp.module.scss'
 class AuthApp extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      loading: true
-    }
     this.handleOk = this.handleOk.bind(this)
     this.handleRefuse = this.handleRefuse.bind(this)
     this.handleAccept = this.handleAccept.bind(this)
   }
 
   async componentDidMount () {
-    this.setState({ loading: false })
     const { channel, key, appId } = this.props.appRequest
     await this.props.handleUserAppLogin(channel, key, appId)
   }
@@ -42,11 +38,8 @@ class AuthApp extends React.Component {
   }
 
   async handleAccept () {
-    this.setState({ loading: true }, async () => {
-      await this.props.handleUserAppRegister(true)
-      this.setState({ loading: false })
-      await this.props.fetchApps() // The apps may be added
-    })
+    await this.props.handleUserAppRegister(true)
+    await this.props.fetchApps() // The apps may be added
   }
 
   async handleOk () {
@@ -55,10 +48,7 @@ class AuthApp extends React.Component {
   }
 
   renderButtons () {
-    const { loading } = this.state
     const { appRequest } = this.props
-
-    if (loading) return <Loader />
 
     if (appRequest.isConnected === false) {
       return (
@@ -72,6 +62,8 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected) {
       return <Button label={'OK'} onClick={this.handleOk} color='#40ae6c' />
     }
+
+    return <Loader />
   }
 
   renderText () {
