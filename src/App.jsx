@@ -111,7 +111,7 @@ class App extends Component {
   }
 
   handlePersistentStorageRequestClose () {
-    this.setState({ PersistentStorageRequest: false })
+    this.setState({ persistentStorageRequest: false })
   }
 
   render () {
