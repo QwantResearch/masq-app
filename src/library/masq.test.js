@@ -7,6 +7,7 @@ const wrtc = require('wrtc')
 window.crypto = require('@trust/webcrypto')
 const common = require('masq-common')
 
+const { hashKey } = common.utils
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 const { ERRORS } = common.errors
 
@@ -53,7 +54,7 @@ jest.mock('masq-common', () => {
     resetDbList: () => { dbList = {} },
     crypto: {
       ...original.crypto,
-      genEncryptedMasterKey: async (passphrase) => {
+      genEncryptedMasterKeyAndNonce: async (passphrase) => {
         const protectedMK = {
           derivationParams: {
             salt: '81570bf99c0134985d7d975b69e123ce',
@@ -68,9 +69,14 @@ jest.mock('masq-common', () => {
         }
         return Promise.resolve(protectedMK)
       },
-      decryptMasterKey: async (passphrase, protectedMK) => {
+      decryptMasterKeyAndNonce: async (passphrase, protectedMK) => {
         const res = Buffer.from(passphrase).toString('hex') === protectedMK.encryptedMasterKey.ciphertext
-        if (res) return Promise.resolve(Buffer.from('00112233445566778899AABBCCDDEEFF', 'hex'))
+        if (res) {
+          return Promise.resolve({
+            masterKey: Buffer.from('00112233445566778899AABBCCDDEEFF', 'hex'),
+            nonce: '00112233445566778899AABBCCDDEEFF'
+          })
+        }
         if (!res) throw new Error('Wrong passphrase')
       }
     }
@@ -187,7 +193,10 @@ describe('masq internal operations', () => {
   })
 
   test('should check if masq-profile values are encrypted', async () => {
-    const node = await masq.profileDB.getAsync('/profile')
+    const key = '/profile'
+    const hashedKey = await hashKey(key, masq.nonce)
+
+    const node = await masq.profileDB.getAsync(hashedKey)
     expect(node.value.iv).toBeDefined()
     expect(node.value.ciphertext).toBeDefined()
   })
@@ -369,7 +378,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send notAuthorized, and give write access', async (done) => {
-    expect.assertions(8)
+    expect.assertions(9)
     const hub = signalhub('channel2', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -380,11 +389,12 @@ describe('masq protocol', async () => {
         const { msg } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('notAuthorized')
         peer.once('data', async (data) => {
-          const { msg, key, userAppDbId, userAppDEK, username, profileImage } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+          const { msg, key, userAppDbId, userAppDEK, username, profileImage, userAppNonce } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
           expect(msg).toBe('masqAccessGranted')
           expect(key).toBeDefined()
           expect(userAppDbId).toBeDefined()
           expect(userAppDEK).toBeDefined()
+          expect(userAppNonce).toBeDefined()
           expect(username).toBeDefined()
           expect(profileImage).toBeDefined()
 
@@ -418,7 +428,7 @@ describe('masq protocol', async () => {
   })
 
   test('should send authorized and close connection', done => {
-    expect.assertions(5)
+    expect.assertions(6)
     const hub = signalhub('channel', 'localhost:8080')
     const sw = swarm(hub, { wrtc })
 
@@ -426,10 +436,11 @@ describe('masq protocol', async () => {
 
     sw.once('peer', peer => {
       peer.once('data', async (data) => {
-        const { msg, userAppDbId, userAppDEK, username, profileImage } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
+        const { msg, userAppDbId, userAppDEK, username, profileImage, userAppNonce } = await decrypt(cryptoKey, JSON.parse(data), 'base64')
         expect(msg).toBe('authorized')
         expect(userAppDbId).toBeDefined()
         expect(userAppDEK).toBeDefined()
+        expect(userAppNonce).toBeDefined()
         expect(username).toBeDefined()
         expect(profileImage).toBeDefined()
 

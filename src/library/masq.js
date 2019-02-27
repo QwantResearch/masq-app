@@ -6,7 +6,7 @@ import * as common from 'masq-common'
 
 import { isUsernameAlreadyTaken } from './utils'
 
-const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey, decryptMasterKey } = common.crypto
+const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get } = common.utils
 
 const { ERRORS, MasqError, checkObject } = common.errors
@@ -74,8 +74,9 @@ class Masq {
 
     const protectedMK = await this._getProtectedMK()
     try {
-      const MK = await decryptMasterKey(passphrase, protectedMK)
-      this.masterKey = await importKey(MK)
+      const { masterKey, nonce } = await decryptMasterKeyAndNonce(passphrase, protectedMK)
+      this.masterKey = await importKey(masterKey)
+      this.nonce = nonce
     } catch (error) {
       this.closeProfile()
       throw new MasqError(ERRORS.INVALID_PASSPHRASE)
@@ -100,6 +101,7 @@ class Masq {
     this._stopAllReplicates()
     this.profileDB = null
     this.masterKey = null
+    this.nonce = null
     this.profileId = null
     this.appsDBs = {}
   }
@@ -115,9 +117,11 @@ class Masq {
     if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
 
     const id = uuidv4()
-    const protectedMK = await genEncryptedMasterKey(profile.password)
-    const MK = await decryptMasterKey(profile.password, protectedMK)
-    this.masterKey = await importKey(MK)
+    const protectedMK = await genEncryptedMasterKeyAndNonce(profile.password)
+
+    const { masterKey, nonce } = await decryptMasterKeyAndNonce(profile.password, protectedMK)
+
+    this.masterKey = await importKey(masterKey)
 
     const publicProfile = {
       username: profile.username,
@@ -138,7 +142,7 @@ class Masq {
     await db.putAsync('/profile/protectedMK', protectedMK)
     // We do not use this.encryptAndPut method because the master key
     // is not stored in this.profileDB (only set in openProfile)
-    await put(db, this.masterKey, '/profile', privateProfile)
+    await put(db, this.masterKey, nonce, '/profile', privateProfile)
     this._setProfileToLocalStorage(publicProfile)
     return privateProfile
   }
@@ -150,8 +154,7 @@ class Masq {
    */
   async getAndDecrypt (key) {
     this._checkProfile()
-    this._checkMK()
-    const dec = await get(this.profileDB, this.masterKey, key)
+    const dec = await get(this.profileDB, this.masterKey, this.nonce, key)
     return dec
   }
 
@@ -164,8 +167,7 @@ class Masq {
    */
   async encryptAndPut (key, value) {
     this._checkProfile()
-    this._checkMK()
-    await put(this.profileDB, this.masterKey, key, value)
+    await put(this.profileDB, this.masterKey, this.nonce, key, value)
   }
 
   /**
@@ -276,8 +278,8 @@ class Masq {
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-      const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage) => {
-        const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage }
+      const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
+        const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -310,7 +312,7 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            await sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image)
+            await sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
           } else {
             await sendNotAuthorized(peer)
           }
@@ -357,8 +359,8 @@ class Masq {
         peer.send(JSON.stringify(encryptedMsg))
       }
 
-      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK, username, profileImage) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage }
+      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
+        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
@@ -396,9 +398,10 @@ class Masq {
       const apps = await this.getApps()
       const app = apps.find(app => app.appId === this.appId)
       const appDEK = app ? app.appDEK : await this._genAppDEK()
+      const appNonce = app ? app.appNonce : await this._genNonce()
 
       const id = app ? app.id : await this.addApp({
-        ...this.app, appId: this.appId, appDEK
+        ...this.app, appId: this.appId, appDEK, appNonce
       })
 
       const privateProfile = await this.getProfile(this.profileId)
@@ -408,7 +411,7 @@ class Masq {
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
         this._startReplicate(db)
-        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image)
+        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
       })
       this.peer.on('data', (data) => handleData(this.peer, data))
     })
@@ -430,6 +433,18 @@ class Masq {
     const extractedKey = await exportKey(key)
     const hexKey = Buffer.from(extractedKey).toString('hex')
     return hexKey
+  }
+
+  /**
+   * Generate a User app nonce, during the register
+   * of a new app, this info is added alongside the appId (user
+   * app database id) during the masqAccessGranted message and authorized
+   * message.
+   * The nonce is used to hash the keys of the user-app database
+   * @returns {String} -The nonce key in hex format
+   */
+  async _genNonce () {
+    return genRandomBuffer(16, 'hex')
   }
 
   async _decryptValue (ciphertext) {
@@ -525,10 +540,6 @@ class Masq {
 
   _checkProfile () {
     if (!this.profileDB) throw new MasqError(ERRORS.PROFILE_NOT_OPENED)
-  }
-
-  _checkMK () {
-    if (!this.masterKey) throw Error('MasterKey is not set')
   }
 
   _closeUserAppConnection () {
