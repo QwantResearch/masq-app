@@ -97,8 +97,8 @@ export const updateCurrentAppRequest = update => {
 export const handleUserAppLogin = (channel, key, appId) => {
   return function (dispatch) {
     return masq.handleUserAppLogin(channel, key, appId)
-      .then((isConnected) => dispatch(updateCurrentAppRequest({
-        isConnected: isConnected
+      .then((info) => dispatch(updateCurrentAppRequest({
+        ...info
       })))
   }
 }

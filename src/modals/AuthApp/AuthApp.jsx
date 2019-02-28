@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, Loader } from 'qwant-research-components'
+import { Button, Loader, Card } from 'qwant-research-components'
 
 import { Modal } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps } from '../../actions'
@@ -72,6 +72,7 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <div>
+          <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color='#a3005c' description={appRequest.description} />
           <p className={styles.description}>
           Cette notification apparait car cette application demande un accès à votre stockage Masq.
           </p>
@@ -96,9 +97,10 @@ class AuthApp extends React.Component {
 
   render () {
     const { appRequest } = this.props
+    const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={400}>
+      <Modal width={511} height={isConnected === false ? 600 : 400}>
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
           <p className={styles.appTitle}>{appRequest.appId}</p>

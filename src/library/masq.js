@@ -326,11 +326,11 @@ class Masq {
 
           if (json.msg === 'connectionEstablished') {
             await this._closeUserAppConnection()
-            return resolve(true)
+            return resolve({ isConnected: true })
           } else if (json.msg === 'registerUserApp') {
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
-            resolve(false)
+            resolve({ isConnected: false, ...this.app })
           } else {
             await this._closeUserAppConnection()
             reject(new MasqError(ERRORS.INVALID_DATA))
