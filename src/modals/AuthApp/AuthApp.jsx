@@ -74,7 +74,7 @@ class AuthApp extends React.Component {
         <div>
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color='#a3005c' description={appRequest.description} />
           <p className={styles.description}>
-          Cette notification apparait car cette application demande un accès à votre stockage Masq.
+          Cette application demande un accès à votre stockage Masq.
           </p>
           <p className={styles.description}>
           Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
@@ -100,10 +100,9 @@ class AuthApp extends React.Component {
     const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={isConnected === false ? 600 : 400}>
+      <Modal width={511} height={isConnected === false ? 550 : 400}>
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
-          <p className={styles.appTitle}>{appRequest.appId}</p>
           {this.renderText()}
 
           <div className={styles.buttons}>
