@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { createHashHistory } from 'history'
 import { Router, Route, Redirect } from 'react-router-dom'
+import DetectBrowser from 'detect-browser'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
 import { NotificationMasq } from './components'
@@ -54,6 +55,9 @@ class App extends Component {
   }
 
   async checkPersistentStorage () {
+    const { name } = DetectBrowser.detect()
+    if (name !== 'firefox') return
+
     if (!navigator.storage || !navigator.storage.persist) return
     const persistent = await navigator.storage.persisted()
     if (persistent) { return }
@@ -69,7 +73,7 @@ class App extends Component {
     console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
 
     if (!this.props.devices.length) {
-      const { name, os } = require('detect-browser').detect()
+      const { name, os } = DetectBrowser.detect()
       this.props.addDevice({
         name: `${capitalize(name)} sur ${os}`,
         description: 'Cet appareil',
