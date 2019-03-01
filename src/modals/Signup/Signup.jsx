@@ -143,100 +143,106 @@ class Signup extends React.Component {
     }
   }
 
+  renderFirstStep () {
+    return (
+      <React.Fragment>
+        <Avatar
+          size={120}
+          upload
+          ref={this.refAvatar}
+          onChange={(e) => this.onImageChange(e)}
+          image={this.state.image || null}
+        />
+
+        <div style={{ paddingTop: 24 }} />
+        <Button secondary label='Importer une photo' onClick={this.openDialog} />
+        <div style={{ paddingBottom: 32 }} />
+
+        <TextField
+          className={styles.TextField}
+          defaultValue={this.state.lastname}
+          label={this.isValid('lastname')
+            ? 'Nom (facultatif)'
+            : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
+          error={!this.isValid('lastname')}
+          onChange={(e) => this.onChange('lastname', e)}
+        />
+        <TextField
+          className={styles.TextField}
+          defaultValue={this.state.firstname}
+          label={this.isValid('firstname')
+            ? 'Prénom (facultatif)'
+            : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
+          error={!this.isValid('firstname')}
+          onChange={(e) => this.onChange('firstname', e)}
+        />
+        <TextField
+          className={styles.TextField}
+          defaultValue={this.state.username}
+          error={!this.isValid('username')}
+          onChange={(e) => this.onChange('username', e)}
+          onKeyUp={this.handleKeyUp}
+          label={this.getUsernameLabel(
+            'Pseudo (affiché)',
+            'Pseudo déjà utilisé. Veuillez en choisir un autre.',
+            'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+          )}
+        />
+
+        <div className={styles.buttons}>
+          <Button label='Suivant' onClick={this.next} width={185} />
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  renderSecondStep () {
+    return (
+      <React.Fragment>
+        <Avatar
+          size={120}
+          image={this.state.image}
+          firstname={this.state.firstname}
+          lastname={this.state.lastname}
+        />
+        <p className={styles.user}>{this.state.username}</p>
+        <TextField
+          className={styles.TextField}
+          autoFocus
+          type='password'
+          label={this.isValid('password')
+            ? 'Mot de passe'
+            : 'Le mot de passe doit être composé d\'au moins 8 caractères, et contenir au moins un chiffre et un caractère spécial (!?$#@()-*)'}
+          error={!this.isValid('password')}
+          onChange={(e) => this.onChange('password', e)}
+        />
+
+        <TextField
+          className={styles.TextField}
+          type='password'
+          label={this.isValid('passwordConfirmation')
+            ? 'Mot de passe (confirmation)'
+            : 'Les mots de passe ne correspondent pas.'}
+          error={!this.isValid('passwordConfirmation')}
+          onKeyUp={this.handleKeyUp}
+          onChange={(e) => this.onChange('passwordConfirmation', e)}
+        />
+
+        <div className={styles.buttons}>
+          <Button label='Précédent' onClick={this.previous} width={185} />
+          <Button label='Terminer' onClick={this.finish} width={185} />
+        </div>
+      </React.Fragment>
+    )
+  }
+
   render () {
     return (
       <Modal onClose={this.props.onClose} height={650} width={511}>
         <div className={styles.Signup}>
           <span className={styles.title}>Ajouter un nouvel utilisateur</span>
-
-          {this.currentStep === 0 && (
-            <React.Fragment>
-              <Avatar
-                size={120}
-                upload
-                ref={this.refAvatar}
-                onChange={(e) => this.onImageChange(e)}
-                image={this.state.image || null}
-              />
-
-              <div style={{ paddingTop: 24 }} />
-              <Button secondary label='Importer une photo' onClick={this.openDialog} />
-              <div style={{ paddingBottom: 32 }} />
-
-              <TextField
-                className={styles.TextField}
-                defaultValue={this.state.lastname}
-                label={this.isValid('lastname')
-                  ? 'Nom (facultatif)'
-                  : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
-                error={!this.isValid('lastname')}
-                onChange={(e) => this.onChange('lastname', e)}
-              />
-              <TextField
-                className={styles.TextField}
-                defaultValue={this.state.firstname}
-                label={this.isValid('firstname')
-                  ? 'Prénom (facultatif)'
-                  : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
-                error={!this.isValid('firstname')}
-                onChange={(e) => this.onChange('firstname', e)}
-              />
-              <TextField
-                className={styles.TextField}
-                defaultValue={this.state.username}
-                error={!this.isValid('username')}
-                onChange={(e) => this.onChange('username', e)}
-                onKeyUp={this.handleKeyUp}
-                label={this.getUsernameLabel(
-                  'Pseudo (affiché)',
-                  'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-                  'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
-                )}
-              />
-
-              <div className={styles.buttons}>
-                <Button label='Suivant' onClick={this.next} width={185} />
-              </div>
-            </React.Fragment>
-          )}
-
-          {this.currentStep === 1 && (
-            <React.Fragment>
-              <Avatar
-                size={120}
-                image={this.state.image}
-                firstname={this.state.firstname}
-                lastname={this.state.lastname}
-              />
-              <p className={styles.user}>{this.state.username}</p>
-              <TextField
-                className={styles.TextField}
-                autoFocus
-                type='password'
-                label={this.isValid('password')
-                  ? 'Mot de passe'
-                  : 'Le mot de passe doit être composé d\'au moins 8 caractères, et contenir au moins un chiffre et un caractère spécial (!?$#@()-*)'}
-                error={!this.isValid('password')}
-                onChange={(e) => this.onChange('password', e)}
-              />
-
-              <TextField
-                className={styles.TextField}
-                type='password'
-                label={this.isValid('passwordConfirmation')
-                  ? 'Mot de passe (confirmation)'
-                  : 'Les mots de passe ne correspondent pas.'}
-                error={!this.isValid('passwordConfirmation')}
-                onKeyUp={this.handleKeyUp}
-                onChange={(e) => this.onChange('passwordConfirmation', e)}
-              />
-
-              <div className={styles.buttons}>
-                <Button label='Précédent' onClick={this.previous} width={185} />
-                <Button label='Terminer' onClick={this.finish} width={185} />
-              </div>
-            </React.Fragment>
-          )}
+          {this.currentStep === 0 && this.renderFirstStep()}
+          {this.currentStep === 1 && this.renderSecondStep()}
         </div>
       </Modal>
     )
