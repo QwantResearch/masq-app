@@ -1,8 +1,10 @@
+@import '../../styles/colors.scss';
+
 .Sidebar {
   height: 100vh;
   width: 252px;
   min-width: 252px;
-  background-color: #252a39;
+  background-color: $color-blue-dark;
 
   .header {
     height: 212px;
@@ -38,8 +40,8 @@
   }
 
   .active * {
-    color: #458bf8;
-    fill: #458bf8;
+    color: $color-blue;
+    fill: $color-blue;
   }
 
   .active.navElement {
@@ -50,7 +52,7 @@
       height: 21px;
       width: 2px;
       border-radius: 1px;
-      background-color: #458bf8;
+      background-color: $color-blue;
     }
   }
 

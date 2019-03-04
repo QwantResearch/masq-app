@@ -53,14 +53,14 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <Fragment>
-          <Button label={'Refuser'} onClick={this.handleRefuse} color='#e53b5b' />
-          <Button label={'Valider'} onClick={this.handleAccept} color='#40ae6c' />
+          <Button label={'Refuser'} onClick={this.handleRefuse} color={styles.colorRed} />
+          <Button label={'Valider'} onClick={this.handleAccept} color={styles.colorGreen} />
         </Fragment>
       )
     }
 
     if (appRequest.isConnected) {
-      return <Button label={'OK'} onClick={this.handleOk} color='#40ae6c' />
+      return <Button label={'OK'} onClick={this.handleOk} color={styles.colorGreen} />
     }
 
     return <Loader />
@@ -72,7 +72,7 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <div>
-          <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color='#a3005c' description={appRequest.description} />
+          <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color={styles.colorPurple} description={appRequest.description} />
           <p className={styles.description}>
           Cette application demande un accès à votre stockage Masq.
           </p>
@@ -100,7 +100,7 @@ class AuthApp extends React.Component {
     const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={isConnected === false ? 550 : 400}>
+      <Modal width={511} height={isConnected === false ? 550 : 300}>
         <div className={styles.AuthApp}>
           <p className={styles.title}>Nouvelle requête de connexion de:</p>
           {this.renderText()}

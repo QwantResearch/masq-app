@@ -18,7 +18,7 @@
     font-weight: 600;
     letter-spacing: 0.7px;
     text-align: center;
-    color: #458bf8;
+    color: $color-blue;
     margin-bottom: 48px;
   }
 
@@ -28,7 +28,7 @@
     font-weight: 500;
     line-height: 1.57;
     text-align: center;
-    color: $color-background;
+    color: $color-blue-dark;
   }
 
   .title {
@@ -37,7 +37,7 @@
     line-height: 1.04;
     text-align: center;
     margin-bottom: 32px;
-    color: $color-background;
+    color: $color-blue-dark;
   }
 
   .description {
@@ -48,9 +48,9 @@
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.7px;
-    color: #458bf8;
+    color: $color-blue;
     margin-bottom: 48px;
-    border: 1px solid $color-background;
+    border: 1px solid $color-blue-dark;
   }
 
   .loader {

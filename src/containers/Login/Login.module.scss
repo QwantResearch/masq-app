@@ -1,7 +1,7 @@
 @import '../../styles/colors.scss';
 
 .Login {
-  background-color: $color-background;
+  background-color: $color-blue-dark;
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -67,7 +67,7 @@
   }
 
   .Background {
-    background-color: $color-background;
+    background-color: $color-blue-dark;
     flex-shrink: 0;
   }
 }
