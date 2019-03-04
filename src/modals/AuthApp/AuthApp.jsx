@@ -100,7 +100,7 @@ class AuthApp extends React.Component {
     const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={isConnected === false ? 550 : 300}>
+      <Modal width={511} height={isConnected === false ? 500 : 300}>
         <div className={styles.AuthApp}>
           <p className='title-modal'>Nouvelle requête de connexion de:</p>
           {this.renderText()}
