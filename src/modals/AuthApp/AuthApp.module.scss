@@ -8,30 +8,10 @@
   width: 100%;
   padding-top: 48px;
 
-  h1 {
-    margin-bottom: 64px;
-  }
-
-  a {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.7px;
-    text-align: center;
-    color: var(--blue-300);
-    text-decoration: none;
-  }
-
   Button {
     width: 185px;
     margin-right: 16px;
     margin-left: 16px;
-  }
-
-  .title {
-    font-size: 16px;
-    letter-spacing: 0.1px;
-    text-align: center;
-    color: $color-blue-dark;
   }
 
   .appTitle {
@@ -42,15 +22,6 @@
     color: $color-blue-dark;
     margin: 0;
     margin-bottom: 16px;
-  }
-
-  .description {
-    width: 380px;
-    font-size: 14px;
-    font-weight: 500px;
-    line-height: 1.57;
-    text-align: center;
-    color: #697496;
   }
 
   .buttons {

@@ -22,7 +22,7 @@ class SidebarMax extends React.Component {
       <div className={styles.Sidebar}>
         <div className={styles.header}>
           <Avatar {...user} size={64} />
-          <h2>{user.username}</h2>
+          <p className='username'>{user.username}</p>
         </div>
         <div className={styles.nav}>
           <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>

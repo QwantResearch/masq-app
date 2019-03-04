@@ -23,7 +23,7 @@ class SidebarMin extends React.Component {
         <div>
           <div className={styles.header}>
             <Avatar {...user} size={64} />
-            <h2>{user.username}</h2>
+            <p className='username'>{user.username}</p>
           </div>
 
           <div className={styles.nav}>

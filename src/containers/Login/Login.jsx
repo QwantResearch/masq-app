@@ -132,13 +132,13 @@ class Login extends Component {
         {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
 
         <Logo className={styles.Logo} />
-        <h1 className={styles.title}>Qui est-ce ?</h1>
+        <h1 className='title-login'>Qui est-ce ?</h1>
         { this.renderQRCodeModal() }
         <div className={styles.users}>
           {users.map(user => (
             <div key={user.username} className={styles.user} onClick={() => this.selectUser(user)}>
               <Avatar {...user} />
-              <h2>{user.username}</h2>
+              <p className='username'>{user.username}</p>
             </div>
           ))}
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
@@ -171,7 +171,7 @@ class Login extends Component {
         <div className={styles.users}>
           <div key={selectedUser.username} className={styles.user}>
             <Avatar {...selectedUser} />
-            <h2>{selectedUser.username}</h2>
+            <p className='username'>{selectedUser.username}</p>
           </div>
         </div>
 

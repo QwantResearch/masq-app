@@ -240,7 +240,7 @@ class Signup extends React.Component {
     return (
       <Modal onClose={this.props.onClose} height={this.currentStep === 0 ? 650 : 530} width={511}>
         <div className={styles.Signup}>
-          <span className={styles.title}>Ajouter un nouvel utilisateur</span>
+          <span className='title-modal'>Ajouter un nouvel utilisateur</span>
           {this.currentStep === 0 && this.renderFirstStep()}
           {this.currentStep === 1 && this.renderSecondStep()}
         </div>

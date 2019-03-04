@@ -10,8 +10,8 @@
   align-items: center;
   text-align: center;
 
-  .title {
-    margin-bottom: 32px;
+  p {
+    color: white;
   }
 
   .Logo {
@@ -45,14 +45,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  h1 {
-    color: white;
-  }
-
-  p {
-    color: white;
   }
 
   .goback {

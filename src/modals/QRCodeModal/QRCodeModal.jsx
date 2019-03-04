@@ -21,10 +21,8 @@ class QRCodeModal extends Component {
     return (
       <Modal height={540} width={511} onClose={onClose}>
         <div className={styles.QRCode}>
-          <p className={styles.title}>Connexion avec un autre appareil</p>
-          <p className={styles.description}>
-            Scannez le QRCode suivant sur votre téléphone, ou copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.
-          </p>
+          <p className='title-modal'>Connexion avec un autre appareil</p>
+          <p>Scannez le QRCode suivant sur votre téléphone, ou copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.</p>
           <QRCode value={currentAppRequest.link} style={{ marginBottom: 16 }} />
           <input id='link' readOnly defaultValue={currentAppRequest.link} />
           <Button label='Copier' onClick={this.copyLink} />

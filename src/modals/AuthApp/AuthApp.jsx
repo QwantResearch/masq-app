@@ -73,10 +73,10 @@ class AuthApp extends React.Component {
       return (
         <div>
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color={styles.colorPurple} description={appRequest.description} />
-          <p className={styles.description}>
+          <p>
           Cette application demande un accès à votre stockage Masq.
           </p>
-          <p className={styles.description}>
+          <p>
           Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
           </p>
         </div>
@@ -84,10 +84,10 @@ class AuthApp extends React.Component {
     } else {
       return (
         <div>
-          <p className={styles.description}>
+          <p>
           Vous avez autorisé l'application à accéder à votre stockage Masq.
           </p>
-          <p className={styles.description}>
+          <p>
           Vous pouvez désormais utiliser l'application.
           </p>
         </div>
@@ -102,7 +102,7 @@ class AuthApp extends React.Component {
     return (
       <Modal width={511} height={isConnected === false ? 550 : 300}>
         <div className={styles.AuthApp}>
-          <p className={styles.title}>Nouvelle requête de connexion de:</p>
+          <p className='title-modal'>Nouvelle requête de connexion de:</p>
           {this.renderText()}
 
           <div className={styles.buttons}>

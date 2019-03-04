@@ -38,10 +38,8 @@ class SyncDevice extends React.Component {
     return (
       <Modal height={370} width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
-          <p className={styles.title}>Ajouter un appareil</p>
-          <p className={styles.description}>
-            Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.
-          </p>
+          <p className='title-modal'>Ajouter un appareil</p>
+          <p>Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.</p>
           <input id='link' readOnly defaultValue='qwa.nt/0BJ8ZX' />
           <Button label='Copier' onClick={this.copyLink} />
         </div>
@@ -53,8 +51,8 @@ class SyncDevice extends React.Component {
     return (
       <Modal height={370} width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
-          <p className={styles.title}>Ajouter un appareil</p>
-          <p className={styles.description}>Synchronisation en cours, veuillez patienter...</p>
+          <p className='title-modal'>Ajouter un appareil</p>
+          <p>Synchronisation en cours, veuillez patienter...</p>
           <div className={styles.loader}>
             <Loader />
           </div>
@@ -67,7 +65,7 @@ class SyncDevice extends React.Component {
       <Modal height={370} width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
           <CheckCircle width={160} height={160} color={styles.colorGreen} />
-          <p className={styles.description}>Synchronisation terminée. Vous pouvez maintenant vous connecter</p>
+          <p>Synchronisation terminée. Vous pouvez maintenant vous connecter</p>
           <Button label='OK' onClick={this.handleOnClose} />
         </div>
       </Modal>

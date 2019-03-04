@@ -8,22 +8,12 @@
   width: 100%;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 1.04;
-  text-align: center;
-  margin-bottom: 32px;
-  color: $color-blue-dark;
-}
-
 .user {
-  margin-top: 16px;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.11;
   text-align: center;
-  color: var(--blue-500);
+  color: $color-blue-dark !important;
 }
 
 .buttons {
