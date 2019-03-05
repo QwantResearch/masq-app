@@ -13,6 +13,31 @@ const { ERRORS, MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
+
+let STUN_TURN = []
+if (process.env.REACT_APP_STUN_URLS) {
+  const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
+    u => {
+      return { urls: u }
+    })
+  STUN_TURN = STUN_TURN.concat(urls)
+}
+
+if (process.env.REACT_APP_TURN_URLS) {
+  const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
+    u => {
+      const splitted = u.split('|')
+      return {
+        urls: splitted[0],
+        username: splitted[1],
+        credential: splitted[2]
+      }
+    })
+  STUN_TURN = STUN_TURN.concat(urls)
+}
+
+const swarmOpts = { config: { iceServers: STUN_TURN } }
+
 const requiredParametersDevice = [
   'name'
 ]
@@ -289,7 +314,7 @@ class Masq {
       }
 
       this.hub = signalhub(channel, HUB_URLS)
-      this.sw = swarm(this.hub)
+      this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
         await this._closeUserAppConnection()
@@ -523,7 +548,7 @@ class Masq {
   _startReplicate (db) {
     const discoveryKey = db.discoveryKey.toString('hex')
     this.hubs[discoveryKey] = signalhub(discoveryKey, HUB_URLS)
-    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey])
+    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
     this.swarms[discoveryKey].on('peer', peer => {
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
