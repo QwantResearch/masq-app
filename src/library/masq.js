@@ -17,6 +17,30 @@ const swarmOpts = process.env.NODE_ENV === 'test'
   ? { wrtc: require('wrtc') }
   : {}
 
+let STUN_TURN = []
+if (process.env.REACT_APP_STUN_URLS) {
+  const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
+    u => {
+      return { urls: u }
+    })
+  STUN_TURN = STUN_TURN.concat(urls)
+}
+
+if (process.env.REACT_APP_TURN_URLS) {
+  const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
+    u => {
+      const splitted = u.split('|')
+      return {
+        urls: splitted[0],
+        username: splitted[1],
+        credential: splitted[2]
+      }
+    })
+  STUN_TURN = STUN_TURN.concat(urls)
+}
+
+swarmOpts.config = { iceServers: STUN_TURN }
+
 const requiredParametersDevice = [
   'name'
 ]
