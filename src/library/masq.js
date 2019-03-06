@@ -13,10 +13,6 @@ const { ERRORS, MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
-const swarmOpts = process.env.NODE_ENV === 'test'
-  ? { wrtc: require('wrtc') }
-  : {}
-
 const requiredParametersDevice = [
   'name'
 ]
@@ -180,7 +176,7 @@ class Masq {
   /**
    * Get private profile from hyperdb
    */
-  async getProfile (profileId) {
+  async getProfile () {
     const profile = await this.getAndDecrypt('/profile')
     return profile
   }
@@ -196,7 +192,9 @@ class Masq {
     if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username, id)
-    if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
+    if (isUsernameTaken) {
+      throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN)
+    }
 
     const privateProfile = await this.getProfile(id)
     // First update private profile
@@ -291,7 +289,7 @@ class Masq {
       }
 
       this.hub = signalhub(channel, HUB_URLS)
-      this.sw = swarm(this.hub, swarmOpts)
+      this.sw = swarm(this.hub)
 
       this.sw.on('disconnect', async () => {
         await this._closeUserAppConnection()
@@ -404,7 +402,7 @@ class Masq {
         ...this.app, appId: this.appId, appDEK, appNonce
       })
 
-      const privateProfile = await this.getProfile(this.profileId)
+      const privateProfile = await this.getProfile()
 
       dbName = this.profileId + '-' + id
       const db = openOrCreateDB(dbName)
@@ -525,7 +523,7 @@ class Masq {
   _startReplicate (db) {
     const discoveryKey = db.discoveryKey.toString('hex')
     this.hubs[discoveryKey] = signalhub(discoveryKey, HUB_URLS)
-    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
+    this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey])
     this.swarms[discoveryKey].on('peer', peer => {
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)

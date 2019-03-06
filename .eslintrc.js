@@ -1,7 +1,13 @@
 module.exports = {
   extends: ['standard', 'standard-react'],
-  plugins: ['jest'],
+  plugins: ['mocha'],
   env: {
-    'jest/globals': true
-  }
+    'mocha': true
+  },
+  overrides: [{
+    files: '*.test.js',
+    rules: {
+      'no-unused-expressions': 'off'
+    }
+  }]
 }
