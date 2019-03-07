@@ -15,25 +15,28 @@ const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 
 let STUN_TURN = []
-if (process.env.REACT_APP_STUN_URLS) {
-  const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
-    u => {
-      return { urls: u }
-    })
-  STUN_TURN = STUN_TURN.concat(urls)
-}
 
-if (process.env.REACT_APP_TURN_URLS) {
-  const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
-    u => {
-      const splitted = u.split('|')
-      return {
-        urls: splitted[0],
-        username: splitted[1],
-        credential: splitted[2]
-      }
-    })
-  STUN_TURN = STUN_TURN.concat(urls)
+if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
+  if (process.env.REACT_APP_STUN_URLS) {
+    const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
+      u => {
+        return { urls: u }
+      })
+    STUN_TURN = STUN_TURN.concat(urls)
+  }
+
+  if (process.env.REACT_APP_TURN_URLS) {
+    const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
+      u => {
+        const splitted = u.split('|')
+        return {
+          urls: splitted[0],
+          username: splitted[1],
+          credential: splitted[2]
+        }
+      })
+    STUN_TURN = STUN_TURN.concat(urls)
+  }
 }
 
 const swarmOpts = { config: { iceServers: STUN_TURN } }
