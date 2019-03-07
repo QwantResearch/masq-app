@@ -32,3 +32,25 @@ npm run build
 ```
 
 Then deploy the static files in the `build/` folder.
+
+## Environment variables
+
+For now we have to specify an env variable with the urls of the signalhubs (signalling server) that will be used.
+`
+REACT_APP_SIGNALHUB_URLS
+`
+
+# Remote webrtc
+
+For Masq app to display a button showing the remote connection link and QR code and possibly use a STUN or TURN server, you will need to specify the following env variable.
+
+`
+REACT_APP_REMOTE_WEBRTC
+`
+
+To be able to connect between different devices, a STUN and TURN server might be needed, ou can set stun and turn servers with the following env variables. Multiple URLs can be specified as a single comma separated string.
+
+`
+REACT_APP_STUN_URLS
+REACT_APP_TURN_URLS
+`
