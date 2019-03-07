@@ -13,6 +13,8 @@ import { Avatar } from '../../components'
 
 import { Signup, AddProfile, SyncDevice, QRCodeModal } from '../../modals'
 
+const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
+
 class Login extends Component {
   constructor (props) {
     super(props)
@@ -33,6 +35,7 @@ class Login extends Component {
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.closeQRCodeModal = this.closeQRCodeModal.bind(this)
     this.openQRCodeModal = this.openQRCodeModal.bind(this)
+    this.renderQRCode = this.renderQRCodeModal()
     this.onPasswordKeyUp = this.onPasswordKeyUp.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -110,8 +113,18 @@ class Login extends Component {
     this.setState({ qrcodeModal: false })
   }
 
+  renderQRCodeModal () {
+    if (this.props.currentAppRequest && remoteWebRTCEnabled) {
+      return (
+        <div style={{ marginBottom: 32 }}>
+          <Button label='Se connecter avec un autre appareil' onClick={this.openQRCodeModal} />
+        </div>
+      )
+    }
+  }
+
   renderUsersSelection () {
-    const { users, currentAppRequest } = this.props
+    const { users } = this.props
     const { isModalOpened, signup, sync, qrcodeModal } = this.state
 
     return (
@@ -120,11 +133,7 @@ class Login extends Component {
 
         <Logo className={styles.Logo} />
         <h1 className={styles.title}>Qui est-ce ?</h1>
-        {currentAppRequest && (
-          <div style={{ marginBottom: 32 }}>
-            <Button label='Se connecter avec un autre appareil' onClick={this.openQRCodeModal} />
-          </div>
-        )}
+        { this.renderQRCodeModal() }
         <div className={styles.users}>
           {users.map(user => (
             <div key={user.username} className={styles.user} onClick={() => this.selectUser(user)}>
