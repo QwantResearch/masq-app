@@ -160,24 +160,6 @@ class Signup extends React.Component {
 
         <TextField
           className={styles.TextField}
-          defaultValue={this.state.lastname}
-          label={this.isValid('lastname')
-            ? 'Nom (facultatif)'
-            : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
-          error={!this.isValid('lastname')}
-          onChange={(e) => this.onChange('lastname', e)}
-        />
-        <TextField
-          className={styles.TextField}
-          defaultValue={this.state.firstname}
-          label={this.isValid('firstname')
-            ? 'Prénom (facultatif)'
-            : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
-          error={!this.isValid('firstname')}
-          onChange={(e) => this.onChange('firstname', e)}
-        />
-        <TextField
-          className={styles.TextField}
           defaultValue={this.state.username}
           error={!this.isValid('username')}
           onChange={(e) => this.onChange('username', e)}

@@ -13,7 +13,6 @@ const { ERRORS, MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
-
 let STUN_TURN = []
 
 if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
