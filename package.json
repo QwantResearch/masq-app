@@ -5,7 +5,7 @@
   "scripts": {
     "start": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts start",
     "build": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
-    "test": "concurrently -k -s first \"signalhubws -p 8080\" \"karma start karma.conf.js\"",
+    "test": "eslint --ext .js,.jsx ./src && concurrently -k -s first \"signalhubws -p 8080\" \"karma start\"",
     "lint": "eslint --fix --ext .js,.jsx ./src",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
