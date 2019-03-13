@@ -69,6 +69,8 @@ class AuthApp extends React.Component {
   renderText () {
     const { appRequest } = this.props
 
+    if (appRequest.isConnected === undefined) return false
+
     if (appRequest.isConnected === false) {
       return (
         <div>
@@ -95,16 +97,24 @@ class AuthApp extends React.Component {
     }
   }
 
+  getTitle () {
+    if (this.props.appRequest.isConnected === undefined) return false
+
+    return this.props.appRequest.isConnected
+      ? 'Connexion établie'
+      : 'Nouvelle requête de connexion de:'
+  }
+
   render () {
     const { appRequest } = this.props
     const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={isConnected === false ? 500 : 300}>
+      <Modal width={511} height={isConnected === false ? 500 : 350}>
         <div className={styles.AuthApp}>
-          <p className='title-modal'>Nouvelle requête de connexion de:</p>
+          <p className='title-modal'>{this.getTitle()}</p>
+          {isConnected && <h1>{this.props.appRequest.appId}</h1>}
           {this.renderText()}
-
           <div className={styles.buttons}>
             {this.renderButtons()}
           </div>
