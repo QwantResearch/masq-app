@@ -12,9 +12,9 @@ const { ERRORS } = common.errors
 
 const PASSPHRASE = 'secret'
 
-describe('masq internal operations', () => {
+describe('masq internal operations', function () {
   let masq
-
+  this.timeout(6000)
   before(() => {
     masq = new Masq()
   })
@@ -169,7 +169,6 @@ describe('masq internal operations', () => {
       password: PASSPHRASE,
       image: ''
     }
-
     await masq.addProfile(newProfile)
     const profiles = await masq.getProfiles()
     const profile = { ...profiles[1], username: profiles[0].username }
@@ -225,6 +224,7 @@ describe('masq internal operations', () => {
     let err = null
     const apps = await masq.getApps()
     const app = { ...apps[0] }
+
     delete app.id
 
     try {
@@ -234,6 +234,28 @@ describe('masq internal operations', () => {
     }
 
     expect(err.type).to.equal(ERRORS.MISSING_RESOURCE_ID)
+  })
+
+  it('should delete the app', async () => {
+    const wait = async () => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, 1000)
+    })
+
+    const profiles = await masq.getProfiles()
+    const profile = profiles[0].username === 'updatedUsername' ? profiles[0] : profiles[1]
+
+    // Open a profile (login)
+    await masq.openProfile(profile.id, PASSPHRASE)
+    let apps = await masq.getApps()
+    const app = apps[0]
+    expect(apps).to.have.lengthOf(1)
+    // Just to be sure that startReplicate is finished.
+    await wait()
+    await masq.removeApp(app)
+    apps = await masq.getApps()
+    expect(apps).to.have.lengthOf(0)
   })
 
   it('add a device and retrieve it', async () => {

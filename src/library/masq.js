@@ -7,7 +7,7 @@ import * as common from 'masq-common'
 import { isUsernameAlreadyTaken } from './utils'
 
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer } = common.crypto
-const { dbReady, createPromisifiedHyperDB, put, get } = common.utils
+const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
 const { ERRORS, MasqError, checkObject } = common.errors
 
@@ -144,7 +144,7 @@ class Masq {
 
     const { masterKey, nonce } = await decryptMasterKeyAndNonce(profile.password, protectedMK)
 
-    this.masterKey = await importKey(masterKey)
+    const _masterKey = await importKey(masterKey)
 
     const publicProfile = {
       username: profile.username,
@@ -165,7 +165,7 @@ class Masq {
     await db.putAsync('/profile/protectedMK', protectedMK)
     // We do not use this.encryptAndPut method because the master key
     // is not stored in this.profileDB (only set in openProfile)
-    await put(db, this.masterKey, nonce, '/profile', privateProfile)
+    await put(db, _masterKey, nonce, '/profile', privateProfile)
     this._setProfileToLocalStorage(publicProfile)
     return privateProfile
   }
@@ -183,7 +183,6 @@ class Masq {
 
   /**
    * Put a new value in the current profile database
-   * The db parameter is only needed when this.profileDB is not set
    * @param {string} key - Key
    * @param {Object} value - The value to insert
    * @returns {Promise}
@@ -191,6 +190,27 @@ class Masq {
   async encryptAndPut (key, value) {
     this._checkProfile()
     await put(this.profileDB, this.masterKey, this.nonce, key, value)
+  }
+
+  /**
+   * Delete a a key in the current profile database
+   * @param {string} key - Key
+   * @returns {Promise}
+   */
+  async del (key) {
+    this._checkProfile()
+    await del(this.profileDB, this.masterKey, this.nonce, key)
+  }
+
+  /**
+   * List items
+   * @param {string} key - Key
+   * @returns {Promise<Object>}
+   */
+  async listAndDecrypt (key) {
+    this._checkProfile()
+    const items = await list(this.profileDB, this.masterKey, this.nonce, key)
+    return items
   }
 
   /**
@@ -244,6 +264,20 @@ class Masq {
   addApp (app) {
     checkObject(app, requiredParametersApp)
     return this._createResource('apps', app)
+  }
+
+  /**
+   * Remove an app to a specified profile
+   * @param {object} app The app
+   */
+  removeApp (app) {
+    checkObject(app, requiredParametersApp)
+    const dbName = this.profileId + '-' + app.id
+    const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
+    const sw = this.swarms[discoveryKey]
+    sw.close()
+    window.indexedDB.deleteDatabase(dbName)
+    return this._deleteResource('apps', app)
   }
 
   /**
@@ -489,36 +523,28 @@ class Masq {
   }
 
   async _createResource (name, res) {
-    const node = await this.getAndDecrypt(`/${name}`)
-    const ids = node || []
     const id = uuidv4()
     res['id'] = id
-
-    /* TODO: define a batch method to encrypt and batch in masq-common */
-    await this.encryptAndPut(`/${name}`, [...ids, id])
     await this.encryptAndPut(`/${name}/${id}`, res)
 
     return id
   }
 
   async _getResources (name) {
-    const node = await this.getAndDecrypt(`/${name}`)
-    if (!node) return []
-
-    const ids = node
-
-    const resourcePromises = ids.map(async (id) => {
-      const val = await this.getAndDecrypt(`/${name}/${id}`)
-      return val
-    })
-    const resources = await Promise.all(resourcePromises)
-    return resources
+    const node = await this.listAndDecrypt(`/${name}`)
+    return Object.keys(node).length === 0 ? [] : Object.values(node)
   }
 
   _updateResource (name, res) {
     const id = res.id
     if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
     return this.encryptAndPut(`/${name}/${id}`, res)
+  }
+
+  _deleteResource (name, res) {
+    const id = res.id
+    if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
+    return this.del(`/${name}/${id}`)
   }
 
   _setProfileToLocalStorage (profile) {
