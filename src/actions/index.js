@@ -76,6 +76,13 @@ export const fetchApps = () => {
   }
 }
 
+export const removeApp = (app) => {
+  return function (dispatch) {
+    return masq.removeApp(app)
+      .then(() => dispatch(fetchApps()))
+  }
+}
+
 export const fetchCurrentAppRequestStatus = () => ({
   type: 'FETCH_CURRENT_APP_REQUEST_STATUS'
 })

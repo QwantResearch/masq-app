@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Card, Icon } from 'qwant-research-components'
 
-import { fetchApps } from '../../actions'
+import { fetchApps, removeApp } from '../../actions'
 import { ConfirmDialog } from '../../modals'
 
 import styles from './Apps.module.scss'
@@ -13,6 +13,7 @@ class Apps extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      appToRemove: null,
       confirmDialog: false
     }
 
@@ -26,27 +27,30 @@ class Apps extends PureComponent {
     this.props.fetchApps()
   }
 
-  handleTrashClick () {
-    console.log('handleTrashClick')
+  handleTrashClick (app) {
     this.setState({
+      appToRemove: app,
       confirmDialog: true
     })
   }
 
-  closeConfirmDialog () {
+  async closeConfirmDialog () {
     this.setState({
+      appToRemove: null,
       confirmDialog: false
     })
   }
 
-  confirmDelete () {
-    console.log('confirmDelete, need to call action')
+  async confirmDelete () {
+    const { removeApp } = this.props
+    const { appToRemove } = this.state
+    await removeApp(appToRemove)
     this.closeConfirmDialog()
   }
 
   render () {
     const { apps, user } = this.props
-    const { confirmDialog } = this.state
+    const { confirmDialog, appToRemove } = this.state
 
     if (!user) return <Redirect to='/' />
     if (!apps) return false
@@ -55,7 +59,7 @@ class Apps extends PureComponent {
       <div className={styles.Apps}>
         {confirmDialog && <ConfirmDialog
           title='Confirmation de suppression'
-          text='La suppression des données de cette application est irréversible. Etes-vous certain ?'
+          text={`Vous êtes sur le point de supprimer toutes les données de lapplication ${appToRemove.appId}. Cette action est irréversible. Etes-vous certain ?`}
           onConfirm={() => this.confirmDelete()}
           onCancel={() => this.closeConfirmDialog()}
           onClose={() => this.closeConfirmDialog()}
@@ -75,7 +79,7 @@ class Apps extends PureComponent {
                   style={{ cursor: 'pointer' }}
                   name='Trash'
                   fill='#b2b2b2'
-                  onClick={this.handleTrashClick}
+                  onClick={() => this.handleTrashClick(app)}
                 />
               }
             />
@@ -92,13 +96,15 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchApps: () => dispatch(fetchApps())
+  fetchApps: () => dispatch(fetchApps()),
+  removeApp: (app) => dispatch(removeApp(app))
 })
 
 Apps.propTypes = {
   apps: PropTypes.array,
   user: PropTypes.object,
-  fetchApps: PropTypes.func
+  fetchApps: PropTypes.func,
+  removeApp: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Apps)
