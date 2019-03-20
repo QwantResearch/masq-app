@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Button, TextField } from 'qwant-research-components'
 
-import { updateUser, setNotification } from '../../actions'
+import { updateUser, removeProfile, setNotification } from '../../actions'
 import { Avatar } from '../../components'
+import { ConfirmDialog } from '../../modals'
 import { isName, isUsername } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 
@@ -19,13 +20,17 @@ class Settings extends React.Component {
       image: '',
       lastname: '',
       firstname: '',
-      username: ''
+      username: '',
+      confirmDialog: false
     }
 
     this.hasChanged = false
     this.validate = this.validate.bind(this)
     this.isValid = this.isValid.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
+    this.confirmDelete = this.confirmDelete.bind(this)
+    this.openConfirmDialog = this.openConfirmDialog.bind(this)
+    this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
   }
 
   componentDidMount () {
@@ -115,12 +120,28 @@ class Settings extends React.Component {
     }
   }
 
+  openConfirmDialog () {
+    this.setState({
+      confirmDialog: true
+    })
+  }
+
+  confirmDelete () {
+    this.props.removeProfile()
+  }
+
+  closeConfirmDialog () {
+    this.setState({
+      confirmDialog: false
+    })
+  }
+
   render () {
+    const { confirmDialog } = this.state
     if (!this.props.user) return <Redirect to='/' />
 
     return (
       <div className={styles.Settings}>
-
         <div className={styles.main}>
           <p className='title'>Vos paramètres d'utilisateur</p>
           <p className='subtitle'>Changez vos informations personnelles</p>
@@ -159,11 +180,21 @@ class Settings extends React.Component {
               'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
             )}
           />
+
+          <Button secondary={!this.hasChanged} label='SAUVEGARDER' onClick={this.validate} />
         </div>
 
-        <div className={styles.sidebar}>
-          <Button width={200} secondary={!this.hasChanged} label='SAUVEGARDER' onClick={this.validate} />
-        </div>
+        <Button secondary style={{ width: 300 }} label='SUPPRIMER MON PROFIL' onClick={this.openConfirmDialog} />
+
+        {confirmDialog && (
+          <ConfirmDialog
+            title='Confirmation de suppression'
+            text='Vous êtes sur le point de supprimer le profil ainsi que toutes les données des applications. Cette action est irréversible. Etes-vous certain ?'
+            onConfirm={() => this.confirmDelete()}
+            onCancel={() => this.closeConfirmDialog()}
+            onClose={() => this.closeConfirmDialog()}
+          />
+        )}
       </div>
     )
   }
@@ -175,12 +206,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateUser: (id, user) => dispatch(updateUser(id, user)),
-  setNotification: (notif) => dispatch(setNotification(notif))
+  setNotification: (notif) => dispatch(setNotification(notif)),
+  removeProfile: () => dispatch(removeProfile())
 })
 
 Settings.propTypes = {
   user: PropTypes.object,
   updateUser: PropTypes.func,
+  removeProfile: PropTypes.func,
   setNotification: PropTypes.func
 }
 

@@ -1,5 +1,5 @@
 .Settings {
-  flex: 1;
+  width: 700px;
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
   grid-row-gap: 48px;
@@ -12,11 +12,15 @@
   }
 
   .inputs {
-    align-self: flex-end;
+    margin-top: 78px;
     display: flex;
     flex-direction: column;
-    height: 192px;
     justify-content: space-between;
+    width: 300px;
+
+    input {
+      margin-bottom: 32px;
+    }
   }
 
   .fields {
@@ -63,6 +67,10 @@
 
   .avatar {
     margin-top: 24px;
+  }
+
+  button {
+    width: 300px;
   }
 }
 

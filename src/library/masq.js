@@ -170,6 +170,20 @@ class Masq {
     return privateProfile
   }
 
+  async removeProfile () {
+    // Remove every apps data
+    const apps = await this.getApps()
+    for (let app of apps) {
+      await this.removeApp(app)
+    }
+
+    // Remove the profile
+    const dbName = this.profileId
+    await this.closeProfile()
+    window.indexedDB.deleteDatabase(dbName)
+    window.localStorage.removeItem(dbName)
+  }
+
   /**
    * Get a value
    * @param {string} key - Key
@@ -466,13 +480,21 @@ class Masq {
       const privateProfile = await this.getProfile()
 
       dbName = this.profileId + '-' + id
+
+      const db = await this._createDBAndSyncApp(dbName)
+      await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
+      this.peer.on('data', (data) => handleData(this.peer, data))
+    })
+  }
+
+  _createDBAndSyncApp (dbName) {
+    return new Promise((resolve, reject) => {
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
         this._startReplicate(db)
-        await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
+        resolve(db)
       })
-      this.peer.on('data', (data) => handleData(this.peer, data))
     })
   }
 

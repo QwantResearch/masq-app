@@ -57,6 +57,13 @@ export const signup = user => {
   }
 }
 
+export const removeProfile = () => {
+  return function (dispatch) {
+    return masq.removeProfile()
+      .then(() => dispatch(signout()))
+  }
+}
+
 export const fetchUsers = () => {
   return function (dispatch) {
     return masq.getProfiles()

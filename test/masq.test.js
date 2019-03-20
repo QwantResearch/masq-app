@@ -6,15 +6,23 @@ const signalhub = require('signalhubws')
 const swarm = require('webrtc-swarm')
 const common = require('masq-common')
 
-const { hashKey } = common.utils
+const { hashKey, dbExists } = common.utils
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 const { ERRORS } = common.errors
 
 const PASSPHRASE = 'secret'
 
+const wait = async (timeout = 1000) => new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve()
+  }, timeout)
+})
+
 describe('masq internal operations', function () {
+  this.timeout(30000)
+
   let masq
-  this.timeout(6000)
+
   before(() => {
     masq = new Masq()
   })
@@ -237,12 +245,6 @@ describe('masq internal operations', function () {
   })
 
   it('should delete the app', async () => {
-    const wait = async () => new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
-      }, 1000)
-    })
-
     const profiles = await masq.getProfiles()
     const profile = profiles[0].username === 'updatedUsername' ? profiles[0] : profiles[1]
 
@@ -292,6 +294,37 @@ describe('masq internal operations', function () {
     }
 
     expect(err.type).to.equal(ERRORS.MISSING_RESOURCE_ID)
+  })
+
+  it('should remove the profile and all its associated data', async () => {
+    const app = { name: 'myapp', description: 'desc', appId: 'id' }
+    const profiles = await masq.getProfiles()
+    const profile = profiles[0]
+    const dbNameProfile = profile.id
+
+    // Open a profile (login)
+    await masq.openProfile(profile.id, PASSPHRASE)
+
+    // Add an app
+    await masq.addApp(app)
+
+    let apps = await masq.getApps()
+    expect(apps).to.have.lengthOf(1)
+
+    // Simulate a synchronization of the app db
+    const dbNameApp = profile.id + '-' + apps[0].id
+    await masq._createDBAndSyncApp(dbNameApp)
+
+    const localStorageLength = window.localStorage.length
+    expect(localStorageLength).to.be.greaterThan(0)
+    expect(await dbExists(dbNameApp)).to.be.true
+    expect(await dbExists(dbNameProfile)).to.be.true
+
+    await masq.removeProfile()
+
+    expect(window.localStorage.length).to.equal(localStorageLength - 1)
+    expect(await dbExists(dbNameApp)).to.be.false
+    expect(await dbExists(dbNameProfile)).to.be.false
   })
 })
 
