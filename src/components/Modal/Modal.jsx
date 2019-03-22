@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import MediaQuery from 'react-responsive'
 
-import { ReactComponent as Close } from '../../assets/close.svg'
+import { X } from 'react-feather'
 
 import './Modal.scss'
 
@@ -10,7 +10,7 @@ const Modal = ({ onClose, width, height, children }) => (
   <div className='Modal'>
     <div className='overlay' onClick={onClose} />
     <div className='modal' style={{ width, height }}>
-      {onClose && <Close className='close' width={16} height={16} onClick={onClose} />}
+      {onClose && <X className='close' width={16} height={16} onClick={onClose} />}
       {children}
     </div>
   </div>

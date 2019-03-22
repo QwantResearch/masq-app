@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
-
-import { Icon } from '..'
+import { Camera } from 'react-feather'
 
 import styles from './AvatarBase.module.scss'
 
@@ -16,8 +15,7 @@ const Avatar = ({ src, width, height, onClick, upload }) => (
       onClick={onClick}
     />
     {upload && (
-      <Icon
-        name='Camera'
+      <Camera
         className={styles.icon}
         height={33}
         width={40}

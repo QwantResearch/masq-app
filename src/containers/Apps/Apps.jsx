@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { Trash2 } from 'react-feather'
 
 import { fetchApps, removeApp } from '../../actions'
-import { Card, Icon } from '../../components'
+import { Card } from '../../components'
 import { ConfirmDialog } from '../../modals'
 
 import styles from './Apps.module.scss'
@@ -75,10 +76,9 @@ class Apps extends PureComponent {
               color='#a3005c'
               description={app.description}
               actions={
-                <Icon
+                <Trash2
                   style={{ cursor: 'pointer' }}
-                  name='Trash'
-                  fill='#b2b2b2'
+                  color='#b2b2b2'
                   onClick={() => this.handleTrashClick(app)}
                 />
               }

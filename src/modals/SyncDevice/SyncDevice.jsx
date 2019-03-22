@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 
 import { setSyncStep } from '../../actions'
 import { Modal, Button, Loader } from '../../components'
-import { ReactComponent as CheckCircle } from '../../assets/check-circle.svg'
 
 import styles from './SyncDevice.module.scss'
+import { CheckCircle } from 'react-feather'
 
 class SyncDevice extends React.Component {
   constructor (props) {

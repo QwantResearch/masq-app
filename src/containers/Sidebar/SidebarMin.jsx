@@ -3,14 +3,11 @@ import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Grid, Smartphone, Settings, LogOut } from 'react-feather'
 
 import { signout } from '../../actions'
 
 import styles from './SidebarMin.module.scss'
-import { ReactComponent as AppsIcon } from '../../assets/cards.svg'
-import { ReactComponent as PhoneIcon } from '../../assets/phone.svg'
-import { ReactComponent as SettingsIcon } from '../../assets/settings.svg'
-import { ReactComponent as LogoutIcon } from '../../assets/logout.svg'
 
 class SidebarMin extends React.Component {
   render () {
@@ -28,15 +25,15 @@ class SidebarMin extends React.Component {
 
           <div className={styles.nav}>
             <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>
-              <AppsIcon fill='white' opacity={0.8} width={24} />
+              <Grid opacity={0.8} width={24} />
               <p className='label' />
             </NavLink>
             <NavLink to='/devices' className={styles.navElement} activeClassName={styles.active}>
-              <PhoneIcon fill='white' opacity={0.8} width={24} />
+              <Smartphone opacity={0.8} width={24} />
               <p className='label' />
             </NavLink>
             <NavLink to='/settings' className={styles.navElement} activeClassName={styles.active}>
-              <SettingsIcon fill='white' opacity={0.8} width={24} />
+              <Settings opacity={0.8} width={24} />
               <p className='label' />
             </NavLink>
           </div>
@@ -44,7 +41,7 @@ class SidebarMin extends React.Component {
 
         <div className={styles.logout} onClick={signout}>
           <div className={styles.navElement}>
-            <LogoutIcon fill='white' opacity={0.8} width={24} />
+            <LogOut opacity={0.8} width={24} />
             <p className='label' />
           </div>
         </div>

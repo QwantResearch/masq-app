@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import AvatarBase from './AvatarBase'
-import { ReactComponent as CameraSquare } from '../../assets/camera-square.svg'
+import { Camera } from 'react-feather'
 
 import './Avatar.css'
 
@@ -16,7 +16,7 @@ Replace.propTypes = {
 }
 
 const NewUpload = ({ style, onClick }) => (
-  <CameraSquare
+  <Camera
     className='Avatar upload'
     color='var(--grey-200)'
     style={style}

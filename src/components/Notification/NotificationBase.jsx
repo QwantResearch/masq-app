@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Check, Close } from '../Icon/icons'
+import { Check, Close } from 'react-feather'
 
 import styles from './NotificationBase.module.scss'
 
