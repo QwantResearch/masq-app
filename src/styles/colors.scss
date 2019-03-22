@@ -22,3 +22,16 @@ $color-blue-grey-ligher: #e0e1e6;
 $color-grey-lighter: #f7f7f7;
 $color-grey-light: #b2b2b2;
 $color-grey: #707070;
+
+// New colors
+$color-primary: #03a0f9;
+$color-success: #40ae6c;
+$color-danger: #e53b5b;
+$color-neutral: #5c6f84;
+$color-light: #f7f7f7;
+
+:export { colorPrimary: $color-primary; }
+:export { colorSuccess: $color-success; }
+:export { colorDanger: $color-danger; }
+:export { colorNeutral: $color-neutral; }
+:export { colorLight: $color-light; }

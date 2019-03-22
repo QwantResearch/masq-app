@@ -2,45 +2,50 @@
 @import '../../styles/colors.scss';
 
 .Button {
-  border-radius: 6px;
-  padding: 0 48px;
   height: 50px;
+  border-radius: 6px;
+  padding: 0 32px;
   outline: none;
+  border: none;
   cursor: pointer;
+  transition: box-shadow 0.5s;
 
-  &.animate {
-    &:hover {
-      box-shadow:
-        0 10px 16px 0 rgba(0, 0, 0, 0.16),
-        0 10px 16px 0 rgba(69, 139, 248, 0.4);
-      transform: translateY(-8px);
-      transition: all 0.5s;
-    }
-  }
-
-  &.primary {
-    background-color: $color-blue;
-    border: solid 2px $color-blue;
-  }
-
-  &.secondary {
-    background-color: $color-grey-lighter;
-    border: solid 1px $color-grey-light;
-    &:hover {
-      border: solid 1px $color-blue-grey;
-      .label {
-        color: $color-blue-grey;
-      }
-    }
-
-    .label {
-      color: $color-grey-light;
-    }
-  }
-
-  .label {
-    @include font(12px, 2, 600, 0.5px);
+  span {
     text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 2;
+    letter-spacing: 0.5px;
+    text-align: center;
     color: white;
+  }
+}
+
+
+.primary {
+  background-color: $color-primary;
+  &:hover {
+    box-shadow: 0 5px 16px 0 rgba(69, 179, 248, 0.4);
+  }
+}
+
+.success {
+  background-color: $color-success;
+  &:hover {
+    box-shadow: 0 5px 16px 0 rgba(64, 174, 108, 0.4);
+  }
+}
+
+.danger {
+  background-color: $color-danger;
+  &:hover {
+    box-shadow: 0 5px 16px 0 rgba(229, 59, 91, 0.4);
+  }
+}
+
+.neutral {
+  background-color: $color-neutral;
+  &:hover {
+    box-shadow: 0 5px 16px 0 rgba(92, 111, 132, 0.4)
   }
 }

@@ -12,21 +12,33 @@ storiesOf('Button', module)
   })
   .add('primary', () => (
     <Button
-      label='primary button'
+      color='primary'
       onClick={action('onClick')}
-    />
+    >
+      Primary
+    </Button>
   ))
-  .add('with custom color (no translation)', () => (
+  .add('success', () => (
     <Button
-      label='primary button'
-      color='#40ae6c'
+      color='success'
       onClick={action('onClick')}
-    />
+    >
+      Success
+    </Button>
   ))
-  .add('secondary', () => (
+  .add('danger', () => (
     <Button
-      secondary
-      label='secondary button'
+      color='danger'
       onClick={action('onClick')}
-    />
+    >
+      Danger
+    </Button>
+  ))
+  .add('neutral', () => (
+    <Button
+      color='neutral'
+      onClick={action('onClick')}
+    >
+      Neutral
+    </Button>
   ))
