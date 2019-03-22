@@ -1,19 +1,16 @@
 @import '../../styles/colors.scss';
 
-$color-grey: #707070;
-$color-grey-light: #b2b2b2;
-
 .TextField {
   width: 300px;
   display: flex;
   flex-direction: column-reverse;
 
   label {
+    font-size: 12px;
+    line-height: 1.25;
     &:first-letter {
       text-transform: capitalize;
     }
-    font-size: 12px;
-    line-height: 1.25;
   }
 
   input {
@@ -25,15 +22,15 @@ $color-grey-light: #b2b2b2;
 
 .default {
   label {
-    color: $color-grey;
+    color: $color-neutral;
   }
 
   input {
     border: solid 1px $color-grey-light;
     &:focus {
-      border: solid 1px $color-blue;
+      border: solid 1px $color-primary;
       + label {
-        color: $color-blue;
+        color: $color-primary;
       }
     }
   }
@@ -41,13 +38,13 @@ $color-grey-light: #b2b2b2;
 
 .error {
   label {
-    color: $color-red;
+    color: $color-danger;
   }
 
   input {
-    border: solid 1px $color-red;
+    border: solid 1px $color-danger;
     &:focus {
-      border: solid 1px $color-red;
+      border: solid 1px $color-danger;
     }
   }
 }
