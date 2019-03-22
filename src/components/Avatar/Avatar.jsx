@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Avatar as AvatarBase } from 'qwant-research-components'
 
+import AvatarBase from './AvatarBase'
 import { ReactComponent as CameraSquare } from '../../assets/camera-square.svg'
 
 import './Avatar.css'

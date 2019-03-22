@@ -1,0 +1,40 @@
+.Notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  background-color: #495063;
+
+  .title {
+    margin: auto;
+    display: flex;
+    align-items: center;
+
+    p {
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.21;
+      letter-spacing: normal;
+    }
+  }
+
+  .iconContainer {
+    height: 16px;
+    width: 16px;
+    margin-right: 16px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+  }
+
+  .closeBtn {
+    margin-right: 20px;
+    color: white;
+    cursor: pointer;
+  }
+}

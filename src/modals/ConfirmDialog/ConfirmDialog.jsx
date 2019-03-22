@@ -1,8 +1,7 @@
 import React from 'react'
-import { Button } from 'qwant-research-components'
 import PropTypes from 'prop-types'
 
-import { Modal } from '../../components'
+import { Button, Modal } from '../../components'
 
 import styles from './ConfirmDialog.module.scss'
 

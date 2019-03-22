@@ -1,0 +1,46 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/colors.scss';
+
+.Button {
+  border-radius: 6px;
+  padding: 0 48px;
+  height: 50px;
+  outline: none;
+  cursor: pointer;
+
+  &.animate {
+    &:hover {
+      box-shadow:
+        0 10px 16px 0 rgba(0, 0, 0, 0.16),
+        0 10px 16px 0 rgba(69, 139, 248, 0.4);
+      transform: translateY(-8px);
+      transition: all 0.5s;
+    }
+  }
+
+  &.primary {
+    background-color: $color-blue;
+    border: solid 2px $color-blue;
+  }
+
+  &.secondary {
+    background-color: $color-grey-lighter;
+    border: solid 1px $color-grey-light;
+    &:hover {
+      border: solid 1px $color-blue-grey;
+      .label {
+        color: $color-blue-grey;
+      }
+    }
+
+    .label {
+      color: $color-grey-light;
+    }
+  }
+
+  .label {
+    @include font(12px, 2, 600, 0.5px);
+    text-transform: uppercase;
+    color: white;
+  }
+}

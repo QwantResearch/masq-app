@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Card, Icon } from 'qwant-research-components'
 
 import { fetchApps, removeApp } from '../../actions'
+import { Card, Icon } from '../../components'
 import { ConfirmDialog } from '../../modals'
 
 import styles from './Apps.module.scss'

@@ -1,0 +1,42 @@
+@import '../../styles/colors.scss';
+
+$color-blue-grey: #697496;
+
+@keyframes dot-keyframes {
+  0% {
+    opacity: .4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .4;
+  }
+}
+
+.Loader {
+  display: flex;
+
+  .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    animation: dot-keyframes 2s infinite ease-in-out;
+
+    &:nth-child(1) {
+      margin-right: 10px;
+      background-color: $color-blue-grey;
+    }
+
+    &:nth-child(2) {
+      margin-right: 10px;
+      background-color: $color-blue;
+      animation-delay: .5s
+    }
+
+    &:nth-child(3) {
+      background-color: $color-red;
+      animation-delay: 1s;
+    }
+  }
+}

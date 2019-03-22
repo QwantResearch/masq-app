@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { signin, signup, fetchUsers } from '../../actions'
-import { Button, TextField } from 'qwant-research-components'
 import PropTypes from 'prop-types'
 
 import styles from './Login.module.scss'
@@ -9,7 +8,7 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Background } from '../../assets/background.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { ReactComponent as Chevron } from '../../assets/chevron.svg'
-import { Avatar } from '../../components'
+import { Avatar, Button, TextField } from '../../components'
 
 import { Signup, AddProfile, SyncDevice, QRCodeModal } from '../../modals'
 

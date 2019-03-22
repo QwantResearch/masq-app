@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, TextField } from 'qwant-research-components'
 import { connect } from 'react-redux'
 
 import { setNotification } from '../../actions'
-import { Avatar, Modal } from '../../components'
+import { Avatar, Modal, Button, TextField } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 import defaultAvatar from '../../assets/user.png'

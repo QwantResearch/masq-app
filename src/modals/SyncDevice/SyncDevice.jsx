@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Loader } from 'qwant-research-components'
 import { connect } from 'react-redux'
 
 import { setSyncStep } from '../../actions'
-import { Modal } from '../../components'
+import { Modal, Button, Loader } from '../../components'
 import { ReactComponent as CheckCircle } from '../../assets/check-circle.svg'
 
 import styles from './SyncDevice.module.scss'

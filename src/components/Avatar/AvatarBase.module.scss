@@ -1,0 +1,25 @@
+.Avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.16);
+    transition: 1s;
+  }
+
+  .icon {
+    position: absolute;
+  }
+}
+
+.upload {
+  &:hover {
+    img {
+      filter: grayscale(100%);
+    }
+  }
+}

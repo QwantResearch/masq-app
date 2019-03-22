@@ -1,0 +1,43 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/colors.scss';
+
+.Image {
+  height: 112px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .marker {
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+}
+
+.Title {
+  margin-bottom: 8px;
+}
+
+.Description {
+  margin-bottom: 16px;
+}
+
+.Card {
+  border: solid 1px $color-grey-light;
+  border-radius: 3px;
+  background-color: white;
+
+  .content {
+    margin-top: 16px;
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-bottom: 24px;
+  }
+}

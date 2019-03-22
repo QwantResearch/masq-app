@@ -1,0 +1,14 @@
+@import '../../styles/mixins.scss';
+
+.title {
+  @include font(20px, 1.25, 600);
+}
+
+.label {
+  @include font(10px, normal, 600, 0.5px);
+  text-transform: uppercase;
+}
+
+.text {
+  @include font(14px, 1.57, normal);
+}

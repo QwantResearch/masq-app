@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button } from 'qwant-research-components'
 import QRCode from 'qrcode.react'
 
-import { Modal } from '../../components'
+import { Button, Modal } from '../../components'
 
 import styles from './QRCodeModal.module.scss'
 

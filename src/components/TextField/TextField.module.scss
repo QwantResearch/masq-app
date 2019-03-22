@@ -1,0 +1,53 @@
+@import '../../styles/colors.scss';
+
+$color-grey: #707070;
+$color-grey-light: #b2b2b2;
+
+.TextField {
+  width: 300px;
+  display: flex;
+  flex-direction: column-reverse;
+
+  label {
+    &:first-letter {
+      text-transform: capitalize;
+    }
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  input {
+    border-radius: 3px;
+    outline: none;
+    padding: 8px 12px;
+  }
+}
+
+.default {
+  label {
+    color: $color-grey;
+  }
+
+  input {
+    border: solid 1px $color-grey-light;
+    &:focus {
+      border: solid 1px $color-blue;
+      + label {
+        color: $color-blue;
+      }
+    }
+  }
+}
+
+.error {
+  label {
+    color: $color-red;
+  }
+
+  input {
+    border: solid 1px $color-red;
+    &:focus {
+      border: solid 1px $color-red;
+    }
+  }
+}

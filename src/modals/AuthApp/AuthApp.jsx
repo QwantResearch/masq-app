@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Button, Loader, Card } from 'qwant-research-components'
 
-import { Modal } from '../../components'
+import { Modal, Button, Loader, Card } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps } from '../../actions'
 
 import styles from './AuthApp.module.scss'

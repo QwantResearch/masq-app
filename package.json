@@ -9,7 +9,9 @@
     "lint": "eslint --fix --ext .js,.jsx ./src",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "browserslist": [
     ">0.2%",
@@ -24,7 +26,6 @@
     "detect-browser": "^3.0.1",
     "masq-common": "git+https://github.com/QwantResearch/masq-common",
     "pump": "^3.0.0",
-    "qwant-research-components": "git+https://github.com/QwantResearch/qwant-research-components.git",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^6.0.0",
@@ -40,6 +41,12 @@
     "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq"
   },
   "devDependencies": {
+    "@storybook/react": "^5.0.3",
+    "@storybook/addon-actions": "^5.0.3",
+    "@storybook/addon-links": "^5.0.3",
+    "@storybook/addons": "^5.0.3",
+    "@babel/core": "^7.4.0",
+    "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "concurrently": "^4.1.0",
     "es6-promisify": "^6.0.1",

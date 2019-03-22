@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Notification } from 'qwant-research-components'
 import { connect } from 'react-redux'
 
+import NotificationBase from './NotificationBase'
 import { setNotification } from '../../actions/index'
 
 import styles from './Notification.module.scss'
@@ -14,7 +14,7 @@ const NotificationMasq = ({ setNotification, ...props }) => {
 
   return (
     <div className={styles.Notification}>
-      <Notification {...props} onClose={() => setNotification(null)} />
+      <NotificationBase {...props} onClose={() => setNotification(null)} />
     </div>
   )
 }

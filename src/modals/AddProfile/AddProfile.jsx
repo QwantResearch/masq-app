@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'qwant-research-components'
 
-import { Modal } from '../../components'
+import { Button, Modal } from '../../components'
 
 import styles from './AddProfile.module.scss'
 
