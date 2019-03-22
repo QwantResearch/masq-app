@@ -9,6 +9,6 @@ storiesOf('Loader', module)
   .addParameters({
     info: 'A Loader to show that an operation is in progress.'
   })
-  .add('default', () => (
+  .add('loader', () => (
     <Loader />
   ))

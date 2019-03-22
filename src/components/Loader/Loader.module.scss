@@ -4,13 +4,13 @@ $color-blue-grey: #697496;
 
 @keyframes dot-keyframes {
   0% {
-    opacity: .4;
-  }
-  50% {
     opacity: 1;
   }
+  50% {
+    opacity: 0;
+  }
   100% {
-    opacity: .4;
+    opacity: 1;
   }
 }
 
@@ -25,17 +25,17 @@ $color-blue-grey: #697496;
 
     &:nth-child(1) {
       margin-right: 10px;
-      background-color: $color-blue-grey;
+      background-color: black;
     }
 
     &:nth-child(2) {
       margin-right: 10px;
-      background-color: $color-blue;
+      background-color: black;
       animation-delay: .5s
     }
 
     &:nth-child(3) {
-      background-color: $color-red;
+      background-color: black;
       animation-delay: 1s;
     }
   }
