@@ -45,7 +45,7 @@ export default class Avatar extends React.Component {
 
     if (upload) {
       return (
-        <div>
+        <div className='upload'>
           <input name='avatar' type='file' ref='fileDialog'
             style={{ display: 'none' }} onChange={onChange}
             accept='.jpg, .jpeg, .png'

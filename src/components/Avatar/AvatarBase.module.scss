@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 
   img {
     border-radius: 10px;
@@ -17,6 +16,7 @@
 }
 
 .upload {
+  cursor: pointer;
   &:hover {
     img {
       filter: grayscale(100%);
