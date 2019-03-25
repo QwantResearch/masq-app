@@ -21,11 +21,12 @@ storiesOf('Card', module)
   .addParameters({
     info: 'A Card can contain two children: actions displayed in the top right corner, and a footer.'
   })
-  .add('an empty card', () => (
-    <Card color='#e54b5b' />
-  ))
-  .add('with title', () => (
-    <Card color='#a3005c' title='Title' />
+  .add('with title and description', () => (
+    <Card
+      color='#a3005c'
+      title='Title'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
+    />
   ))
   .add('with image', () => (
     <Card
@@ -33,7 +34,6 @@ storiesOf('Card', module)
       color='#a3005c'
       title='Title'
       description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
-      actions={<Actions />}
       footer={<Footer />}
     />
   ))
