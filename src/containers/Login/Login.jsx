@@ -6,9 +6,9 @@ import { ChevronLeft } from 'react-feather'
 
 import styles from './Login.module.scss'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
-import { ReactComponent as Background } from '../../assets/background.svg'
+import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
-import { Avatar, Button, TextField } from '../../components'
+import { Avatar, Button, TextField, Typography, Space } from '../../components'
 
 import { Signup, AddProfile, SyncDevice, QRCodeModal } from '../../modals'
 
@@ -116,7 +116,7 @@ class Login extends Component {
     if (this.props.currentAppRequest && remoteWebRTCEnabled) {
       return (
         <div style={{ marginBottom: 32 }}>
-          <Button label='Se connecter avec un autre appareil' onClick={this.openQRCodeModal} />
+          <Button onClick={this.openQRCodeModal}>Se connecter avec un autre appareil</Button>
         </div>
       )
     }
@@ -129,15 +129,18 @@ class Login extends Component {
     return (
       <div style={{ width: '100%' }}>
         {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
-
-        <Logo className={styles.Logo} />
-        <h1 className='title-login'>Qui est-ce ?</h1>
+        <Space size={68} />
+        <Logo />
+        <Space size={82} />
+        <Typography type='title'>Qui est-ce ?</Typography>
+        <Space size={34} />
         { this.renderQRCodeModal() }
         <div className={styles.users}>
           {users.map(user => (
             <div key={user.username} className={styles.user} onClick={() => this.selectUser(user)}>
               <Avatar {...user} />
-              <p className='username'>{user.username}</p>
+              <Space size={16} />
+              <Typography type='username'>{user.username}</Typography>
             </div>
           ))}
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
@@ -160,23 +163,24 @@ class Login extends Component {
 
     return (
       <div style={{ width: '100%' }}>
-        <Logo className={styles.Logo} />
-
-        <div className={styles.goback} onClick={this.goBack}>
-          <ChevronLeft style={{ cursor: 'pointer' }} />
-          <p style={{ cursor: 'pointer' }}>Changer d'utilisateur</p>
-        </div>
+        <Space size={68} />
+        <Logo />
+        <Space size={82} />
 
         <div className={styles.users}>
           <div key={selectedUser.username} className={styles.user}>
             <Avatar {...selectedUser} />
-            <p className='username'>{selectedUser.username}</p>
+            <Space size={16} />
+            <Typography type='username'>{selectedUser.username}</Typography>
           </div>
         </div>
 
+        <Space size={16} />
+
         <div className={styles.passwordSection}>
-          <p>Entrez votre mot de passe</p>
           <TextField
+            large
+            height={46}
             autoFocus
             type='password'
             onChange={this.onPasswordChange}
@@ -184,8 +188,13 @@ class Login extends Component {
             label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
             onKeyUp={this.onPasswordKeyUp}
           />
-          <div style={{ marginBottom: 32 }} />
-          <Button label='connexion' onClick={this.connect} />
+          <Space size={19} />
+          <Button width={302} onClick={this.connect}>Valider</Button>
+          <Space size={105} />
+          <div className={styles.goback} onClick={this.goBack}>
+            <ChevronLeft />
+            <Typography type='label'>Changer d'utilisateur</Typography>
+          </div>
         </div>
       </div>
     )
@@ -207,7 +216,7 @@ class Login extends Component {
           : this.renderUsersSelection()
         }
 
-        <Background className={styles.Background} />
+        <Cubes className={styles.Background} />
       </div>
     )
   }

@@ -5,12 +5,15 @@ import cx from 'classnames'
 
 import styles from './TextField.module.scss'
 
-const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue }) => (
-  <div className={cx(
-    className,
-    styles.TextField,
-    error ? [styles.error] : [styles.default]
-  )}>
+const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large }) => (
+  <div
+    className={cx(
+      className,
+      styles.TextField,
+      error ? [styles.error] : [styles.default],
+      { [styles.large]: large }
+    )}
+  >
     <input
       onChange={onChange}
       type={type}
@@ -32,6 +35,7 @@ TextField.defaultProps = {
 }
 
 TextField.propTypes = {
+  large: PropTypes.bool,
   className: PropTypes.string,
 
   /** The label of the text field */

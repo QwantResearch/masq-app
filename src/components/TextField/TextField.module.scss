@@ -1,7 +1,7 @@
 @import '../../styles/colors.scss';
 
 .TextField {
-  width: 300px;
+  width: 302px;
   display: flex;
   flex-direction: column-reverse;
 
@@ -16,7 +16,16 @@
   input {
     border-radius: 3px;
     outline: none;
-    padding: 8px 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.large {
+  input {
+    height: 46px;
+    font-size: 20px;
+    color: $color-blue-dark;
   }
 }
 

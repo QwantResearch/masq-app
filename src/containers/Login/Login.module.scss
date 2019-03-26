@@ -14,17 +14,10 @@
     color: white;
   }
 
-  .Logo {
-    margin-top: 95px;
-    margin-bottom: 95px;
-    min-width: 316px;
-    min-height: 124px;
-  }
-
   .users {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 160px));
-    grid-gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 120px));
+    grid-gap: 64px;
     text-align: center;
     justify-content: center;
 
@@ -56,6 +49,7 @@
     justify-content: center;
     grid-template-columns: auto auto;
     margin-bottom: 16px;
+    cursor: pointer;
   }
 
   .Background {
