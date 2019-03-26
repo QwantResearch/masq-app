@@ -42,3 +42,11 @@ storiesOf('Button', module)
       Neutral
     </Button>
   ))
+  .add('secondary', () => (
+    <Button
+      secondary
+      onClick={action('onClick')}
+    >
+      Secondary
+    </Button>
+  ))

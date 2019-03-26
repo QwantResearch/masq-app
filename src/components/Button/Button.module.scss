@@ -21,6 +21,22 @@
   }
 }
 
+.secondary {
+  opacity: 0.8;
+  border: solid 1px $color-grey-light;
+  background-color: $color-grey-lighter;
+
+  span {
+    color: #999999;
+  }
+
+  &:hover {
+    border: solid 1px $color-blue-grey;
+    span {
+      color: $color-blue-grey;
+    }
+  }
+}
 
 .primary {
   background-color: $color-primary;

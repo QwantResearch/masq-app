@@ -4,9 +4,13 @@ import cx from 'classnames'
 
 import styles from './Button.module.scss'
 
-const Button = ({ onClick, color, children, width }) => (
+const Button = ({ onClick, color, children, width, secondary }) => (
   <button
-    className={cx(styles.Button, styles[color])}
+    className={cx(
+      styles.Button,
+      { [styles[color]]: !secondary },
+      { [styles.secondary]: secondary }
+    )}
     onClick={onClick}
     style={{ width }}
   >
@@ -28,6 +32,7 @@ Button.propTypes = {
     'light'
   ]),
   width: PropTypes.number,
+  secondary: PropTypes.bool,
   children: PropTypes.string
 }
 
