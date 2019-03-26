@@ -6,7 +6,7 @@ import { Router, Route, Redirect } from 'react-router-dom'
 import DetectBrowser from 'detect-browser'
 
 import { Login, Apps, Devices, Settings, Sidebar } from './containers'
-import { NotificationMasq } from './components'
+import { Notification } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp, PersistentStorageRequest } from './modals'
 
@@ -125,7 +125,7 @@ class App extends Component {
     return (
       <Router history={history}>
         <div>
-          {notification && <NotificationMasq {...notification} />}
+          {notification && <Notification {...notification} />}
           {currentUser && currentAppRequest &&
             <AuthApp
               onClose={() => setCurrentAppRequest(null)}

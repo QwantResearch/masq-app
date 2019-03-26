@@ -9,7 +9,7 @@ import styles from './Notification.module.scss'
 
 const TIMEOUT = 5000
 
-const NotificationMasq = ({ setNotification, ...props }) => {
+const Notification = ({ setNotification, ...props }) => {
   setTimeout(() => setNotification(null), TIMEOUT)
 
   return (
@@ -23,8 +23,8 @@ const mapDispatchToProps = dispatch => ({
   setNotification: notif => dispatch(setNotification(notif))
 })
 
-NotificationMasq.propTypes = {
+Notification.propTypes = {
   setNotification: PropTypes.func
 }
 
-export default connect(null, mapDispatchToProps)(NotificationMasq)
+export default connect(null, mapDispatchToProps)(Notification)
