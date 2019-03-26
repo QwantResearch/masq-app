@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import cx from 'classnames'
 
 import styles from './Typography.module.scss'
 
 const Typography = ({ type, children, color }) => (
-  <p className={styles[type]} style={{ color }}>{children}</p>
+  <p className={cx(styles.typography, styles[type])} style={{ color }}>{children}</p>
 )
 
 Typography.propTypes = {
@@ -12,8 +13,12 @@ Typography.propTypes = {
   color: PropTypes.string,
   type: PropTypes.oneOf([
     'title',
+    'title-modal',
+    'paragraph',
+    'paragraph-modal',
+    'username',
     'label',
-    'text'
+    'label-nav'
   ]).isRequired
 }
 

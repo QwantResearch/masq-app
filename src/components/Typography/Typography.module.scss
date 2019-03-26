@@ -1,14 +1,53 @@
-@import '../../styles/mixins.scss';
+@import '../../styles/colors.scss';
+
+.typography {
+  margin: 0;
+  padding: 0;
+}
+
+.username {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.11;
+  color: white;
+}
 
 .title {
-  @include font(20px, 1.25, 600);
+  font-size: 30px;
+  line-height: 0.83;
+  color: white;
+}
+
+.title-modal {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 0.89;
+  color: $color-blue-dark;
+}
+
+.paragraph {
+  font-size: 14px;
+  line-height: 1.36;
+  color: $color-blue-dark;
+}
+
+.paragraph-modal {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.57;
+  color: $color-blue-dark;
 }
 
 .label {
-  @include font(10px, normal, 600, 0.5px);
   text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.text {
-  @include font(14px, 1.57, normal);
+.label-nav {
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: white;
 }
