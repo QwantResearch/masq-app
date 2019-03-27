@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 
 import { updateUser, removeProfile, setNotification } from '../../actions'
 import { Avatar, Button, TextField } from '../../components'
-import { ConfirmDialog } from '../../modals'
+import { DeleteProfileDialog } from '../../modals'
 import { isName, isUsername } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 
@@ -136,6 +136,7 @@ class Settings extends React.Component {
   }
 
   render () {
+    const { username } = this.props.user
     const { confirmDialog } = this.state
     if (!this.props.user) return <Redirect to='/' />
 
@@ -180,15 +181,14 @@ class Settings extends React.Component {
             )}
           />
 
-          <Button secondary={!this.hasChanged} label='SAUVEGARDER' onClick={this.validate} />
+          <Button secondary={!this.hasChanged}onClick={this.validate}>Sauvegarder</Button>
         </div>
 
-        <Button secondary style={{ width: 300 }} label='SUPPRIMER MON PROFIL' onClick={this.openConfirmDialog} />
+        <Button secondary style={{ width: 300 }} onClick={this.openConfirmDialog}>Supprimer mon profil</Button>
 
         {confirmDialog && (
-          <ConfirmDialog
-            title='Confirmation de suppression'
-            text='Vous êtes sur le point de supprimer le profil ainsi que toutes les données des applications. Cette action est irréversible. Etes-vous certain ?'
+          <DeleteProfileDialog
+            username={username}
             onConfirm={() => this.confirmDelete()}
             onCancel={() => this.closeConfirmDialog()}
             onClose={() => this.closeConfirmDialog()}
