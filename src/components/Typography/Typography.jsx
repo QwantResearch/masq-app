@@ -4,8 +4,8 @@ import cx from 'classnames'
 
 import styles from './Typography.module.scss'
 
-const Typography = ({ type, children, color }) => (
-  <p className={cx(styles.typography, styles[type])} style={{ color }}>{children}</p>
+const Typography = ({ type, children, color, align }) => (
+  <p className={cx(styles.typography, styles[type])} style={{ color, textAlign: align }}>{children}</p>
 )
 
 Typography.propTypes = {
@@ -19,7 +19,8 @@ Typography.propTypes = {
     'username',
     'label',
     'label-nav'
-  ]).isRequired
+  ]).isRequired,
+  align: PropTypes.string
 }
 
 export default Typography

@@ -182,38 +182,40 @@ class Signup extends React.Component {
   renderSecondStep () {
     return (
       <React.Fragment>
-        <Avatar
-          size={120}
-          image={this.state.image}
-          firstname={this.state.firstname}
-          lastname={this.state.lastname}
-        />
-        <p className={styles.user}>{this.state.username}</p>
+        <Typography type='paragraph-modal'>
+          Définissez une Clé Secrète pour chiffrer vos données.
+        </Typography>
+        <Typography type='paragraph-modal' align='left'>
+          Choisissez-la avec attention car vous seul la connaitrez, il n’y a aucun moyen de la récupérer en cas d'oubli.
+        </Typography>
+        <Space size={14} />
         <TextField
           className={styles.TextField}
           autoFocus
           type='password'
           label={this.isValid('password')
-            ? 'Mot de passe'
+            ? 'Clé Secrète'
             : 'Le mot de passe doit être composé d\'au moins 8 caractères, et contenir au moins un chiffre et un caractère spécial (!?$#@()-*)'}
           error={!this.isValid('password')}
           onChange={(e) => this.onChange('password', e)}
         />
-
+        <Space size={14} />
         <TextField
           className={styles.TextField}
           type='password'
           label={this.isValid('passwordConfirmation')
-            ? 'Mot de passe (confirmation)'
+            ? 'Confirmation de la Clé Secrète'
             : 'Les mots de passe ne correspondent pas.'}
           error={!this.isValid('passwordConfirmation')}
           onKeyUp={this.handleKeyUp}
           onChange={(e) => this.onChange('passwordConfirmation', e)}
         />
 
+        <Space size={30} />
+
         <div className={styles.buttons}>
-          <Button label='Précédent' onClick={this.previous} width={185} />
-          <Button label='Terminer' onClick={this.finish} width={185} />
+          <Button width={142} color='neutral' onClick={this.previous}>Précédent</Button>
+          <Button width={142} onClick={this.finish}>Terminer</Button>
         </div>
       </React.Fragment>
     )
@@ -221,9 +223,9 @@ class Signup extends React.Component {
 
   render () {
     return (
-      <Modal onClose={this.props.onClose} height={this.currentStep === 0 ? 520 : 530} width={511}>
+      <Modal onClose={this.props.onClose} height={this.currentStep === 0 ? 520 : 420} width={511}>
         <div className={styles.Signup}>
-          <Typography type='title-modal'>Ajouter un nouvel utilisateur</Typography>
+          <Typography type='title-modal'>Créer un nouveau compte</Typography>
           <Space size={28} />
           {this.currentStep === 0 && this.renderFirstStep()}
           {this.currentStep === 1 && this.renderSecondStep()}
