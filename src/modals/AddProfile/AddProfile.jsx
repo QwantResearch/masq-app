@@ -8,8 +8,8 @@ import styles from './AddProfile.module.scss'
 const AddProfile = ({ onClose, onNewProfile, onSyncProfile }) => (
   <Modal height={370} width={511} onClose={onClose}>
     <div className={styles.AddProfile}>
-      <Button label='Nouveau profil' onClick={onNewProfile} />
-      <Button secondary label='Synchroniser un profil existant (bientôt)' />
+      <Button onClick={onNewProfile}>Nouveau profil</Button>
+      <Button secondary>Synchroniser un profil existant (bientôt)</Button>
     </div>
   </Modal>
 )
