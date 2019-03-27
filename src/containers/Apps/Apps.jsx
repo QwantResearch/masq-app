@@ -6,7 +6,7 @@ import { Trash2 } from 'react-feather'
 
 import { fetchApps, removeApp } from '../../actions'
 import { Card } from '../../components'
-import { ConfirmDialog } from '../../modals'
+import { DeleteAppDialog } from '../../modals'
 
 import styles from './Apps.module.scss'
 
@@ -58,9 +58,8 @@ class Apps extends PureComponent {
 
     return (
       <div className={styles.Apps}>
-        {confirmDialog && <ConfirmDialog
-          title='Confirmation de suppression'
-          text={`Vous êtes sur le point de supprimer toutes les données de lapplication ${appToRemove.appId}. Cette action est irréversible. Etes-vous certain ?`}
+        {confirmDialog && <DeleteAppDialog
+          app={appToRemove}
           onConfirm={() => this.confirmDelete()}
           onCancel={() => this.closeConfirmDialog()}
           onClose={() => this.closeConfirmDialog()}

@@ -18,8 +18,8 @@ Description.propTypes = {
   description: PropTypes.string.isRequired
 }
 
-const Card = ({ minHeight, image, title, actions, description, footer, color }) => (
-  <div className={styles.Card} style={{ minHeight }}>
+const Card = ({ minHeight, image, title, actions, description, footer, color, width }) => (
+  <div className={styles.Card} style={{ minHeight, width }}>
     {image && <Image image={image} />}
     <div className={styles.content}>
       <Header color={color}>{actions}</Header>
@@ -35,6 +35,7 @@ Card.defaultProps = {
 }
 
 Card.propTypes = {
+  width: PropTypes.number,
   minHeight: PropTypes.number,
   image: PropTypes.string,
   title: PropTypes.string,
