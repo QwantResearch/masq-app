@@ -136,7 +136,6 @@ class Settings extends React.Component {
   }
 
   render () {
-    const { username } = this.props.user
     const { confirmDialog } = this.state
     if (!this.props.user) return <Redirect to='/' />
 
@@ -188,7 +187,7 @@ class Settings extends React.Component {
 
         {confirmDialog && (
           <DeleteProfileDialog
-            username={username}
+            username={this.props.user.username}
             onConfirm={() => this.confirmDelete()}
             onCancel={() => this.closeConfirmDialog()}
             onClose={() => this.closeConfirmDialog()}
