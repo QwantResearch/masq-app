@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { setNotification } from '../../actions'
-import { Avatar, Modal, Button, TextField } from '../../components'
+import { Avatar, Modal, Button, TextField, Typography, Space } from '../../components'
 import { isName, isUsername, isPassword } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 import defaultAvatar from '../../assets/user.png'
@@ -153,9 +153,9 @@ class Signup extends React.Component {
           image={this.state.image || null}
         />
 
-        <div style={{ paddingTop: 24 }} />
-        <Button secondary label='Importer une photo' onClick={this.openDialog} />
-        <div style={{ paddingBottom: 32 }} />
+        <Space size={21} />
+        <Button secondary onClick={this.openDialog}>Importer une photo</Button>
+        <Space size={32} />
 
         <TextField
           className={styles.TextField}
@@ -164,14 +164,16 @@ class Signup extends React.Component {
           onChange={(e) => this.onChange('username', e)}
           onKeyUp={this.handleKeyUp}
           label={this.getUsernameLabel(
-            'Pseudo (affiché)',
+            'Votre pseudo',
             'Pseudo déjà utilisé. Veuillez en choisir un autre.',
             'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
           )}
         />
 
+        <Space size={32} />
+
         <div className={styles.buttons}>
-          <Button label='Suivant' onClick={this.next} width={185} />
+          <Button onClick={this.next} width={185}>Suivant</Button>
         </div>
       </React.Fragment>
     )
@@ -221,7 +223,8 @@ class Signup extends React.Component {
     return (
       <Modal onClose={this.props.onClose} height={this.currentStep === 0 ? 520 : 530} width={511}>
         <div className={styles.Signup}>
-          <span className='title-modal'>Ajouter un nouvel utilisateur</span>
+          <Typography type='title-modal'>Ajouter un nouvel utilisateur</Typography>
+          <Space size={28} />
           {this.currentStep === 0 && this.renderFirstStep()}
           {this.currentStep === 1 && this.renderSecondStep()}
         </div>
