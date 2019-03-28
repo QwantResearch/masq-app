@@ -42,7 +42,7 @@
   }
 
   .active * {
-    color: $color-blue;
+    color: $color-primary;
   }
 
   .active.navElement {
@@ -54,7 +54,7 @@
       height: 21px;
       width: 2px;
       border-radius: 1px;
-      background-color: $color-blue;
+      background-color: $color-primary;
     }
   }
 
