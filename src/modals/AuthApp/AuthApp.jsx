@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { CheckCircle } from 'react-feather'
+import { CheckCircle, Slash } from 'react-feather'
 
 import { Modal, Button, Loader, Card, Typography, Space } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps } from '../../actions'
@@ -11,9 +11,13 @@ import styles from './AuthApp.module.scss'
 class AuthApp extends React.Component {
   constructor (props) {
     super(props)
+    this.state = {
+      refused: false
+    }
     this.handleOk = this.handleOk.bind(this)
-    this.handleRefuse = this.handleRefuse.bind(this)
     this.handleAccept = this.handleAccept.bind(this)
+    this.handleRefuse = this.handleRefuse.bind(this)
+    this.handleRefuseConfirm = this.handleRefuseConfirm.bind(this)
   }
 
   async componentDidMount () {
@@ -32,6 +36,10 @@ class AuthApp extends React.Component {
   }
 
   async handleRefuse () {
+    this.setState({ refused: true })
+  }
+
+  async handleRefuseConfirm () {
     await this.props.handleUserAppRegister(false)
     await this.props.setCurrentAppRequest(null)
     this.props.onClose()
@@ -49,6 +57,13 @@ class AuthApp extends React.Component {
 
   renderButtons () {
     const { appRequest } = this.props
+    const { refused } = this.state
+
+    if (refused) {
+      return (
+        <Button color='neutral' onClick={this.handleRefuseConfirm}>Fermer</Button>
+      )
+    }
 
     if (appRequest.isConnected === false) {
       return (
@@ -68,6 +83,17 @@ class AuthApp extends React.Component {
 
   renderText () {
     const { appRequest } = this.props
+    const { refused } = this.state
+
+    if (refused) {
+      return (
+        <div>
+          <Slash size={114} color={styles.colorGreyLight} />
+          <Space size={28} />
+          <Typography type='paragraph-modal' align='center'>Vous avez refusé l'accès de l'application {appRequest.appId} à votre stockage Masq.</Typography>
+        </div>
+      )
+    }
 
     if (appRequest.isConnected === undefined) return false
 
@@ -95,6 +121,10 @@ class AuthApp extends React.Component {
   }
 
   getTitle () {
+    if (this.state.refused) {
+      return 'Nouvelle requête de connexion refusée'
+    }
+
     if (this.props.appRequest.isConnected === undefined) return false
 
     return this.props.appRequest.isConnected
@@ -102,15 +132,27 @@ class AuthApp extends React.Component {
       : 'Nouvelle requête de connexion'
   }
 
-  render () {
-    const { appRequest } = this.props
-    const { isConnected } = appRequest
+  getHeight () {
+    const { refused } = this.state
+    const { isConnected } = this.props.appRequest
 
+    if (refused) {
+      return 390
+    } else if (isConnected === false) {
+      return 450
+    } else if (isConnected === true) {
+      return 420
+    } else {
+      return 300
+    }
+  }
+
+  render () {
     return (
-      <Modal width={511} height={isConnected === false ? 450 : 420}>
+      <Modal width={511} height={this.getHeight()}>
         <div className={styles.AuthApp}>
           <Typography type='title-modal'>{this.getTitle()}</Typography>
-          <Space size={24} />
+          <Space size={32} />
           {this.renderText()}
           <div className={styles.buttons}>
             {this.renderButtons()}
