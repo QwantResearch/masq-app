@@ -5,13 +5,6 @@ $color-red: #e53b5b;
 $color-green: #40ae6c;
 $color-purple: #a3005c;
 
-:export { colorBlueDark: $color-blue-dark; }
-:export { colorBlue: $color-blue; }
-:export { colorBlueLight: $color-blue-light; }
-:export { colorRed: $color-red; }
-:export { colorGreen: $color-green; }
-:export { colorPurple: $color-purple; }
-
 // old colors
 $color-blue-darker : #252a39;
 $color-blue : #458bf8;
@@ -33,3 +26,11 @@ $color-light: #f7f7f7;
 
 $color-grey: #707070;
 $color-grey-light: #cccccc;
+
+:export { colorBlueDark: $color-blue-dark; }
+:export { colorBlue: $color-blue; }
+:export { colorBlueLight: $color-blue-light; }
+:export { colorRed: $color-red; }
+:export { colorGreen: $color-green; }
+:export { colorPurple: $color-purple; }
+:export { colorNeutral: $color-neutral }

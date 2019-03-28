@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { Trash } from 'react-feather'
 
 import { updateUser, removeProfile, setNotification } from '../../actions'
-import { Avatar, Button, TextField } from '../../components'
+import { Avatar, Button, TextField, Typography, Space } from '../../components'
 import { DeleteProfileDialog } from '../../modals'
 import { isName, isUsername } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
@@ -141,49 +142,60 @@ class Settings extends React.Component {
 
     return (
       <div className={styles.Settings}>
-        <div className={styles.main}>
-          <p className='title'>Vos paramètres d'utilisateur</p>
-          <p className='subtitle'>Changez vos informations personnelles</p>
-          <div className={styles.avatar}>
-            <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+        <div>
+          <Typography type='title-page'>Mes paramètres d'utilisateur</Typography>
+          <Space size={30} />
+
+          <div className={styles.content}>
+            <div className={styles.avatar}>
+              <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+            </div>
+
+            <div className={styles.inputs}>
+              <TextField
+                error={!this.isValid('username')}
+                onKeyUp={this.handleKeyUp}
+                defaultValue={this.state.username}
+                onChange={(e) => this.onChange('username', e)}
+                label={this.getUsernameLabel(
+                  'Pseudo (affiché)',
+                  'Pseudo déjà utilisé. Veuillez en choisir un autre.',
+                  'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+                )}
+              />
+              <TextField
+                error={!this.isValid('firstname')}
+                onKeyUp={this.handleKeyUp}
+                defaultValue={this.state.firstname}
+                onChange={(e) => this.onChange('firstname', e)}
+                label={this.isValid('firstname')
+                  ? 'Prénom (facultatif)'
+                  : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
+              />
+              <TextField
+                error={!this.isValid('lastname')}
+                onKeyUp={this.handleKeyUp}
+                defaultValue={this.state.lastname}
+                onChange={(e) => this.onChange('lastname', e)}
+                label={this.isValid('lastname')
+                  ? 'Nom (facultatif)'
+                  : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
+              />
+            </div>
           </div>
         </div>
 
-        <div className={styles.inputs}>
-          <TextField
-            error={!this.isValid('lastname')}
-            onKeyUp={this.handleKeyUp}
-            defaultValue={this.state.lastname}
-            onChange={(e) => this.onChange('lastname', e)}
-            label={this.isValid('lastname')
-              ? 'Nom (facultatif)'
-              : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
-          />
-          <TextField
-            error={!this.isValid('firstname')}
-            onKeyUp={this.handleKeyUp}
-            defaultValue={this.state.firstname}
-            onChange={(e) => this.onChange('firstname', e)}
-            label={this.isValid('firstname')
-              ? 'Prénom (facultatif)'
-              : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
-          />
-          <TextField
-            error={!this.isValid('username')}
-            onKeyUp={this.handleKeyUp}
-            defaultValue={this.state.username}
-            onChange={(e) => this.onChange('username', e)}
-            label={this.getUsernameLabel(
-              'Pseudo (affiché)',
-              'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-              'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
-            )}
-          />
-
-          <Button secondary={!this.hasChanged}onClick={this.validate}>Sauvegarder</Button>
+        <div className={styles.rightSection}>
+          <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Sauvegarder</Button>
+          <Space size={24} />
+          <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
+            <Typography align='center' type='label' color={styles.colorNeutral}>
+              <Trash className={styles.trashIcon} size={14} color={styles.colorNeutral} />
+              Supprimer le compte
+            </Typography>
+          </div>
         </div>
-
-        <Button secondary style={{ width: 300 }} onClick={this.openConfirmDialog}>Supprimer mon profil</Button>
+        {/* <Button secondary style={{ width: 300 }} onClick={this.openConfirmDialog}>Supprimer mon profil</Button> */}
 
         {confirmDialog && (
           <DeleteProfileDialog

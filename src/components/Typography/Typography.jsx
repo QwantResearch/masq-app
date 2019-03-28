@@ -14,6 +14,7 @@ Typography.propTypes = {
   type: PropTypes.oneOf([
     'title',
     'title-modal',
+    'title-page',
     'paragraph',
     'paragraph-modal',
     'username',
