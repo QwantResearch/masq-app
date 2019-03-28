@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { CheckCircle } from 'react-feather'
 
-import { Modal, Button, Loader, Card } from '../../components'
+import { Modal, Button, Loader, Card, Typography, Space } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps } from '../../actions'
 
 import styles from './AuthApp.module.scss'
@@ -52,14 +53,14 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <Fragment>
-          <Button label={'Refuser'} onClick={this.handleRefuse} color={styles.colorRed} />
-          <Button label={'Valider'} onClick={this.handleAccept} color={styles.colorGreen} />
+          <Button onClick={this.handleRefuse} color='danger'>Refuser</Button>
+          <Button onClick={this.handleAccept} color='success'>Valider</Button>
         </Fragment>
       )
     }
 
     if (appRequest.isConnected) {
-      return <Button label={'OK'} onClick={this.handleOk} color={styles.colorGreen} />
+      return <Button onClick={this.handleOk}>Ok</Button>
     }
 
     return <Loader />
@@ -73,24 +74,21 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <div>
+          <Typography type='paragraph-modal'>
+            Cette application demande un accès à votre stockage Masq.
+            Si vous n’êtes pas à l’origine de cette demande veuillez refuser cette requête.
+          </Typography>
+          <Space size={30} />
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color={styles.colorPurple} description={appRequest.description} />
-          <p>
-          Cette application demande un accès à votre stockage Masq.
-          </p>
-          <p>
-          Si vous n’êtes pas à l’origine de cette demande, veuillez refuser cette requête.
-          </p>
         </div>
       )
     } else {
       return (
         <div>
-          <p>
-          Vous avez autorisé l'application à accéder à votre stockage Masq.
-          </p>
-          <p>
-          Vous pouvez désormais utiliser l'application.
-          </p>
+          <CheckCircle size={114} color={styles.colorGreen} />
+          <Space size={28} />
+          <Typography type='paragraph-modal' align='center'>Vous avez autorisé l'application {appRequest.appId} à accéder à votre stockage Masq.</Typography>
+          <Typography type='paragraph-modal' align='center'>Vous pouvez désormais utiliser l'application.</Typography>
         </div>
       )
     }
@@ -100,8 +98,8 @@ class AuthApp extends React.Component {
     if (this.props.appRequest.isConnected === undefined) return false
 
     return this.props.appRequest.isConnected
-      ? 'Connexion établie'
-      : 'Nouvelle requête de connexion de:'
+      ? 'Nouvelle requête de connexion acceptée'
+      : 'Nouvelle requête de connexion'
   }
 
   render () {
@@ -109,10 +107,10 @@ class AuthApp extends React.Component {
     const { isConnected } = appRequest
 
     return (
-      <Modal width={511} height={isConnected === false ? 500 : 350}>
+      <Modal width={511} height={isConnected === false ? 450 : 420}>
         <div className={styles.AuthApp}>
-          <p className='title-modal'>{this.getTitle()}</p>
-          {isConnected && <h1>{this.props.appRequest.appId}</h1>}
+          <Typography type='title-modal'>{this.getTitle()}</Typography>
+          <Space size={24} />
           {this.renderText()}
           <div className={styles.buttons}>
             {this.renderButtons()}
