@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Image from './Image'
-import Header from './Header'
-import Title from './Title'
 import { Typography } from '..'
 
 import styles from './Card.module.scss'
@@ -22,8 +20,11 @@ const Card = ({ minHeight, image, title, actions, description, footer, color, wi
   <div className={styles.Card} style={{ minHeight, width }}>
     {image && <Image image={image} />}
     <div className={styles.content}>
-      <Header color={color}>{actions}</Header>
-      {title && <Title title={title} />}
+      <div className={styles.Header}>
+        <div className={styles.marker} style={{ backgroundColor: color }} />
+        {actions}
+      </div>
+      {title && <Typography type='title-card'>{title}</Typography>}
       {description && <Description description={description} /> }
       {footer}
     </div>

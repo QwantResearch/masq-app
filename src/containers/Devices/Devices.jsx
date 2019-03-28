@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Card, Button } from '../../components'
+import { Card, Button, Typography } from '../../components'
 
 import { SyncDevice } from '../../modals'
 
@@ -38,18 +38,15 @@ class Devices extends React.Component {
       <div className={styles.Devices}>
         <div className={styles.main}>
           {this.renderSyncModal()}
-          <p className='title'>Mes Appareils</p>
-          <p className='subtitle'>Retrouvez la liste de vos appareils connectés à Masq</p>
+          <Typography type='title-page'>Mes appareils</Typography>
           {devices.map((device, index) => (
             <div key={index} className={styles.Card}>
-              <Card minHeight={64} title={device.name} color={device.color} description={device.description} />
+              <Card width={378} title={device.name} color={device.color} description={device.description} />
             </div>
           ))}
         </div>
 
-        <div className={styles.sidebar}>
-          <Button secondary label='Ajouter un appareil (bientôt)' />
-        </div>
+        <Button secondary>Ajouter un appareil (bientôt)</Button>
       </div>
     )
   }

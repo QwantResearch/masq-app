@@ -1,9 +1,7 @@
 .Devices {
-  flex: 1;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
-  grid-gap: 32px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   margin-top: 48px;
   margin-left: 48px;
   margin-right: 48px;

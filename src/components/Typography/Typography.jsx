@@ -15,6 +15,7 @@ Typography.propTypes = {
     'title',
     'title-modal',
     'title-page',
+    'title-card',
     'paragraph',
     'paragraph-modal',
     'username',
