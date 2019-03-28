@@ -1,0 +1,21 @@
+@import '../../styles/colors.scss';
+
+.Apps {
+  flex: 1;
+  margin-top: 48px;
+  margin-left: 48px;
+  margin-right: 48px;
+
+  .Card {
+    margin-top: 24px;
+    max-width: 400px;
+
+    .trashIcon {
+      cursor: pointer;
+      color: $color-grey-light;
+      &:hover {
+        color: $color-grey;
+      }
+    }
+  }
+}

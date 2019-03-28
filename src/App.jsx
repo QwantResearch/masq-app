@@ -5,7 +5,7 @@ import { createHashHistory } from 'history'
 import { Router, Route, Redirect } from 'react-router-dom'
 import DetectBrowser from 'detect-browser'
 
-import { Login, Apps, Devices, Settings, Sidebar } from './containers'
+import { Login, Applications, Devices, Settings, Sidebar } from './containers'
 import { Notification } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp, PersistentStorageRequest } from './modals'
@@ -16,7 +16,7 @@ const authenticatedRoutes = [
   {
     path: '/apps',
     sidebar: Sidebar,
-    main: Apps
+    main: Applications
   },
   {
     path: '/devices',

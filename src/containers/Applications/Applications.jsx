@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Trash2 } from 'react-feather'
+import { Trash } from 'react-feather'
 
 import { fetchApps, removeApp } from '../../actions'
-import { Card } from '../../components'
+import { Card, Typography } from '../../components'
 import { DeleteAppDialog } from '../../modals'
 
-import styles from './Apps.module.scss'
+import styles from './Applications.module.scss'
 
 class Apps extends PureComponent {
   constructor (props) {
@@ -64,8 +64,7 @@ class Apps extends PureComponent {
           onCancel={() => this.closeConfirmDialog()}
           onClose={() => this.closeConfirmDialog()}
         />}
-        <p className='title'>Mes Applications</p>
-        <p className='subtitle'>Retrouvez vos applications synchronisées avec Masq</p>
+        <Typography type='title-page'>Mes Applications</Typography>
         {apps.map((app, index) => (
           <div key={index} className={styles.Card}>
             <Card
@@ -75,9 +74,8 @@ class Apps extends PureComponent {
               color='#a3005c'
               description={app.description}
               actions={
-                <Trash2
-                  style={{ cursor: 'pointer' }}
-                  color='#b2b2b2'
+                <Trash
+                  className={styles.trashIcon}
                   onClick={() => this.handleTrashClick(app)}
                 />
               }
