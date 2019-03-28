@@ -1,11 +1,13 @@
 import React from 'react'
-import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Grid, Smartphone, Settings, LogOut } from 'react-feather'
 
+import { Avatar, Space, Typography } from '../../components'
 import { signout } from '../../actions'
+import { ReactComponent as Cubes } from '../../assets/cubes-sidebar.svg'
+import { ReactComponent as Logo } from '../../assets/logo-sidebar.svg'
 
 import styles from './SidebarMax.module.scss'
 
@@ -18,29 +20,33 @@ class SidebarMax extends React.Component {
     return (
       <div className={styles.Sidebar}>
         <div className={styles.header}>
-          <Avatar {...user} size={64} />
-          <p className='username'>{user.username}</p>
+          <Logo />
+          <Space size={22} />
+          <Avatar {...user} size={54} />
+          <Space size={8} />
+          <Typography type='username'>{user.username}</Typography>
         </div>
         <div className={styles.nav}>
           <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>
             <Grid opacity={0.8} width={24} />
-            <p className='label'>Applications</p>
+            <Typography type='label-nav'>Applications</Typography>
           </NavLink>
           <NavLink to='/devices' className={styles.navElement} activeClassName={styles.active}>
             <Smartphone opacity={0.8} width={24} />
-            <p className='label'>Appareils</p>
+            <Typography type='label-nav'>Appareils</Typography>
           </NavLink>
           <NavLink to='/settings' className={styles.navElement} activeClassName={styles.active}>
             <Settings opacity={0.8} width={24} />
-            <p className='label'>Paramètres</p>
+            <Typography type='label-nav'>Paramètres</Typography>
           </NavLink>
         </div>
         <div className={styles.logout} onClick={signout}>
           <div className={styles.navElement}>
             <LogOut opacity={0.8} width={24} />
-            <p className='label'>Déconnexion</p>
+            <Typography type='label-nav'>Déconnexion</Typography>
           </div>
         </div>
+        <Cubes className={styles.cubes} />
       </div>
     )
   }

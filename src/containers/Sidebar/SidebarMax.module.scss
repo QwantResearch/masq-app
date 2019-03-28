@@ -7,8 +7,9 @@
   background-color: $color-blue-dark;
 
   .header {
-    height: 212px;
+    height: 190px;
     display: flex;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -16,7 +17,7 @@
   }
 
   .nav {
-    padding-top: 32px;
+    padding-top: 42px;
     display: flex;
     flex-direction: column;
     >:not(:last-child) {
@@ -29,7 +30,8 @@
     margin-left: 70px;
     align-items: center;
     cursor: pointer;
-    &:hover * {
+    opacity: 0.8;
+    &:hover {
       opacity: 1;
     }
     :first-child {
@@ -44,6 +46,7 @@
   }
 
   .active.navElement {
+    opacity: 1;
     &::before {
       position: absolute;
       content: '';
@@ -56,7 +59,13 @@
   }
 
   .logout {
+    z-index: 1;
     position: absolute;
     bottom: 64px;
+  }
+
+  .cubes {
+    position: absolute;
+    bottom: 0;
   }
 }

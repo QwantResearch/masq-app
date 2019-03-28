@@ -1,10 +1,10 @@
 import React from 'react'
-import { Avatar } from '../../components'
 import { connect } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Grid, Smartphone, Settings, LogOut } from 'react-feather'
 
+import { Avatar, Typography, Space } from '../../components'
 import { signout } from '../../actions'
 
 import styles from './SidebarMin.module.scss'
@@ -19,8 +19,9 @@ class SidebarMin extends React.Component {
       <div className={styles.Sidebar}>
         <div>
           <div className={styles.header}>
-            <Avatar {...user} size={64} />
-            <p className='username'>{user.username}</p>
+            <Avatar {...user} size={58} />
+            <Space size={8} />
+            <Typography type='username'>{user.username}</Typography>
           </div>
 
           <div className={styles.nav}>
