@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 import { Trash } from 'react-feather'
 
 import { fetchApps, removeApp } from '../../actions'
-import { Card, Typography } from '../../components'
+import { Card, Typography, Space } from '../../components'
 import { DeleteAppDialog } from '../../modals'
 
 import styles from './Applications.module.scss'
@@ -64,24 +64,32 @@ class Apps extends PureComponent {
           onCancel={() => this.closeConfirmDialog()}
           onClose={() => this.closeConfirmDialog()}
         />}
-        <Typography type='title-page'>Mes Applications</Typography>
-        {apps.map((app, index) => (
-          <div key={index} className={styles.Card}>
-            <Card
-              minHeight={64}
-              title={app.name}
-              image={app.imageURL}
-              color='#a3005c'
-              description={app.description}
-              actions={
-                <Trash
-                  className={styles.trashIcon}
-                  onClick={() => this.handleTrashClick(app)}
-                />
-              }
-            />
-          </div>
-        ))}
+
+        <div className={styles.topSection}>
+          <Typography type='title-page'>Mes Applications</Typography>
+        </div>
+
+        <Space size={16} />
+
+        <div className={styles.cards}>
+          {apps.map((app, index) => (
+            <div key={index} className={styles.Card}>
+              <Card
+                minHeight={64}
+                title={app.name}
+                image={app.imageURL}
+                color='#a3005c'
+                description={app.description}
+                actions={
+                  <Trash
+                    className={styles.trashIcon}
+                    onClick={() => this.handleTrashClick(app)}
+                  />
+                }
+              />
+            </div>
+          ))}
+        </div>
       </div>
     )
   }

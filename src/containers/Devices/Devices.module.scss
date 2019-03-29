@@ -1,15 +1,22 @@
 .Devices {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 48px;
-  margin-left: 48px;
-  margin-right: 48px;
+  margin: 48px 48px 48px;
 
-  .main {
-    .Card {
-      margin-top: 24px;
-      max-width: 400px;
+  .topSection {
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+  }
+
+  .cards {
+    display: grid;
+    grid-gap: 28px;
+    @media (min-width: 1200px) {
+      margin-right: 365px;
+    }
+
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 

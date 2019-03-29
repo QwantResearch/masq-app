@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Card, Button, Typography } from '../../components'
+import { Card, Button, Typography, Space } from '../../components'
 
 import { SyncDevice } from '../../modals'
 
@@ -36,17 +36,20 @@ class Devices extends React.Component {
 
     return (
       <div className={styles.Devices}>
-        <div className={styles.main}>
-          {this.renderSyncModal()}
+        {this.renderSyncModal()}
+        <div className={styles.topSection}>
           <Typography type='title-page'>Mes appareils</Typography>
+          <Button secondary>Ajouter un appareil (bientôt)</Button>
+        </div>
+
+        <Space size={16} />
+        <div className={styles.cards}>
           {devices.map((device, index) => (
             <div key={index} className={styles.Card}>
-              <Card width={378} title={device.name} color={device.color} description={device.description} />
+              <Card title={device.name} color={device.color} description={device.description} />
             </div>
           ))}
         </div>
-
-        <Button secondary>Ajouter un appareil (bientôt)</Button>
       </div>
     )
   }

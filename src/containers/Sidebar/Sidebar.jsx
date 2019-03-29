@@ -6,10 +6,10 @@ import SidebarMax from './SidebarMax'
 
 const Sidebar = (props) => (
   <Fragment>
-    <MediaQuery maxWidth={800}>
+    <MediaQuery maxWidth={1023}>
       <SidebarMin {...props} />
     </MediaQuery>
-    <MediaQuery minWidth={801}>
+    <MediaQuery minWidth={1024}>
       <SidebarMax {...props} />
     </MediaQuery>
   </Fragment>
