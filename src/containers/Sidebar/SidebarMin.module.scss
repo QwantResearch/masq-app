@@ -41,6 +41,16 @@
   }
 
   .active * {
+    opacity: 1;
     color: $color-primary;
+  }
+
+  .logout {
+    z-index: 1;
+  }
+
+  .cubes {
+    position: absolute;
+    bottom: 0;
   }
 }
