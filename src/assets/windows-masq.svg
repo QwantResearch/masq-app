@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="311" height="231" viewBox="0 0 311 231">
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(69 54)">
+            <rect width="234" height="169" x="4" y="4" fill="#FFF" stroke="#00CAFC" stroke-width="8" rx="8"/>
+            <path fill="#2C3B51" d="M220 140.897L213.942 145v-17.673l-10.909 8.117a.902.902 0 0 1-1.084 0l-10.907-8.117v17.644L185 140.877V115l16.926 12.596a.94.94 0 0 0 1.13 0L219.984 115l.016 25.897z"/>
+            <path fill="#00CAFC" d="M214.748 118.983l-11.611-8.645a.967.967 0 0 0-1.177-.002L190.274 119 185 114.83l16.906-12.61a1.064 1.064 0 0 1 1.3.003L220 114.83l-5.252 4.153zM201.805 160.777l-16.798-11.854L185 141l16.877 11.866c.38.266.867.266 1.246 0L220 141l-.016 7.923-16.79 11.854a1.192 1.192 0 0 1-1.389 0M181.476 21h14.048v14h-14.048V21zM159 21h14.048v14H159V21zm44.952 0H218v14h-14.048V21z"/>
+            <path stroke="#00CAFC" stroke-linecap="square" stroke-width="6" d="M8.7 46.5h226.202"/>
+        </g>
+        <g>
+            <rect width="234" height="169" x="4" y="4" fill="#00CAFC" stroke="#2C3B51" stroke-width="8" rx="8"/>
+            <path fill="#2C3B51" d="M181.476 21h14.048v14h-14.048V21zM159 21h14.048v14H159V21zm44.952 0H218v14h-14.048V21z"/>
+            <path stroke="#252A39" stroke-linecap="square" stroke-width="6" d="M8.7 46.5h226.202"/>
+        </g>
+    </g>
+</svg>

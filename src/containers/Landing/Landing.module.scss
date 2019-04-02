@@ -1,0 +1,150 @@
+@import '../../styles/colors.scss';
+
+.Landing {
+  width: 100%;
+  // overflow: hidden;
+  background-color: $color-blue-dark;
+
+  .section1 {
+    padding-top: 68px;
+    height: 666px;
+    background-color: $color-blue-dark;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom center;
+
+    .Logo {
+      margin: auto;
+    }
+
+    .connectBtn {
+      position: absolute;
+      z-index: 3;
+      top: 27px;
+      right: 48px;
+    }
+
+    .title {
+      margin: auto;
+      max-width: 689px;
+      p {
+        font-family: 'Asap Condensed';
+        margin: 0;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 1.13;
+        text-align: center;
+        color: white;
+      }
+    }
+
+    .accountBtn {
+      width: 340px;
+      margin: auto;
+    }
+  }
+
+  .text {
+    width: 380px;
+  }
+
+  .section2 {
+    width: 100%;
+    margin-top: -150px;
+
+    .Box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: auto;
+      max-width: 680px;
+
+      @media (max-width: 800px) {
+        flex-direction: column-reverse;
+        .text {
+          margin-top: 28px;
+        }
+      }
+    }
+
+    .Hdd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: auto;
+      max-width: 740px;
+
+      @media (max-width: 800px) {
+        flex-direction: column;
+        .text {
+          margin-top: 28px;
+        }
+      }
+    }
+
+    .Devices {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: auto;
+      max-width: 880px;
+
+      @media (max-width: 800px) {
+        flex-direction: column-reverse;
+        .text {
+          margin-top: 28px;
+        }
+      }
+    }
+  }
+
+  .section3 {
+    margin-top: 76px;
+    padding-top: 218px;
+    padding-bottom: 112px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
+
+    .title {
+      margin: auto;
+      max-width: 500px;
+    }
+
+    .Shield {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: auto;
+      max-width: 860px;
+
+      @media (max-width: 800px) {
+        flex-direction: column;
+        .text {
+          margin-top: 28px;
+        }
+      }
+    }
+
+    .Windows {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: auto;
+      max-width: 840px;
+
+      @media (max-width: 800px) {
+        flex-direction: column-reverse;
+        .text {
+          margin-top: 28px;
+        }
+      }
+    }
+  }
+
+  .Footer {
+    display: flex;
+    align-items: center;
+    height: 77px;
+  }
+}

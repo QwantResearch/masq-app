@@ -19,6 +19,24 @@
   color: white;
 }
 
+.title-landing {
+  font-family: 'Asap Condensed';
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.14;
+  color: #00cafc;
+}
+
+.title-landing2 {
+  font-family: 'Asap Condensed';
+  font-size: 34px;
+  font-weight: 600;
+  font-stretch: condensed;
+  line-height: 1.18;
+  text-align: center;
+  color: #252a39;
+}
+
 .title-page {
   font-size: 20px;
   font-weight: bold;
@@ -45,6 +63,18 @@
   font-size: 14px;
   line-height: 1.36;
   color: $color-blue-dark;
+}
+
+.paragraph-landing {
+  font-size: 18px;
+  line-height: 1.22;
+  color: #e0e1e6;
+}
+
+.paragraph-landing-dark {
+  font-size: 18px;
+  line-height: 1.22;
+  color: #697496;
 }
 
 .paragraph-modal {

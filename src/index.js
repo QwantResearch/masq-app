@@ -10,6 +10,7 @@ import App from './App'
 
 import './styles/index.scss'
 import 'typeface-asap'
+import 'typeface-asap-condensed'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
