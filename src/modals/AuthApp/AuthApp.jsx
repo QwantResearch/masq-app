@@ -111,7 +111,7 @@ class AuthApp extends React.Component {
     } else {
       return (
         <div>
-          <CheckCircle size={114} color={styles.colorGreen} />
+          <CheckCircle size={114} color={styles.colorSuccess} />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>Vous avez autorisé l'application {appRequest.appId} à accéder à votre stockage Masq.</Typography>
           <Typography type='paragraph-modal' align='center'>Vous pouvez désormais utiliser l'application.</Typography>

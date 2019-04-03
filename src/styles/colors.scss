@@ -1,22 +1,8 @@
-$color-blue-dark: #252a39;
-$color-blue: #458bf8;
-$color-blue-light: #697496;
-$color-red: #e53b5b;
-$color-green: #40ae6c;
-$color-purple: #a3005c;
-
-// old colors
-$color-blue-darker : #252a39;
-$color-blue : #458bf8;
-$color-blue-grey: #697496;
-$color-blue-grey-light: #c8cbd3;
-$color-blue-grey-ligher: #e0e1e6;
-
-$color-grey-lighter: #f7f7f7;
-$color-grey-light: #b2b2b2;
-
-// New colors
 $color-background: #f4f6fa;
+
+$color-blue-grey-light: #c8cbd3;
+$color-blue-grey: #697496;
+$color-blue-dark: #252a39;
 
 $color-primary: #03a0f9;
 $color-success: #40ae6c;
@@ -26,13 +12,20 @@ $color-light: #f7f7f7;
 
 $color-grey: #707070;
 $color-grey-light: #cccccc;
+$color-grey-lighter: #f7f7f7;
 
+$color-purple: #a3005c;
+
+:export { colorBlueGreyLight: $color-blue-grey-light; }
+:export { colorBlueGrey: $color-blue-grey; }
 :export { colorBlueDark: $color-blue-dark; }
-:export { colorBlue: $color-blue; }
-:export { colorBlueLight: $color-blue-light; }
-:export { colorRed: $color-red; }
-:export { colorGreen: $color-green; }
-:export { colorPurple: $color-purple; }
-:export { colorNeutral: $color-neutral }
+:export { colorBackground: $color-background; }
+:export { colorPrimary: $color-primary; }
+:export { colorSuccess: $color-success; }
+:export { colorDanger: $color-danger; }
+:export { colorNeutral: $color-neutral; }
+:export { colorLight: $color-light; }
 :export { colorGrey: $color-grey }
 :export { colorGreyLight: $color-grey-light }
+:export { colorGreyLighter: $color-grey-lighter }
+:export { colorPurple: $color-purple; }
