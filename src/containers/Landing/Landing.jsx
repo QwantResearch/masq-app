@@ -111,7 +111,7 @@ const Landing = () => (
         <a href='mailto:masq.dev@qwant.com'>
           <Typography type='footer'>Contactez-nous</Typography>
         </a>
-        <a href='https://help.qwant.com' rel='noopener' target='_blank'>
+        <a href='https://help.qwant.com' rel='noopener noreferrer' target='_blank'>
           <Typography type='footer'>F.A.Q.</Typography>
         </a>
       </div>

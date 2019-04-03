@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { setSyncStep } from '../../actions'
-import { Modal, Button, Loader } from '../../components'
+import { Modal, Button, Loader, Typography } from '../../components'
 
 import styles from './SyncDevice.module.scss'
 import { CheckCircle } from 'react-feather'
@@ -37,10 +37,10 @@ class SyncDevice extends React.Component {
     return (
       <Modal height={370} width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
-          <p className='title-modal'>Ajouter un appareil</p>
-          <p>Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.</p>
+          <Typography type='title-modal'>Ajouter un appareil</Typography>
+          <Typography type='paragraph-modal'>Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.</Typography>
           <input id='link' readOnly defaultValue='qwa.nt/0BJ8ZX' />
-          <Button label='Copier' onClick={this.copyLink} />
+          <Button onClick={this.copyLink}>Copier</Button>
         </div>
       </Modal>
     )
@@ -50,8 +50,8 @@ class SyncDevice extends React.Component {
     return (
       <Modal height={370} width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
-          <p className='title-modal'>Ajouter un appareil</p>
-          <p>Synchronisation en cours, veuillez patienter...</p>
+          <Typography type='title-modal'>Ajouter un appareil</Typography>
+          <Typography type='paragraph-modal'>Synchronisation en cours, veuillez patienter...</Typography>
           <div className={styles.loader}>
             <Loader />
           </div>
@@ -65,7 +65,7 @@ class SyncDevice extends React.Component {
         <div className={styles.SyncDevice}>
           <CheckCircle width={160} height={160} color={styles.colorGreen} />
           <p>Synchronisation terminée. Vous pouvez maintenant vous connecter</p>
-          <Button label='OK' onClick={this.handleOnClose} />
+          <Button onClick={this.handleOnClose}>Ok</Button>
         </div>
       </Modal>
     )

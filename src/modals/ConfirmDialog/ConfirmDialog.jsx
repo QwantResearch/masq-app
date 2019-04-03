@@ -11,8 +11,8 @@ const ConfirmDialog = ({ title, text, onConfirm, onCancel, onClose }) => (
       <span className={styles.title}>{title}</span>
       <p className='subtitle'>{text}</p>
       <div className={styles.buttons}>
-        <Button label='Annuler' onClick={onCancel} />
-        <Button label='Confirmer' onClick={onConfirm} />
+        <Button onClick={onCancel}>Annuler</Button>
+        <Button onClick={onConfirm}>Confirmer</Button>
       </div>
     </div>
   </Modal>

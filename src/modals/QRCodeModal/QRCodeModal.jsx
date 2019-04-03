@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
 
-import { Button, Modal } from '../../components'
+import { Button, Modal, Typography } from '../../components'
 
 import styles from './QRCodeModal.module.scss'
 
@@ -20,11 +20,11 @@ class QRCodeModal extends Component {
     return (
       <Modal height={540} width={511} onClose={onClose}>
         <div className={styles.QRCode}>
-          <p className='title-modal'>Connexion avec un autre appareil</p>
-          <p>Scannez le QRCode suivant sur votre téléphone, ou copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.</p>
+          <Typography type='title-modal'>Connexion avec un autre appareil</Typography>
+          <Typography type='paragraph-modal'>Scannez le QRCode suivant sur votre téléphone, ou copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.</Typography>
           <QRCode value={currentAppRequest.link} style={{ marginBottom: 16 }} />
           <input id='link' readOnly defaultValue={currentAppRequest.link} />
-          <Button label='Copier' onClick={this.copyLink} />
+          <Button onClick={this.copyLink}>Copier</Button>
         </div>
       </Modal>
     )
