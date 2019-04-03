@@ -57,9 +57,11 @@
       justify-content: space-between;
       align-items: center;
       margin: auto;
+      margin-bottom: 26px;
       max-width: 680px;
 
       @media (max-width: 800px) {
+        margin-bottom: 80px;
         flex-direction: column-reverse;
         .text {
           margin-top: 28px;
@@ -146,5 +148,36 @@
     display: flex;
     align-items: center;
     height: 77px;
+    margin-left: 34px;
+    margin-right: 96px;
+    justify-content: space-between;
+
+    a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 800px) {
+      height: 100%;
+      margin-right: 16px;
+      align-items: baseline;
+      padding-top: 32px;
+      padding-bottom: 32px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: row;
+      *:not(:first-child) {
+        margin-left: 20px;
+      }
+
+      @media (max-width: 800px) {
+        flex-direction: column;
+        text-align: right;
+        *:not(:last-child) {
+          margin-bottom: 20px;
+        }
+      }
+    }
   }
 }

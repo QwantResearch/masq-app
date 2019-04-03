@@ -38,6 +38,7 @@
     "redux-thunk": "^2.3.0",
     "signalhubws": "^1.0.7",
     "typeface-asap": "0.0.54",
+    "typeface-asap-condensed": "0.0.72",
     "uuid": "^3.3.2",
     "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq"
   },

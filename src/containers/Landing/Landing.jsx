@@ -9,18 +9,19 @@ import { ReactComponent as HDD } from '../../assets/hard-disk.svg'
 import { ReactComponent as Devices } from '../../assets/devices.svg'
 import { ReactComponent as Shield } from '../../assets/shield.svg'
 import { ReactComponent as Windows } from '../../assets/windows-masq.svg'
+import { ReactComponent as Qwant } from '../../assets/qwant.svg'
 
 import { Button, Space, Typography } from '../../components'
 
 import styles from './Landing.module.scss'
 
-console.log('Head', Head)
+const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
 const Landing = () => (
   <div className={styles.Landing}>
     <div className={styles.section1} style={{ backgroundImage: `url(${Head})` }}>
       <div className={styles.Logo}><Logo /></div>
-      <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>
+      {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>}
       <Space size={74} />
       <div className={styles.title}>
         <p>Masq est un service de stockage de données GRATUIT et SECURISÉ sur vos appareils</p>
@@ -43,8 +44,6 @@ const Landing = () => (
         </div>
         <Box />
       </div>
-
-      <Space size={26} />
 
       <div className={styles.Hdd}>
         <HDD />
@@ -107,7 +106,15 @@ const Landing = () => (
     </div>
 
     <div className={styles.Footer}>
-      <Typography type='paragraph-landing' />
+      <Qwant />
+      <div className={styles.links}>
+        <a href='mailto:masq.dev@qwant.com'>
+          <Typography type='footer'>Contactez-nous</Typography>
+        </a>
+        <a href='https://help.qwant.com' rel='noopener' target='_blank'>
+          <Typography type='footer'>F.A.Q.</Typography>
+        </a>
+      </div>
     </div>
   </div>
 )

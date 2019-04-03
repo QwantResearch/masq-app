@@ -24,7 +24,8 @@ Typography.propTypes = {
     'paragraph-modal',
     'username',
     'label',
-    'label-nav'
+    'label-nav',
+    'footer'
   ]).isRequired,
   align: PropTypes.string
 }
