@@ -8,7 +8,7 @@ import styles from './Card.module.scss'
 
 const Description = ({ description }) => (
   <div className={styles.Description}>
-    <Typography type='text' color='#697496'>{description}</Typography>
+    <Typography type='paragraph' color='#697496'>{description}</Typography>
   </div>
 )
 
