@@ -103,7 +103,10 @@ class Settings extends React.Component {
     }
 
     // Every fields should be valid
-    const isValid = Object.keys(this.state).every(key => this.isValid(key))
+    const isValid = ['username', 'image', 'firstname', 'lastname'].every(key => {
+      return this.isValid(key)
+    })
+
     // If invalid, return
     if (!isValid) {
       // forceUpdate to show errors
