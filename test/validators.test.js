@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { isName, isUsername, isPassword } = require('../src/library/validators')
+const { isName, isUsername, isPassword, checkPassword } = require('../src/library/validators')
 
 describe('name validator', () => {
   it('should be valid', () => {
@@ -90,5 +90,57 @@ describe('password validator', () => {
   it('without at least one special character is forbidden', () => {
     const str = 'somepassword9'
     expect(isPassword(str)).to.be.false
+  })
+})
+
+describe('password rules checker', () => {
+  it('should return 1 if password contains lowercase', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).lowercase).to.equal(1)
+  })
+  it('should return 1 if password contains uppercase', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).uppercase).to.equal(1)
+  })
+  it('should return 1 if password contains specialCharacter', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).specialCharacter).to.equal(1)
+  })
+  it('should return 1 if password contains number', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).number).to.equal(1)
+  })
+  it('should return 6 if password contains at least 6 characters', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).minLength).to.equal(6)
+  })
+  it('should return 12 if password contains at least 12 characters', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).secureLength).to.equal(12)
+  })
+
+  it('should return low for the password force', () => {
+    const str = 'some'
+    expect(checkPassword(str).force).to.equal('low')
+  })
+  it('should return low for the password force', () => {
+    const str = 'somepa'
+    expect(checkPassword(str).force).to.equal('low')
+  })
+  it('should return medium for the password force', () => {
+    const str = 'somEpa'
+    expect(checkPassword(str).force).to.equal('medium')
+  })
+  it('should return low for the password force', () => {
+    const str = '145689'
+    expect(checkPassword(str).force).to.equal('low')
+  })
+  it('should return medium for the password force', () => {
+    const str = '14568A'
+    expect(checkPassword(str).force).to.equal('medium')
+  })
+  it('should return high for the password force', () => {
+    const str = 'somePassword9$'
+    expect(checkPassword(str).force).to.equal('high')
   })
 })
