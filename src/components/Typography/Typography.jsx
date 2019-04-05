@@ -9,7 +9,7 @@ const Typography = ({ type, children, color, align }) => (
 )
 
 Typography.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
   color: PropTypes.string,
   type: PropTypes.oneOf([
     'title',
