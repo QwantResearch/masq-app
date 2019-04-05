@@ -6,7 +6,7 @@ import * as common from 'masq-common'
 
 import { isUsernameAlreadyTaken } from './utils'
 
-const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer } = common.crypto
+const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
 const { ERRORS, MasqError, checkObject } = common.errors
@@ -247,7 +247,6 @@ class Masq {
    * @param {object} profile The updated profile
    */
   async updateProfile (profile) {
-    // TODO: Check profile
     this._checkProfile()
     const id = profile.id
     if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
@@ -269,6 +268,23 @@ class Masq {
 
     await this.encryptAndPut('/profile', updatedPrivateProfile)
     this._setProfileToLocalStorage(updatePublicProfile)
+  }
+
+  /**
+   * Update passphrase
+   * @param {string} currentPassPhrase The current passphrase
+   * @param {string} newPassPhrase The new passphrase
+   */
+  async updatePassphrase (currentPassPhrase, newPassPhrase) {
+    this._checkProfile()
+    const protectedMK = await this._getProtectedMK()
+    try {
+      const protectedMKNewPass = await updateMasterKeyAndNonce(currentPassPhrase, newPassPhrase, protectedMK)
+      // we do not use this.encryptAndPut because this value is not encrypted
+      await this.profileDB.putAsync('/profile/protectedMK', protectedMKNewPass)
+    } catch (error) {
+      throw new MasqError(ERRORS.INVALID_PASSPHRASE)
+    }
   }
 
   /**

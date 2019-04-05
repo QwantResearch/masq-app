@@ -11,6 +11,7 @@ const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
 const { ERRORS } = common.errors
 
 const PASSPHRASE = 'secret'
+const NEW_PASSPHRASE = 'secretnew'
 
 const wait = async (timeout = 1000) => new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -137,6 +138,16 @@ describe('masq internal operations', function () {
     expect(encryptedMasterKeyAndNonce.ciphertext).to.exist
   })
 
+  it('should update protectedMK after a passphrase change(must be logged)', async () => {
+    const protectedMasterKey = await masq._getProtectedMK()
+    const { encryptedMasterKeyAndNonce } = protectedMasterKey
+
+    await masq.updatePassphrase(PASSPHRASE, `${PASSPHRASE}new`)
+    const protectedMasterKeyNewPass = await masq._getProtectedMK()
+    const { encryptedMasterKeyAndNonce: encMKAndNonceNewPass } = protectedMasterKeyNewPass
+    expect(encryptedMasterKeyAndNonce.ciphertext).to.not.equal(encMKAndNonceNewPass.ciphertext)
+  })
+
   it('should check if masq-profile values are encrypted', async () => {
     const key = '/profile'
     const hashedKey = await hashKey(key, masq.nonce)
@@ -249,7 +260,7 @@ describe('masq internal operations', function () {
     const profile = profiles[0].username === 'updatedUsername' ? profiles[0] : profiles[1]
 
     // Open a profile (login)
-    await masq.openProfile(profile.id, PASSPHRASE)
+    await masq.openProfile(profile.id, NEW_PASSPHRASE)
     let apps = await masq.getApps()
     const app = apps[0]
     expect(apps).to.have.lengthOf(1)
@@ -299,11 +310,12 @@ describe('masq internal operations', function () {
   it('should remove the profile and all its associated data', async () => {
     const app = { name: 'myapp', description: 'desc', appId: 'id' }
     const profiles = await masq.getProfiles()
-    const profile = profiles[0]
+
+    const profile = profiles.filter(profile => profile.username === 'updatedUsername')[0]
     const dbNameProfile = profile.id
 
     // Open a profile (login)
-    await masq.openProfile(profile.id, PASSPHRASE)
+    await masq.openProfile(profile.id, NEW_PASSPHRASE)
 
     // Add an app
     await masq.addApp(app)
