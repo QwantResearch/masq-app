@@ -6,7 +6,7 @@ import { Button, Modal } from '../../components'
 import styles from './AddProfile.module.scss'
 
 const AddProfile = ({ onClose, onNewProfile, onSyncProfile }) => (
-  <Modal height={370} width={511} onClose={onClose}>
+  <Modal width={511} onClose={onClose}>
     <div className={styles.AddProfile}>
       <Button onClick={onNewProfile}>Nouveau profil</Button>
       <Button secondary>Synchroniser un profil existant (bientôt)</Button>

@@ -4,25 +4,25 @@ import MediaQuery from 'react-responsive'
 
 import { X } from 'react-feather'
 
-import './Modal.scss'
+import styles from './Modal.module.scss'
 
-const Modal = ({ onClose, width, height, children }) => (
-  <div className='Modal'>
-    <div className='overlay' onClick={onClose} />
-    <div className='modal' style={{ width, height }}>
-      {onClose && <X className='close' width={16} height={16} onClick={onClose} />}
+const Modal = ({ onClose, width, children }) => (
+  <div className={styles.Modal}>
+    <div className={styles.overlay} onClick={onClose} />
+    <div className={styles.modal} style={{ width }}>
+      {onClose && <X className={styles.close} size={16} onClick={onClose} />}
       {children}
     </div>
   </div>
 )
 
-const ResponsiveModal = ({ onClose, width, height, children }) => (
+const ResponsiveModal = ({ onClose, width, children }) => (
   <div>
     <MediaQuery maxWidth={800}>
-      <Modal width='100%' onClose={onClose} height={height} children={children} />
+      <Modal width='100%' onClose={onClose} children={children} />
     </MediaQuery>
     <MediaQuery minWidth={801}>
-      <Modal width={width} onClose={onClose} height={height} children={children} />
+      <Modal width={width} onClose={onClose} children={children} />
     </MediaQuery>
   </div>
 )
@@ -30,12 +30,11 @@ const ResponsiveModal = ({ onClose, width, height, children }) => (
 Modal.propTypes =
 ResponsiveModal.propTypes = {
   onClose: PropTypes.func,
+  children: PropTypes.object,
   width: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
-  ]),
-  height: PropTypes.number,
-  children: PropTypes.object
+  ])
 }
 
 export default ResponsiveModal

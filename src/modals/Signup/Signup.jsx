@@ -223,7 +223,7 @@ class Signup extends React.Component {
 
   render () {
     return (
-      <Modal onClose={this.props.onClose} height={this.currentStep === 0 ? 520 : 420} width={511}>
+      <Modal onClose={this.props.onClose} width={511}>
         <div className={styles.Signup}>
           <Typography type='title-modal'>Créer un nouveau compte</Typography>
           <Space size={28} />

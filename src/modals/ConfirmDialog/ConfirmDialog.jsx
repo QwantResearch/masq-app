@@ -6,7 +6,7 @@ import { Button, Modal } from '../../components'
 import styles from './ConfirmDialog.module.scss'
 
 const ConfirmDialog = ({ title, text, onConfirm, onCancel, onClose }) => (
-  <Modal height={290} width={511} onClose={onClose}>
+  <Modal width={511} onClose={onClose}>
     <div className={styles.ConfirmDialog}>
       <span className={styles.title}>{title}</span>
       <p className='subtitle'>{text}</p>

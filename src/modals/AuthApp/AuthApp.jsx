@@ -132,24 +132,9 @@ class AuthApp extends React.Component {
       : 'Nouvelle requête de connexion'
   }
 
-  getHeight () {
-    const { refused } = this.state
-    const { isConnected } = this.props.appRequest
-
-    if (refused) {
-      return 390
-    } else if (isConnected === false) {
-      return 450
-    } else if (isConnected === true) {
-      return 420
-    } else {
-      return 300
-    }
-  }
-
   render () {
     return (
-      <Modal width={511} height={this.getHeight()}>
+      <Modal width={511}>
         <div className={styles.AuthApp}>
           <Typography type='title-modal'>{this.getTitle()}</Typography>
           <Space size={32} />

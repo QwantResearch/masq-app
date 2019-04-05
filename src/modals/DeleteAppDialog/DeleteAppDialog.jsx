@@ -6,7 +6,7 @@ import { Button, Modal, Typography, Space, Card } from '../../components'
 import styles from './DeleteAppDialog.module.scss'
 
 const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => (
-  <Modal height={526} width={465} onClose={onClose}>
+  <Modal width={465} onClose={onClose}>
     <div className={styles.ConfirmDialog}>
       <Typography type='title-modal'>Suppression de l'application {app.appId}</Typography>
       <Space size={32} />

@@ -7,7 +7,7 @@ import { Button, Modal, Typography, Space } from '../../components'
 import styles from './DeleteProfileDialog.module.scss'
 
 const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => (
-  <Modal height={465} width={465} onClose={onClose}>
+  <Modal width={465} onClose={onClose}>
     <div className={styles.ConfirmDialog}>
       <Typography type='title-modal'>Suppression de compte</Typography>
       <Space size={32} />

@@ -35,7 +35,7 @@ class SyncDevice extends React.Component {
 
   renderSyncLink () {
     return (
-      <Modal height={370} width={511} onClose={this.handleOnClose}>
+      <Modal width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
           <Typography type='title-modal'>Ajouter un appareil</Typography>
           <Typography type='paragraph-modal'>Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.</Typography>
@@ -48,7 +48,7 @@ class SyncDevice extends React.Component {
 
   renderSyncLoading () {
     return (
-      <Modal height={370} width={511} onClose={this.handleOnClose}>
+      <Modal width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
           <Typography type='title-modal'>Ajouter un appareil</Typography>
           <Typography type='paragraph-modal'>Synchronisation en cours, veuillez patienter...</Typography>
@@ -61,7 +61,7 @@ class SyncDevice extends React.Component {
   }
   renderSyncComplete () {
     return (
-      <Modal height={370} width={511} onClose={this.handleOnClose}>
+      <Modal width={511} onClose={this.handleOnClose}>
         <div className={styles.SyncDevice}>
           <CheckCircle width={160} height={160} color={styles.colorSuccess} />
           <p>Synchronisation terminée. Vous pouvez maintenant vous connecter</p>

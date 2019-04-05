@@ -6,7 +6,7 @@ import { Button, Modal, Typography, Space } from '../../components'
 import styles from './PersistentStorageRequest.module.scss'
 
 const PermanentStorageRequest = ({ onClose }) => (
-  <Modal height={330} width={511} onClose={onClose}>
+  <Modal width={511} onClose={onClose}>
     <div className={styles.PermanentStorage}>
       <Typography type='title-modal'>Autorisation de stockage</Typography>
       <Space size={32} />
