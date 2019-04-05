@@ -1,34 +1,53 @@
 @import '../../styles/colors.scss';
 
-.Modal .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 2;
-}
+.Modal {
+  @media (max-width: 800px) {
+    position: relative;
+  }
 
-.Modal .modal {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.16);
-  opacity: 1;
-  border-radius: 6px;
-  padding-bottom: 32px;
-}
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 
-.Modal .close {
-  float: right;
-  margin-top: 20px;
-  margin-right: 20px;
-  color: #191919;
-  opacity: 0.4;
-  cursor: pointer;
-  margin-bottom: 44px;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2;
+  }
+
+  .modal {
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.16);
+    opacity: 1;
+    padding-top: 64px;
+    padding-bottom: 32px;
+
+    @media (min-width: 801px) {
+      border-radius: 6px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 800px) {
+      top: 0;
+      // width: 100vw;
+      height: calc(100vh - 96px);
+      position: fixed;
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #191919;
+    opacity: 0.4;
+    cursor: pointer;
+    margin-bottom: 44px;
+  }
 }

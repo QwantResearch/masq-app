@@ -145,16 +145,19 @@ class Signup extends React.Component {
   renderFirstStep () {
     return (
       <React.Fragment>
-        <Avatar
-          size={120}
-          upload
-          ref={this.refAvatar}
-          onChange={(e) => this.onImageChange(e)}
-          image={this.state.image || null}
-        />
+        <div className={styles.avatar}>
+          <Avatar
+            size={120}
+            upload
+            ref={this.refAvatar}
+            onChange={(e) => this.onImageChange(e)}
+            image={this.state.image || null}
+          />
 
-        <Space size={21} />
-        <Button secondary onClick={this.openDialog}>Importer une photo</Button>
+          <Space size={21} />
+          <Button secondary onClick={this.openDialog}>Importer une photo</Button>
+        </div>
+
         <Space size={32} />
 
         <TextField
