@@ -68,8 +68,8 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <Fragment>
-          <Button onClick={this.handleRefuse} color='danger'>Refuser</Button>
-          <Button onClick={this.handleAccept} color='success'>Valider</Button>
+          <Button width={185} onClick={this.handleRefuse} color='danger'>Refuser</Button>
+          <Button width={185} onClick={this.handleAccept} color='success'>Valider</Button>
         </Fragment>
       )
     }
@@ -136,9 +136,11 @@ class AuthApp extends React.Component {
     return (
       <Modal width={511}>
         <div className={styles.AuthApp}>
-          <Typography type='title-modal'>{this.getTitle()}</Typography>
-          <Space size={32} />
-          {this.renderText()}
+          <div className={styles.content}>
+            <Typography type='title-modal'>{this.getTitle()}</Typography>
+            <Space size={32} />
+            {this.renderText()}
+          </div>
           <div className={styles.buttons}>
             {this.renderButtons()}
           </div>

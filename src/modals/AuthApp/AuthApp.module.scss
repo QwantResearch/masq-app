@@ -6,14 +6,8 @@
   align-items: center;
   height: 100%;
   width: 100%;
-  padding-top: 48px;
   text-align: center;
-
-  Button {
-    width: 185px;
-    margin-right: 16px;
-    margin-left: 16px;
-  }
+  justify-content: space-between;
 
   .appTitle {
     font-size: 32px;
@@ -27,6 +21,22 @@
 
   .buttons {
     display: flex;
-    margin-top: 32px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    @media (min-width: 801px) {
+      margin-top: 32px;
+      :first-child {
+        margin-right: 12px;
+      }
+    }
+
+    @media (max-width: 800px) {
+      display: flex;
+      flex-direction: column-reverse;
+      :first-child {
+        margin-top: 12px;
+      }
+    }
   }
 }
