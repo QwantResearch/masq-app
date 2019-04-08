@@ -8,13 +8,15 @@ import styles from './PersistentStorageRequest.module.scss'
 const PermanentStorageRequest = ({ onClose }) => (
   <Modal width={511} onClose={onClose}>
     <div className={styles.PermanentStorage}>
-      <Typography type='title-modal'>Autorisation de stockage</Typography>
-      <Space size={32} />
-      <Typography type='paragraph-modal'>
-        Afin de stocker vos données de manière sécurisée,
-        merci d'autoriser Masq à utiliser le stockage persistant de votre navigateur.
-        Cette notification réapparaitra à la prochaine ouverture de Masq si nécessaire.
-      </Typography>
+      <div>
+        <Typography type='title-modal'>Autorisation de stockage</Typography>
+        <Space size={32} />
+        <Typography type='paragraph-modal'>
+          Afin de stocker vos données de manière sécurisée,
+          merci d'autoriser Masq à utiliser le stockage persistant de votre navigateur.
+          Cette notification réapparaitra à la prochaine ouverture de Masq si nécessaire.
+        </Typography>
+      </div>
       <Space size={32} />
       <Button onClick={onClose}>Ok</Button>
     </div>
