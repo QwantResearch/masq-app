@@ -4,28 +4,39 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-top: 48px;
-  margin-left: 48px;
-  margin-right: 48px;
+  margin: 48px 48px 16px 48px;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: center;
+  }
 
   .titleContainer {
     margin-bottom: 32px;
   }
 
-  .inputs {
-    margin-left: 64px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    input {
-      width: 224px;
-    }
-  }
 
   .content {
     display: flex;
     flex-direction: row;
+
+    .inputs {
+      height: 192px;
+      margin-left: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 800px) {
+      flex-direction: column;
+      align-items: center;
+
+      .inputs {
+        margin-top: 24px;
+        margin-left: 0;
+      }
+    }
   }
 
   .rightSection {
