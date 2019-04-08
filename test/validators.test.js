@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { isName, isUsername, isPassword, checkPassword } = require('../src/library/validators')
+const { isName, isUsername, isPassword, checkPassword, isForceEnough } = require('../src/library/validators')
 
 describe('name validator', () => {
   it('should be valid', () => {
@@ -62,7 +62,7 @@ describe('username validator', () => {
   })
 })
 
-describe('password validator', () => {
+describe('password validator (check only authoried caracters)', () => {
   it('should be valid', () => {
     const str = 'somePassword9$'
     expect(isPassword(str)).to.be.true
@@ -77,46 +77,36 @@ describe('password validator', () => {
     expect(isUsername(str)).to.be.false
   })
 
-  it('less than 8 characters is forbidden', () => {
-    const str = 'short8$'
-    expect(isPassword(str)).to.be.false
-  })
-
-  it('without at least one number is forbidden', () => {
-    const str = 'somepassword$'
-    expect(isPassword(str)).to.be.false
-  })
-
-  it('without at least one special character is forbidden', () => {
-    const str = 'somepassword9'
-    expect(isPassword(str)).to.be.false
+  it('not authorized special caracters are forbidden', () => {
+    const str = 'shor%'
+    expect(isUsername(str)).to.be.false
   })
 })
 
 describe('password rules checker', () => {
-  it('should return 1 if password contains lowercase', () => {
+  it('should return true if password contains lowercase', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).lowercase).to.equal(1)
+    expect(checkPassword(str).lowercase).to.be.true
   })
-  it('should return 1 if password contains uppercase', () => {
+  it('should return true if password contains uppercase', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).uppercase).to.equal(1)
+    expect(checkPassword(str).uppercase).to.be.true
   })
-  it('should return 1 if password contains specialCharacter', () => {
+  it('should return true if password contains specialCharacter', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).specialCharacter).to.equal(1)
+    expect(checkPassword(str).specialCharacter).to.be.true
   })
-  it('should return 1 if password contains number', () => {
+  it('should return true if password contains number', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).number).to.equal(1)
+    expect(checkPassword(str).number).to.be.true
   })
-  it('should return 6 if password contains at least 6 characters', () => {
+  it('should return true if password contains at least 6 characters', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).minLength).to.equal(6)
+    expect(checkPassword(str).minLength).to.be.true
   })
-  it('should return 12 if password contains at least 12 characters', () => {
+  it('should return true if password contains at least 12 characters', () => {
     const str = 'somePassword9$'
-    expect(checkPassword(str).secureLength).to.equal(12)
+    expect(checkPassword(str).secureLength).to.be.true
   })
 
   it('should return low for the password force', () => {
@@ -142,5 +132,36 @@ describe('password rules checker', () => {
   it('should return high for the password force', () => {
     const str = 'somePassword9$'
     expect(checkPassword(str).force).to.equal('high')
+  })
+})
+
+describe('password force validator', () => {
+  it('should accept low + upp', () => {
+    const str = 'abcdeF'
+    expect(isForceEnough(str)).to.be.true
+  })
+  it('should accept low + number', () => {
+    const str = 'abcde5'
+    expect(isForceEnough(str)).to.be.true
+  })
+  it('should accept low + special', () => {
+    const str = 'abcde#'
+    expect(isForceEnough(str)).to.be.true
+  })
+  it('should not accept only low', () => {
+    const str = 'abcdef'
+    expect(isForceEnough(str)).to.be.false
+  })
+  it('should not accept only upp', () => {
+    const str = 'ABCDEF'
+    expect(isForceEnough(str)).to.be.false
+  })
+  it('should not accept only numbers', () => {
+    const str = '123456'
+    expect(isForceEnough(str)).to.be.false
+  })
+  it('should not accept if length < 6', () => {
+    const str = '1a#b'
+    expect(isForceEnough(str)).to.be.false
   })
 })

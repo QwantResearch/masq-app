@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { setNotification } from '../../actions'
-import { Avatar, Modal, Button, TextField, Typography, Space } from '../../components'
-import { isName, isUsername, isPassword } from '../../library/validators'
+import { Avatar, Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
+import { isName, isUsername, isPassword, isForceEnough } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 import defaultAvatar from '../../assets/user.png'
 
@@ -48,7 +48,7 @@ class Signup extends React.Component {
       case 'firstname': return isName(field)
       case 'lastname': return isName(field)
       case 'username': return isUsername(field) && !isUsernameAlreadyTaken(field)
-      case 'password': return isPassword(field)
+      case 'password': return isPassword(field) && isForceEnough(field)
       case 'passwordConfirmation': return field === this.state.password
       default: return false
     }
@@ -188,7 +188,7 @@ class Signup extends React.Component {
         <Typography type='paragraph-modal'>
           Définissez une Clé Secrète pour chiffrer vos données.
         </Typography>
-        <Typography type='paragraph-modal' align='left'>
+        <Typography type='paragraph-modal' align='center'>
           Choisissez-la avec attention car vous seul la connaitrez, il n’y a aucun moyen de la récupérer en cas d'oubli.
         </Typography>
         <Space size={14} />
@@ -198,10 +198,12 @@ class Signup extends React.Component {
           type='password'
           label={this.isValid('password')
             ? 'Clé Secrète'
-            : 'Le mot de passe doit être composé d\'au moins 8 caractères, et contenir au moins un chiffre et un caractère spécial (!?$#@()-*)'}
+            : 'Le mot de passe doit être composé d\'au moins 6 caractères, et respecter au moins 2 points parmi les 5 règles présentées ci-dessous:'}
           error={!this.isValid('password')}
           onChange={(e) => this.onChange('password', e)}
         />
+        <Space size={14} />
+        <PasswordStrength password={this.state.password} />
         <Space size={14} />
         <TextField
           className={styles.TextField}

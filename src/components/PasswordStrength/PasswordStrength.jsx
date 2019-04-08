@@ -36,7 +36,7 @@ const Item = ({ fulfilled, text }) => {
       printedRule = '1 chiffre'
       break
     case 'specialCharacter':
-      printedRule = '1 caractère spécial (#@!...)'
+      printedRule = '1 caractère spécial parmi (!?$#@()-*)'
       break
     case 'minLength':
       printedRule = '6 caractères'
@@ -113,7 +113,7 @@ const PasswordRules = ({ force, passwordInfo }) => {
           return (
             <Item
               key={elt}
-              fulfilled={passwordInfo[elt] > 0}
+              fulfilled={passwordInfo[elt]}
               text={elt}
             />)
         })}
