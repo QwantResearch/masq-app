@@ -60,7 +60,7 @@
       margin-bottom: 26px;
       max-width: 680px;
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         margin-bottom: 80px;
         flex-direction: column-reverse;
         .text {
@@ -76,7 +76,7 @@
       margin: auto;
       max-width: 740px;
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         flex-direction: column;
         .text {
           margin-top: 28px;
@@ -91,7 +91,7 @@
       margin: auto;
       max-width: 880px;
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         flex-direction: column-reverse;
         .text {
           margin-top: 28px;
@@ -120,7 +120,7 @@
       margin: auto;
       max-width: 860px;
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         flex-direction: column;
         .text {
           margin-top: 28px;
@@ -135,7 +135,7 @@
       margin: auto;
       max-width: 840px;
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         flex-direction: column-reverse;
         .text {
           margin-top: 28px;
@@ -156,7 +156,7 @@
       text-decoration: none;
     }
 
-    @media (max-width: 800px) {
+    @media (max-width: 500px) {
       height: 100%;
       margin-right: 16px;
       align-items: baseline;
@@ -171,7 +171,7 @@
         margin-left: 20px;
       }
 
-      @media (max-width: 800px) {
+      @media (max-width: 500px) {
         flex-direction: column;
         text-align: right;
         *:not(:last-child) {

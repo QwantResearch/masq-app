@@ -23,13 +23,13 @@
 }
 
 .buttons {
-  @media (min-width: 801px) {
+  @media (min-width: 501px) {
     :not(:first-child) {
       margin-left: 12px;
     }
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 500px) {
     display: flex;
     flex-direction: column-reverse;
     :first-child {
