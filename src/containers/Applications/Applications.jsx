@@ -66,7 +66,7 @@ class Apps extends PureComponent {
         />}
 
         <div className={styles.topSection}>
-          <Typography type='title-page'>Mes Applications</Typography>
+          <Typography type='title-page'>Mes applications</Typography>
         </div>
 
         <Space size={16} />
