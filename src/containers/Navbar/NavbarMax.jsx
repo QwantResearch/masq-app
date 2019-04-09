@@ -9,9 +9,9 @@ import { signout } from '../../actions'
 import { ReactComponent as Cubes } from '../../assets/cubes-sidebar.svg'
 import { ReactComponent as Logo } from '../../assets/logo-sidebar.svg'
 
-import styles from './SidebarMax.module.scss'
+import styles from './NavbarMax.module.scss'
 
-class SidebarMax extends React.Component {
+class NavbarMax extends React.Component {
   render () {
     const { user, signout } = this.props
 
@@ -52,7 +52,7 @@ class SidebarMax extends React.Component {
   }
 }
 
-SidebarMax.propTypes = {
+NavbarMax.propTypes = {
   user: PropTypes.object,
   signout: PropTypes.func
 }
@@ -65,4 +65,4 @@ const mapDispatchToProps = dispatch => ({
   signout: () => dispatch(signout())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SidebarMax)
+export default connect(mapStateToProps, mapDispatchToProps)(NavbarMax)

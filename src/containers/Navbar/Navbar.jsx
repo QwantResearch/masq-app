@@ -1,16 +1,16 @@
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
 
-import SidebarMin from './SidebarMin'
-import SidebarMax from './SidebarMax'
+import NavbarMin from './NavbarMin'
+import NavbarMax from './NavbarMax'
 
 const Sidebar = (props) => (
   <Fragment>
     <MediaQuery maxWidth={1023}>
-      <SidebarMin {...props} />
+      <NavbarMin {...props} />
     </MediaQuery>
     <MediaQuery minWidth={1024}>
-      <SidebarMax {...props} />
+      <NavbarMax {...props} />
     </MediaQuery>
   </Fragment>
 )

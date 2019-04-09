@@ -9,9 +9,9 @@ import { signout } from '../../actions'
 import { ReactComponent as Cubes } from '../../assets/cubes-sidebar-min.svg'
 import { ReactComponent as Logo } from '../../assets/logo-sidebar.svg'
 
-import styles from './SidebarMin.module.scss'
+import styles from './NavbarMin.module.scss'
 
-class SidebarMin extends React.Component {
+class NavbarMin extends React.Component {
   render () {
     const { user, signout } = this.props
 
@@ -57,7 +57,7 @@ class SidebarMin extends React.Component {
   }
 }
 
-SidebarMin.propTypes = {
+NavbarMin.propTypes = {
   user: PropTypes.object,
   signout: PropTypes.func
 }
@@ -70,4 +70,4 @@ const mapDispatchToProps = dispatch => ({
   signout: () => dispatch(signout())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SidebarMin)
+export default connect(mapStateToProps, mapDispatchToProps)(NavbarMin)
