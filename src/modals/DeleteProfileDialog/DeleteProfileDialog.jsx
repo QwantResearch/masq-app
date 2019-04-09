@@ -14,7 +14,7 @@ const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => (
       <AlertCircle size={104} color='#ff3b4a' />
       <Space size={32} />
       <Typography type='paragraph-modal'>
-        Vous êtes sur le point de supprimer le compte « {username} »
+        Vous êtes sur le point de supprimer le compte « {username} ».
         Toutes les données personnelles de toutes les applications ajoutées dans Masq seront perdues.
       </Typography>
       <Space size={16} />
