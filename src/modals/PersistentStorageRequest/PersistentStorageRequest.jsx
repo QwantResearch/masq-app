@@ -14,7 +14,7 @@ const PermanentStorageRequest = ({ onClose }) => (
         <Typography type='paragraph-modal'>
           Afin de stocker vos données de manière sécurisée,
           merci d'autoriser Masq à utiliser le stockage persistant de votre navigateur.
-          Cette notification réapparaitra à la prochaine ouverture de Masq si nécessaire.
+          Cette notification réapparaîtra à la prochaine ouverture de Masq si nécessaire.
         </Typography>
       </div>
       <Space size={32} />
