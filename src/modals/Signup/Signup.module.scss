@@ -24,15 +24,15 @@
 
 .buttons {
   @media (min-width: 501px) {
-    :not(:first-child) {
-      margin-left: 12px;
+    >:first-child {
+      margin-right: 12px;
     }
   }
 
   @media (max-width: 500px) {
     display: flex;
     flex-direction: column-reverse;
-    :first-child {
+    >:first-child {
       margin-top: 12px;
     }
   }

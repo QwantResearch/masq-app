@@ -11,7 +11,7 @@
   .buttons {
     display: flex;
     @media (min-width: 501px) {
-      :first-child {
+      >:first-child {
         margin-right: 12px;
       }
     }
@@ -19,7 +19,7 @@
     @media (max-width: 500px) {
       display: flex;
       flex-direction: column;
-      :first-child {
+      >:first-child {
         margin-bottom: 12px;
       }
     }
