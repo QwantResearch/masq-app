@@ -10,6 +10,8 @@ import { Notification } from './components'
 import { addDevice, setCurrentAppRequest } from './actions'
 import { AuthApp, PersistentStorageRequest } from './modals'
 
+import styles from './App.module.scss'
+
 const history = createHashHistory()
 
 const authenticatedRoutes = [
@@ -138,7 +140,7 @@ class App extends Component {
           <Route exact path='/link/:hash' component={this.processLink} />
           <Route exact path='/' component={Login} />
 
-          <div style={{ display: 'flex' }}>
+          <div className={styles.layout}>
             {authenticatedRoutes.map((route, index) => (
               <Route
                 key={index}

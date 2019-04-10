@@ -23,6 +23,7 @@ Typography.propTypes = {
     'paragraph-landing-dark',
     'paragraph-modal',
     'username',
+    'username-alt',
     'label',
     'label-nav',
     'footer'

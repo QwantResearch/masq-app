@@ -1,0 +1,22 @@
+.Dropdown {
+  display: flex;
+  width: 150px;
+  right: 14px;
+  align-items: center;
+  top: 64px;
+  position: absolute;
+  border-radius: 3px;
+  background-color: white;
+  height: 35px;
+  z-index: 1;
+  padding-left: 12px;
+
+  font-size: 13px;
+  line-height: 1.23;
+  color: #353c52;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+
+  :first-child {
+    margin-right: 8px;
+  }
+}

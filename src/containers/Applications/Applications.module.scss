@@ -4,6 +4,11 @@
   flex: 1;
   margin: 48px 48px 48px;
 
+  @media (max-width: 500px) {
+    margin: 16px;
+    width: unset;
+  }
+
   .topSection {
     display: flex;
     height: 50px;
