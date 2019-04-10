@@ -149,10 +149,9 @@ class Settings extends React.Component {
 
     return (
       <div className={styles.Settings}>
-        <div>
-          <Typography type='title-page'>Mes paramètres</Typography>
-          <Space size={30} />
-
+        <Typography type='title-page'>Mes paramètres d'utilisateur</Typography>
+        <Space size={30} />
+        <div className={styles.page}>
           <div className={styles.content}>
             <div className={styles.avatar}>
               <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
@@ -190,19 +189,17 @@ class Settings extends React.Component {
               />
             </div>
           </div>
-        </div>
-
-        <div className={styles.rightSection}>
-          <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Enregistrer</Button>
-          <Space size={24} />
-          <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
-            <Typography align='center' type='label' color={styles.colorNeutral}>
-              <Trash className={styles.trashIcon} size={14} color={styles.colorNeutral} />
+          <div className={styles.rightSection}>
+            <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Sauvegarder</Button>
+            <Space size={24} />
+            <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
+              <Typography align='center' type='label' color={styles.colorNeutral}>
+                <Trash className={styles.trashIcon} size={14} color={styles.colorNeutral} />
               Supprimer le compte
-            </Typography>
+              </Typography>
+            </div>
           </div>
         </div>
-        {/* <Button secondary style={{ width: 300 }} onClick={this.openConfirmDialog}>Supprimer mon profil</Button> */}
 
         {confirmDialog && (
           <DeleteProfileDialog
