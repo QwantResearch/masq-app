@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Trash } from 'react-feather'
 
-import { fetchApps, removeApp } from '../../actions'
+import { fetchApps, removeApp, setNotification } from '../../actions'
 import { Card, Typography, Space } from '../../components'
 import { DeleteAppDialog } from '../../modals'
 
@@ -43,10 +43,13 @@ class Apps extends PureComponent {
   }
 
   async confirmDelete () {
-    const { removeApp } = this.props
+    const { removeApp, setNotification } = this.props
     const { appToRemove } = this.state
     await removeApp(appToRemove)
     this.closeConfirmDialog()
+    setNotification({
+      title: 'Application supprimée avec succès.'
+    })
   }
 
   render () {
@@ -103,14 +106,16 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchApps: () => dispatch(fetchApps()),
-  removeApp: (app) => dispatch(removeApp(app))
+  removeApp: (app) => dispatch(removeApp(app)),
+  setNotification: (notif) => dispatch(setNotification(notif))
 })
 
 Apps.propTypes = {
   apps: PropTypes.array,
   user: PropTypes.object,
   fetchApps: PropTypes.func,
-  removeApp: PropTypes.func
+  removeApp: PropTypes.func,
+  setNotification: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Apps)
