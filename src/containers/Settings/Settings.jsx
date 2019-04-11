@@ -129,8 +129,12 @@ class Settings extends React.Component {
     })
   }
 
-  confirmDelete () {
-    this.props.removeProfile()
+  async confirmDelete () {
+    const { setNotification } = this.props
+    await this.props.removeProfile()
+    setNotification({
+      title: 'Profil supprimé avec succès.'
+    })
   }
 
   closeConfirmDialog () {
