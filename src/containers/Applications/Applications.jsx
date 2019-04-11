@@ -54,7 +54,6 @@ class Apps extends PureComponent {
     const { confirmDialog, appToRemove } = this.state
 
     if (!user) return <Redirect to='/' />
-    if (!apps) return false
 
     return (
       <div className={styles.Apps}>
@@ -70,6 +69,8 @@ class Apps extends PureComponent {
         </div>
 
         <Space size={16} />
+
+        {apps.length === 0 && <Typography type='paragraph'>Vous n'avez pas d'applications pour le moment</Typography>}
 
         <div className={styles.cards}>
           {apps.map((app, index) => (
