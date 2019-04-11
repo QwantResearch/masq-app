@@ -146,7 +146,7 @@ class Settings extends React.Component {
     return (
       <div className={styles.Settings}>
         <div>
-          <Typography type='title-page'>Mes paramètres d'utilisateur</Typography>
+          <Typography type='title-page'>Mes paramètres</Typography>
           <Space size={30} />
 
           <div className={styles.content}>
@@ -189,7 +189,7 @@ class Settings extends React.Component {
         </div>
 
         <div className={styles.rightSection}>
-          <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Sauvegarder</Button>
+          <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Enregistrer</Button>
           <Space size={24} />
           <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
             <Typography align='center' type='label' color={styles.colorNeutral}>
