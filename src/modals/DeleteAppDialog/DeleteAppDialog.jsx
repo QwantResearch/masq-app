@@ -20,11 +20,7 @@ const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => (
         title={app.name}
         image={app.imageURL}
         description={app.description} />
-      <Space size={16} />
-      <Typography type='paragraph-modal'>
-        Voulez-vous vraiment continuer ?
-      </Typography>
-      <Space size={22} />
+      <Space size={32} />
       <div className={styles.buttons}>
         <Button width={185} color='neutral' onClick={onCancel}>Annuler</Button>
         <Button width={185} color='danger' onClick={onConfirm}>Supprimer l'application</Button>

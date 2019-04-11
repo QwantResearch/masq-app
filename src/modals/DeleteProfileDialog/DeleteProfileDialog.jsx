@@ -17,10 +17,6 @@ const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => (
         Vous êtes sur le point de supprimer le compte « {username} ».
         Toutes les données personnelles de toutes les applications ajoutées dans Masq seront perdues.
       </Typography>
-      <Space size={16} />
-      <Typography type='paragraph-modal'>
-        Voulez-vous vraiment continuer ?
-      </Typography>
       <Space size={32} />
       <div className={styles.buttons}>
         <Button width={185} color='neutral' onClick={onCancel}>Annuler</Button>
