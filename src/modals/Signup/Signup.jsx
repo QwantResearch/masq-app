@@ -155,7 +155,7 @@ class Signup extends React.Component {
           />
 
           <Space size={21} />
-          <Button secondary onClick={this.openDialog}>Importer une photo</Button>
+          <Button width={185} secondary onClick={this.openDialog}>Importer une photo</Button>
         </div>
 
         <Space size={32} />
