@@ -10,7 +10,7 @@ import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
 
-import { Signup, AddProfile, SyncDevice, QRCodeModal } from '../../modals'
+import { Signup, SyncDevice, QRCodeModal } from '../../modals'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
@@ -20,7 +20,6 @@ class Login extends Component {
     this.state = {
       selectedUser: null,
       isWrongPassword: false,
-      isModalOpened: false,
       isLoggedIn: false,
       signup: false,
       sync: false,
@@ -30,7 +29,6 @@ class Login extends Component {
 
     this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
     this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
-    this.handleClickNewUser = this.handleClickNewUser.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.closeQRCodeModal = this.closeQRCodeModal.bind(this)
     this.openQRCodeModal = this.openQRCodeModal.bind(this)
@@ -46,15 +44,8 @@ class Login extends Component {
     this.props.fetchUsers()
   }
 
-  handleClickNewUser () {
-    this.setState({
-      isModalOpened: !this.state.isModalOpened
-    })
-  }
-
   handleClose () {
     this.setState({
-      isModalOpened: false,
       signup: false,
       sync: false
     })
@@ -63,15 +54,15 @@ class Login extends Component {
   handleSignup (user) {
     const { signup } = this.props
     signup(user)
-    this.setState({ isModalOpened: false, signup: false })
+    this.setState({ signup: false })
   }
 
   handleClickNewProfile () {
-    this.setState({ isModalOpened: false, signup: true })
+    this.setState({ signup: true })
   }
 
   handleClickSyncProfile () {
-    this.setState({ isModalOpened: false, sync: true })
+    this.setState({ sync: true })
   }
 
   selectUser (user) {
@@ -124,7 +115,7 @@ class Login extends Component {
 
   renderUsersSelection () {
     const { users } = this.props
-    const { isModalOpened, signup, sync, qrcodeModal } = this.state
+    const { signup, sync, qrcodeModal } = this.state
 
     return (
       <div style={{ width: '100%' }}>
@@ -143,17 +134,10 @@ class Login extends Component {
               <Typography type='username'>{user.username}</Typography>
             </div>
           ))}
-          <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewUser} />
+          <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewProfile} />
         </div>
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
         {sync && <SyncDevice onClose={this.handleClose} />}
-        {isModalOpened && (
-          <AddProfile
-            onClose={this.handleClose}
-            onNewProfile={this.handleClickNewProfile}
-            onSyncProfile={this.handleClickSyncProfile}
-          />
-        )}
       </div>
     )
   }
