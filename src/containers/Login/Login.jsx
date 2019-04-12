@@ -118,11 +118,8 @@ class Login extends Component {
     const { signup, sync, qrcodeModal } = this.state
 
     return (
-      <div style={{ width: '100%' }}>
+      <div className={styles.usersSelection}>
         {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
-        <Space size={68} />
-        <Logo />
-        <Space size={82} />
         <Typography type='title'>Qui est-ce ?</Typography>
         <Space size={34} />
         { this.renderQRCodeModal() }
@@ -146,11 +143,7 @@ class Login extends Component {
     const { selectedUser } = this.state
 
     return (
-      <div style={{ width: '100%' }}>
-        <Space size={68} />
-        <Logo />
-        <Space size={82} />
-
+      <div className={styles.userPassword}>
         <div className={styles.users}>
           <div key={selectedUser.username} className={styles.user}>
             <Avatar {...selectedUser} />
@@ -174,7 +167,7 @@ class Login extends Component {
           />
           <Space size={19} />
           <Button width={302} onClick={this.connect}>Valider</Button>
-          <Space size={105} />
+          <Space size={32} />
           <div className={styles.goback} onClick={this.goBack}>
             <ChevronLeft />
             <Typography type='label'>Changer d'utilisateur</Typography>
@@ -191,24 +184,41 @@ class Login extends Component {
   }
 
   render () {
-    const { users } = this.props
+    const { users, currentAppRequest } = this.props
     const { selectedUser, signup } = this.state
 
-    if (users.length === 0) {
+    const children = () => {
+      if (users.length === 0) {
+        return null
+      } else if (selectedUser) {
+        return this.renderPassword()
+      } else {
+        return this.renderUsersSelection()
+      }
+    }
+
+    if (!currentAppRequest || users.length === 0) {
       return (
         <div>
           {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-          <Landing onClick={this.handleClickNewProfile} />
+          <Landing onClick={this.handleClickNewProfile}>
+            {children()}
+          </Landing>
         </div>
       )
     }
 
     return (
       <div className={styles.Login}>
-        {selectedUser
-          ? this.renderPassword()
-          : this.renderUsersSelection()
-        }
+        <div className={styles.content}>
+          <Space size={68} />
+          <Logo />
+          <Space size={82} />
+          {selectedUser
+            ? this.renderPassword()
+            : this.renderUsersSelection()
+          }
+        </div>
 
         <Cubes className={styles.Background} />
       </div>

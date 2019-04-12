@@ -10,46 +10,59 @@
   align-items: center;
   text-align: center;
 
-  .users {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 120px));
-    grid-gap: 64px;
-    text-align: center;
-    justify-content: center;
-
-    .PlusSquare {
-      margin-right: auto;
-      margin-left: auto;
-      cursor: pointer;
-    }
-
-    .user {
-      margin: auto;
-      cursor: pointer;
-      text-decoration: none;
-    }
-  }
-
-  .passwordSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .goback {
-    text-decoration: none;
-    display: grid;
-    color: white;
-    grid-column-gap: 8px;
-    align-items: center;
-    justify-content: center;
-    grid-template-columns: auto auto;
-    margin-bottom: 16px;
-    cursor: pointer;
+  .content {
+    width: 100%;
   }
 
   .Background {
     background-color: $color-blue-dark;
     flex-shrink: 0;
   }
+}
+
+.usersSelection {
+  width: 100%;
+  text-align: center;
+}
+
+.users {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 120px));
+  grid-gap: 64px;
+  text-align: center;
+  justify-content: center;
+
+  .PlusSquare {
+    margin-right: auto;
+    margin-left: auto;
+    cursor: pointer;
+  }
+
+  .user {
+    margin: auto;
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
+
+.userPassword {
+  text-align: center;
+  .passwordSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.goback {
+  text-decoration: none;
+  display: grid;
+  color: white;
+  grid-column-gap: 8px;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: auto auto;
+  margin-bottom: 16px;
+  cursor: pointer;
 }

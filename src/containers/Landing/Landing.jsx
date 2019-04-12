@@ -18,19 +18,24 @@ import styles from './Landing.module.scss'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
-const Landing = ({ onClick }) => (
+const Landing = ({ onClick, children }) => (
   <div className={styles.Landing}>
     <div className={styles.section1} style={{ backgroundImage: `url(${Head})` }}>
       <div className={styles.Logo}><Logo /></div>
       {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>}
       <Space size={74} />
-      <div className={styles.title}>
-        <p>Masq est un service de stockage de données GRATUIT et SECURISÉ sur vos appareils</p>
-      </div>
-      <Space size={42} />
-      <div className={styles.accountBtn}>
-        <Button width={340} color='success' onClick={onClick}>Créer un compte</Button>
-      </div>
+
+      {children || (
+        <div>
+          <div className={styles.title}>
+            <p>Masq est un service de stockage de données GRATUIT et SECURISÉ sur vos appareils</p>
+          </div>
+          <Space size={42} />
+          <div className={styles.accountBtn}>
+            <Button width={340} color='success' onClick={onClick}>Créer un compte</Button>
+          </div>
+        </div>
+      )}
     </div>
 
     <div className={styles.section2}>
@@ -120,7 +125,8 @@ const Landing = ({ onClick }) => (
 )
 
 Landing.propTypes = {
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  children: PropTypes.element
 }
 
 export default Landing
