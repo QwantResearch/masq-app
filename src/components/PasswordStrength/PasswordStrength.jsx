@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 import styles from './PasswordStrength.module.scss'
 import { Shield, Lock, Unlock, CheckCircle } from 'react-feather'
-const { checkPassword } = require('../../library/validators')
+const { getPasswordInfo, getForce } = require('../../library/validators')
 
 const NonChecked = () => (
   <div className={styles.Oval} />
@@ -20,7 +20,7 @@ Description.propTypes = {
   description: PropTypes.string
 }
 Description.defaultProps = {
-  description: 'Pour être sécurisée, la clé devrait contenir au moins :'
+  description: 'Pour être complètement sécurisée, la clé devrait contenir au moins :'
 }
 
 const Item = ({ fulfilled, text }) => {
@@ -36,10 +36,7 @@ const Item = ({ fulfilled, text }) => {
       printedRule = '1 chiffre'
       break
     case 'specialCharacter':
-      printedRule = '1 caractère spécial parmi (!?$#@()-*)'
-      break
-    case 'minLength':
-      printedRule = '6 caractères'
+      printedRule = '1 caractère spécial parmi : !?$#@()-*'
       break
     case 'secureLength':
       printedRule = '12 caractères'
@@ -67,7 +64,6 @@ Item.propTypes = {
     'uppercase',
     'number',
     'specialCharacter',
-    'minLength',
     'secureLength'
   ])
 }
@@ -76,7 +72,7 @@ const ForceBar = ({ force }) => {
   return (
     <div className={styles.Force}>
       <div className={styles.Rectangle}>
-        <div className={styles[`Rectangle${force}Force`]} />
+        <div className={cx(styles.RectangleForce, styles[`Force-${force}`])} />
       </div>
       <div className={styles.LabelForce}>
         {'Force'}
@@ -88,23 +84,26 @@ const ForceBar = ({ force }) => {
 
 ForceBar.propTypes = {
   force: PropTypes.oneOf([
-    'low',
-    'medium',
-    'high'
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
   ])
 }
 ForceBar.defaultProps = {
-  force: 'low'
+  force: 0
 }
 const PasswordRules = ({ force, passwordInfo }) => {
-  const lockIcon = passwordInfo.force === 'low'
+  const lockIcon = force > 1
     ? <Unlock
       size={30}
-      className={cx(styles.lockIcon, styles[force])}
+      className={cx(styles.lockIcon, styles[`force-${force}`])}
     />
     : <Lock
       size={30}
-      className={cx(styles.lockIcon, styles[force])}
+      className={cx(styles.lockIcon, styles[`force-${force}`])}
     />
   return (
     <div className={styles.PasswordRules}>
@@ -121,7 +120,7 @@ const PasswordRules = ({ force, passwordInfo }) => {
       <div className={styles.icon}>
         <Shield
           size={79}
-          className={styles[force]}
+          className={styles[`force-${force}`]}
         />
         {lockIcon}
       </div>
@@ -133,15 +132,18 @@ const PasswordRules = ({ force, passwordInfo }) => {
 PasswordRules.propTypes = {
   passwordInfo: PropTypes.object,
   force: PropTypes.oneOf([
-    'low',
-    'medium',
-    'high'
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
   ])
 }
 
 const PasswordStrength = ({ password }) => {
-  const passwordInfo = checkPassword(password)
-  const force = passwordInfo['force']
+  const passwordInfo = getPasswordInfo(password)
+  const force = getForce(password)
   return (
     <div className={styles.PasswordStrength}>
       <ForceBar force={force} />

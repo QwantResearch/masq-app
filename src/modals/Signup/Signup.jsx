@@ -185,11 +185,9 @@ class Signup extends React.Component {
   renderSecondStep () {
     return (
       <React.Fragment>
-        <Typography type='paragraph-modal'>
-          Définissez une Clé Secrète pour chiffrer vos données.
-        </Typography>
-        <Typography type='paragraph-modal' align='center'>
-          Choisissez-la avec attention car vous seul la connaitrez, il n’y a aucun moyen de la récupérer en cas d'oubli.
+        <Typography type='paragraph-modal' align='justify'>
+        Définissez une clé secrète pour chiffrer vos données, choisissez-la avec attention.
+        Il n’y a aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez.
         </Typography>
         <Space size={14} />
         <TextField
@@ -197,8 +195,8 @@ class Signup extends React.Component {
           autoFocus
           type='password'
           label={this.isValid('password')
-            ? 'Clé Secrète'
-            : 'Le mot de passe doit être composé d\'au moins 6 caractères, et respecter au moins 2 points parmi les 5 règles présentées ci-dessous:'}
+            ? 'clé secrète'
+            : 'Le mot de passe doit être composé d\'au moins 6 caractères.'}
           error={!this.isValid('password')}
           onChange={(e) => this.onChange('password', e)}
         />
@@ -209,7 +207,7 @@ class Signup extends React.Component {
           className={styles.TextField}
           type='password'
           label={this.isValid('passwordConfirmation')
-            ? 'Confirmation de la Clé Secrète'
+            ? 'Confirmation de la clé secrète'
             : 'Les mots de passe ne correspondent pas.'}
           error={!this.isValid('passwordConfirmation')}
           onKeyUp={this.handleKeyUp}

@@ -4,10 +4,12 @@ const isUsername = str => /^[\w!?$#@()\-*]+$/.test(str)
 
 const isPassword = str => /^([a-zA-Z\d!?$#@()\-*])+$/.test(str)
 
-const isForceEnough = str => {
-  const { force } = checkPassword(str)
-  return force !== 'low'
+const getForce = str => {
+  const info = getPasswordInfo(str)
+  return str.length < 6 ? 0 : computeScore(info)
 }
+
+const isForceEnough = (str) => getForce(str) > 1
 
 const containUppercase = str => /[A-Z]/.test(str)
 
@@ -18,7 +20,6 @@ const containNumber = str => /[0-9]/.test(str)
 const containSpecialCharacter = str => /[!?$#@()\-*]/.test(str)
 
 const getPasswordInfo = str => ({
-  minLength: str.length >= 6,
   lowercase: containLowercase(str),
   uppercase: containUppercase(str),
   number: containNumber(str),
@@ -28,17 +29,4 @@ const getPasswordInfo = str => ({
 
 const computeScore = info => Object.keys(info).reduce((acc, cur) => acc + (info[cur] ? 1 : 0), 0)
 
-const checkPassword = str => {
-  const info = getPasswordInfo(str)
-  const score = computeScore(info)
-
-  let force = null
-  if (score === Object.keys(info).length) {
-    force = 'high'
-  } else if (score >= 3 && (str.length >= 6)) {
-    force = 'medium'
-  } else force = 'low'
-  return { ...info, force }
-}
-
-export { isName, isUsername, isPassword, checkPassword, isForceEnough }
+export { isName, isUsername, isPassword, getPasswordInfo, getForce, isForceEnough }

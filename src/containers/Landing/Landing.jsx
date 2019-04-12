@@ -35,11 +35,10 @@ const Landing = () => (
     <div className={styles.section2}>
       <div className={styles.Box}>
         <div className={styles.text}>
-          <Typography type='title-landing'>Lorem ipsum dolor sit amet, adipiscing elit.</Typography>
+          <Typography type='title-landing'>Le respect de la vie privée</Typography>
           <Space size={32} />
           <Typography type='paragraph-landing'>
-            Masq vous permet de stocker les données personnelles de vos applications tout en vous garantissant le respect de votre vie privée.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas..
+          Masq vous permet de stocker les données personnelles de vos applications tout en garantissant le respect de votre vie privée.
           </Typography>
         </div>
         <Box />
@@ -48,10 +47,10 @@ const Landing = () => (
       <div className={styles.Hdd}>
         <HDD />
         <div className={styles.text}>
-          <Typography type='title-landing'>Lorem ipsum dolor sit amet, adipiscing elit.</Typography>
+          <Typography type='title-landing'>Le stockage des données sur vos appareils</Typography>
           <Space size={32} />
           <Typography type='paragraph-landing'>
-            Contrairement à la plupart des applications, nous stockons les données personnelles direcement sur les disques durs de vos appareils. Vous les gardez chez vous, vous en avez le total contrôle.
+          Contrairement à la plupart des applications, vos données personnelles sont stockées directement sur les disques durs de vos appareils. Vous les gardez chez vous, vous êtes propriétaire de vos données.
           </Typography>
         </div>
       </div>
@@ -60,10 +59,10 @@ const Landing = () => (
 
       <div className={styles.Devices}>
         <div className={styles.text}>
-          <Typography type='title-landing'>Lorem ipsum dolor sit amet, adipiscing elit.</Typography>
+          <Typography type='title-landing'>La synchronisation entre appareils en temps réel (bientôt)</Typography>
           <Space size={32} />
           <Typography type='paragraph-landing'>
-            Retrouvez tous vos lieux préférés issus de Qwant Maps, votre historique de recherche de Qwant Search, toutes vos playslists de Qwant Music ... disponibles sur tous vos appareils avec une synchronisation en temps réel !
+          Retrouvez vos lieux préférés issus de Qwant Maps, votre historique de recherche de Qwant Search, vos playslists de Qwant Music ... disponibles depuis tous vos appareils avec une synchronisation en temps réel!
           </Typography>
         </div>
         <Devices />
@@ -95,10 +94,10 @@ const Landing = () => (
 
       <div className={styles.Windows}>
         <div className={styles.text}>
-          <Typography type='title-landing'>Laisser la fenêtre Masq en arrière plan pour synchroniser vos données</Typography>
+          <Typography type='title-landing'>Laisser la fenêtre Masq en arrière-plan pour synchroniser vos données (bientôt)</Typography>
           <Space size={32} />
           <Typography type='paragraph-landing-dark'>
-          Afin de profiter un maximum de la synchronisation en temps réel et d'avoir toujours vos données à jour, il est nécessaire de laisser l'application Masq en arrière sur tous les appareils.
+          Afin de profiter un maximum de la synchronisation en temps réel et d'avoir toujours vos données à jour, il est nécessaire de laisser l'application Masq en arrière-plan sur tous vos appareils.
           </Typography>
         </div>
         <Windows />
