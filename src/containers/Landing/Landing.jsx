@@ -32,7 +32,7 @@ const Landing = ({ onClick, children }) => (
           </div>
           <Space size={42} />
           <div className={styles.accountBtn}>
-            <Button width={340} color='success' onClick={onClick}>Créer un compte</Button>
+            <Button width={340} color='success' onClick={onClick}>Créer un profil</Button>
           </div>
         </div>
       )}

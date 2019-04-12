@@ -9,18 +9,18 @@ import styles from './DeleteProfileDialog.module.scss'
 const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => (
   <Modal width={465} onClose={onClose}>
     <div className={styles.ConfirmDialog}>
-      <Typography type='title-modal'>Suppression de compte</Typography>
+      <Typography type='title-modal'>Suppression de profil</Typography>
       <Space size={32} />
       <AlertCircle size={104} color='#ff3b4a' />
       <Space size={32} />
       <Typography type='paragraph-modal'>
-        Vous êtes sur le point de supprimer le compte « {username} ».
+        Vous êtes sur le point de supprimer le profil « {username} ».
         Toutes les données personnelles de toutes les applications ajoutées dans Masq seront perdues.
       </Typography>
       <Space size={32} />
       <div className={styles.buttons}>
         <Button width={185} color='neutral' onClick={onCancel}>Annuler</Button>
-        <Button width={185} color='danger' onClick={onConfirm}>Supprimer ce compte</Button>
+        <Button width={185} color='danger' onClick={onConfirm}>Supprimer ce profil</Button>
       </div>
     </div>
   </Modal>
