@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import Head from '../../assets/head-landing.svg'
 import BGLanding from '../../assets/bg-landing.svg'
@@ -17,7 +18,7 @@ import styles from './Landing.module.scss'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
-const Landing = () => (
+const Landing = ({ onClick }) => (
   <div className={styles.Landing}>
     <div className={styles.section1} style={{ backgroundImage: `url(${Head})` }}>
       <div className={styles.Logo}><Logo /></div>
@@ -28,7 +29,7 @@ const Landing = () => (
       </div>
       <Space size={42} />
       <div className={styles.accountBtn}>
-        <Button width={340} color='success'>Créer un compte</Button>
+        <Button width={340} color='success' onClick={onClick}>Créer un compte</Button>
       </div>
     </div>
 
@@ -117,5 +118,9 @@ const Landing = () => (
     </div>
   </div>
 )
+
+Landing.propTypes = {
+  onClick: PropTypes.func
+}
 
 export default Landing

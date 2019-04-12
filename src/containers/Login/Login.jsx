@@ -9,8 +9,8 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-
 import { Signup, SyncDevice, QRCodeModal } from '../../modals'
+import { Landing } from '../../containers'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
@@ -191,7 +191,17 @@ class Login extends Component {
   }
 
   render () {
-    const { selectedUser } = this.state
+    const { users } = this.props
+    const { selectedUser, signup } = this.state
+
+    if (users.length === 0) {
+      return (
+        <div>
+          {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
+          <Landing onClick={this.handleClickNewProfile} />
+        </div>
+      )
+    }
 
     return (
       <div className={styles.Login}>
