@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" viewBox="0 0 120 120">
     <defs>
-        <rect id="a" width="120" height="120" rx="10"/>
-        <path id="b" d="M78.667 60c0 1.4-.934 2.333-2.334 2.333h-14v14c0 1.4-.933 2.334-2.333 2.334-1.4 0-2.333-.934-2.333-2.334v-14h-14c-1.4 0-2.334-.933-2.334-2.333 0-1.4.934-2.333 2.334-2.333h14v-14c0-1.4.933-2.334 2.333-2.334 1.4 0 2.333.934 2.333 2.334v14h14c1.4 0 2.334.933 2.334 2.333z"/>
+        <rect id="plus-square-a" width="120" height="120" rx="10"/>
+        <path id="plus-square-b" d="M78.667 60c0 1.4-.934 2.333-2.334 2.333h-14v14c0 1.4-.933 2.334-2.333 2.334-1.4 0-2.333-.934-2.333-2.334v-14h-14c-1.4 0-2.334-.933-2.334-2.333 0-1.4.934-2.333 2.334-2.333h14v-14c0-1.4.933-2.334 2.333-2.334 1.4 0 2.333.934 2.333 2.334v14h14c1.4 0 2.334.933 2.334 2.333z"/>
     </defs>
     <g fill="none" fill-rule="evenodd">
         <g opacity=".5">
-            <use fill="#1F2330" xlink:href="#a"/>
+            <use fill="#1F2330" xlink:href="#plus-square-a"/>
             <rect width="118" height="118" x="1" y="1" stroke="#FFF" stroke-width="2" rx="10"/>
         </g>
-        <use fill="#FFF" fill-rule="nonzero" opacity=".5" xlink:href="#b"/>
+        <use fill="#FFF" fill-rule="nonzero" opacity=".5" xlink:href="#plus-square-b"/>
     </g>
 </svg>
