@@ -11,7 +11,7 @@ const Navbar = (props) => {
       <MediaQuery maxWidth={500}>
         <NavBarMobile {...props} />
       </MediaQuery>
-      <MediaQuery minWidth={501} maxWidth={1023}>
+      <MediaQuery minWidth={501} maxWidth={1109}>
         <NavbarMin {...props} />
       </MediaQuery>
       <MediaQuery minWidth={1110}>
