@@ -18,7 +18,7 @@ const PermanentStorageRequest = ({ onClose }) => (
         </Typography>
       </div>
       <Space size={32} />
-      <Button onClick={onClose}>Ok</Button>
+      <Button width={80} onClick={onClose}>Ok</Button>
     </div>
   </Modal>
 )
