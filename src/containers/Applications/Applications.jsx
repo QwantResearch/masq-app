@@ -82,7 +82,7 @@ class Apps extends PureComponent {
                 minHeight={64}
                 title={app.name}
                 image={app.imageURL}
-                color='#a3005c'
+                color='#82c362'
                 description={app.description}
                 actions={
                   <Trash
