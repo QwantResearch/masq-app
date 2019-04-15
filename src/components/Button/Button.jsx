@@ -12,7 +12,7 @@ const Button = ({ onClick, color, children, width, secondary }) => (
       { [styles.secondary]: secondary }
     )}
     onClick={onClick}
-    style={{ width }}
+    style={{ width, padding: width ? 0 : '0px 50px' }}
   >
     <span>{children}</span>
   </button>
