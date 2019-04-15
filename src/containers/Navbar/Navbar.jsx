@@ -14,7 +14,7 @@ const Navbar = (props) => {
       <MediaQuery minWidth={501} maxWidth={1023}>
         <NavbarMin {...props} />
       </MediaQuery>
-      <MediaQuery minWidth={1024}>
+      <MediaQuery minWidth={1110}>
         <NavbarMax {...props} />
       </MediaQuery>
     </Fragment>
