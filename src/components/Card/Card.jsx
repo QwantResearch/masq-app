@@ -43,7 +43,7 @@ Card.propTypes = {
   actions: PropTypes.object,
   description: PropTypes.string,
   footer: PropTypes.object,
-  color: PropTypes.string.isRequired
+  color: PropTypes.string
 }
 
 export default Card
