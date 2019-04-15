@@ -77,8 +77,6 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected) {
       return <Button width={80} onClick={this.handleOk}>Ok</Button>
     }
-
-    return <Loader />
   }
 
   renderText () {
@@ -133,6 +131,20 @@ class AuthApp extends React.Component {
   }
 
   render () {
+    const { appRequest } = this.props
+    const { refused } = this.state
+
+    if (!refused && appRequest.isConnected === undefined) {
+      return (
+        <Modal width={511}>
+          <div className={styles.AuthApp}>
+            <Loader />
+            <Space size={32} />
+          </div>
+        </Modal>
+      )
+    }
+
     return (
       <Modal width={511}>
         <div className={styles.AuthApp}>
