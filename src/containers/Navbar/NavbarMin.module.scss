@@ -33,6 +33,7 @@
 
   .navElement {
     cursor: pointer;
+    z-index: 1;
     &:hover * {
       opacity: 1;
     }
