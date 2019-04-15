@@ -183,6 +183,8 @@ class Signup extends React.Component {
   }
 
   renderSecondStep () {
+    const { password, passwordConfirmation } = this.state
+
     return (
       <React.Fragment>
         <Typography type='paragraph-modal' align='justify'>
@@ -192,6 +194,7 @@ class Signup extends React.Component {
         <Space size={14} />
         <TextField
           className={styles.TextField}
+          defaultValue={password}
           autoFocus
           type='password'
           label={this.isValid('password')
@@ -201,11 +204,12 @@ class Signup extends React.Component {
           onChange={(e) => this.onChange('password', e)}
         />
         <Space size={14} />
-        <PasswordStrength password={this.state.password} />
+        <PasswordStrength password={password} />
         <Space size={14} />
         <TextField
           className={styles.TextField}
           type='password'
+          defaultValue={passwordConfirmation}
           label={this.isValid('passwordConfirmation')
             ? 'Confirmation de la clé secrète'
             : 'Les mots de passe ne correspondent pas.'}
