@@ -75,7 +75,7 @@ class AuthApp extends React.Component {
     }
 
     if (appRequest.isConnected) {
-      return <Button onClick={this.handleOk}>Ok</Button>
+      return <Button width={80} onClick={this.handleOk}>Ok</Button>
     }
 
     return <Loader />
