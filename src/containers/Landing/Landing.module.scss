@@ -2,8 +2,15 @@
 
 .Landing {
   width: 100%;
-  // overflow: hidden;
   background-color: $color-blue-dark;
+
+  @media (max-width: 500px) {
+    text-align: center;
+  }
+
+  svg {
+    max-width: 100%;
+  }
 
   .section1 {
     padding-top: 68px;
@@ -45,7 +52,7 @@
   }
 
   .text {
-    width: 380px;
+    max-width: 380px;
   }
 
   .section2 {
@@ -54,11 +61,16 @@
 
     .Box {
       display: flex;
+      padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       margin: auto;
       margin-bottom: 26px;
       max-width: 680px;
+
+      :first-child {
+        margin-right: 16px;
+      }
 
       @media (max-width: 500px) {
         margin-bottom: 80px;
@@ -71,10 +83,15 @@
 
     .Hdd {
       display: flex;
+      padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       margin: auto;
       max-width: 740px;
+
+      :first-child {
+        margin-right: 16px;
+      }
 
       @media (max-width: 500px) {
         flex-direction: column;
@@ -86,10 +103,15 @@
 
     .Devices {
       display: flex;
+      padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       margin: auto;
       max-width: 880px;
+
+      :first-child {
+        margin-right: 16px;
+      }
 
       @media (max-width: 500px) {
         flex-direction: column-reverse;
@@ -111,14 +133,20 @@
     .title {
       margin: auto;
       max-width: 500px;
+      padding: 16px;
     }
 
     .Shield {
       display: flex;
+      padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       margin: auto;
       max-width: 860px;
+
+      :first-child {
+        margin-right: 16px;
+      }
 
       @media (max-width: 500px) {
         flex-direction: column;
@@ -130,10 +158,15 @@
 
     .Windows {
       display: flex;
+      padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       margin: auto;
       max-width: 840px;
+
+      :first-child {
+        margin-right: 16px;
+      }
 
       @media (max-width: 500px) {
         flex-direction: column-reverse;
@@ -151,6 +184,10 @@
     margin-left: 34px;
     margin-right: 96px;
     justify-content: space-between;
+
+    :first-child {
+      width: unset;
+    }
 
     a {
       text-decoration: none;
