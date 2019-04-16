@@ -122,7 +122,7 @@ class Login extends Component {
         {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
         <Typography type='title'>Qui est-ce ?</Typography>
         <Space size={34} />
-        { this.renderQRCodeModal() }
+        {/* { this.renderQRCodeModal() } */}
         <div className={styles.users}>
           {users.map(user => (
             <div key={user.username} className={styles.user} onClick={() => this.selectUser(user)}>
