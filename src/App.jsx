@@ -5,9 +5,9 @@ import { createHashHistory } from 'history'
 import { Router, Route, Redirect } from 'react-router-dom'
 import DetectBrowser from 'detect-browser'
 
-import { Login, Applications, Devices, Settings, Navbar } from './containers'
+import { Login, Applications, Devices, Settings, Navbar, Loading } from './containers'
 import { Notification } from './components'
-import { addDevice, setCurrentAppRequest } from './actions'
+import { addDevice, setCurrentAppRequest, setLoading } from './actions'
 import { AuthApp, PersistentStorageRequest } from './modals'
 
 import styles from './App.module.scss'
@@ -92,6 +92,8 @@ class App extends Component {
     })
 
     this.checkPersistentStorage()
+
+    this.props.setLoading(false)
   }
 
   processLink () {
@@ -120,13 +122,21 @@ class App extends Component {
     this.setState({ persistentStorageRequest: false })
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.loading && !this.props.loading) {
+      history.goBack()
+    }
+  }
+
   render () {
     const { persistentStorageRequest } = this.state
-    const { currentUser, currentAppRequest, notification, setCurrentAppRequest } = this.props
+    const { currentUser, currentAppRequest, notification, setCurrentAppRequest, loading } = this.props
+    const { pathname } = history.location
 
     return (
       <Router history={history}>
         <div>
+          {loading && pathname !== '/loading' && <Redirect to='/loading' />}
           {notification && <Notification {...notification} />}
           {currentUser && currentAppRequest &&
             <AuthApp
@@ -139,6 +149,7 @@ class App extends Component {
 
           <Route exact path='/link/:hash' component={this.processLink} />
           <Route exact path='/' component={Login} />
+          <Route path='/loading' component={Loading} />
 
           <div className={styles.layout}>
             {authenticatedRoutes.map((route, index) => (
@@ -168,12 +179,14 @@ const mapStateToProps = state => ({
   currentUser: state.masq.currentUser,
   devices: state.masq.devices,
   users: state.masq.users,
-  notification: state.notification.currentNotification
+  notification: state.notification.currentNotification,
+  loading: state.loading.loading
 })
 
 const mapDispatchToProps = dispatch => ({
   addDevice: device => dispatch(addDevice(device)),
-  setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app))
+  setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app)),
+  setLoading: value => dispatch(setLoading(value))
 })
 
 App.propTypes = {
@@ -182,7 +195,9 @@ App.propTypes = {
   setCurrentAppRequest: PropTypes.func,
   addDevice: PropTypes.func,
   devices: PropTypes.arrayOf(PropTypes.object),
-  notification: PropTypes.object
+  notification: PropTypes.object,
+  loading: PropTypes.bool,
+  setLoading: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

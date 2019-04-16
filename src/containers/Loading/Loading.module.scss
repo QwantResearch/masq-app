@@ -1,0 +1,17 @@
+@import '../../styles/colors.scss';
+
+.Login {
+  background-color: $color-blue-dark;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .Background {
+    background-color: $color-blue-dark;
+    flex-shrink: 0;
+  }
+}

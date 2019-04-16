@@ -130,3 +130,8 @@ export const setNotification = (notification) => ({
   type: 'SET_NOTIFICATION',
   notification
 })
+
+export const setLoading = (loading) => ({
+  type: 'SET_LOADING',
+  loading
+})
