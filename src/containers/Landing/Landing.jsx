@@ -16,13 +16,13 @@ import { Button, Space, Typography } from '../../components'
 
 import styles from './Landing.module.scss'
 
-const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
+// const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
 const Landing = ({ onClick, children }) => (
   <div className={styles.Landing}>
     <div className={styles.section1} style={{ backgroundImage: `url(${Head})` }}>
       <div className={styles.Logo}><Logo /></div>
-      {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>}
+      {/* {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>} */}
       <Space size={74} />
 
       {children || (
