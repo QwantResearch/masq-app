@@ -9,7 +9,7 @@ import { isUsernameAlreadyTaken } from './utils'
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
-const { ERRORS, MasqError, checkObject } = common.errors
+const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
@@ -87,7 +87,7 @@ class Masq {
    * Open and replicate a profile database
    */
   async openProfile (profileId, passphrase) {
-    if (!profileId) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
+    if (!profileId) throw new MasqError(MasqError.MISSING_PROFILE_ID)
 
     // close existing profile, if any
     this.closeProfile()
@@ -102,7 +102,7 @@ class Masq {
       this.nonce = nonce
     } catch (error) {
       this.closeProfile()
-      throw new MasqError(ERRORS.INVALID_PASSPHRASE)
+      throw new MasqError(MasqError.INVALID_PASSPHRASE)
     }
 
     await dbReady(this.profileDB)
@@ -137,7 +137,7 @@ class Masq {
     checkObject(profile, requiredParametersProfile)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username)
-    if (isUsernameTaken) { throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN) }
+    if (isUsernameTaken) { throw new MasqError(MasqError.USERNAME_ALREADY_TAKEN) }
 
     const id = uuidv4()
     const protectedMK = await genEncryptedMasterKeyAndNonce(profile.password)
@@ -249,11 +249,11 @@ class Masq {
   async updateProfile (profile) {
     this._checkProfile()
     const id = profile.id
-    if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
+    if (!id) throw new MasqError(MasqError.MISSING_PROFILE_ID)
 
     const isUsernameTaken = await isUsernameAlreadyTaken(profile.username, id)
     if (isUsernameTaken) {
-      throw new MasqError(ERRORS.USERNAME_ALREADY_TAKEN)
+      throw new MasqError(MasqError.USERNAME_ALREADY_TAKEN)
     }
 
     const privateProfile = await this.getProfile(id)
@@ -283,7 +283,7 @@ class Masq {
       // we do not use this.encryptAndPut because this value is not encrypted
       await this.profileDB.putAsync('/profile/protectedMK', protectedMKNewPass)
     } catch (error) {
-      throw new MasqError(ERRORS.INVALID_PASSPHRASE)
+      throw new MasqError(MasqError.INVALID_PASSPHRASE)
     }
   }
 
@@ -384,7 +384,7 @@ class Masq {
 
       this.sw.on('disconnect', async () => {
         await this._closeUserAppConnection()
-        return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
+        return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
       })
 
       this.sw.once('peer', async (peer) => {
@@ -407,7 +407,7 @@ class Masq {
           }
         } catch (e) {
           await this._closeUserAppConnection()
-          return reject(new MasqError(ERRORS.DISCONNECTED_DURING_LOGIN))
+          return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
 
         peer.once('data', async (data) => {
@@ -422,7 +422,7 @@ class Masq {
             resolve({ isConnected: false, ...this.app })
           } else {
             await this._closeUserAppConnection()
-            reject(new MasqError(ERRORS.INVALID_DATA))
+            reject(new MasqError(MasqError.INVALID_DATA))
           }
         })
       })
@@ -470,7 +470,7 @@ class Masq {
           try {
             await this.appsDBs[dbName].authorizeAsync(userAppKey)
           } catch (err) {
-            throw new MasqError(ERRORS.AUTHORIZE_DB_KEY_FAILED)
+            throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
           }
           await sendWriteAccessGranted(peer)
           this.sw.close()
@@ -575,19 +575,19 @@ class Masq {
 
   _updateResource (name, res) {
     const id = res.id
-    if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
+    if (!id) throw new MasqError(MasqError.MISSING_RESOURCE_ID)
     return this.encryptAndPut(`/${name}/${id}`, res)
   }
 
   _deleteResource (name, res) {
     const id = res.id
-    if (!id) throw new MasqError(ERRORS.MISSING_RESOURCE_ID)
+    if (!id) throw new MasqError(MasqError.MISSING_RESOURCE_ID)
     return this.del(`/${name}/${id}`)
   }
 
   _setProfileToLocalStorage (profile) {
     const id = profile.id
-    if (!id) throw new MasqError(ERRORS.MISSING_PROFILE_ID)
+    if (!id) throw new MasqError(MasqError.MISSING_PROFILE_ID)
 
     window.localStorage.setItem(id, JSON.stringify({
       id: id,
@@ -628,7 +628,7 @@ class Masq {
   }
 
   _checkProfile () {
-    if (!this.profileDB) throw new MasqError(ERRORS.PROFILE_NOT_OPENED)
+    if (!this.profileDB) throw new MasqError(MasqError.PROFILE_NOT_OPENED)
   }
 
   _closeUserAppConnection () {
