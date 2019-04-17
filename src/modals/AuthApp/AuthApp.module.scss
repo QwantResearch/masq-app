@@ -26,8 +26,8 @@
     width: 100%;
     @media (min-width: 501px) {
       margin-top: 32px;
-      >:first-child {
-        margin-right: 12px;
+      >:nth-child(2) {
+        margin-left: 12px;
       }
     }
 
