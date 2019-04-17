@@ -149,46 +149,49 @@ class Settings extends React.Component {
 
     return (
       <div className={styles.Settings}>
-        <Typography type='title-page'>Mes paramètres</Typography>
-        <Space size={30} />
         <div className={styles.page}>
-          <div className={styles.content}>
-            <div className={styles.avatar}>
-              <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
-            </div>
+          <div>
+            <Typography type='title-page'>Mes paramètres</Typography>
+            <Space size={30} />
+            <div className={styles.content}>
+              <div className={styles.avatar}>
+                <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+              </div>
 
-            <div className={styles.inputs}>
-              <TextField
-                error={!this.isValid('username')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.username}
-                onChange={(e) => this.onChange('username', e)}
-                label={this.getUsernameLabel(
-                  'Pseudo (affiché)',
-                  'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-                  'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
-                )}
-              />
-              <TextField
-                error={!this.isValid('firstname')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.firstname}
-                onChange={(e) => this.onChange('firstname', e)}
-                label={this.isValid('firstname')
-                  ? 'Prénom (facultatif)'
-                  : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
-              />
-              <TextField
-                error={!this.isValid('lastname')}
-                onKeyUp={this.handleKeyUp}
-                defaultValue={this.state.lastname}
-                onChange={(e) => this.onChange('lastname', e)}
-                label={this.isValid('lastname')
-                  ? 'Nom (facultatif)'
-                  : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
-              />
+              <div className={styles.inputs}>
+                <TextField
+                  error={!this.isValid('username')}
+                  onKeyUp={this.handleKeyUp}
+                  defaultValue={this.state.username}
+                  onChange={(e) => this.onChange('username', e)}
+                  label={this.getUsernameLabel(
+                    'Pseudo (affiché)',
+                    'Pseudo déjà utilisé. Veuillez en choisir un autre.',
+                    'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+                  )}
+                />
+                <TextField
+                  error={!this.isValid('firstname')}
+                  onKeyUp={this.handleKeyUp}
+                  defaultValue={this.state.firstname}
+                  onChange={(e) => this.onChange('firstname', e)}
+                  label={this.isValid('firstname')
+                    ? 'Prénom (facultatif)'
+                    : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
+                />
+                <TextField
+                  error={!this.isValid('lastname')}
+                  onKeyUp={this.handleKeyUp}
+                  defaultValue={this.state.lastname}
+                  onChange={(e) => this.onChange('lastname', e)}
+                  label={this.isValid('lastname')
+                    ? 'Nom (facultatif)'
+                    : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
+                />
+              </div>
             </div>
           </div>
+
           <div className={styles.rightSection}>
             <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Enregistrer</Button>
             <Space size={24} />
