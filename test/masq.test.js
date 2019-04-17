@@ -8,7 +8,7 @@ const common = require('masq-common')
 
 const { hashKey, dbExists } = common.utils
 const { encrypt, decrypt, exportKey, genAESKey } = common.crypto
-const { ERRORS } = common.errors
+const { MasqError } = common.errors
 
 const PASSPHRASE = 'secret'
 const NEW_PASSPHRASE = 'secretnew'
@@ -47,7 +47,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.WRONG_PARAMETER)
+    expect(err.code).to.equal(MasqError.WRONG_PARAMETER)
   })
 
   it('add a new profile and retrieve it from localstorage', async () => {
@@ -82,7 +82,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.USERNAME_ALREADY_TAKEN)
+    expect(err.code).to.equal(MasqError.USERNAME_ALREADY_TAKEN)
   })
 
   it('should throw if there is no opened (logged) profile', async () => {
@@ -96,7 +96,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.PROFILE_NOT_OPENED)
+    expect(err.code).to.equal(MasqError.PROFILE_NOT_OPENED)
   })
 
   it('should throw when trying to open profile with bad passphrase', async () => {
@@ -109,7 +109,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.INVALID_PASSPHRASE)
+    expect(err.code).to.equal(MasqError.INVALID_PASSPHRASE)
   })
 
   it('should get the newly added private profile', async () => {
@@ -197,7 +197,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.USERNAME_ALREADY_TAKEN)
+    expect(err.code).to.equal(MasqError.USERNAME_ALREADY_TAKEN)
   })
 
   it('should throw if there is no id in profile', async () => {
@@ -211,7 +211,7 @@ describe('masq internal operations', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.MISSING_PROFILE_ID)
+    expect(err.code).to.equal(MasqError.MISSING_PROFILE_ID)
   })
 
   it('add an app and retrieve it', async () => {
@@ -252,7 +252,7 @@ describe('masq internal operations', function () {
       err = e
     }
 
-    expect(err.type).to.equal(ERRORS.MISSING_RESOURCE_ID)
+    expect(err.code).to.equal(MasqError.MISSING_RESOURCE_ID)
   })
 
   it('should delete the app', async () => {
@@ -304,7 +304,7 @@ describe('masq internal operations', function () {
       err = e
     }
 
-    expect(err.type).to.equal(ERRORS.MISSING_RESOURCE_ID)
+    expect(err.code).to.equal(MasqError.MISSING_RESOURCE_ID)
   })
 
   it('should remove the profile and all its associated data', async () => {
@@ -386,7 +386,7 @@ describe('masq protocol', function () {
     } catch (e) {
       err = e
     }
-    expect(err.type).to.equal(ERRORS.DISCONNECTED_DURING_LOGIN)
+    expect(err.code).to.equal(MasqError.DISCONNECTED_DURING_LOGIN)
   })
 
   it('should send masqAccessRefused', (done) => {
