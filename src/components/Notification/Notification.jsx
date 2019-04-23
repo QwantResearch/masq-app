@@ -10,7 +10,10 @@ import styles from './Notification.module.scss'
 const TIMEOUT = 5000
 
 const Notification = ({ setNotification, ...props }) => {
-  setTimeout(() => setNotification(null), TIMEOUT)
+  if (!props.error) {
+    // Close notification after timeout only if it is not an error
+    setTimeout(() => setNotification(null), TIMEOUT)
+  }
 
   return (
     <div className={styles.Notification}>
@@ -24,7 +27,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 Notification.propTypes = {
-  setNotification: PropTypes.func
+  setNotification: PropTypes.func,
+  error: PropTypes.bool
 }
 
 export default connect(null, mapDispatchToProps)(Notification)

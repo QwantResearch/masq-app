@@ -3,8 +3,9 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import * as common from 'masq-common'
-
 import { isUsernameAlreadyTaken } from './utils'
+
+const { CustomEvent, dispatchEvent } = window
 
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
@@ -64,6 +65,13 @@ const requiredParametersProfile = [
  */
 const openOrCreateDB = (name) => {
   return createPromisifiedHyperDB(name)
+}
+
+const dispatchMasqError = (errorCode) => {
+  const event = new CustomEvent('MasqError', {
+    detail: errorCode
+  })
+  dispatchEvent(event)
 }
 
 class Masq {
@@ -380,6 +388,11 @@ class Masq {
       }
 
       this.hub = signalhub(channel, HUB_URLS)
+      this.hub.on('error', async () => {
+        await this._closeUserAppConnection()
+        return reject(new MasqError(MasqError.SIGNALLING_SERVER_ERROR))
+      })
+
       this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
@@ -614,6 +627,10 @@ class Masq {
   _startReplicate (db) {
     const discoveryKey = db.discoveryKey.toString('hex')
     this.hubs[discoveryKey] = signalhub(discoveryKey, HUB_URLS)
+    this.hubs[discoveryKey].on('error', () => {
+      dispatchMasqError(MasqError.REPLICATION_SIGNALLING_ERROR)
+    })
+
     this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
     this.swarms[discoveryKey].on('peer', peer => {
       const stream = db.replicate({ live: true })

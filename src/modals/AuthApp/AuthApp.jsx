@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { CheckCircle, Slash } from 'react-feather'
 
 import { Modal, Button, Card, Typography, Space } from '../../components'
-import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps, setLoading } from '../../actions'
+import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps, setLoading, setNotification } from '../../actions'
 
 import styles from './AuthApp.module.scss'
 
@@ -14,6 +14,7 @@ class AuthApp extends React.Component {
     this.state = {
       refused: false
     }
+    this.login = this.login.bind(this)
     this.handleOk = this.handleOk.bind(this)
     this.handleAccept = this.handleAccept.bind(this)
     this.handleRefuse = this.handleRefuse.bind(this)
@@ -21,8 +22,23 @@ class AuthApp extends React.Component {
   }
 
   async componentDidMount () {
-    const { channel, key, appId } = this.props.appRequest
-    await this.props.handleUserAppLogin(channel, key, appId)
+    await this.login()
+  }
+
+  async login () {
+    const { appRequest, setLoading, setCurrentAppRequest, setNotification, handleUserAppLogin } = this.props
+    const { channel, key, appId } = appRequest
+
+    try {
+      await handleUserAppLogin(channel, key, appId)
+    } catch (err) {
+      setLoading(false)
+      setCurrentAppRequest(null)
+      setNotification({
+        error: true,
+        title: 'Echec de la connexion avec l\' application. Merci de réessayer.'
+      })
+    }
   }
 
   componentWillUnmount () {
@@ -45,8 +61,7 @@ class AuthApp extends React.Component {
     }
 
     // Another appRequest has been received
-    const { channel, key, appId } = this.props.appRequest
-    await this.props.handleUserAppLogin(channel, key, appId)
+    this.login()
   }
 
   async handleRefuse () {
@@ -178,7 +193,8 @@ AuthApp.propTypes = {
   fetchApps: PropTypes.func.isRequired,
   appRequest: PropTypes.object.isRequired,
   onClose: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  setNotification: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -191,7 +207,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleUserAppRegister: (isAccepted) => dispatch(handleUserAppRegister(isAccepted)),
   setCurrentAppRequest: (app) => dispatch(setCurrentAppRequest(app)),
   fetchApps: () => dispatch(fetchApps()),
-  setLoading: value => dispatch(setLoading(value))
+  setLoading: value => dispatch(setLoading(value)),
+  setNotification: notif => dispatch(setNotification(notif))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthApp)

@@ -4,15 +4,19 @@ import { connect } from 'react-redux'
 import { createHashHistory } from 'history'
 import { Router, Route, Redirect } from 'react-router-dom'
 import DetectBrowser from 'detect-browser'
+import * as common from 'masq-common'
 
 import { Login, Applications, Devices, Settings, Navbar, Loading } from './containers'
 import { Notification } from './components'
-import { addDevice, setCurrentAppRequest, setLoading } from './actions'
+import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
 import { AuthApp, PersistentStorageRequest } from './modals'
 
 import styles from './App.module.scss'
 
 const history = createHashHistory()
+const { MasqError } = common.errors
+
+// listen for errors event and display them
 
 const authenticatedRoutes = [
   {
@@ -73,6 +77,15 @@ class App extends Component {
 
   async componentDidMount () {
     console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
+
+    window.addEventListener('MasqError', (e) => {
+      if (e.detail === MasqError.REPLICATION_SIGNALLING_ERROR) {
+        this.props.setNotification({
+          error: true,
+          title: 'Echec de connexion, merci de réessayer.'
+        })
+      }
+    })
 
     if (!this.props.devices.length) {
       const { name, os } = DetectBrowser.detect()
@@ -186,7 +199,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addDevice: device => dispatch(addDevice(device)),
   setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app)),
-  setLoading: value => dispatch(setLoading(value))
+  setLoading: value => dispatch(setLoading(value)),
+  setNotification: notif => dispatch(setNotification(notif))
 })
 
 App.propTypes = {
@@ -197,7 +211,8 @@ App.propTypes = {
   devices: PropTypes.arrayOf(PropTypes.object),
   notification: PropTypes.object,
   loading: PropTypes.bool,
-  setLoading: PropTypes.func
+  setLoading: PropTypes.func,
+  setNotification: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

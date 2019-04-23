@@ -36,7 +36,7 @@
     "react-scripts": "^2.1.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "signalhubws": "^1.0.7",
+    "signalhubws": "git+https://github.com/QwantResearch/signalhubws#masq",
     "typeface-asap": "^0.0.69",
     "typeface-asap-condensed": "^0.0.72",
     "uuid": "^3.3.2",
