@@ -30,3 +30,12 @@ storiesOf('TextField', module)
       onChange={action('onChange')}
     />
   ))
+  .add('with a button', () => (
+    <TextField
+      label='Password'
+      type='password'
+      onChange={action('onChange')}
+      button='Edit'
+      onClick={action('onClick')}
+    />
+  ))

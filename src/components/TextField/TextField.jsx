@@ -4,8 +4,9 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 
 import styles from './TextField.module.scss'
+import Typography from '../Typography'
 
-const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large }) => (
+const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick }) => (
   <div
     className={cx(
       className,
@@ -23,6 +24,9 @@ const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus
       defaultValue={defaultValue}
     />
     <label htmlFor='field'>{label}</label>
+    {button && <span onClick={onClick}>
+      <Typography className={styles.button} type='textFieldButton'>{button}</Typography>
+    </span>}
   </div>
 )
 
@@ -56,7 +60,11 @@ TextField.propTypes = {
 
   placeholder: PropTypes.string,
 
-  defaultValue: PropTypes.string
+  defaultValue: PropTypes.string,
+
+  button: PropTypes.string,
+
+  onClick: PropTypes.func
 }
 
 export default TextField

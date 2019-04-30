@@ -4,11 +4,12 @@ import cx from 'classnames'
 
 import styles from './Typography.module.scss'
 
-const Typography = ({ type, children, color, align }) => (
-  <p className={cx(styles.typography, styles[type])} style={{ color, textAlign: align }}>{children}</p>
+const Typography = ({ className, type, children, color, align }) => (
+  <p className={cx(styles.typography, styles[type], className)} style={{ color, textAlign: align }}>{children}</p>
 )
 
 Typography.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.any.isRequired,
   color: PropTypes.string,
   type: PropTypes.oneOf([
@@ -26,7 +27,8 @@ Typography.propTypes = {
     'username-alt',
     'label',
     'label-nav',
-    'footer'
+    'footer',
+    'textFieldButton'
   ]).isRequired,
   align: PropTypes.string
 }

@@ -1,6 +1,7 @@
 @import '../../styles/colors.scss';
 
 .TextField {
+  position: relative;
   width: 302px;
   display: flex;
   flex-direction: column-reverse;
@@ -23,6 +24,13 @@
     outline: none;
     padding-left: 16px;
     padding-right: 16px;
+  }
+
+  .button {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    cursor: pointer;
   }
 }
 

@@ -188,6 +188,12 @@ class Settings extends React.Component {
                     ? 'Nom (facultatif)'
                     : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
                 />
+                <TextField
+                  type='password'
+                  defaultValue='password'
+                  label='clé secrète'
+                  button='Modifier'
+                />
               </div>
             </div>
           </div>
