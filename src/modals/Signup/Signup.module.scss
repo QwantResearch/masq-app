@@ -24,8 +24,8 @@
 
 .buttons {
   @media (min-width: 501px) {
-    >:first-child {
-      margin-right: 12px;
+    >:nth-child(2) {
+      margin-left: 12px;
     }
   }
 
