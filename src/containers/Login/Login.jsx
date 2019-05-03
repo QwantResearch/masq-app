@@ -156,6 +156,7 @@ class Login extends Component {
 
         <div className={styles.passwordSection}>
           <TextField
+            password
             large
             height={46}
             autoFocus

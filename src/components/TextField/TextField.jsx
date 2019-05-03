@@ -81,7 +81,9 @@ TextField.propTypes = {
 
   button: PropTypes.string,
 
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+
+  password: PropTypes.bool
 }
 
 export default TextField
