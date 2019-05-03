@@ -199,7 +199,7 @@ class Signup extends React.Component {
           type='password'
           label={this.isValid('password')
             ? 'clé secrète'
-            : 'Le mot de passe doit être composé d\'au moins 6 caractères.'}
+            : 'Le mot de passe doit être composé d\'au moins 6 caractères et respecter au minimum deux règles.'}
           error={!this.isValid('password')}
           onChange={(e) => this.onChange('password', e)}
         />
