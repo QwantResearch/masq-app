@@ -2,7 +2,7 @@ const isName = str => /^$|^[A-zÀ-ú\- ]+$/.test(str)
 
 const isUsername = str => /^[\w!?$#@()\-*]+$/.test(str)
 
-const isPassword = str => /^([a-zA-Z\d!?$#@()\-*])+$/.test(str)
+const isPassword = str => /^([a-zA-Z\d!?$#%@()\\\-*/@^+*&:<>:{};~'.|[\]])+$/.test(str)
 
 const getForce = str => {
   const info = getPasswordInfo(str)
@@ -17,7 +17,7 @@ const containLowercase = str => /[a-z]/.test(str)
 
 const containNumber = str => /[0-9]/.test(str)
 
-const containSpecialCharacter = str => /[!?$#@()\-*]/.test(str)
+const containSpecialCharacter = str => /[!?$#%@()\\\-*/@^+*&:<>:{};~'.|[\]]/.test(str)
 
 const getPasswordInfo = str => ({
   lowercase: containLowercase(str),
