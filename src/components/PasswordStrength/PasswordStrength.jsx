@@ -36,7 +36,7 @@ const Item = ({ fulfilled, text }) => {
       printedRule = '1 chiffre'
       break
     case 'specialCharacter':
-      printedRule = '1 caractère spécial parmi : !?$#@()-*'
+      printedRule = '1 caractère spécial (!?$#@...)'
       break
     case 'secureLength':
       printedRule = '12 caractères'
