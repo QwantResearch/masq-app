@@ -1,8 +1,9 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Eye } from 'react-feather'
 
-import { TextField } from '../src/components'
+import { TextField, Typography } from '../src/components'
 
 TextField.displayName = 'TextField'
 
@@ -25,15 +26,16 @@ storiesOf('TextField', module)
   ))
   .add('password field', () => (
     <TextField
+      password
       label='Password'
       type='password'
+      button={() => <Eye />}
       onChange={action('onChange')}
     />
   ))
   .add('with a button', () => (
     <TextField
       label='Password'
-      type='password'
       onChange={action('onChange')}
       button='Edit'
       onClick={action('onClick')}

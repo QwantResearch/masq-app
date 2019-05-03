@@ -193,6 +193,7 @@ class Signup extends React.Component {
         </Typography>
         <Space size={14} />
         <TextField
+          password
           className={styles.TextField}
           defaultValue={password}
           autoFocus
@@ -207,6 +208,7 @@ class Signup extends React.Component {
         <PasswordStrength password={password} />
         <Space size={14} />
         <TextField
+          password
           className={styles.TextField}
           type='password'
           defaultValue={passwordConfirmation}

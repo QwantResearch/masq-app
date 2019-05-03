@@ -29,8 +29,12 @@
   .button {
     position: absolute;
     right: 14px;
-    top: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 32px;
     cursor: pointer;
+    color: $color-blue-dark;
   }
 }
 

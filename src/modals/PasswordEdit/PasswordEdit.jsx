@@ -39,8 +39,6 @@ class PasswordEdit extends React.Component {
       return true
     }
 
-    console.log('isValid', this.state)
-
     switch (fieldName) {
       case 'password': return isPassword(field) && isForceEnough(field) && this.state.password !== this.state.currentPassword
       case 'passwordConfirmation': return field === this.state.password
@@ -55,7 +53,6 @@ class PasswordEdit extends React.Component {
   }
 
   async updatePassphrase () {
-    console.log('updatePassphrase')
     const { currentPassword, password } = this.state
 
     this.validationEnabled = true
@@ -88,7 +85,6 @@ class PasswordEdit extends React.Component {
 
   render () {
     const { currentPassword, password, passwordConfirmation, currentPasswordError } = this.state
-    console.log('render', currentPasswordError)
 
     return (
       <Modal onClose={this.props.onClose} width={511}>
@@ -96,6 +92,7 @@ class PasswordEdit extends React.Component {
           <Typography type='title-modal'>Modifier votre clé secrète</Typography>
           <Space size={28} />
           <TextField
+            password
             className={styles.TextField}
             defaultValue={currentPassword}
             autoFocus
@@ -108,6 +105,7 @@ class PasswordEdit extends React.Component {
           />
           <Space size={32} />
           <TextField
+            password
             className={styles.TextField}
             type='password'
             defaultValue={password}
@@ -122,6 +120,7 @@ class PasswordEdit extends React.Component {
           <PasswordStrength password={password} />
           <Space size={14} />
           <TextField
+            password
             className={styles.TextField}
             type='password'
             defaultValue={passwordConfirmation}

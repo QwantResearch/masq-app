@@ -1,34 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Eye, EyeOff } from 'react-feather'
 
 import cx from 'classnames'
 
+import { Typography } from '..'
 import styles from './TextField.module.scss'
-import Typography from '../Typography'
 
-const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick }) => (
-  <div
-    className={cx(
-      className,
-      styles.TextField,
-      error ? [styles.error] : [styles.default],
-      { [styles.large]: large }
-    )}
-  >
-    <input
-      onChange={onChange}
-      type={type}
-      onKeyUp={onKeyUp}
-      autoFocus={autoFocus}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-    />
-    <label htmlFor='field'>{label}</label>
-    {button && <span onClick={onClick}>
-      <Typography className={styles.button} type='textFieldButton'>{button}</Typography>
-    </span>}
-  </div>
-)
+const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick, password }) => {
+  const [visible, setVisible] = useState(false)
+
+  const handleClick = () => {
+    if (password) {
+      setVisible(!visible)
+    }
+    if (onClick) {
+      onClick()
+    }
+  }
+
+  return (
+    <div
+      className={cx(
+        className,
+        styles.TextField,
+        error ? [styles.error] : [styles.default],
+        { [styles.large]: large }
+      )}
+    >
+      <input
+        onChange={onChange}
+        type={visible ? 'text' : type}
+        onKeyUp={onKeyUp}
+        autoFocus={autoFocus}
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+      />
+      <label htmlFor='field'>{label}</label>
+
+      {(password || button) && <div onClick={handleClick} className={styles.button}>
+        {password && visible && <EyeOff />}
+        {password && !visible && <Eye />}
+        {button && <Typography type='textFieldButton'>{button}</Typography>}
+      </div>}
+    </div>
+  )
+}
 
 TextField.defaultProps = {
   error: false,
