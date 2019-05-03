@@ -135,3 +135,9 @@ export const setLoading = (loading) => ({
   type: 'SET_LOADING',
   loading
 })
+
+export const updatePassphrase = (oldPass, newPass) => {
+  return function (dispatch) {
+    return masq.updatePassphrase(oldPass, newPass)
+  }
+}

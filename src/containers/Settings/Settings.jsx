@@ -6,7 +6,7 @@ import { Trash } from 'react-feather'
 
 import { updateUser, removeProfile, setNotification } from '../../actions'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-import { DeleteProfileDialog } from '../../modals'
+import { DeleteProfileDialog, PasswordEdit } from '../../modals'
 import { isName, isUsername } from '../../library/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
 
@@ -21,7 +21,8 @@ class Settings extends React.Component {
       lastname: '',
       firstname: '',
       username: '',
-      confirmDialog: false
+      confirmDialog: false,
+      passwordEditModal: false
     }
 
     this.hasChanged = false
@@ -31,6 +32,8 @@ class Settings extends React.Component {
     this.confirmDelete = this.confirmDelete.bind(this)
     this.openConfirmDialog = this.openConfirmDialog.bind(this)
     this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
+    this.openPasswordEditModal = this.openPasswordEditModal.bind(this)
+    this.closePasswordEditModal = this.closePasswordEditModal.bind(this)
   }
 
   componentDidMount () {
@@ -143,8 +146,20 @@ class Settings extends React.Component {
     })
   }
 
+  openPasswordEditModal () {
+    this.setState({
+      passwordEditModal: true
+    })
+  }
+
+  closePasswordEditModal () {
+    this.setState({
+      passwordEditModal: false
+    })
+  }
+
   render () {
-    const { confirmDialog } = this.state
+    const { confirmDialog, passwordEditModal } = this.state
     if (!this.props.user) return <Redirect to='/' />
 
     return (
@@ -193,6 +208,7 @@ class Settings extends React.Component {
                   defaultValue='password'
                   label='clé secrète'
                   button='Modifier'
+                  onClick={this.openPasswordEditModal}
                 />
               </div>
             </div>
@@ -209,6 +225,10 @@ class Settings extends React.Component {
             </div>
           </div>
         </div>
+
+        {passwordEditModal && (
+          <PasswordEdit onClose={this.closePasswordEditModal} />
+        )}
 
         {confirmDialog && (
           <DeleteProfileDialog

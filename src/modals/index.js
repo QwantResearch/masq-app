@@ -6,3 +6,4 @@ export { default as PersistentStorageRequest } from './PersistentStorageRequest/
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog'
 export { default as DeleteProfileDialog } from './DeleteProfileDialog/DeleteProfileDialog'
 export { default as DeleteAppDialog } from './DeleteAppDialog/DeleteAppDialog'
+export { default as PasswordEdit } from './PasswordEdit/PasswordEdit'
