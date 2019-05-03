@@ -68,18 +68,23 @@ describe('password validator (check only authoried caracters)', () => {
     expect(isPassword(str)).to.be.true
   })
 
+  it('should be valid', () => {
+    const str = '!?$#%@()\\-*/@^+*&:<>:{};~\'.|'
+    expect(isPassword(str)).to.be.true
+  })
+
   it('empty is forbbiden', () => {
     expect(isPassword('')).to.be.false
   })
 
   it('spaces are forbidden', () => {
     const str = 'some Password9$'
-    expect(isUsername(str)).to.be.false
+    expect(isPassword(str)).to.be.false
   })
 
   it('not authorized special caracters are forbidden', () => {
-    const str = 'shor%'
-    expect(isUsername(str)).to.be.false
+    const str = 'shor²'
+    expect(isPassword(str)).to.be.false
   })
 })
 
