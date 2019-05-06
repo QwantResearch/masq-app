@@ -40,8 +40,8 @@ const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus
       <label htmlFor='field'>{label}</label>
 
       {(password || button) && <div onClick={handleClick} className={styles.button}>
-        {password && visible && <EyeOff />}
-        {password && !visible && <Eye />}
+        {password && visible && defaultValue.length > 0 && <EyeOff />}
+        {password && !visible && defaultValue.length > 0 && <Eye />}
         {button && <Typography type='textFieldButton'>{button}</Typography>}
       </div>}
     </div>

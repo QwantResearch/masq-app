@@ -140,7 +140,7 @@ class Login extends Component {
   }
 
   renderPassword () {
-    const { selectedUser } = this.state
+    const { selectedUser, password } = this.state
 
     return (
       <div className={styles.userPassword}>
@@ -165,6 +165,7 @@ class Login extends Component {
             error={this.state.isWrongPassword}
             label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
             onKeyUp={this.onPasswordKeyUp}
+            defaultValue={password}
           />
           <Space size={19} />
           <Button width={302} onClick={this.connect}>Valider</Button>
