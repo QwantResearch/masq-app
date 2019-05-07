@@ -85,9 +85,10 @@ class PasswordEdit extends React.Component {
 
   render () {
     const { currentPassword, password, passwordConfirmation, currentPasswordError } = this.state
+    const { onClose } = this.props
 
     return (
-      <Modal onClose={this.props.onClose} width={511}>
+      <Modal onClose={onClose} width={511}>
         <div className={styles.PasswordEdit}>
           <Typography type='title-modal'>Modifier votre clé secrète</Typography>
           <Space size={28} />
@@ -135,7 +136,7 @@ class PasswordEdit extends React.Component {
           <Space size={30} />
 
           <div className={styles.buttons}>
-            <Button width={142} color='neutral' onClick={this.previous}>Annuler</Button>
+            <Button width={142} color='neutral' onClick={onClose}>Annuler</Button>
             <Button width={142} onClick={this.updatePassphrase}>Enregistrer</Button>
           </div>
         </div>
