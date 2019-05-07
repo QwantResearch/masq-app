@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { signin, signup, fetchUsers } from '../../actions'
 import PropTypes from 'prop-types'
 import { ChevronLeft } from 'react-feather'
 
-import styles from './Login.module.scss'
+import { signin, signup, fetchUsers, setCurrentAppRequest } from '../../actions'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
 import { Signup, SyncDevice, QRCodeModal } from '../../modals'
 import { Landing } from '../../containers'
+
+import styles from './Login.module.scss'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
@@ -40,8 +41,24 @@ class Login extends Component {
     this.goBack = this.goBack.bind(this)
   }
 
-  componentDidMount () {
+  async componentDidMount () {
+    const { setCurrentAppRequest } = this.props
     this.props.fetchUsers()
+
+    if (window.location.hash.substr(0, 7) !== '#/link/') {
+      return
+    }
+
+    const hash = window.location.hash.substr(7) // ignore #/link/ characters
+    if (!hash.length) return
+    const decoded = Buffer.from(hash, 'base64')
+
+    try {
+      const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
+      await setCurrentAppRequest({ appId, channel, key, link: window.location.href })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   handleClose () {
@@ -179,8 +196,8 @@ class Login extends Component {
     )
   }
 
-  componentDidUpdate () {
-    if (this.props.user) {
+  componentDidUpdate (prevProps) {
+    if (!prevProps.user && this.props.user) {
       this.props.history.push('/apps')
     }
   }
@@ -235,7 +252,8 @@ Login.propTypes = {
   signup: PropTypes.func,
   signin: PropTypes.func,
   history: PropTypes.object,
-  currentAppRequest: PropTypes.object
+  currentAppRequest: PropTypes.object,
+  setCurrentAppRequest: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -247,7 +265,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   signin: (user, passphrase) => dispatch(signin(user, passphrase)),
   signup: user => dispatch(signup(user)),
-  fetchUsers: user => dispatch(fetchUsers(user))
+  fetchUsers: user => dispatch(fetchUsers(user)),
+  setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -56,7 +56,6 @@ class App extends Component {
       prevPath: ''
     }
 
-    this.processLink = this.processLink.bind(this)
     this.handlePersistentStorageRequestClose = this.handlePersistentStorageRequestClose.bind(this)
   }
 
@@ -97,9 +96,11 @@ class App extends Component {
     }
 
     history.listen(location => {
-      if (location.pathname !== this.state.prevPath) {
+      const paths = ['/apps', '/devices', '/settings']
+      if (location.pathname !== this.state.prevPath &&
+        paths.includes(location.pathname)) {
         this.setState({
-          prevPath: history.location.pathname
+          prevPath: location.pathname
         })
       }
     })
@@ -109,35 +110,14 @@ class App extends Component {
     this.props.setLoading(false)
   }
 
-  processLink () {
-    const { setCurrentAppRequest, currentUser } = this.props
-    const hash = window.location.hash.substr(7) // ignore #/link/ characters
-
-    if (!hash.length) return
-
-    const decoded = Buffer.from(hash, 'base64')
-
-    try {
-      const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
-      setCurrentAppRequest({ appId, channel, key, link: window.location.href })
-    } catch (e) {
-      console.error(e)
-    }
-
-    if (currentUser) {
-      return <Redirect to={this.state.prevPath} />
-    }
-
-    return <Redirect to='/' />
-  }
-
   handlePersistentStorageRequestClose () {
     this.setState({ persistentStorageRequest: false })
   }
 
   componentDidUpdate (prevProps) {
+    const { prevPath } = this.state
     if (prevProps.loading && !this.props.loading) {
-      history.goBack()
+      history.push(prevPath)
     }
   }
 
@@ -160,7 +140,7 @@ class App extends Component {
 
           {persistentStorageRequest && <PersistentStorageRequest onClose={this.handlePersistentStorageRequestClose} />}
 
-          <Route exact path='/link/:hash' component={this.processLink} />
+          <Route exact path='/link/:hash' component={Login} />
           <Route exact path='/' component={Login} />
           <Route path='/loading' component={Loading} />
 
