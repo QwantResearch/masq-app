@@ -1,33 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import AvatarBase from './AvatarBase'
+import classNames from 'classnames'
 import { Camera } from 'react-feather'
 
-import './Avatar.css'
+import { Typography } from '../'
 
-const Replace = ({ size, image, onClick }) =>
-  <AvatarBase upload src={image} width={size} height={size} onClick={onClick} />
+import styles from './Avatar.module.scss'
 
-Replace.propTypes = {
-  size: PropTypes.number,
-  image: PropTypes.string.isRequired,
-  onClick: PropTypes.func
-}
-
-const NewUpload = ({ style, onClick }) => (
-  <Camera
-    className='Avatar upload'
-    color='var(--grey-200)'
-    style={style}
-    onClick={onClick}
-  />
-)
-
-NewUpload.propTypes = {
-  style: PropTypes.object,
-  onClick: PropTypes.func
-}
+const COLORS = [
+  styles.colorPrimary,
+  styles.colorSuccess,
+  styles.colorDanger,
+  styles.colorNeutral,
+  styles.colorWarning,
+  styles.colorCyan
+]
 
 export default class Avatar extends React.Component {
   constructor (props) {
@@ -40,25 +27,39 @@ export default class Avatar extends React.Component {
   }
 
   render () {
-    const { size, image, upload, onChange } = this.props
+    const { size, image, upload, onChange, username } = this.props
     const style = { backgroundImage: 'url(' + image + ')' }
 
-    if (upload) {
-      return (
-        <div className='upload'>
-          <input name='avatar' type='file' ref='fileDialog'
-            style={{ display: 'none' }} onChange={onChange}
-            accept='.jpg, .jpeg, .png'
-          />
+    return (
+      <div
+        style={{ width: size, height: size }}
+        onClick={upload ? this.openDialog : null}
+        className={classNames(
+          styles.Avatar,
+          { [styles.upload]: upload && (image || username) },
+          { [styles.new]: !image && !username },
+          { [styles.mobile]: size <= 32 }
+        )}
+      >
+        <input name='avatar' type='file' ref='fileDialog'
+          style={{ display: 'none' }} onChange={onChange}
+          accept='.jpg, .jpeg, .png'
+        />
 
-          {image
-            ? <Replace size={size} image={image} onClick={this.openDialog} />
-            : <NewUpload style={style} onClick={this.openDialog} />
-          }
-        </div>)
-    }
+        <Camera className={styles.camera} size={42} />
 
-    return <AvatarBase src={image} width={size} height={size} />
+        {!image && username && (
+          <div
+            className={styles.avatarUsername}
+            style={{ backgroundColor: COLORS[username.charCodeAt(0) % COLORS.length] }}
+          >
+            <Typography type='avatarUsername'>{username[0].toUpperCase()}</Typography>
+          </div>
+        )}
+
+        {image && <div className={styles.img} style={style} />}
+      </div>
+    )
   }
 }
 
@@ -70,5 +71,6 @@ Avatar.propTypes = {
   size: PropTypes.number,
   upload: PropTypes.bool,
   image: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  username: PropTypes.string
 }

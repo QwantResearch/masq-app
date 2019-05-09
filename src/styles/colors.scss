@@ -16,6 +16,7 @@ $color-grey: #707070;
 $color-grey-light: #cccccc;
 $color-grey-lighter: #f7f7f7;
 
+$color-cyan: #00cafc;
 $color-purple: #a3005c;
 
 :export { colorBlueGreyLight: $color-blue-grey-light; }
@@ -28,7 +29,9 @@ $color-purple: #a3005c;
 :export { colorDanger: $color-danger; }
 :export { colorNeutral: $color-neutral; }
 :export { colorLight: $color-light; }
+:export { colorWarning: $color-warning; }
 :export { colorGrey: $color-grey }
 :export { colorGreyLight: $color-grey-light }
 :export { colorGreyLighter: $color-grey-lighter }
 :export { colorPurple: $color-purple; }
+:export { colorCyan: $color-cyan }

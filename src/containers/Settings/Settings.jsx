@@ -159,6 +159,7 @@ class Settings extends React.Component {
   }
 
   render () {
+    const { user } = this.props
     const { confirmDialog, passwordEditModal } = this.state
     if (!this.props.user) return <Redirect to='/' />
 
@@ -170,7 +171,7 @@ class Settings extends React.Component {
             <Space size={30} />
             <div className={styles.content}>
               <div className={styles.avatar}>
-                <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} />
+                <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} username={user.username} />
               </div>
 
               <div className={styles.inputs}>

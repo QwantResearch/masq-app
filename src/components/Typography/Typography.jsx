@@ -28,7 +28,8 @@ Typography.propTypes = {
     'label',
     'label-nav',
     'footer',
-    'textFieldButton'
+    'textFieldButton',
+    'avatarUsername'
   ]).isRequired,
   align: PropTypes.string
 }

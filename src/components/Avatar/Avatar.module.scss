@@ -1,0 +1,85 @@
+@import '../../styles/colors.scss';
+
+.Avatar {
+  position: relative;
+  border-radius: 10px;
+
+  .avatarUsername {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .camera {
+    position: absolute;
+    color: $color-blue-grey-light;
+    visibility: hidden;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: top center;
+  }
+}
+
+.new {
+  position: relative;
+  box-shadow:0 0 0 2px $color-blue-grey-light;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+  .camera {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:hover {
+    box-shadow:0 0 0 2px $color-grey;
+    .camera {
+      color: $color-grey;
+    }
+  }
+}
+
+.upload {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+  .camera {
+    transition: visibility 0s, opacity 0.3s linear;
+    visibility: visible;
+    opacity: 0;
+  }
+
+  &:hover {
+    filter: grayscale(50%);
+    cursor: pointer;
+
+    .camera {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+.mobile {
+  .avatarUsername {
+    border-radius: 50px;
+  }
+
+  p {
+    font-size: 24px;
+  }
+}
