@@ -101,7 +101,7 @@ class Masq {
     this.closeProfile()
 
     this.profileId = profileId
-    this.profileDB = openOrCreateDB(profileId)
+    this.profileDB = openOrCreateDB(`profile-${profileId}`)
 
     const protectedMK = await this._getProtectedMK()
     try {
@@ -118,7 +118,7 @@ class Masq {
 
     const apps = await this.getApps()
     apps.forEach(app => {
-      const dbName = profileId + '-' + app.id
+      const dbName = `app-${profileId}-${app.id}`
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', () => this._startReplicate(db))
@@ -166,7 +166,7 @@ class Masq {
     }
 
     // Create a DB for this profile
-    const db = openOrCreateDB(id)
+    const db = openOrCreateDB(`profile-${id}`)
     await dbReady(db)
 
     // we do not use this.encryptAndPut because this value is not encrypted
@@ -186,7 +186,7 @@ class Masq {
     }
 
     // Remove the profile
-    const dbName = this.profileId
+    const dbName = `profile-${this.profileId}`
     await this.closeProfile()
     window.indexedDB.deleteDatabase(dbName)
     window.localStorage.removeItem(dbName)
@@ -310,7 +310,7 @@ class Masq {
    */
   removeApp (app) {
     checkObject(app, requiredParametersApp)
-    const dbName = this.profileId + '-' + app.id
+    const dbName = `app-${this.profileId}-${app.id}`
     const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
     const sw = this.swarms[discoveryKey]
     sw.close()
@@ -508,7 +508,7 @@ class Masq {
 
       const privateProfile = await this.getProfile()
 
-      dbName = this.profileId + '-' + id
+      dbName = `app-${this.profileId}-${id}`
 
       const db = await this._createDBAndSyncApp(dbName)
       await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
@@ -602,7 +602,7 @@ class Masq {
     const id = profile.id
     if (!id) throw new MasqError(MasqError.MISSING_PROFILE_ID)
 
-    window.localStorage.setItem(id, JSON.stringify({
+    window.localStorage.setItem(`profile-${id}`, JSON.stringify({
       id: id,
       username: profile.username,
       image: profile.image
@@ -610,7 +610,10 @@ class Masq {
   }
 
   _getProfilesFromLocalStorage () {
-    const ids = Object.keys(window.localStorage)
+    const ids = Object
+      .keys(window.localStorage)
+      .filter(k => k.split('-')[0] === 'profile')
+
     if (!ids) return []
 
     const profiles = ids.map(id =>

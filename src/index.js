@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { render } from 'react-dom'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { Provider } from 'react-redux'
 
+import 'typeface-asap'
+import 'typeface-asap-condensed'
+
+import './i18n'
 import * as serviceWorker from './serviceWorker'
 import rootReducer from './reducers'
 import App from './App'
 
 import './styles/index.scss'
-import 'typeface-asap'
-import 'typeface-asap-condensed'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -21,7 +23,9 @@ const store = createStore(
 
 render(
   <Provider store={store}>
-    <App />
+    <Suspense fallback='loading'>
+      <App />
+    </Suspense>
   </Provider>,
   document.getElementById('root')
 )

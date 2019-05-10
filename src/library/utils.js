@@ -3,7 +3,10 @@ import Compressor from 'compressorjs'
 const MAX_IMAGE_SIZE = 100000 // 100 KB
 
 const isUsernameAlreadyTaken = (username, id) => {
-  const ids = Object.keys(window.localStorage)
+  const ids = Object
+    .keys(window.localStorage)
+    .filter(k => k.split('-')[0] === 'profile')
+
   if (!ids) return false
 
   const publicProfiles = ids.map(id => JSON.parse(window.localStorage.getItem(id)))

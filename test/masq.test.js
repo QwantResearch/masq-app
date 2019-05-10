@@ -312,7 +312,7 @@ describe('masq internal operations', function () {
     const profiles = await masq.getProfiles()
 
     const profile = profiles.filter(profile => profile.username === 'updatedUsername')[0]
-    const dbNameProfile = profile.id
+    const dbNameProfile = `profile-${profile.id}`
 
     // Open a profile (login)
     await masq.openProfile(profile.id, NEW_PASSPHRASE)
@@ -324,7 +324,7 @@ describe('masq internal operations', function () {
     expect(apps).to.have.lengthOf(1)
 
     // Simulate a synchronization of the app db
-    const dbNameApp = profile.id + '-' + apps[0].id
+    const dbNameApp = `app-${profile.id}-${apps[0].id}`
     await masq._createDBAndSyncApp(dbNameApp)
 
     const localStorageLength = window.localStorage.length
