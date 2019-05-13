@@ -40,7 +40,8 @@ Button.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   secondary: PropTypes.bool,
-  children: PropTypes.string
+  children: PropTypes.string,
+  borderRadius: PropTypes.number
 }
 
 export default Button
