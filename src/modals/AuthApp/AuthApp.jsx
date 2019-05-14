@@ -133,7 +133,7 @@ class AuthApp extends React.Component {
             If you are not the one who initiated this request, please refuse. `)}
           </Typography>
           <Space size={30} />
-          <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color='#82c362' description={appRequest.description} />
+          <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} description={appRequest.description} />
         </div>
       )
     } else {
