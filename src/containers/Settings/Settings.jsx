@@ -221,7 +221,7 @@ class Settings extends React.Component {
             <Space size={24} />
             <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
               <Typography align='center' type='label' color={styles.colorNeutral}>
-                <Trash className={styles.trashIcon} size={14} color={styles.colorNeutral} />
+                <Trash className={styles.trashIcon} size={14} color={styles.colorBlueGrey} />
                 {t('Delete the profile')}
               </Typography>
             </div>

@@ -26,44 +26,44 @@
 
 .secondary {
   opacity: 0.8;
-  border: solid 1px $color-grey-light;
-  background-color: $color-grey-lighter;
+  border: solid 1px $color-grey-200;
+  background-color: $color-grey-100;
 
   span {
     color: #999999;
   }
 
   &:hover {
-    border: solid 1px $color-blue-grey;
+    border: solid 1px $color-blue-grey-200;
     span {
-      color: $color-blue-grey;
+      color: $color-blue-grey-200;
     }
   }
 }
 
 .primary {
-  background-color: $color-primary;
+  background-color: $color-blue;
   &:hover {
     box-shadow: 0 5px 16px 0 rgba(69, 179, 248, 0.4);
   }
 }
 
 .success {
-  background-color: $color-success;
+  background-color: $color-green;
   &:hover {
     box-shadow: 0 5px 16px 0 rgba(64, 174, 108, 0.4);
   }
 }
 
 .danger {
-  background-color: $color-danger;
+  background-color: $color-red;
   &:hover {
     box-shadow: 0 5px 16px 0 rgba(229, 59, 91, 0.4);
   }
 }
 
 .neutral {
-  background-color: $color-neutral;
+  background-color: $color-blue-grey;
   &:hover {
     box-shadow: 0 5px 16px 0 rgba(92, 111, 132, 0.4)
   }

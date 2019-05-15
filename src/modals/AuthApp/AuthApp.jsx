@@ -116,7 +116,7 @@ class AuthApp extends React.Component {
     if (refused) {
       return (
         <div>
-          <Slash size={114} color={styles.colorBlueGreyLight} />
+          <Slash size={114} color={styles.colorBlueGrey100} />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>Vous avez refusé l'accès de l'application {appRequest.appId} à votre stockage Masq.</Typography>
         </div>
@@ -139,7 +139,7 @@ class AuthApp extends React.Component {
     } else {
       return (
         <div>
-          <CheckCircle size={114} color={styles.colorSuccess} />
+          <CheckCircle size={114} color={styles.colorGreen} />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>{ `${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}` }</Typography>
           <Typography type='paragraph-modal' align='center'>{t('You can now use the application.')}</Typography>

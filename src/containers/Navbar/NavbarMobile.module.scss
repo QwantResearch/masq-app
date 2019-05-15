@@ -5,7 +5,7 @@
 
   .header {
     height: 64px;
-    background-color: $color-blue-darker;
+    background-color: $color-dark-blue-200;
     .content {
       display: flex;
       height: 100%;
@@ -35,7 +35,7 @@
   .nav {
     width: 100%;
     height: 56px;
-    background-color: $color-blue-dark;
+    background-color: $color-dark-blue-100;
     color: white;
 
     .content {
@@ -65,7 +65,7 @@
       }
 
       .active * {
-        color: $color-primary;
+        color: $color-blue;
         opacity: 1;
 
         &:before {
@@ -76,7 +76,7 @@
           height: 2px;
           width: 100%;
           border-radius: 1px;
-          background-color: $color-primary;
+          background-color: $color-blue;
         }
       }
     }

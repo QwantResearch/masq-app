@@ -8,12 +8,12 @@ import { Typography } from '../'
 import styles from './Avatar.module.scss'
 
 const COLORS = [
-  styles.colorPrimary,
-  styles.colorSuccess,
-  styles.colorDanger,
-  styles.colorNeutral,
-  styles.colorWarning,
-  styles.colorCyan
+  styles.colorCyan,
+  styles.colorBlue,
+  styles.colorGreen,
+  styles.colorRed,
+  styles.colorBlueGrey,
+  styles.colorYellow
 ]
 
 export default class Avatar extends React.Component {

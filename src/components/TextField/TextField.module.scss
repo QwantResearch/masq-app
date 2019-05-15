@@ -34,7 +34,7 @@
     justify-content: center;
     height: 32px;
     cursor: pointer;
-    color: $color-blue-dark;
+    color: $color-dark-blue-100;
   }
 }
 
@@ -42,7 +42,7 @@
   input {
     height: 46px;
     font-size: 20px;
-    color: $color-blue-dark;
+    color: $color-dark-blue-100;
   }
 
   .button {
@@ -52,15 +52,15 @@
 
 .default {
   label {
-    color: $color-neutral;
+    color: $color-blue-grey;
   }
 
   input {
-    border: solid 1px $color-grey-light;
+    border: solid 1px $color-grey-200;
     &:focus {
-      border: solid 1px $color-primary;
+      border: solid 1px $color-blue;
       + label {
-        color: $color-primary;
+        color: $color-blue;
       }
     }
   }
@@ -68,13 +68,13 @@
 
 .error {
   label {
-    color: $color-danger;
+    color: $color-red;
   }
 
   input {
-    border: solid 1px $color-danger;
+    border: solid 1px $color-red;
     &:focus {
-      border: solid 1px $color-danger;
+      border: solid 1px $color-red;
     }
   }
 }
