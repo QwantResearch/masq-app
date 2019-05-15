@@ -20,8 +20,11 @@
     background-size: cover;
     background-position: bottom center;
 
-    .Logo {
-      margin: auto;
+    @media (max-width: 700px) {
+      .Logo {
+        margin: auto;
+        max-width: 36%;
+      }
     }
 
     .connectBtn {
@@ -42,6 +45,11 @@
         line-height: 1.13;
         text-align: center;
         color: white;
+
+        @media (max-width: 700px) {
+          font-size: 28px;
+          line-height: 1.25;
+        }
       }
     }
 
@@ -53,6 +61,14 @@
 
   .text {
     max-width: 380px;
+
+    :first-child {
+      margin-bottom: 32px;
+
+      @media (max-width: 700px) {
+        margin-bottom: 12px;
+      }
+    }
   }
 
   .section2 {
@@ -73,10 +89,15 @@
       }
 
       @media (max-width: 700px) {
-        margin-bottom: 80px;
+        margin-bottom: 48px;
         flex-direction: column-reverse;
         .text {
           margin-top: 28px;
+        }
+
+        svg {
+          max-width: 35%;
+          height: 100%;
         }
       }
     }
@@ -88,15 +109,22 @@
       align-items: center;
       margin: auto;
       max-width: 740px;
+      margin-bottom: 95px;
 
       :first-child {
         margin-right: 16px;
       }
 
       @media (max-width: 700px) {
+        margin-bottom: 64px;
         flex-direction: column;
         .text {
           margin-top: 28px;
+        }
+
+        svg {
+          max-width: 50%;
+          max-height: 100%;
         }
       }
     }
@@ -134,6 +162,10 @@
       margin: auto;
       max-width: 500px;
       padding: 16px;
+      margin-bottom: 62px;
+      @media (max-width: 700px) {
+        margin-bottom: 0;
+      }
     }
 
     .Shield {
@@ -143,6 +175,7 @@
       align-items: center;
       margin: auto;
       max-width: 860px;
+      margin-bottom: 100px;
 
       :first-child {
         margin-right: 16px;
@@ -150,8 +183,9 @@
 
       @media (max-width: 700px) {
         flex-direction: column;
-        .text {
-          margin-top: 28px;
+        margin-bottom:16px;
+        svg {
+          max-width: 214px;
         }
       }
     }
@@ -170,8 +204,9 @@
 
       @media (max-width: 700px) {
         flex-direction: column-reverse;
-        .text {
-          margin-top: 28px;
+
+        svg {
+          max-width: 222px;
         }
       }
     }

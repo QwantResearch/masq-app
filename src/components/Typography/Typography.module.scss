@@ -35,6 +35,10 @@
   font-weight: 600;
   line-height: 1.14;
   color: #00cafc;
+  @media (max-width: 700px) {
+    font-size: 22px;
+    line-height: 1.36;
+  }
 }
 
 .title-landing2 {
@@ -45,6 +49,10 @@
   line-height: 1.18;
   text-align: center;
   color: #252a39;
+  @media (max-width: 700px) {
+    font-size: 28px;
+    line-height: 1.14;
+  }
 }
 
 .title-page {
