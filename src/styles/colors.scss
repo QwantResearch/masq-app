@@ -16,8 +16,10 @@ $color-blue-grey-200: #697496;
 
 $color-dark-blue-100: #252a39;
 $color-dark-blue-200: #171c2f;
+$color-dark-blue-300: #23283b;
 :export { colorBlue100: $color-dark-blue-100; }
 :export { colorBlue200: $color-dark-blue-200; }
+:export { colorBlue300: $color-dark-blue-300; }
 
 $color-cyan: #00cafc;
 $color-blue: #03a0f9;
