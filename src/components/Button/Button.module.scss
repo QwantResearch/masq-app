@@ -1,5 +1,6 @@
 @import '../../styles/mixins.scss';
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .Button {
   height: 50px;
@@ -9,7 +10,7 @@
   cursor: pointer;
   transition: box-shadow 0.5s;
 
-  @media (max-width: 500px) {
+  @media (max-width: $mobile-width) {
     width: 320px !important;
   }
 

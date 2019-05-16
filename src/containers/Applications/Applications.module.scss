@@ -1,10 +1,11 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .Apps {
   flex: 1;
   margin: 48px 48px 48px;
 
-  @media (max-width: 500px) {
+  @media (max-width: $mobile-width) {
     margin: 16px;
     width: unset;
   }

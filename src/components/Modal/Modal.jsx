@@ -18,10 +18,10 @@ const Modal = ({ onClose, width, children }) => (
 
 const ResponsiveModal = ({ onClose, width, children }) => (
   <div>
-    <MediaQuery maxWidth={500}>
+    <MediaQuery maxWidth={styles.mobileWidth}>
       <Modal width='100%' onClose={onClose} children={children} />
     </MediaQuery>
-    <MediaQuery minWidth={501}>
+    <MediaQuery minWidth={701}>
       <Modal width={width} onClose={onClose} children={children} />
     </MediaQuery>
   </div>

@@ -1,6 +1,8 @@
+@import './styles/variables.scss';
+
 .layout {
   display: flex;
-  @media (max-width: 500px) {
+  @media (max-width: $mobile-width) {
     display: block;
   }
 }

@@ -1,7 +1,8 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .Modal {
-  @media (max-width: 500px) {
+  @media (max-width: $mobile-width) {
     position: relative;
   }
 
@@ -26,14 +27,14 @@
     padding-top: 64px;
     padding-bottom: 32px;
 
-    @media (min-width: 501px) {
+    @media (min-width: $mobile-width + 1px) {
       border-radius: 6px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: $mobile-width) {
       top: 0;
       height: calc(100vh - 96px);
       position: fixed;
