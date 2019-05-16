@@ -1,32 +1,20 @@
-$color-grey-50: #f4f6fa;
-$color-grey-100: #f7f7f7;
-$color-grey-150: #e5e5e5;
-$color-grey-200: #cccccc;
-$color-grey-300: #707070;
-:export { colorGrey50: $color-grey-50 }
+$color-grey-100: #f4f6fa;
+$color-grey-200: #e0e1e6;
+$color-grey-300: #c8cbd3;
 :export { colorGrey100: $color-grey-100 }
-:export { colorGrey150: $color-grey-150 }
 :export { colorGrey200: $color-grey-200 }
-:export { colorGrey300: $color-grey-300 }
-
-$color-blue-grey-100: #c8cbd3;
-$color-blue-grey-200: #697496;
-:export { colorBlueGrey100: $color-blue-grey-100; }
-:export { colorBlueGrey200: $color-blue-grey-200; }
+:export { colorGrey300: $color-grey-300; }
 
 $color-dark-blue-100: #252a39;
 $color-dark-blue-200: #171c2f;
-$color-dark-blue-300: #23283b;
-:export { colorBlue100: $color-dark-blue-100; }
-:export { colorBlue200: $color-dark-blue-200; }
-:export { colorBlue300: $color-dark-blue-300; }
+:export { colorDarkBlue100: $color-dark-blue-100; }
+:export { colorDarkBlue200: $color-dark-blue-200; }
 
 $color-cyan: #00cafc;
 $color-blue: #03a0f9;
 $color-green: #40ae6c;
 $color-red: #e53b5b;
 $color-blue-grey: #5c6f84;
-$color-light: #f7f7f7;
 $color-yellow: #f3b100;
 $color-purple: #a3005c;
 :export { colorCyan: $color-cyan }
@@ -34,9 +22,8 @@ $color-purple: #a3005c;
 :export { colorGreen: $color-green; }
 :export { colorRed: $color-red; }
 :export { colorBlueGrey: $color-blue-grey; }
-:export { colorLight: $color-light; }
 :export { colorYellow: $color-yellow; }
 :export { colorPurple: $color-purple; }
 
-$color-background: $color-grey-50;
+$color-background: $color-grey-100;
 :export { colorBackground: $color-background; }

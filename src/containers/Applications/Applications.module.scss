@@ -31,9 +31,9 @@
   .Card {
     .trashIcon {
       cursor: pointer;
-      color: $color-grey-200;
+      color: $color-grey-300;
       &:hover {
-        color: $color-grey-300;
+        color: $color-blue-grey;
       }
     }
   }

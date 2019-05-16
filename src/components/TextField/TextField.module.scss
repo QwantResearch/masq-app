@@ -57,7 +57,7 @@
   }
 
   input {
-    border: solid 1px $color-grey-200;
+    border: solid 1px $color-grey-300;
     &:focus {
       border: solid 1px $color-blue;
       + label {

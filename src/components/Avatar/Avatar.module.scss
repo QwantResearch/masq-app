@@ -16,7 +16,7 @@
 
   .camera {
     position: absolute;
-    color: $color-blue-grey-100;
+    color: $color-grey-300;
     visibility: hidden;
     left: 50%;
     top: 50%;
@@ -34,7 +34,7 @@
 
 .new {
   position: relative;
-  box-shadow:0 0 0 2px $color-blue-grey-100;
+  box-shadow:0 0 0 2px $color-grey-300;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 

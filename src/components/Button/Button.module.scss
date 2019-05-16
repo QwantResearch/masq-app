@@ -27,17 +27,17 @@
 
 .secondary {
   opacity: 0.8;
-  border: solid 1px $color-grey-200;
+  border: solid 1px $color-grey-300;
   background-color: $color-grey-100;
 
   span {
-    color: #999999;
+    color: $color-grey-300;
   }
 
   &:hover {
-    border: solid 1px $color-blue-grey-200;
+    border: solid 1px $color-blue-grey;
     span {
-      color: $color-blue-grey-200;
+      color: $color-blue-grey;
     }
   }
 }
