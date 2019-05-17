@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { CheckCircle, Slash } from 'react-feather'
+import { withTranslation } from 'react-i18next'
 
 import { Modal, Button, Card, Typography, Space } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps, setLoading, setNotification } from '../../actions'
@@ -28,7 +29,7 @@ class AuthApp extends React.Component {
   async login () {
     const { appRequest, setLoading, setCurrentAppRequest, setNotification, handleUserAppLogin } = this.props
     const { channel, key, appId } = appRequest
-
+    const { t } = this.props
     try {
       await handleUserAppLogin(channel, key, appId)
     } catch (err) {
@@ -36,7 +37,7 @@ class AuthApp extends React.Component {
       setCurrentAppRequest(null)
       setNotification({
         error: true,
-        title: 'Echec de la connexion avec l\' application. Merci de réessayer.'
+        title: t('Error during the connection with the application. Please retry.')
       })
     }
   }
@@ -82,11 +83,10 @@ class AuthApp extends React.Component {
   async handleOk () {
     // remove the app request
     await this.props.setCurrentAppRequest(null)
-    console.log('props', this.props)
   }
 
   renderButtons () {
-    const { appRequest } = this.props
+    const { appRequest, t } = this.props
     const { refused } = this.state
 
     if (refused) {
@@ -98,8 +98,8 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <Fragment>
-          <Button width={185} onClick={this.handleRefuse} color='danger'>Refuser</Button>
-          <Button width={185} onClick={this.handleAccept} color='success'>Valider</Button>
+          <Button width={185} onClick={this.handleRefuse} color='danger'>{t('Refuse')}</Button>
+          <Button width={185} onClick={this.handleAccept} color='success'>{t('Validate')}</Button>
         </Fragment>
       )
     }
@@ -110,7 +110,7 @@ class AuthApp extends React.Component {
   }
 
   renderText () {
-    const { appRequest } = this.props
+    const { appRequest, t } = this.props
     const { refused } = this.state
 
     if (refused) {
@@ -129,8 +129,8 @@ class AuthApp extends React.Component {
       return (
         <div>
           <Typography type='paragraph-modal'>
-            Cette application demande un accès à votre stockage Masq.
-            Si vous n’êtes pas à l’origine de cette demande veuillez refuser cette requête.
+            {t(`This application ask access to Masq.
+            If you are not the one who initiated this request, please refuse. `)}
           </Typography>
           <Space size={30} />
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} color='#82c362' description={appRequest.description} />
@@ -141,23 +141,24 @@ class AuthApp extends React.Component {
         <div>
           <CheckCircle size={114} color={styles.colorSuccess} />
           <Space size={28} />
-          <Typography type='paragraph-modal' align='center'>Vous avez autorisé l'application {appRequest.appId} à accéder à votre stockage Masq.</Typography>
-          <Typography type='paragraph-modal' align='center'>Vous pouvez désormais utiliser l'application.</Typography>
+          <Typography type='paragraph-modal' align='center'>{ `${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}` }</Typography>
+          <Typography type='paragraph-modal' align='center'>{t('You can now use the application.')}</Typography>
         </div>
       )
     }
   }
 
   getTitle () {
+    const { t } = this.props
     if (this.state.refused) {
-      return 'Nouvelle requête de connexion refusée'
+      return t('New connection request has been refused')
     }
 
     if (this.props.appRequest.isConnected === undefined) return false
 
     return this.props.appRequest.isConnected
-      ? 'Nouvelle requête de connexion acceptée'
-      : 'Nouvelle requête de connexion'
+      ? t('New connection request has been accepted')
+      : t('New connection request')
   }
 
   render () {
@@ -194,7 +195,8 @@ AuthApp.propTypes = {
   appRequest: PropTypes.object.isRequired,
   onClose: PropTypes.func,
   loading: PropTypes.bool,
-  setNotification: PropTypes.func.isRequired
+  setNotification: PropTypes.func.isRequired,
+  t: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -211,4 +213,5 @@ const mapDispatchToProps = (dispatch) => ({
   setNotification: notif => dispatch(setNotification(notif))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthApp)
+const translatedAuthApp = withTranslation()(AuthApp)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedAuthApp)

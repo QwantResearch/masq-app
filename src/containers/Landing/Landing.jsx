@@ -36,7 +36,7 @@ const Landing = ({ onClick, children }) => {
             </div>
             <Space size={42} />
             <div className={styles.accountBtn}>
-              <Button width={340} color='success' onClick={onClick}>Créer un profil</Button>
+              <Button width={340} color='success' onClick={onClick}>{t('Create a new profile')}</Button>
             </div>
           </div>
         )}
@@ -45,10 +45,10 @@ const Landing = ({ onClick, children }) => {
       <div className={styles.section2}>
         <div className={styles.Box}>
           <div className={styles.text}>
-            <Typography type='title-landing'>Le respect de la vie privée</Typography>
+            <Typography type='title-landing'>{t('Respects your privacy')}</Typography>
             <Space size={32} />
             <Typography type='paragraph-landing'>
-            Masq vous permet de stocker les données personnelles de vos applications tout en garantissant le respect de votre vie privée.
+              {t('Masq allows you to store all your preferences while guaranteeing your privacy')}
             </Typography>
           </div>
           <Box />
@@ -57,10 +57,10 @@ const Landing = ({ onClick, children }) => {
         <div className={styles.Hdd}>
           <HDD />
           <div className={styles.text}>
-            <Typography type='title-landing'>Le stockage des données sur vos appareils</Typography>
+            <Typography type='title-landing'>{t('Personal data is stored on your devices')}</Typography>
             <Space size={32} />
             <Typography type='paragraph-landing'>
-            Contrairement à la plupart des applications, vos données personnelles sont stockées directement sur les disques durs de vos appareils. Vous les gardez chez vous, vous êtes propriétaire de vos données.
+              {t('Contrary to the most existing applications, your personnal data is stored directly on your hard drives. You are the owner of your data')}
             </Typography>
           </div>
         </div>
@@ -69,10 +69,10 @@ const Landing = ({ onClick, children }) => {
 
         <div className={styles.Devices}>
           <div className={styles.text}>
-            <Typography type='title-landing'>La synchronisation entre appareils en temps réel (bientôt)</Typography>
+            <Typography type='title-landing'>{t('Real time synchronization between devices (coming soon)')}</Typography>
             <Space size={32} />
             <Typography type='paragraph-landing'>
-            Retrouvez vos lieux préférés issus de Qwant Maps, votre historique de recherche de Qwant Search, vos playslists de Qwant Music ... disponibles depuis tous vos appareils avec une synchronisation en temps réel!
+              {t('Store your favorite places, search history and playlists for Qwant applications on all your devices with a real time synchronization (coming soon)')}
             </Typography>
           </div>
           <Devices />
@@ -83,7 +83,7 @@ const Landing = ({ onClick, children }) => {
 
         <div className={styles.title}>
           <Typography type='title-landing2'>
-            Les bonnes pratiques Masq pour une utilisation optimale
+            {t('Good practices of Masq for optimal use')}
           </Typography>
         </div>
 
@@ -92,10 +92,10 @@ const Landing = ({ onClick, children }) => {
         <div className={styles.Shield}>
           <Shield />
           <div className={styles.text}>
-            <Typography type='title-landing'>Votre clé secrète est connue de vous seul, nous n'y avons jamais accès .</Typography>
+            <Typography type='title-landing'>{t('Your secret key is only known by YOU, we never have access to it')}</Typography>
             <Space size={32} />
             <Typography type='paragraph-landing-dark'>
-              Vos données sont chiffrées et déchiffrées au niveau local. Ainsi votre mot de passe (clé secrète), n’est jamais envoyé vers nos serveurs et nous n'y avons jamais accès.
+              {t('Your data is encrypted and decrypted locally. That is why your secret key is never sent to our servers, we never have acces to it')}
             </Typography>
           </div>
         </div>
@@ -104,10 +104,10 @@ const Landing = ({ onClick, children }) => {
 
         <div className={styles.Windows}>
           <div className={styles.text}>
-            <Typography type='title-landing'>Laisser la fenêtre Masq en arrière-plan pour synchroniser vos données (bientôt)</Typography>
+            <Typography type='title-landing'>{t('Keep the Masq window in the background in order to allow data synchronization (coming soon)')}</Typography>
             <Space size={32} />
             <Typography type='paragraph-landing-dark'>
-            Afin de profiter un maximum de la synchronisation en temps réel et d'avoir toujours vos données à jour, il est nécessaire de laisser l'application Masq en arrière-plan sur tous vos appareils.
+              {t('To benefit from real time synchronization and always have up-to-date data, keep the Masq window opened in the background on all your devices')}
             </Typography>
           </div>
           <Windows />
@@ -118,7 +118,7 @@ const Landing = ({ onClick, children }) => {
         <Qwant />
         <div className={styles.links}>
           <a href='mailto:masq.dev@qwant.com'>
-            <Typography type='footer'>Contactez-nous</Typography>
+            <Typography type='footer'>{t('Contact us')}</Typography>
           </a>
           <a href='https://help.qwant.com' rel='noopener noreferrer' target='_blank'>
             <Typography type='footer'>F.A.Q.</Typography>

@@ -1,30 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { AlertCircle } from 'react-feather'
-
+import { useTranslation } from 'react-i18next'
 import { Button, Modal, Typography, Space } from '../../components'
 
 import styles from './DeleteProfileDialog.module.scss'
 
-const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => (
-  <Modal width={465} onClose={onClose}>
-    <div className={styles.ConfirmDialog}>
-      <Typography type='title-modal'>Suppression de profil</Typography>
-      <Space size={32} />
-      <AlertCircle size={104} color='#ff3b4a' />
-      <Space size={32} />
-      <Typography type='paragraph-modal'>
-        Vous êtes sur le point de supprimer le profil « {username} ».
-        Toutes les données personnelles de toutes les applications ajoutées dans Masq seront perdues.
-      </Typography>
-      <Space size={32} />
-      <div className={styles.buttons}>
-        <Button width={185} color='neutral' onClick={onCancel}>Annuler</Button>
-        <Button width={185} color='danger' onClick={onConfirm}>Supprimer ce profil</Button>
+const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => {
+  const { t } = useTranslation()
+  return (
+    <Modal width={465} onClose={onClose}>
+      <div className={styles.ConfirmDialog}>
+        <Typography type='title-modal'>{t('Deletion of the profile')}</Typography>
+        <Space size={32} />
+        <AlertCircle size={104} color='#ff3b4a' />
+        <Space size={32} />
+        <Typography type='paragraph-modal'>
+          {`${t('You are at the point of deleting the profile ')} « ${username} ».
+        ${t(' All your personal data of Masq will be lost.')}`}
+        </Typography>
+        <Space size={32} />
+        <div className={styles.buttons}>
+          <Button width={185} color='neutral' onClick={onCancel}>{t('Cancel')}</Button>
+          <Button width={185} color='danger' onClick={onConfirm}>{t('Delete the profile')}</Button>
+        </div>
       </div>
-    </div>
-  </Modal>
-)
+    </Modal>
+  )
+}
 
 ConfirmDialog.propTypes = {
   username: PropTypes.string.isRequired,

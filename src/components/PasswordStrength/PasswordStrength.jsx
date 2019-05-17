@@ -1,45 +1,41 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
-
+import { useTranslation } from 'react-i18next'
 import styles from './PasswordStrength.module.scss'
 import { Shield, Lock, Unlock, CheckCircle } from 'react-feather'
 const { getPasswordInfo, getForce } = require('../../library/validators')
-
 const NonChecked = () => (
   <div className={styles.Oval} />
 )
 
-const Description = ({ description }) => (
-  <div className={styles.Description}>
-    {description}
-  </div>
-)
-
-Description.propTypes = {
-  description: PropTypes.string
-}
-Description.defaultProps = {
-  description: 'Pour être complètement sécurisée, la clé devrait contenir au moins :'
+const Description = () => {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.Description}>
+      {t('To be completely secure, the key must contain at least')}:
+    </div>
+  )
 }
 
 const Item = ({ fulfilled, text }) => {
+  const { t } = useTranslation()
   let printedRule = null
   switch (text) {
     case 'lowercase':
-      printedRule = '1 minuscule'
+      printedRule = t('1 lowercase')
       break
     case 'uppercase':
-      printedRule = '1 majuscule'
+      printedRule = t('1 uppercase')
       break
     case 'number':
-      printedRule = '1 chiffre'
+      printedRule = t('1 number')
       break
     case 'specialCharacter':
-      printedRule = '1 caractère spécial (!?$#@...)'
+      printedRule = t('1 special character (!?$#@...)')
       break
     case 'secureLength':
-      printedRule = '12 caractères'
+      printedRule = t('12 characters')
       break
     default:
       break
@@ -97,11 +93,11 @@ ForceBar.defaultProps = {
 }
 const PasswordRules = ({ force, passwordInfo }) => {
   const lockIcon = force > 1
-    ? <Unlock
+    ? <Lock
       size={30}
       className={cx(styles.lockIcon, styles[`force-${force}`])}
     />
-    : <Lock
+    : <Unlock
       size={30}
       className={cx(styles.lockIcon, styles[`force-${force}`])}
     />
@@ -144,11 +140,12 @@ PasswordRules.propTypes = {
 const PasswordStrength = ({ password }) => {
   const passwordInfo = getPasswordInfo(password)
   const force = getForce(password)
+
   return (
     <div className={styles.PasswordStrength}>
       <ForceBar force={force} />
       <Description />
-      <PasswordRules force={force} passwordInfo={passwordInfo} />
+      <PasswordRules force={force} passwordInfo={passwordInfo} t />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-
+import { withTranslation } from 'react-i18next'
 import { setNotification } from '../../actions'
 import { Avatar, Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
 import { isName, isUsername, isPassword, isForceEnough } from '../../library/validators'
@@ -142,6 +142,7 @@ class Signup extends React.Component {
   }
 
   renderFirstStep () {
+    const { t } = this.props
     return (
       <React.Fragment>
         <div className={styles.avatar}>
@@ -167,29 +168,30 @@ class Signup extends React.Component {
           onChange={(e) => this.onChange('username', e)}
           onKeyUp={this.handleKeyUp}
           label={this.getUsernameLabel(
-            'Votre pseudo',
-            'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-            'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+            t('Username'),
+            t('Username already used, please use another one'),
+            t('The username must not contain spaces, and can contain only the following special characters: !?$#@()-*')
           )}
         />
 
         <Space size={32} />
 
         <div className={styles.buttons}>
-          <Button onClick={this.next} width={185}>Suivant</Button>
+          <Button onClick={this.next} width={185}>{t('Next')}</Button>
         </div>
       </React.Fragment>
     )
   }
 
   renderSecondStep () {
+    const { t } = this.props
     const { password, passwordConfirmation } = this.state
 
     return (
       <React.Fragment>
         <Typography type='paragraph-modal' align='justify'>
-        Définissez une clé secrète pour chiffrer vos données, choisissez-la avec attention.
-        Il n’y a aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez.
+          {t(`Define a secret key to encrypt your data, choose it with care.
+            There is NO WAY to recover this key in case you lose it, because you only know it.`)}
         </Typography>
         <Space size={14} />
         <TextField
@@ -199,8 +201,8 @@ class Signup extends React.Component {
           autoFocus
           type='password'
           label={this.isValid('password')
-            ? 'clé secrète'
-            : 'Le mot de passe doit être composé d\'au moins 6 caractères et respecter au minimum deux règles.'}
+            ? t('Secret key')
+            : t('The secret key must contain at least 6 characters and respect two rules minimum.')}
           error={!this.isValid('password')}
           onChange={(e) => this.onChange('password', e)}
         />
@@ -213,8 +215,8 @@ class Signup extends React.Component {
           type='password'
           defaultValue={passwordConfirmation}
           label={this.isValid('passwordConfirmation')
-            ? 'Confirmation de la clé secrète'
-            : 'Les mots de passe ne correspondent pas.'}
+            ? t('Secret key confirmation')
+            : t('Two secret keys do not match')}
           error={!this.isValid('passwordConfirmation')}
           onKeyUp={this.handleKeyUp}
           onChange={(e) => this.onChange('passwordConfirmation', e)}
@@ -223,18 +225,20 @@ class Signup extends React.Component {
         <Space size={30} />
 
         <div className={styles.buttons}>
-          <Button width={142} color='neutral' onClick={this.previous}>Précédent</Button>
-          <Button width={142} onClick={this.finish}>Terminer</Button>
+          <Button width={142} color='neutral' onClick={this.previous}>{t('Previous')}</Button>
+          <Button width={142} onClick={this.finish}>{t('Finish')}</Button>
         </div>
       </React.Fragment>
     )
   }
 
   render () {
+    const { t } = this.props
+
     return (
       <Modal onClose={this.props.onClose} width={511}>
         <div className={styles.Signup}>
-          <Typography type='title-modal'>Créer un nouveau profil</Typography>
+          <Typography type='title-modal'>{t('Create a new profile')}</Typography>
           <Space size={28} />
           {this.currentStep === 0 && this.renderFirstStep()}
           {this.currentStep === 1 && this.renderSecondStep()}
@@ -247,11 +251,13 @@ class Signup extends React.Component {
 Signup.propTypes = {
   onSignup: PropTypes.func,
   onClose: PropTypes.func,
-  setNotification: PropTypes.func
+  setNotification: PropTypes.func,
+  t: PropTypes.func
 }
 
 const mapDispatchToProps = dispatch => ({
   setNotification: (notif) => dispatch(setNotification(notif))
 })
 
-export default connect(null, mapDispatchToProps)(Signup)
+const translatedSignup = withTranslation()(Signup)
+export default connect(null, mapDispatchToProps)(translatedSignup)

@@ -4,9 +4,9 @@ module.exports = {
     // Use ! to filter out files or directories
     '!**/node_modules/**'
   ],
-  output: './public/locales/',
   options: {
     debug: true,
+    removeUnusedKeys: true,
     func: {
       list: ['i18next.t', 'i18n.t', 't'],
       extensions: ['.js', '.jsx']
@@ -16,8 +16,8 @@ module.exports = {
     defaultNs: 'resource',
     defaultValue: '__STRING_NOT_TRANSLATED__',
     resource: {
-      loadPath: '{{lng}}.json',
-      savePath: '{{lng}}.json',
+      loadPath: 'public/locales/{{lng}}.json',
+      savePath: 'public/locales/{{lng}}.json',
       jsonIndent: 2,
       lineEnding: '\n'
     },

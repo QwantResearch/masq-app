@@ -1,27 +1,30 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { useTranslation } from 'react-i18next'
 import { Button, Modal, Typography, Space } from '../../components'
-
 import styles from './PersistentStorageRequest.module.scss'
 
-const PermanentStorageRequest = ({ onClose }) => (
-  <Modal width={511} onClose={onClose}>
-    <div className={styles.PermanentStorage}>
-      <div>
-        <Typography type='title-modal'>Autorisation de stockage</Typography>
+const PermanentStorageRequest = ({ onClose }) => {
+  const { t } = useTranslation()
+  return (
+    <Modal width={511} onClose={onClose}>
+      <div className={styles.PermanentStorage}>
+        <div>
+          <Typography type='title-modal'>{t('Storage authorization')}</Typography> />
+          <Space size={32} />
+          <Typography type='paragraph-modal'>
+            {`${t('In order to store your data securely,')}
+          ${t('please authorize Masq to use the persistent storage of the browser.')}
+          ${t('This notification will appear again if necessary.')}`}
+          </Typography>
+        </div>
         <Space size={32} />
-        <Typography type='paragraph-modal'>
-          Afin de stocker vos données de manière sécurisée,
-          merci d'autoriser Masq à utiliser le stockage persistant de votre navigateur.
-          Cette notification réapparaîtra à la prochaine ouverture de Masq si nécessaire.
-        </Typography>
+        <Button onClick={onClose}>{t('Ok')}</Button>
       </div>
-      <Space size={32} />
-      <Button onClick={onClose}>Ok</Button>
-    </div>
-  </Modal>
-)
+    </Modal>
+  )
+}
 
 PermanentStorageRequest.propTypes = {
   onClose: PropTypes.func.isRequired

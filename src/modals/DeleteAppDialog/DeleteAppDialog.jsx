@@ -2,32 +2,35 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Button, Modal, Typography, Space, Card } from '../../components'
-
+import { useTranslation } from 'react-i18next'
 import styles from './DeleteAppDialog.module.scss'
 
-const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => (
-  <Modal width={465} onClose={onClose}>
-    <div className={styles.ConfirmDialog}>
-      <Typography type='title-modal'>Suppression de l'application {app.appId}</Typography>
-      <Space size={32} />
-      <Typography type='paragraph-modal'>
-        Vous êtes sur le point de supprimer l’application {app.appId} de Masq avec les données personnelles qui s’y rattachent.
-        Ces données seront définitivement perdues.
-      </Typography>
-      <Space size={36} />
-      <Card
-        width={378}
-        title={app.name}
-        image={app.imageURL}
-        description={app.description} />
-      <Space size={32} />
-      <div className={styles.buttons}>
-        <Button width={185} color='neutral' onClick={onCancel}>Annuler</Button>
-        <Button width={185} color='danger' onClick={onConfirm}>Supprimer l'application</Button>
+const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => {
+  const { t } = useTranslation()
+  return (
+    <Modal width={465} onClose={onClose}>
+      <div className={styles.ConfirmDialog}>
+        <Typography type='title-modal'>{`${t('Deletion of the application')} ${app.appId}`}</Typography>
+        <Space size={32} />
+        <Typography type='paragraph-modal'>
+          {`${t('You are at the point of deleting the application ')} "${app.appId}" ${t('from Masq with all the associated data.')}
+        ${t(' All the data will be lost.')}`}
+        </Typography>
+        <Space size={36} />
+        <Card
+          width={378}
+          title={app.name}
+          image={app.imageURL}
+          description={app.description} />
+        <Space size={32} />
+        <div className={styles.buttons}>
+          <Button width={185} color='neutral' onClick={onCancel}>{t('Cancel')}</Button>
+          <Button width={185} color='danger' onClick={onConfirm}>{t('Delete the application')}</Button>
+        </div>
       </div>
-    </div>
-  </Modal>
-)
+    </Modal>
+  )
+}
 
 ConfirmDialog.propTypes = {
   app: PropTypes.object.isRequired,

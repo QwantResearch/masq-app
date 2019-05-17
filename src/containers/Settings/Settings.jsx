@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Trash } from 'react-feather'
-
+import { withTranslation } from 'react-i18next'
 import { updateUser, removeProfile, setNotification } from '../../actions'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
 import { DeleteProfileDialog, PasswordEdit } from '../../modals'
@@ -79,7 +79,7 @@ class Settings extends React.Component {
   }
 
   async onImageChange (event) {
-    const { setNotification } = this.props
+    const { setNotification, t } = this.props
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
@@ -88,7 +88,7 @@ class Settings extends React.Component {
 
     const image = await compressImage(file)
     if (image.size > MAX_IMAGE_SIZE) {
-      setNotification({ title: 'L\'image sélectionnée est trop lourde. Veuillez en choisir une autre.', error: true })
+      setNotification({ title: t('The chosen image is too big, please select a smaller image'), error: true })
       return
     }
 
@@ -133,10 +133,10 @@ class Settings extends React.Component {
   }
 
   async confirmDelete () {
-    const { setNotification } = this.props
+    const { setNotification, t } = this.props
     await this.props.removeProfile()
     setNotification({
-      title: 'Profil supprimé avec succès.'
+      title: t('Profile succesfully removed.')
     })
   }
 
@@ -162,12 +162,13 @@ class Settings extends React.Component {
     const { user } = this.props
     const { confirmDialog, passwordEditModal } = this.state
     if (!this.props.user) return <Redirect to='/' />
+    const { t } = this.props
 
     return (
       <div className={styles.Settings}>
         <div className={styles.page}>
           <div>
-            <Typography type='title-page'>Mes paramètres</Typography>
+            <Typography type='title-page'>{t('My settings')}</Typography>
             <Space size={30} />
             <div className={styles.content}>
               <div className={styles.avatar}>
@@ -181,9 +182,9 @@ class Settings extends React.Component {
                   defaultValue={this.state.username}
                   onChange={(e) => this.onChange('username', e)}
                   label={this.getUsernameLabel(
-                    'Pseudo (affiché)',
-                    'Pseudo déjà utilisé. Veuillez en choisir un autre.',
-                    'Le pseudo ne doit pas contenir d\'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*'
+                    t('Username (displayed)'),
+                    t('The specified username is already used'),
+                    t('The username must not contain spaces, and can contain only the following special characters:!?$#@()-*')
                   )}
                 />
                 <TextField
@@ -192,8 +193,8 @@ class Settings extends React.Component {
                   defaultValue={this.state.firstname}
                   onChange={(e) => this.onChange('firstname', e)}
                   label={this.isValid('firstname')
-                    ? 'Prénom (facultatif)'
-                    : 'Le prénom ne peut contenir que des caractères alphanumériques et des espaces.'}
+                    ? t('Firstname (optional)')
+                    : t('The firstname can only contain alphanumeric characters and spaces')}
                 />
                 <TextField
                   error={!this.isValid('lastname')}
@@ -201,14 +202,14 @@ class Settings extends React.Component {
                   defaultValue={this.state.lastname}
                   onChange={(e) => this.onChange('lastname', e)}
                   label={this.isValid('lastname')
-                    ? 'Nom (facultatif)'
-                    : 'Le nom ne peut contenir que des caractères alphanumériques et des espaces.'}
+                    ? t('Lastname (optional)')
+                    : t('The lastname can only contain alphanumeric characters and spaces')}
                 />
                 <TextField
                   type='password'
                   defaultValue='password'
-                  label='clé secrète'
-                  button='Modifier'
+                  label={t('Secret key')}
+                  button={t('Update')}
                   onClick={this.openPasswordEditModal}
                 />
               </div>
@@ -216,12 +217,12 @@ class Settings extends React.Component {
           </div>
 
           <div className={styles.rightSection}>
-            <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>Enregistrer</Button>
+            <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>{t('Save')}</Button>
             <Space size={24} />
             <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
               <Typography align='center' type='label' color={styles.colorNeutral}>
                 <Trash className={styles.trashIcon} size={14} color={styles.colorNeutral} />
-              Supprimer le profil
+                {t('Delete the profile')}
               </Typography>
             </div>
           </div>
@@ -258,7 +259,8 @@ Settings.propTypes = {
   user: PropTypes.object,
   updateUser: PropTypes.func,
   removeProfile: PropTypes.func,
-  setNotification: PropTypes.func
+  setNotification: PropTypes.func,
+  t: PropTypes.func
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+const translatedSettings = withTranslation()(Settings)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedSettings)

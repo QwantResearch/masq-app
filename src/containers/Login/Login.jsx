@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { ChevronLeft } from 'react-feather'
 
+import { withTranslation } from 'react-i18next'
 import { signin, signup, fetchUsers, setCurrentAppRequest } from '../../actions'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
@@ -14,7 +15,6 @@ import { Landing } from '../../containers'
 import styles from './Login.module.scss'
 
 const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
-
 class Login extends Component {
   constructor (props) {
     super(props)
@@ -124,20 +124,20 @@ class Login extends Component {
     if (this.props.currentAppRequest && remoteWebRTCEnabled) {
       return (
         <div style={{ marginBottom: 32 }}>
-          <Button onClick={this.openQRCodeModal}>Se connecter avec un autre appareil</Button>
+          <Button onClick={this.openQRCodeModal}>Connect with another device</Button>
         </div>
       )
     }
   }
 
   renderUsersSelection () {
-    const { users } = this.props
+    const { users, t } = this.props
     const { signup, sync, qrcodeModal } = this.state
 
     return (
       <div className={styles.usersSelection}>
         {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
-        <Typography type='title'>Qui est-ce ?</Typography>
+        <Typography type='title'>{t('Who is it ?')}</Typography>
         <Space size={34} />
         {/* { this.renderQRCodeModal() } */}
         <div className={styles.users}>
@@ -157,6 +157,7 @@ class Login extends Component {
   }
 
   renderPassword () {
+    const { t } = this.props
     const { selectedUser, password } = this.state
 
     return (
@@ -180,7 +181,7 @@ class Login extends Component {
             type='password'
             onChange={this.onPasswordChange}
             error={this.state.isWrongPassword}
-            label={this.state.isWrongPassword ? 'Mauvais mot de passe, veuillez réessayer' : ''}
+            label={this.state.isWrongPassword ? t('Wrong password, please try again') : ''}
             onKeyUp={this.onPasswordKeyUp}
             defaultValue={password}
           />
@@ -189,7 +190,7 @@ class Login extends Component {
           <Space size={32} />
           <div className={styles.goback} onClick={this.goBack}>
             <ChevronLeft />
-            <Typography type='label'>Changer d'utilisateur</Typography>
+            <Typography type='label'>{t('Change profile')}</Typography>
           </div>
         </div>
       </div>
@@ -253,7 +254,8 @@ Login.propTypes = {
   signin: PropTypes.func,
   history: PropTypes.object,
   currentAppRequest: PropTypes.object,
-  setCurrentAppRequest: PropTypes.func
+  setCurrentAppRequest: PropTypes.func,
+  t: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -269,4 +271,5 @@ const mapDispatchToProps = dispatch => ({
   setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+const translatedLogin = withTranslation()(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedLogin)

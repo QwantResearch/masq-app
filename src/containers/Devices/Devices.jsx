@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Card, Button, Typography, Space } from '../../components'
-
+import { withTranslation } from 'react-i18next'
 import { SyncDevice } from '../../modals'
 
 import styles from './Devices.module.scss'
@@ -30,7 +30,7 @@ class Devices extends React.Component {
   }
 
   render () {
-    const { user, devices } = this.props
+    const { user, devices, t } = this.props
 
     if (!user) return <Redirect to='/' />
 
@@ -38,8 +38,8 @@ class Devices extends React.Component {
       <div className={styles.Devices}>
         {this.renderSyncModal()}
         <div className={styles.topSection}>
-          <Typography type='title-page'>Mes appareils</Typography>
-          <Button secondary>Ajouter un appareil (bientôt)</Button>
+          <Typography type='title-page'>{t('My devices')}</Typography>
+          <Button secondary>{t('Add a new devce (coming soon)')}</Button>
         </div>
 
         <Space size={16} />
@@ -62,7 +62,8 @@ const mapStateToProps = (state) => ({
 
 Devices.propTypes = {
   user: PropTypes.object,
-  devices: PropTypes.arrayOf(PropTypes.object)
+  devices: PropTypes.arrayOf(PropTypes.object),
+  t: PropTypes.func
 }
-
-export default connect(mapStateToProps)(Devices)
+const translatedDevices = withTranslation()(Devices)
+export default connect(mapStateToProps)(translatedDevices)

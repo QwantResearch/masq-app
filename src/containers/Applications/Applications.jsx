@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { Trash } from 'react-feather'
-
+import { withTranslation } from 'react-i18next'
 import { fetchApps, removeApp, setNotification } from '../../actions'
 import { Card, Typography, Space } from '../../components'
 import { DeleteAppDialog } from '../../modals'
@@ -48,12 +48,12 @@ class Apps extends PureComponent {
     await removeApp(appToRemove)
     this.closeConfirmDialog()
     setNotification({
-      title: 'Application supprimée avec succès.'
+      title: this.props.t('Application succesfully deleted')
     })
   }
 
   render () {
-    const { apps, user } = this.props
+    const { apps, user, t } = this.props
     const { confirmDialog, appToRemove } = this.state
 
     if (!user) return <Redirect to='/' />
@@ -68,12 +68,12 @@ class Apps extends PureComponent {
         />}
 
         <div className={styles.topSection}>
-          <Typography type='title-page'>Mes applications</Typography>
+          <Typography type='title-page'>{t('My applications')}</Typography>
         </div>
 
         <Space size={16} />
 
-        {apps.length === 0 && <Typography type='paragraph'>Vous n'avez pas d'applications pour le moment</Typography>}
+        {apps.length === 0 && <Typography type='paragraph'>{t('You do not have a registered application yet')}</Typography>}
 
         <div className={styles.cards}>
           {apps.map((app, index) => (
@@ -115,7 +115,8 @@ Apps.propTypes = {
   user: PropTypes.object,
   fetchApps: PropTypes.func,
   removeApp: PropTypes.func,
-  setNotification: PropTypes.func
+  setNotification: PropTypes.func,
+  t: PropTypes.func
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Apps)
+const translatedApps = withTranslation()(Apps)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedApps)

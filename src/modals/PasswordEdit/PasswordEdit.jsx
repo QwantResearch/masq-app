@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withTranslation } from 'react-i18next'
 
 import { updatePassphrase, setNotification } from '../../actions'
 import { Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
@@ -54,7 +55,7 @@ class PasswordEdit extends React.Component {
 
   async updatePassphrase () {
     const { currentPassword, password } = this.state
-
+    const { t } = this.props
     this.validationEnabled = true
 
     this.setState({
@@ -74,7 +75,7 @@ class PasswordEdit extends React.Component {
       this.props.onClose()
       this.props.setNotification({
         error: false,
-        title: 'Clé secrète mise à jour avec succès.'
+        title: t('Secret key succesfully updated.')
       })
     } catch (err) {
       this.setState({
@@ -85,12 +86,12 @@ class PasswordEdit extends React.Component {
 
   render () {
     const { currentPassword, password, passwordConfirmation, currentPasswordError } = this.state
-    const { onClose } = this.props
+    const { onClose, t } = this.props
 
     return (
       <Modal onClose={onClose} width={511}>
         <div className={styles.PasswordEdit}>
-          <Typography type='title-modal'>Modifier votre clé secrète</Typography>
+          <Typography type='title-modal'>{t('Update your secret key')}</Typography>
           <Space size={28} />
           <TextField
             password
@@ -99,8 +100,8 @@ class PasswordEdit extends React.Component {
             autoFocus
             type='password'
             label={currentPasswordError
-              ? 'Clé secrète invalide'
-              : 'Clé secrète actuelle'}
+              ? t('Invalid secret key')
+              : t('Current secret key')}
             error={currentPasswordError}
             onChange={(e) => this.onChange('currentPassword', e)}
           />
@@ -111,8 +112,8 @@ class PasswordEdit extends React.Component {
             type='password'
             defaultValue={password}
             label={this.isValid('password')
-              ? 'Nouvelle clé secrète'
-              : 'La clé secrète doit être composé d\'au moins 6 caractères, et être différent de l\'ancienne clé.'}
+              ? t('New secret key')
+              : t('The secret key must contain at least 6 characters, and be different from the old key')}
             error={!this.isValid('password')}
             onKeyUp={this.handleKeyUp}
             onChange={(e) => this.onChange('password', e)}
@@ -126,8 +127,8 @@ class PasswordEdit extends React.Component {
             type='password'
             defaultValue={passwordConfirmation}
             label={this.isValid('passwordConfirmation')
-              ? 'Confirmation de la clé secrète'
-              : 'Les clés ne correspondent pas.'}
+              ? t('Secret key confirmation')
+              : t('Keys do not match')}
             error={!this.isValid('passwordConfirmation')}
             onKeyUp={this.handleKeyUp}
             onChange={(e) => this.onChange('passwordConfirmation', e)}
@@ -136,8 +137,8 @@ class PasswordEdit extends React.Component {
           <Space size={30} />
 
           <div className={styles.buttons}>
-            <Button width={142} color='neutral' onClick={onClose}>Annuler</Button>
-            <Button width={142} onClick={this.updatePassphrase}>Enregistrer</Button>
+            <Button width={142} color='neutral' onClick={onClose}>{t('Cancel')}</Button>
+            <Button width={142} onClick={this.updatePassphrase}>{t('Save')}</Button>
           </div>
         </div>
       </Modal>
@@ -148,12 +149,13 @@ class PasswordEdit extends React.Component {
 PasswordEdit.propTypes = {
   onClose: PropTypes.func,
   updatePassphrase: PropTypes.func.isRequired,
-  setNotification: PropTypes.func.isRequired
+  setNotification: PropTypes.func.isRequired,
+  t: PropTypes.func
 }
 
 const mapDispatchToProps = dispatch => ({
   updatePassphrase: (oldPass, newPass) => dispatch(updatePassphrase(oldPass, newPass)),
   setNotification: (notif) => dispatch(setNotification(notif))
 })
-
-export default connect(null, mapDispatchToProps)(PasswordEdit)
+const translatedPasswordEdit = withTranslation()(PasswordEdit)
+export default connect(null, mapDispatchToProps)(translatedPasswordEdit)
