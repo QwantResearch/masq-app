@@ -186,7 +186,7 @@ class Login extends Component {
             defaultValue={password}
           />
           <Space size={19} />
-          <Button width={302} onClick={this.connect}>Valider</Button>
+          <Button width={302} onClick={this.connect}>{t('Validate')}</Button>
           <Space size={32} />
           <div className={styles.goback} onClick={this.goBack}>
             <ChevronLeft />
