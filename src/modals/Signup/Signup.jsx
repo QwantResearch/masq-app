@@ -189,9 +189,9 @@ class Signup extends React.Component {
 
     return (
       <React.Fragment>
-        <Typography type='paragraph-modal' align='justify'>
-          {t(`Define a secret key to encrypt your data, choose it with care.
-            There is NO WAY to recover this key in case you lose it, because you only know it.`)}
+        <Typography type='paragraph-modal' align='justify' inline>
+          {t(`Define a secret key to encrypt your data, choose it with care. There is `)}
+          <span className={styles.fontMedium}>{t(`NO WAY to recover this key in case you lose it, because you only know it.`)}</span>
         </Typography>
         <Space size={14} />
         <TextField

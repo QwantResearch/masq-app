@@ -82,10 +82,11 @@
   "Username already used, please use another one": "Username already used, please use another one",
   "The username must not contain spaces, and can contain only the following special characters: !?$#@()-*": "The username must not contain spaces, and can contain only the following special characters: !?$#@()-*",
   "Next": "Next",
-  "Define a secret key to encrypt your data, choose it with care.\n            There is NO WAY to recover this key in case you lose it, because you only know it.": "Define a secret key to encrypt your data, choose it with care.\n            There is NO WAY to recover this key in case you lose it, because you only know it.",
   "The secret key must contain at least 6 characters and respect two rules minimum.": "The secret key must contain at least 6 characters and respect two rules minimum.",
   "Two secret keys do not match": "Two secret keys do not match",
   "Previous": "Previous",
   "Finish": "Finish",
-  "Delete the application": "Delete the application"
+  "Delete the application": "Delete the application",
+  "Define a secret key to encrypt your data, choose it with care. There is ": "Define a secret key to encrypt your data, choose it with care. There is ",
+  "NO WAY to recover this key in case you lose it, because you only know it.": "NO WAY to recover this key in case you lose it, because you only know it."
 }

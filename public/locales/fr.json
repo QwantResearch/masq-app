@@ -82,10 +82,11 @@
   "Username already used, please use another one": "Pseudo déjà utilisé. Veuillez en choisir un autre.",
   "The username must not contain spaces, and can contain only the following special characters: !?$#@()-*": "Le pseudo ne doit pas contenir d'espaces, et peut contenir les caractères spéciaux suivants: !?$#@()-*",
   "Next": "Suivant",
-  "Define a secret key to encrypt your data, choose it with care.\n            There is NO WAY to recover this key in case you lose it, because you only know it.": "Définissez une clé secrète pour chiffrer vos données, choisissez-la avec attention.\nIl n’y a aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez.",
   "The secret key must contain at least 6 characters and respect two rules minimum.": "La clé secrète doit être composée d'au moins 6 caractères et respecter au minimum deux règles.",
   "Two secret keys do not match": "Les deux clés ne correspondent pas",
   "Previous": "Précédent",
   "Finish": "Terminer",
-  "Delete the application": "Supprimer l'application"
+  "Delete the application": "Supprimer l'application",
+  "Define a secret key to encrypt your data, choose it with care. There is ": "Définissez une clé secrète pour chiffrer vos données, choisissez-la avec attention.\nIl n’y a ",
+  "NO WAY to recover this key in case you lose it, because you only know it.": "aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez."
 }
