@@ -28,16 +28,25 @@ if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
   if (process.env.REACT_APP_TURN_URLS) {
     const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
       u => {
-        const splitted = u.split('|')
+        const [creds, host] = u.split('@')
+        const [scheme, username, credential] = creds.split(':')
+        console.log({
+          urls: scheme + ':' + host,
+          username: username,
+          credential: credential
+        })
+
         return {
-          urls: splitted[0],
-          username: splitted[1],
-          credential: splitted[2]
+          urls: scheme + ':' + host,
+          username: username,
+          credential: credential
         }
       })
     STUN_TURN = STUN_TURN.concat(urls)
   }
 }
+
+console.log('STUN_TURN', STUN_TURN)
 
 const swarmOpts = { config: { iceServers: STUN_TURN } }
 
@@ -370,18 +379,21 @@ class Masq {
    * @param {string} appId The app id (url for instance)
    */
   async handleUserAppLogin (channel, rawKey, appId) {
+    console.log('handleUserAppLogin', channel, appId)
     return new Promise(async (resolve, reject) => {
       this.appId = appId
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
       const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
+        console.log('sendAuthorized')
         const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
       }
 
       const sendNotAuthorized = async (peer) => {
+        console.log('sendNotAuthorized')
         const data = { msg: 'notAuthorized' }
         const encryptedMsg = await encrypt(this.key, data, 'base64')
         peer.send(JSON.stringify(encryptedMsg))
@@ -389,6 +401,7 @@ class Masq {
 
       this.hub = signalhub(channel, HUB_URLS)
       this.hub.on('error', async () => {
+        console.error('error 1')
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.SIGNALLING_SERVER_ERROR))
       })
@@ -396,12 +409,14 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.sw.on('disconnect', async () => {
+        console.error('this.sw disconnect')
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
       })
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
+        console.log('once peer')
 
         peer.on('error', async (err) => {
           await this._closeUserAppConnection()
@@ -425,6 +440,7 @@ class Masq {
 
         peer.once('data', async (data) => {
           const json = await decrypt(this.key, JSON.parse(data), 'base64')
+          console.log('peer.once', json)
 
           if (json.msg === 'connectionEstablished') {
             await this._closeUserAppConnection()
