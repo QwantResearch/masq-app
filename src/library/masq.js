@@ -89,6 +89,19 @@ class Masq {
     this.masterKey = null
     this.peer = null
     this.app = null
+
+    this.loginChannel = null
+    this.loginKey = null
+    this.loginSw = null
+    this.loginPeer = null
+
+    // init state
+    this.state = 'notLogged'
+  }
+
+  setState (newState) {
+    console.log(` ##### From ${this.state} -> ${newState} ######`)
+    this.state = newState
   }
 
   /**
@@ -125,6 +138,7 @@ class Masq {
     })
 
     const profile = await this.getAndDecrypt('/profile')
+    this.setState('logged')
     return profile
   }
 
@@ -361,6 +375,55 @@ class Masq {
     await this._updateResource('devices', device)
   }
 
+  async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
+    return new Promise(async (resolve, reject) => {
+      this.setState('logged')
+      const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+      const encryptedMsg = await encrypt(this.key, data, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        switch (json.msg) {
+          case 'connectionEstablished':
+            await this._closeUserAppConnection()
+            break
+
+          default:
+          // TODO change error
+            await this._closeUserAppConnection()
+            reject(new MasqError(MasqError.INVALID_DATA))
+        }
+      })
+    })
+  }
+
+  async sendNotAuthorized (peer) {
+    return new Promise(async (resolve, reject) => {
+      this.setState('registerNeeded')
+      const data = { msg: 'notAuthorized' }
+      const encryptedMsg = await encrypt(this.key, data, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        switch (json.msg) {
+          case 'registerUserApp':
+            const { name, description, imageURL } = json
+            this.app = { name, description, imageURL }
+            this.setState('userAppInfoReceived')
+            resolve({ isConnected: false, ...this.app })
+            break
+
+          default:
+          // TODO change error
+            await this._closeUserAppConnection()
+            reject(new MasqError(MasqError.INVALID_DATA))
+        }
+      })
+    })
+  }
+
   /**
    * Connect to a user-app channel and answer if
    * the user-app is authorized or not.
@@ -374,18 +437,6 @@ class Masq {
       this.appId = appId
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
-
-      const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
-        const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
-
-      const sendNotAuthorized = async (peer) => {
-        const data = { msg: 'notAuthorized' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
 
       this.hub = signalhub(channel, HUB_URLS)
       this.hub.on('error', async () => {
@@ -402,7 +453,7 @@ class Masq {
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
-
+        this.setState('needCheckUserApp')
         peer.on('error', async (err) => {
           await this._closeUserAppConnection()
           return reject(err)
@@ -414,30 +465,15 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            await sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
           } else {
-            await sendNotAuthorized(peer)
+            const res = await this.sendNotAuthorized(peer)
+            resolve(res)
           }
         } catch (e) {
           await this._closeUserAppConnection()
           return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
-
-        peer.once('data', async (data) => {
-          const json = await decrypt(this.key, JSON.parse(data), 'base64')
-
-          if (json.msg === 'connectionEstablished') {
-            await this._closeUserAppConnection()
-            return resolve({ isConnected: true })
-          } else if (json.msg === 'registerUserApp') {
-            const { name, description, imageURL } = json
-            this.app = { name, description, imageURL }
-            resolve({ isConnected: false, ...this.app })
-          } else {
-            await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.INVALID_DATA))
-          }
-        })
       })
     })
   }
@@ -450,70 +486,76 @@ class Masq {
    * @param {boolean} isGranted True if the app is authorized
    */
   async handleUserAppRegister (isGranted) {
-    return new Promise(async (resolve, reject) => {
-      this._checkProfile()
+    this._checkProfile()
 
-      let dbName = ''
+    if (!isGranted) {
+      await this.sendAccessRefused(this.peer)
+      await this._closeUserAppConnection()
+    }
 
-      const sendAccessRefused = async (peer) => {
-        const data = { msg: 'masqAccessRefused' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+    await this.sendAccessGranted(this.peer)
+  }
 
-      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+  async sendAccessRefused (peer) {
+    const data = { msg: 'masqAccessRefused' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+  }
 
-      const sendWriteAccessGranted = async (peer) => {
-        const data = { msg: 'writeAccessGranted' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+  async sendAccessGranted (peer) {
+    const apps = await this.getApps()
+    const app = apps.find(app => app.appId === this.appId)
+    const appDEK = app ? app.appDEK : await this._genAppDEK()
+    const appNonce = app ? app.appNonce : await this._genNonce()
 
-      const handleData = async (peer, data) => {
-        const json = await decrypt(this.key, JSON.parse(data), 'base64')
-        const { msg } = json
-        // TODO: Error if  missing params
-
-        if (msg === 'requestWriteAccess') {
-          const userAppKey = Buffer.from(json.key, 'hex')
-          try {
-            await this.appsDBs[dbName].authorizeAsync(userAppKey)
-          } catch (err) {
-            throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
-          }
-          await sendWriteAccessGranted(peer)
-          this.sw.close()
-          return resolve()
-        }
-      }
-
-      if (!isGranted) {
-        await sendAccessRefused(this.peer)
-        await this._closeUserAppConnection()
-        return resolve()
-      }
-
-      const apps = await this.getApps()
-      const app = apps.find(app => app.appId === this.appId)
-      const appDEK = app ? app.appDEK : await this._genAppDEK()
-      const appNonce = app ? app.appNonce : await this._genNonce()
-
-      const id = app ? app.id : await this.addApp({
-        ...this.app, appId: this.appId, appDEK, appNonce
-      })
-
-      const privateProfile = await this.getProfile()
-
-      dbName = `app-${this.profileId}-${id}`
-
-      const db = await this._createDBAndSyncApp(dbName)
-      await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
-      this.peer.on('data', (data) => handleData(this.peer, data))
+    const id = app ? app.id : await this.addApp({
+      ...this.app, appId: this.appId, appDEK, appNonce
     })
+
+    const privateProfile = await this.getProfile()
+
+    const dbName = `app-${this.profileId}-${id}`
+    const db = await this._createDBAndSyncApp(dbName)
+
+    const dbKey = db.key.toString('hex')
+    const userAppDbId = id
+    const userAppDEK = appDEK
+    const username = privateProfile.username
+    const profileImage = privateProfile.image
+    const userAppNonce = appNonce
+
+    const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+    peer.once('data', async (data) => {
+      const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+      switch (json.msg) {
+        case 'requestWriteAccess':
+          this.setState('requestWriteAccessMaterial')
+          await this._grantWriteAccess(this.peer, json, dbName)
+          break
+
+        default:
+        // TODO change error
+          await this._closeUserAppConnection()
+          return new MasqError(MasqError.INVALID_DATA)
+      }
+    })
+  }
+
+  async _grantWriteAccess (peer, json, dbName) {
+    const userAppKey = Buffer.from(json.key, 'hex')
+    try {
+      await this.appsDBs[dbName].authorizeAsync(userAppKey)
+    } catch (err) {
+      throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
+    }
+    this.setState('writeAccessProvided')
+    const data = { msg: 'writeAccessGranted' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+    this.sw.close()
   }
 
   _createDBAndSyncApp (dbName) {
