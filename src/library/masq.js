@@ -379,16 +379,14 @@ class Masq {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
-        switch (json.msg) {
-          case 'connectionEstablished':
-            await this._closeUserAppConnection()
-            break
-
-          default:
-          // TODO change error
-            await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.INVALID_DATA))
+        if (json.msg === 'connectionEstablished') {
+          await this._closeUserAppConnection()
+          resolve({ isConnected: true })
+        } else {
+          await this._closeUserAppConnection()
+          reject(new MasqError(MasqError.INVALID_DATA))
         }
+        // TODO change error
       })
     })
   }
@@ -441,10 +439,12 @@ class Masq {
 
       this.sw = swarm(this.hub, swarmOpts)
 
-      this.sw.on('disconnect', async () => {
+      this.swListener = async () => {
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
-      })
+      }
+
+      this.sw.on('disconnect', this.swListener)
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
@@ -460,13 +460,16 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            const res = await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+
+            resolve(res)
           } else {
             const res = await this.sendNotAuthorized(peer)
             resolve(res)
           }
         } catch (e) {
           await this._closeUserAppConnection()
+
           return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
       })
@@ -689,6 +692,7 @@ class Masq {
   }
 
   _closeUserAppConnection () {
+    this.sw.removeListener('disconnect', this.swListener)
     return new Promise((resolve, reject) => {
       this.sw.on('close', () => {
         this.hub = null
