@@ -3,7 +3,7 @@ import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 
 import SyncProfile from '../src/library/sync-profile'
-// const { expect } = require('chai')
+const { expect } = require('chai')
 
 const { dbReady, createPromisifiedHyperDB } = common.utils
 const { genAESKey, exportKey } = common.crypto
@@ -38,8 +38,9 @@ describe('sync-profile', function () {
   it('should pullProfile', async () => {
     const sp1 = new SyncProfile({ hubUrl: 'localhost:8080' })
     const sp2 = new SyncProfile({ hubUrl: 'localhost:8080' })
+    const dbName = 'id'
 
-    const db = createPromisifiedHyperDB('id')
+    const db = createPromisifiedHyperDB(dbName)
     await dbReady(db)
 
     await Promise.all([
@@ -48,8 +49,10 @@ describe('sync-profile', function () {
     ])
 
     await Promise.all([
-      sp2.pushProfile(db, 'id'),
+      sp2.pushProfile(db, dbName + '-copy'),
       sp1.pullProfile()
     ])
+
+    expect(db._authorized).to.have.lengthOf(2)
   })
 })
