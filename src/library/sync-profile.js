@@ -7,14 +7,12 @@ const { importKey, encrypt, decrypt } = common.crypto
 
 class SyncProfile {
   constructor (options) {
+    this.hubUrl = options.hubUrl
     this.swarmOptions = options
       ? options.swarmOptions || null
       : null
 
-    this.hubUrl = options.hubUrl
-
     this.key = null // encryption key
-
     this.channel = ''
     this.hub = null
     this.sw = null
@@ -38,7 +36,9 @@ class SyncProfile {
   async pullProfile () {
     let data
     console.log('pullProfile')
-    await this.sendEncryptedJSON({ msg: 'pullProfile' })
+    await this.sendEncryptedJSON({
+      msg: 'pullProfile'
+    })
 
     data = await this.waitForDataFromPeer()
     const { msg, id, key } = await this.decryptJSON(data)
@@ -49,11 +49,16 @@ class SyncProfile {
     // create profile
     const db = await createPromisifiedHyperDB(id, key)
     await dbReady(db)
-    await this.sendEncryptedJSON({ msg: 'requestWriteAccess', key: '0x' })
+    console.log('dbReady', db.key.toString('hex'), db.local.key.toString('hex'))
+    await this.sendEncryptedJSON({
+      msg: 'requestWriteAccess',
+      key: db.local.key.toString('hex')
+    })
 
     data = await this.waitForDataFromPeer()
     const { msg: msg2 } = await this.decryptJSON(data)
     console.log('pull data', msg2)
+
     if (msg2 !== 'writeAccessGranted') throw new Error('refused')
   }
 
@@ -74,10 +79,14 @@ class SyncProfile {
 
     data = await this.waitForDataFromPeer()
     const { msg: msg2, key } = await this.decryptJSON(data)
-    console.log('push data', msg, key)
+    console.log('push data', msg2, key)
+
     if (!key || msg2 !== 'requestWriteAccess') throw new Error('msg not expected' + msg2)
-    // db.authorize(key)
-    await this.sendEncryptedJSON({ msg: 'writeAccessGranted' })
+
+    await db.authorizeAsync(Buffer.from(key, 'hex'))
+    await this.sendEncryptedJSON({
+      msg: 'writeAccessGranted'
+    })
   }
 
   async sendEncryptedJSON (message) {
