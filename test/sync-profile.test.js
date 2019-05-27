@@ -39,9 +39,16 @@ describe('sync-profile', function () {
     const sp1 = new SyncProfile({ hubUrl: 'localhost:8080' })
     const sp2 = new SyncProfile({ hubUrl: 'localhost:8080' })
     const dbName = 'id'
+    const publicProfile = {
+      username: 'username',
+      image: '',
+      id: dbName
+    }
 
     const db = createPromisifiedHyperDB(dbName)
     await dbReady(db)
+
+    expect(window.localStorage).to.have.lengthOf(0)
 
     await Promise.all([
       sp1.joinSecureChannel('channel2', this.keyBase64),
@@ -49,10 +56,13 @@ describe('sync-profile', function () {
     ])
 
     await Promise.all([
-      sp2.pushProfile(db, dbName + '-copy'),
+      sp2.pushProfile(db, dbName + '-copy', publicProfile),
       sp1.pullProfile()
     ])
 
     expect(db._authorized).to.have.lengthOf(2)
+    expect(window.localStorage).to.have.lengthOf(1)
+    const localStorageProfile = window.localStorage.getItem('profile-' + dbName)
+    expect(JSON.parse(localStorageProfile)).to.eql(publicProfile)
   })
 })

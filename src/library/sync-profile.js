@@ -2,6 +2,8 @@ import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 import * as common from 'masq-common'
 
+import Masq from './masq'
+
 const { dbReady, createPromisifiedHyperDB } = common.utils
 const { importKey, encrypt, decrypt } = common.crypto
 
@@ -17,6 +19,10 @@ class SyncProfile {
     this.hub = null
     this.sw = null
     this.peer = null
+
+    this.db = null
+
+    this.masq = new Masq()
   }
 
   async joinSecureChannel (channel, rawKey) {
@@ -41,18 +47,21 @@ class SyncProfile {
     })
 
     data = await this.waitForDataFromPeer()
-    const { msg, id, key } = await this.decryptJSON(data)
+    const { msg, id, key, publicProfile } = await this.decryptJSON(data)
     console.log('pull data', msg, id, key)
 
-    if (!id || !key || msg !== 'pushProfile') throw new Error('refused')
+    if (!id || !key || !publicProfile || msg !== 'pushProfile') throw new Error('refused')
 
     // create profile
-    const db = await createPromisifiedHyperDB(id, key)
-    await dbReady(db)
-    console.log('dbReady', db.key.toString('hex'), db.local.key.toString('hex'))
+
+    this.db = await createPromisifiedHyperDB(id, key)
+    await dbReady(this.db)
+    console.log('dbReady', this.db.key.toString('hex'), this.db.local.key.toString('hex'))
+    this.masq._setProfileToLocalStorage(publicProfile)
+
     await this.sendEncryptedJSON({
       msg: 'requestWriteAccess',
-      key: db.local.key.toString('hex')
+      key: this.db.local.key.toString('hex')
     })
 
     data = await this.waitForDataFromPeer()
@@ -62,7 +71,7 @@ class SyncProfile {
     if (msg2 !== 'writeAccessGranted') throw new Error('refused')
   }
 
-  async pushProfile (db, id) {
+  async pushProfile (db, id, publicProfile) {
     let data
     console.log('pushProfile')
     data = await this.waitForDataFromPeer()
@@ -74,7 +83,8 @@ class SyncProfile {
     await this.sendEncryptedJSON({
       msg: 'pushProfile',
       key: db.key.toString('hex'),
-      id
+      id,
+      publicProfile
     })
 
     data = await this.waitForDataFromPeer()

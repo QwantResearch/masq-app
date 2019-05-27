@@ -12,7 +12,7 @@ const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
 const { MasqError, checkObject } = common.errors
 
-const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
+const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS ? process.env.REACT_APP_SIGNALHUB_URLS.split(',') : ''
 
 const debug = (function () {
   switch (process.env.NODE_ENV) {
@@ -39,7 +39,9 @@ const STATES = {
 
 let STUN_TURN = []
 
-if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
+console.log('process.env', process.env)
+
+if (process.env.REACT_APP_REMOTE_WEBRTC && process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
   if (process.env.REACT_APP_STUN_URLS) {
     const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
       u => {
