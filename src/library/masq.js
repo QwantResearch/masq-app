@@ -90,11 +90,6 @@ class Masq {
     this.peer = null
     this.app = null
 
-    this.loginChannel = null
-    this.loginKey = null
-    this.loginSw = null
-    this.loginPeer = null
-
     // init state
     this.state = 'notLogged'
   }
