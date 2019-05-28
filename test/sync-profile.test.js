@@ -1,11 +1,15 @@
+process.env.REACT_APP_SIGNALHUB_URLS = 'localhost:8080'
+const { REACT_APP_SIGNALHUB_URLS } = process.env
+
 import * as common from 'masq-common'
 import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 
-import SyncProfile from '../src/library/sync-profile'
 const { expect } = require('chai')
+const Masq = require('../src/library/masq').default
+const SyncProfile = require('../src/library/sync-profile').default
 
-const { dbReady, createPromisifiedHyperDB } = common.utils
+const { dbExists } = common.utils
 const { genAESKey, exportKey } = common.crypto
 
 describe('sync-profile', function () {
@@ -22,8 +26,8 @@ describe('sync-profile', function () {
   })
 
   it('should join the secure channel', async () => {
-    const sp = new SyncProfile({ hubUrl: 'localhost:8080' })
-    const hub = signalhub('channel', 'localhost:8080')
+    const sp = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
+    const hub = signalhub('channel', REACT_APP_SIGNALHUB_URLS)
     const sw = swarm(hub)
 
     const join = new Promise((resolve) => {
@@ -36,19 +40,41 @@ describe('sync-profile', function () {
   })
 
   it('should pullProfile', async () => {
-    const sp1 = new SyncProfile({ hubUrl: 'localhost:8080' })
-    const sp2 = new SyncProfile({ hubUrl: 'localhost:8080' })
-    const dbName = 'id'
-    const publicProfile = {
+    const sp1 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
+    const sp2 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
+    const masq = new Masq()
+    const masq2 = new Masq()
+    // const dbName = 'id'
+    const profile = {
+      firstname: '',
+      lastname: '',
       username: 'username',
       image: '',
-      id: dbName
+      password: 'pass'
     }
 
-    const db = createPromisifiedHyperDB(dbName)
-    await dbReady(db)
+    // const publicProfile = {
+    //   username: 'username',
+    //   image: ''
+    // }
 
-    expect(window.localStorage).to.have.lengthOf(0)
+    // const db = createPromisifiedHyperDB(dbName)
+    // await dbReady(db)
+
+    // await db.putAsync('/profile', publicProfile)
+
+    const { id } = await masq.addProfile(profile)
+    const idCopy = id + '-copy'
+    const publicProfile = {
+      ...(await masq.getProfiles())[0],
+      id: idCopy
+    }
+
+    // masq._startReplicate(db)
+    await masq.openProfile(id, 'pass')
+
+    expect(window.localStorage).to.have.lengthOf(1)
+    expect(masq.profileDB._authorized).to.have.lengthOf(1)
 
     await Promise.all([
       sp1.joinSecureChannel('channel2', this.keyBase64),
@@ -56,13 +82,18 @@ describe('sync-profile', function () {
     ])
 
     await Promise.all([
-      sp2.pushProfile(db, dbName + '-copy', publicProfile),
+      sp2.pushProfile(masq.profileDB, idCopy, publicProfile),
       sp1.pullProfile()
     ])
 
-    expect(db._authorized).to.have.lengthOf(2)
-    expect(window.localStorage).to.have.lengthOf(1)
-    const localStorageProfile = window.localStorage.getItem('profile-' + dbName)
+    expect(await dbExists('profile-' + id)).to.be.true
+    expect(await dbExists('profile-' + idCopy)).to.be.true
+
+    expect(masq.profileDB._authorized).to.have.lengthOf(2)
+    expect(window.localStorage).to.have.lengthOf(2)
+    const localStorageProfile = window.localStorage.getItem('profile-' + idCopy)
     expect(JSON.parse(localStorageProfile)).to.eql(publicProfile)
+
+    await masq2.openProfile(idCopy, 'pass')
   })
 })

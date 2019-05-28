@@ -7,7 +7,8 @@ module.exports = {
   overrides: [{
     files: '*.test.js',
     rules: {
-      'no-unused-expressions': 'off'
+      'no-unused-expressions': 'off',
+      'import/first': 'off'
     }
   }],
   settings: {
