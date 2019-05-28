@@ -442,7 +442,7 @@ class Masq {
           resolve({ isConnected: true })
         } else {
           await this._closeUserAppConnection()
-          reject(new MasqError(MasqError.WRONG_MESSAGE,`Unexpectedly received message with type ${json.msg}` ))
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
         }
       })
     })
