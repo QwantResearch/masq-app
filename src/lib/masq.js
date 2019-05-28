@@ -13,7 +13,9 @@ const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 const { MasqError, checkObject } = common.errors
 const MasqMessages = common.messages.UserAppLogin
 
-const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS ? process.env.REACT_APP_SIGNALHUB_URLS.split(',') : ''
+console.log('process.env.REACT_APP_SIGNALHUB_URLS', process.env.REACT_APP_SIGNALHUB_URLS)
+
+const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const debug = (function () {
   switch (process.env.NODE_ENV) {
@@ -744,7 +746,9 @@ class Masq {
     })
 
     this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
+    console.log('okok')
     this.swarms[discoveryKey].on('peer', peer => {
+      console.log('startReplicate peer!')
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
     })

@@ -52,11 +52,15 @@ class SyncProfile {
 
     if (!id || !key || !publicProfile || msg !== 'pushProfile') throw new Error('refused')
 
-    // create profile
-
-    this.db = await createPromisifiedHyperDB(id, key)
+    this.db = await createPromisifiedHyperDB('profile-' + id, key)
     await dbReady(this.db)
+
+    // Start to replicate the profile
+    this.masq._startReplicate(this.db)
+
     console.log('dbReady', this.db.key.toString('hex'), this.db.local.key.toString('hex'))
+
+    // store public profile
     this.masq._setProfileToLocalStorage(publicProfile)
 
     await this.sendEncryptedJSON({
@@ -67,6 +71,13 @@ class SyncProfile {
     data = await this.waitForDataFromPeer()
     const { msg: msg2 } = await this.decryptJSON(data)
     console.log('pull data', msg2)
+
+    // this will block until the profile value is replicated
+    await this.db.getAsync('/profile')
+
+    // We have now the profile synced, stop replication.
+    // The user can now log in to start further replication of its profile and apps
+    this.masq._stopAllReplicates()
 
     if (msg2 !== 'writeAccessGranted') throw new Error('refused')
   }
