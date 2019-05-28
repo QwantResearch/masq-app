@@ -442,10 +442,8 @@ class Masq {
           resolve({ isConnected: true })
         } else {
           await this._closeUserAppConnection()
-          // TODO change error
-          reject(new MasqError(MasqError.INVALID_DATA))
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
         }
-        // TODO change error
       })
     })
   }
@@ -468,9 +466,8 @@ class Masq {
             break
 
           default:
-            // TODO change error
             await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.INVALID_DATA))
+            reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
         }
       })
     })
@@ -535,9 +532,8 @@ class Masq {
           break
 
         default:
-        // TODO change error
           await this._closeUserAppConnection()
-          return new MasqError(MasqError.INVALID_DATA)
+          return new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`)
       }
     })
   }
