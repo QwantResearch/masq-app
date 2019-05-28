@@ -370,53 +370,6 @@ class Masq {
     await this._updateResource('devices', device)
   }
 
-  async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
-    return new Promise(async (resolve, reject) => {
-      this.setState('logged')
-      const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-      const encryptedMsg = await encrypt(this.key, data, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
-      peer.once('data', async (data) => {
-        const json = await decrypt(this.key, JSON.parse(data), 'base64')
-
-        if (json.msg === 'connectionEstablished') {
-          await this._closeUserAppConnection()
-          resolve({ isConnected: true })
-        } else {
-          await this._closeUserAppConnection()
-          reject(new MasqError(MasqError.INVALID_DATA))
-        }
-        // TODO change error
-      })
-    })
-  }
-
-  async sendNotAuthorized (peer) {
-    return new Promise(async (resolve, reject) => {
-      this.setState('registerNeeded')
-      const data = { msg: 'notAuthorized' }
-      const encryptedMsg = await encrypt(this.key, data, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
-      peer.once('data', async (data) => {
-        const json = await decrypt(this.key, JSON.parse(data), 'base64')
-
-        switch (json.msg) {
-          case 'registerUserApp':
-            const { name, description, imageURL } = json
-            this.app = { name, description, imageURL }
-            this.setState('userAppInfoReceived')
-            resolve({ isConnected: false, ...this.app })
-            break
-
-          default:
-          // TODO change error
-            await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.INVALID_DATA))
-        }
-      })
-    })
-  }
-
   /**
    * Connect to a user-app channel and answer if
    * the user-app is authorized or not.
@@ -469,8 +422,55 @@ class Masq {
           }
         } catch (e) {
           await this._closeUserAppConnection()
-
           return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
+        }
+      })
+    })
+  }
+
+  async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
+    return new Promise(async (resolve, reject) => {
+      this.setState('logged')
+      const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+      const encryptedMsg = await encrypt(this.key, data, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        if (json.msg === 'connectionEstablished') {
+          await this._closeUserAppConnection()
+          resolve({ isConnected: true })
+        } else {
+          await this._closeUserAppConnection()
+          // TODO change error
+          reject(new MasqError(MasqError.INVALID_DATA))
+        }
+        // TODO change error
+      })
+    })
+  }
+
+  async sendNotAuthorized (peer) {
+    return new Promise(async (resolve, reject) => {
+      this.setState('registerNeeded')
+      const data = { msg: 'notAuthorized' }
+      const encryptedMsg = await encrypt(this.key, data, 'base64')
+      peer.send(JSON.stringify(encryptedMsg))
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        switch (json.msg) {
+          case 'registerUserApp':
+            const { name, description, imageURL } = json
+            this.app = { name, description, imageURL }
+            this.setState('userAppInfoReceived')
+            resolve({ isConnected: false, ...this.app })
+            break
+
+          default:
+            // TODO change error
+            await this._closeUserAppConnection()
+            reject(new MasqError(MasqError.INVALID_DATA))
         }
       })
     })
