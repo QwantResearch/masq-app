@@ -371,6 +371,10 @@ describe('masq protocol', function () {
     }
   })
 
+  after(() => {
+    window.localStorage.clear()
+  })
+
   it('handleUserAppLogin should connect to the swarm', async () => {
     let err = null
     const hub = signalhub('channel', 'localhost:8080')

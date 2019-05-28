@@ -22,7 +22,7 @@ describe('sync-profile', function () {
   })
 
   after(() => {
-
+    window.localStorage.clear()
   })
 
   it('should join the secure channel', async () => {
