@@ -13,8 +13,6 @@ const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 const { MasqError, checkObject } = common.errors
 const MasqMessages = common.messages.UserAppLogin
 
-console.log('process.env.REACT_APP_SIGNALHUB_URLS', process.env.REACT_APP_SIGNALHUB_URLS)
-
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const debug = (function () {
@@ -41,8 +39,6 @@ const STATES = {
 }
 
 let STUN_TURN = []
-
-console.log('process.env', process.env)
 
 if (process.env.REACT_APP_REMOTE_WEBRTC && process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
   if (process.env.REACT_APP_STUN_URLS) {
@@ -746,9 +742,7 @@ class Masq {
     })
 
     this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
-    console.log('okok')
     this.swarms[discoveryKey].on('peer', peer => {
-      console.log('startReplicate peer!')
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
     })
