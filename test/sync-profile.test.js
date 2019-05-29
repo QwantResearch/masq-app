@@ -39,12 +39,11 @@ describe('sync-profile', function () {
     await join
   })
 
-  it('should pullProfile', async () => {
+  it('should sync the profile', async () => {
     const sp1 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const sp2 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const masq = new Masq()
     const masq2 = new Masq()
-    // const dbName = 'id'
     const profile = {
       firstname: '',
       lastname: '',
@@ -60,8 +59,7 @@ describe('sync-profile', function () {
       id: idCopy
     }
 
-    // masq._startReplicate(db)
-    await masq.openProfile(id, 'pass')
+    const privateProfile = await masq.openProfile(id, 'pass')
 
     expect(window.localStorage).to.have.lengthOf(1)
     expect(masq.profileDB._authorized).to.have.lengthOf(1)
@@ -84,6 +82,7 @@ describe('sync-profile', function () {
     const localStorageProfile = window.localStorage.getItem('profile-' + idCopy)
     expect(JSON.parse(localStorageProfile)).to.eql(publicProfile)
 
-    await masq2.openProfile(idCopy, 'pass')
+    const syncedProfile = await masq2.openProfile(idCopy, 'pass')
+    expect(syncedProfile).to.eql(privateProfile)
   })
 })
