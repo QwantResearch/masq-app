@@ -53,16 +53,6 @@ describe('sync-profile', function () {
       password: 'pass'
     }
 
-    // const publicProfile = {
-    //   username: 'username',
-    //   image: ''
-    // }
-
-    // const db = createPromisifiedHyperDB(dbName)
-    // await dbReady(db)
-
-    // await db.putAsync('/profile', publicProfile)
-
     const { id } = await masq.addProfile(profile)
     const idCopy = id + '-copy'
     const publicProfile = {
