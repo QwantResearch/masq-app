@@ -14,6 +14,8 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
+const STATE_DEBUG = false
+
 const STATES = {
   CLEAN_NEEDED: 'cleanNeeded',
   NOT_LOGGED: 'notLogged',
@@ -110,7 +112,7 @@ class Masq {
   }
 
   setState (newState) {
-    console.log(` ##### From ${this.state} -> ${newState} ######`)
+    if (STATE_DEBUG) console.log(` ##### From ${this.state} -> ${newState} ######`)
     switch (newState) {
       case STATES.CLEAN_NEEDED:
         if (this.state === STATES.USER_ACCEPTED || this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) { this._removeDb() }
@@ -417,7 +419,6 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.swListener = async () => {
-        console.log('disconnect ?! what, the current state is ', this.state)
         this.setState(STATES.CLEAN_NEEDED)
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
@@ -599,14 +600,14 @@ class Masq {
 
   _removeDb () {
     if (this.dbName) {
-      console.log(`### Clean operaiton : The userApp db ${this.dbName} exists, we delete it.`)
+      if (STATE_DEBUG) console.log(`### Clean operaiton : The userApp db ${this.dbName} exists, we delete it.`)
       this._stopReplicate(this.dbName)
       window.indexedDB.deleteDatabase(this.dbName)
     }
   }
 
   _clean () {
-    console.log(`### Clean operaiton : we delete the variables`)
+    if (STATE_DEBUG) console.log(`### Clean operaiton : we delete the variables`)
     this.hub = null
     this.dbName = null
     this.peer = null
