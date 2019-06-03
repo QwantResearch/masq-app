@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { createRef } from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
+import html2canvas from 'html2canvas'
+
 import { setNotification } from '../../actions'
 import { Avatar, Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
 import { isName, isUsername, isPassword, isForceEnough } from '../../library/validators'
@@ -24,7 +27,7 @@ class Signup extends React.Component {
 
     this.currentStep = 0
     this.validationEnabled = false
-    this.refAvatar = React.createRef()
+    this.refAvatar = createRef()
 
     this.next = this.next.bind(this)
     this.finish = this.finish.bind(this)
@@ -95,7 +98,7 @@ class Signup extends React.Component {
     this.refAvatar.current.openDialog()
   }
 
-  next () {
+  async next () {
     const fieldsToValidate = ['lastname', 'firstname', 'username']
     this.validationEnabled = true
 
@@ -109,6 +112,15 @@ class Signup extends React.Component {
 
     this.validationEnabled = false // do not display error on the next step for now
     this.currentStep++
+
+    if (this.state.image.length === 0) {
+      // export avatar as png
+      const canvas = await html2canvas(ReactDOM.findDOMNode(this.refAvatar.current))
+      this.setState({
+        image: canvas.toDataURL('image/png')
+      })
+    }
+
     this.forceUpdate()
   }
 

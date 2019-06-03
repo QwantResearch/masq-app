@@ -25,6 +25,7 @@
     "classnames": "^2.2.6",
     "compressorjs": "^1.0.5",
     "detect-browser": "^3.0.1",
+    "html2canvas": "^1.0.0-rc.3",
     "i18next": "^15.1.0",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
