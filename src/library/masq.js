@@ -14,6 +14,20 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
+const STATES = {
+  CLEAN_NEEDED: 'cleanNeeded',
+  NOT_LOGGED: 'notLogged',
+  LOGGED: 'logged',
+  CHECK_USER_APP: 'needCheckUserApp',
+  REGISTER_NEEDED: 'registerNeeded',
+  USERAPP_INFO_RECEIVED: 'userAppInfoReceived',
+  USER_REFUSED: 'userRefused',
+  USER_ACCEPTED: 'userAccepted',
+  REQUEST_WRITE_ACCESS_MATERIAL: 'requestWriteAccessMaterial',
+  WRITE_ACCESS_PROVIDED: 'writeAccessProvided'
+
+}
+
 let STUN_TURN = []
 
 if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
@@ -89,13 +103,23 @@ class Masq {
     this.masterKey = null
     this.peer = null
     this.app = null
+    this.dbName = null // used only during userApp registration
 
     // init state
-    this.state = 'notLogged'
+    this.state = STATES.NOT_LOGGED
   }
 
   setState (newState) {
     console.log(` ##### From ${this.state} -> ${newState} ######`)
+    switch (newState) {
+      case STATES.CLEAN_NEEDED:
+        if (this.state === STATES.USER_ACCEPTED || this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) { this._removeDb() }
+        this._clean()
+        break
+
+      default:
+        break
+    }
     this.state = newState
   }
 
@@ -133,7 +157,7 @@ class Masq {
     })
 
     const profile = await this.getAndDecrypt('/profile')
-    this.setState('logged')
+    this.setState(STATES.LOGGED)
     return profile
   }
 
@@ -393,6 +417,8 @@ class Masq {
       this.sw = swarm(this.hub, swarmOpts)
 
       this.swListener = async () => {
+        console.log('disconnect ?! what, the current state is ', this.state)
+        this.setState(STATES.CLEAN_NEEDED)
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
       }
@@ -401,7 +427,7 @@ class Masq {
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
-        this.setState('needCheckUserApp')
+        this.setState(STATES.CHECK_USER_APP)
         peer.on('error', async (err) => {
           await this._closeUserAppConnection()
           return reject(err)
@@ -430,7 +456,7 @@ class Masq {
 
   async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
     return new Promise(async (resolve, reject) => {
-      this.setState('logged')
+      this.setState(STATES.LOGGED)
       const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
       const encryptedMsg = await encrypt(this.key, data, 'base64')
       peer.send(JSON.stringify(encryptedMsg))
@@ -450,7 +476,7 @@ class Masq {
 
   async sendNotAuthorized (peer) {
     return new Promise(async (resolve, reject) => {
-      this.setState('registerNeeded')
+      this.setState(STATES.REGISTER_NEEDED)
       const data = { msg: 'notAuthorized' }
       const encryptedMsg = await encrypt(this.key, data, 'base64')
       peer.send(JSON.stringify(encryptedMsg))
@@ -461,7 +487,7 @@ class Masq {
           case 'registerUserApp':
             const { name, description, imageURL } = json
             this.app = { name, description, imageURL }
-            this.setState('userAppInfoReceived')
+            this.setState(STATES.USERAPP_INFO_RECEIVED)
             resolve({ isConnected: false, ...this.app })
             break
 
@@ -492,12 +518,14 @@ class Masq {
   }
 
   async sendAccessRefused (peer) {
+    this.setState(STATES.USER_REFUSED)
     const data = { msg: 'masqAccessRefused' }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
   }
 
   async sendAccessGranted (peer) {
+    this.setState(STATES.USER_ACCEPTED)
     const apps = await this.getApps()
     const app = apps.find(app => app.appId === this.appId)
     const appDEK = app ? app.appDEK : await this._genAppDEK()
@@ -511,6 +539,8 @@ class Masq {
 
     const dbName = `app-${this.profileId}-${id}`
     const db = await this._createDBAndSyncApp(dbName)
+    // this.dbName must be filled only during the userApp register protocol
+    this.dbName = dbName
 
     const dbKey = db.key.toString('hex')
     const userAppDbId = id
@@ -527,7 +557,7 @@ class Masq {
 
       switch (json.msg) {
         case 'requestWriteAccess':
-          this.setState('requestWriteAccessMaterial')
+          this.setState(STATES.REQUEST_WRITE_ACCESS_MATERIAL)
           await this._grantWriteAccess(this.peer, json, dbName)
           break
 
@@ -545,11 +575,11 @@ class Masq {
     } catch (err) {
       throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
     }
-    this.setState('writeAccessProvided')
+    this.setState(STATES.WRITE_ACCESS_PROVIDED)
     const data = { msg: 'writeAccessGranted' }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
-    this.sw.close()
+    await this._closeUserAppConnection()
   }
 
   _createDBAndSyncApp (dbName) {
@@ -566,6 +596,22 @@ class Masq {
   /**
    * Private methods
    */
+
+  _removeDb () {
+    if (this.dbName) {
+      console.log(`### Clean operaiton : The userApp db ${this.dbName} exists, we delete it.`)
+      this._stopReplicate(this.dbName)
+      window.indexedDB.deleteDatabase(this.dbName)
+    }
+  }
+
+  _clean () {
+    console.log(`### Clean operaiton : we delete the variables`)
+    this.hub = null
+    this.dbName = null
+    this.peer = null
+    this.app = null
+  }
 
   /**
    * Generate a User app Data Encryption Key, during the register
@@ -681,6 +727,14 @@ class Masq {
     Object.values(this.swarms).forEach(sw => sw.close())
     this.swarms = {}
     this.hubs = {}
+  }
+
+  _stopReplicate (dbName) {
+    const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
+    this.appsDBs[dbName] = null
+    this.hubs[discoveryKey] = null
+    this.swarms[discoveryKey].close()
+    this.swarms[discoveryKey] = null
   }
 
   _checkProfile () {
