@@ -115,7 +115,10 @@ class Masq {
     if (STATE_DEBUG) console.log(` ##### From ${this.state} -> ${newState} ######`)
     switch (newState) {
       case STATES.CLEAN_NEEDED:
-        if (this.state === STATES.USER_ACCEPTED || this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) { this._removeDb() }
+        if (this.state === STATES.USER_ACCEPTED ||
+           this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) {
+          this._removeDb()
+        }
         this._clean()
         break
 
