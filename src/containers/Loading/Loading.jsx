@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { Space, Typography } from '../../components'
-import video from '../../assets/masq_loading.mp4'
+import animation from '../../assets/masq_loading.gif'
 
 import styles from './Loading.module.scss'
 
@@ -16,7 +16,7 @@ const Loading = () => {
         <Logo />
         <Space size={82} />
       </div>
-      <video autoPlay loop src={video} />
+      <img src={animation} />
       <Typography type='paragraph-landing'>{t('Loading...')}</Typography>
       <Cubes className={styles.Background} />
     </div>
