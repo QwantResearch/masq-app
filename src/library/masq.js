@@ -443,14 +443,21 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            const res = await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
-
+            await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            const res = await this.receiveEndOfConnection(peer)
             resolve(res)
           } else {
-            const res = await this.sendNotAuthorized(peer)
+            await this.sendNotAuthorized(peer)
+            const res = await this.receiveRegisterRequest(peer)
             resolve(res)
           }
         } catch (e) {
+          // FIX ME
+          // On chrome Headless we receive this error
+          // This error message comes from the browser,
+          // we need to check if this is the same message for Firefox/safari...
+          // This fix is needed in order to detect other errors than the peer.send error
+          // message for chrome headless : e.message === "Failed to execute 'send' on 'RTCDataChannel': RTCDataChannel.readyState is not 'open'"
           await this._closeUserAppConnection()
           return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
@@ -464,9 +471,13 @@ class Masq {
       const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
       const encryptedMsg = await encrypt(this.key, data, 'base64')
       peer.send(JSON.stringify(encryptedMsg))
+    })
+  }
+
+  async receiveEndOfConnection (peer) {
+    return new Promise(async (resolve, reject) => {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
-
         if (json.msg === 'connectionEstablished') {
           await this._closeUserAppConnection()
           resolve({ isConnected: true })
@@ -479,25 +490,25 @@ class Masq {
   }
 
   async sendNotAuthorized (peer) {
+    this.setState(STATES.REGISTER_NEEDED)
+    const data = { msg: 'notAuthorized' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+  }
+
+  async receiveRegisterRequest (peer) {
     return new Promise(async (resolve, reject) => {
-      this.setState(STATES.REGISTER_NEEDED)
-      const data = { msg: 'notAuthorized' }
-      const encryptedMsg = await encrypt(this.key, data, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
-        switch (json.msg) {
-          case 'registerUserApp':
-            const { name, description, imageURL } = json
-            this.app = { name, description, imageURL }
-            this.setState(STATES.USERAPP_INFO_RECEIVED)
-            resolve({ isConnected: false, ...this.app })
-            break
-
-          default:
-            await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+        if (json.msg === 'registerUserApp') {
+          const { name, description, imageURL } = json
+          this.app = { name, description, imageURL }
+          this.setState(STATES.USERAPP_INFO_RECEIVED)
+          resolve({ isConnected: false, ...this.app })
+        } else {
+          await this._closeUserAppConnection()
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
         }
       })
     })
