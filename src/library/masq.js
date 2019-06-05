@@ -452,7 +452,7 @@ class Masq {
           }
         } catch (e) {
           await this._closeUserAppConnection()
-          return reject(e)
+          return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
       })
     })
