@@ -607,14 +607,14 @@ class Masq {
 
   _removeDb () {
     if (this.dbName) {
-      if (STATE_DEBUG) console.log(`### Clean operaiton : The userApp db ${this.dbName} exists, we delete it.`)
+      if (STATE_DEBUG) console.log(`### Clean operation : The userApp db ${this.dbName} exists, we delete it.`)
       this._stopReplicate(this.dbName)
       window.indexedDB.deleteDatabase(this.dbName)
     }
   }
 
   _clean () {
-    if (STATE_DEBUG) console.log(`### Clean operaiton : we delete the variables`)
+    if (STATE_DEBUG) console.log(`### Clean operation : we delete the variables`)
     this.hub = null
     this.dbName = null
     this.peer = null

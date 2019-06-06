@@ -547,7 +547,7 @@ describe('masq protocol', function () {
     const hub2 = signalhub(channelName2, 'localhost:8080')
     const hub3 = signalhub(channelName3, 'localhost:8080')
     const sw2 = swarm(hub2)
-    let sw3 = swarm(hub3)
+    const sw3 = swarm(hub3)
 
     sw2.once('close', async () => {
       await wait(15000)
