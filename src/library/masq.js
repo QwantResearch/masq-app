@@ -14,7 +14,7 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
-const STATE_DEBUG = false
+const STATE_DEBUG = true
 
 const STATES = {
   CLEAN_NEEDED: 'cleanNeeded',
@@ -466,12 +466,10 @@ class Masq {
   }
 
   async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
-    return new Promise(async (resolve, reject) => {
-      this.setState(STATES.LOGGED)
-      const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-      const encryptedMsg = await encrypt(this.key, data, 'base64')
-      peer.send(JSON.stringify(encryptedMsg))
-    })
+    this.setState(STATES.LOGGED)
+    const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
   }
 
   async receiveEndOfConnection (peer) {
