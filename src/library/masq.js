@@ -113,17 +113,12 @@ class Masq {
 
   setState (newState) {
     if (STATE_DEBUG) console.log(` ##### From ${this.state} -> ${newState} ######`)
-    switch (newState) {
-      case STATES.CLEAN_NEEDED:
-        if (this.state === STATES.USER_ACCEPTED ||
-           this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) {
-          this._removeDb()
-        }
-        this._clean()
-        break
-
-      default:
-        break
+    if (newState === STATES.CLEAN_NEEDED) {
+      if (this.state === STATES.USER_ACCEPTED ||
+          this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) {
+        this._removeDb()
+      }
+      this._clean()
     }
     this.state = newState
   }
@@ -421,13 +416,13 @@ class Masq {
 
       this.sw = swarm(this.hub, swarmOpts)
 
-      this.swListener = async () => {
+      this.onDisconnect = async () => {
         this.setState(STATES.CLEAN_NEEDED)
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
       }
 
-      this.sw.on('disconnect', this.swListener)
+      this.sw.on('disconnect', this.onDisconnect)
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
@@ -755,7 +750,7 @@ class Masq {
   }
 
   _closeUserAppConnection () {
-    this.sw.removeListener('disconnect', this.swListener)
+    this.sw.removeListener('disconnect', this.onDisconnect)
     return new Promise((resolve, reject) => {
       this.sw.on('close', () => {
         this.hub = null
