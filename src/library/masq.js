@@ -7,7 +7,7 @@ import { isUsernameAlreadyTaken } from './utils'
 
 const { CustomEvent, dispatchEvent } = window
 
-const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBuffer, updateMasterKeyAndNonce } = common.crypto
+const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBufferAsStr, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
 const { MasqError, checkObject } = common.errors
@@ -644,7 +644,7 @@ class Masq {
    * @returns {String} -The nonce key in hex format
    */
   async _genNonce () {
-    return genRandomBuffer(16, 'hex')
+    return genRandomBufferAsStr(16, 'hex')
   }
 
   async _decryptValue (ciphertext) {
