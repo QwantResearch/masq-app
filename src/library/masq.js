@@ -113,13 +113,6 @@ class Masq {
 
   setState (newState) {
     if (STATE_DEBUG) console.log(` ##### From ${this.state} -> ${newState} ######`)
-    if (newState === STATES.CLEAN_NEEDED) {
-      if (this.state === STATES.USER_ACCEPTED ||
-          this.state === STATES.REQUEST_WRITE_ACCESS_MATERIAL) {
-        this._removeDb()
-      }
-      this._clean()
-    }
     this.state = newState
   }
 
