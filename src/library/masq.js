@@ -14,7 +14,14 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
-const STATE_DEBUG = false
+const debug = (function () {
+  switch (process.env.NODE_ENV) {
+    case ('development'):
+      return console.log
+    default:
+      return () => { }
+  }
+})()
 
 const STATES = {
   CLEAN_NEEDED: 'cleanNeeded',
@@ -112,7 +119,7 @@ class Masq {
   }
 
   setState (newState) {
-    if (STATE_DEBUG) console.log(` ##### From ${this.state} -> ${newState} ######`)
+    debug(` ##### From ${this.state} -> ${newState} ######`)
     this.state = newState
   }
 
@@ -600,14 +607,14 @@ class Masq {
 
   _removeDb () {
     if (this.dbName) {
-      if (STATE_DEBUG) console.log(`### Clean operation : The userApp db ${this.dbName} exists, we delete it.`)
+      debug(`### Clean operation : The userApp db ${this.dbName} exists, we delete it.`)
       this._stopReplicate(this.dbName)
       window.indexedDB.deleteDatabase(this.dbName)
     }
   }
 
   _clean () {
-    if (STATE_DEBUG) console.log(`### Clean operation : we delete the variables`)
+    debug(`### Clean operation : we delete the variables`)
     this.hub = null
     this.dbName = null
     this.peer = null
