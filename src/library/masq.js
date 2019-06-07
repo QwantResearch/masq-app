@@ -14,6 +14,29 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
+const debug = (function () {
+  switch (process.env.NODE_ENV) {
+    case ('development'):
+      return console.log
+    default:
+      return () => { }
+  }
+})()
+
+const STATES = {
+  CLEAN_NEEDED: 'cleanNeeded',
+  NOT_LOGGED: 'notLogged',
+  LOGGED: 'logged',
+  CHECK_USER_APP: 'needCheckUserApp',
+  REGISTER_NEEDED: 'registerNeeded',
+  USERAPP_INFO_RECEIVED: 'userAppInfoReceived',
+  USER_REFUSED: 'userRefused',
+  USER_ACCEPTED: 'userAccepted',
+  REQUEST_WRITE_ACCESS_MATERIAL: 'requestWriteAccessMaterial',
+  WRITE_ACCESS_PROVIDED: 'writeAccessProvided'
+
+}
+
 let STUN_TURN = []
 
 if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
@@ -89,6 +112,15 @@ class Masq {
     this.masterKey = null
     this.peer = null
     this.app = null
+    this.dbName = null // used only during userApp registration
+
+    // init state
+    this.state = STATES.NOT_LOGGED
+  }
+
+  setState (newState) {
+    debug(` ##### From ${this.state} -> ${newState} ######`)
+    this.state = newState
   }
 
   /**
@@ -125,6 +157,7 @@ class Masq {
     })
 
     const profile = await this.getAndDecrypt('/profile')
+    this.setState(STATES.LOGGED)
     return profile
   }
 
@@ -375,18 +408,6 @@ class Masq {
       this._checkProfile()
       this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
-      const sendAuthorized = async (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
-        const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
-
-      const sendNotAuthorized = async (peer) => {
-        const data = { msg: 'notAuthorized' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
-
       this.hub = signalhub(channel, HUB_URLS)
       this.hub.on('error', async () => {
         await this._closeUserAppConnection()
@@ -395,14 +416,17 @@ class Masq {
 
       this.sw = swarm(this.hub, swarmOpts)
 
-      this.sw.on('disconnect', async () => {
+      this.onDisconnect = async () => {
+        this.setState(STATES.CLEAN_NEEDED)
         await this._closeUserAppConnection()
         return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
-      })
+      }
+
+      this.sw.on('disconnect', this.onDisconnect)
 
       this.sw.once('peer', async (peer) => {
         this.peer = peer
-
+        this.setState(STATES.CHECK_USER_APP)
         peer.on('error', async (err) => {
           await this._closeUserAppConnection()
           return reject(err)
@@ -414,30 +438,71 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            await sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            const res = await this.receiveEndOfConnection(peer)
+            resolve(res)
           } else {
-            await sendNotAuthorized(peer)
+            await this.sendNotAuthorized(peer)
+            const res = await this.receiveRegisterRequest(peer)
+            resolve(res)
           }
         } catch (e) {
+          // FIX ME
+          // On chrome Headless we receive this error
+          // This error message comes from the browser,
+          // we need to check if this is the same message for Firefox/safari...
+          // This fix is needed in order to detect other errors than the peer.send error
+          // message for chrome headless : e.message === "Failed to execute 'send' on 'RTCDataChannel': RTCDataChannel.readyState is not 'open'"
           await this._closeUserAppConnection()
           return reject(new MasqError(MasqError.DISCONNECTED_DURING_LOGIN))
         }
+      })
+    })
+  }
 
-        peer.once('data', async (data) => {
-          const json = await decrypt(this.key, JSON.parse(data), 'base64')
+  async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
+    this.setState(STATES.LOGGED)
+    const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+  }
 
-          if (json.msg === 'connectionEstablished') {
-            await this._closeUserAppConnection()
-            return resolve({ isConnected: true })
-          } else if (json.msg === 'registerUserApp') {
-            const { name, description, imageURL } = json
-            this.app = { name, description, imageURL }
-            resolve({ isConnected: false, ...this.app })
-          } else {
-            await this._closeUserAppConnection()
-            reject(new MasqError(MasqError.INVALID_DATA))
-          }
-        })
+  async receiveEndOfConnection (peer) {
+    return new Promise(async (resolve, reject) => {
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+        if (json.msg === 'connectionEstablished') {
+          await this._closeUserAppConnection()
+          resolve({ isConnected: true })
+        } else {
+          await this._closeUserAppConnection()
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+        }
+      })
+    })
+  }
+
+  async sendNotAuthorized (peer) {
+    this.setState(STATES.REGISTER_NEEDED)
+    const data = { msg: 'notAuthorized' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+  }
+
+  async receiveRegisterRequest (peer) {
+    return new Promise(async (resolve, reject) => {
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        if (json.msg === 'registerUserApp') {
+          const { name, description, imageURL } = json
+          this.app = { name, description, imageURL }
+          this.setState(STATES.USERAPP_INFO_RECEIVED)
+          resolve({ isConnected: false, ...this.app })
+        } else {
+          await this._closeUserAppConnection()
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+        }
       })
     })
   }
@@ -450,70 +515,87 @@ class Masq {
    * @param {boolean} isGranted True if the app is authorized
    */
   async handleUserAppRegister (isGranted) {
-    return new Promise(async (resolve, reject) => {
-      this._checkProfile()
+    this._checkProfile()
 
-      let dbName = ''
+    if (!isGranted) {
+      await this.sendAccessRefused(this.peer)
+      await this._closeUserAppConnection()
+    }
 
-      const sendAccessRefused = async (peer) => {
-        const data = { msg: 'masqAccessRefused' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+    await this.sendAccessGranted(this.peer)
+  }
 
-      const sendAccessGranted = async (peer, dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce) => {
-        const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+  async sendAccessRefused (peer) {
+    this.setState(STATES.USER_REFUSED)
+    const data = { msg: 'masqAccessRefused' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+  }
 
-      const sendWriteAccessGranted = async (peer) => {
-        const data = { msg: 'writeAccessGranted' }
-        const encryptedMsg = await encrypt(this.key, data, 'base64')
-        peer.send(JSON.stringify(encryptedMsg))
-      }
+  async sendAccessGranted (peer) {
+    this.setState(STATES.USER_ACCEPTED)
+    const apps = await this.getApps()
+    const app = apps.find(app => app.appId === this.appId)
+    const appDEK = app ? app.appDEK : await this._genAppDEK()
+    const appNonce = app ? app.appNonce : await this._genNonce()
 
-      const handleData = async (peer, data) => {
-        const json = await decrypt(this.key, JSON.parse(data), 'base64')
-        const { msg } = json
-        // TODO: Error if  missing params
-
-        if (msg === 'requestWriteAccess') {
-          const userAppKey = Buffer.from(json.key, 'hex')
-          try {
-            await this.appsDBs[dbName].authorizeAsync(userAppKey)
-          } catch (err) {
-            throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
-          }
-          await sendWriteAccessGranted(peer)
-          this.sw.close()
-          return resolve()
-        }
-      }
-
-      if (!isGranted) {
-        await sendAccessRefused(this.peer)
-        await this._closeUserAppConnection()
-        return resolve()
-      }
-
-      const apps = await this.getApps()
-      const app = apps.find(app => app.appId === this.appId)
-      const appDEK = app ? app.appDEK : await this._genAppDEK()
-      const appNonce = app ? app.appNonce : await this._genNonce()
-
-      const id = app ? app.id : await this.addApp({
-        ...this.app, appId: this.appId, appDEK, appNonce
-      })
-
-      const privateProfile = await this.getProfile()
-
-      dbName = `app-${this.profileId}-${id}`
-
-      const db = await this._createDBAndSyncApp(dbName)
-      await sendAccessGranted(this.peer, db.key.toString('hex'), id, appDEK, privateProfile.username, privateProfile.image, appNonce)
-      this.peer.on('data', (data) => handleData(this.peer, data))
+    const id = app ? app.id : await this.addApp({
+      ...this.app, appId: this.appId, appDEK, appNonce
     })
+
+    const privateProfile = await this.getProfile()
+
+    const dbName = `app-${this.profileId}-${id}`
+    const db = await this._createDBAndSyncApp(dbName)
+    // this.dbName must be filled only during the userApp register protocol
+    this.dbName = dbName
+
+    const dbKey = db.key.toString('hex')
+    const userAppDbId = id
+    const userAppDEK = appDEK
+    const username = privateProfile.username
+    const profileImage = privateProfile.image
+    const userAppNonce = appNonce
+
+    const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
+    await this.receiveRequestWriteAccess(peer, dbName)
+  }
+
+  async receiveRequestWriteAccess (peer, dbName) {
+    return new Promise(async (resolve, reject) => {
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        if (json.msg === 'requestWriteAccess') {
+          this.setState(STATES.REQUEST_WRITE_ACCESS_MATERIAL)
+          try {
+            await this._grantWriteAccess(peer, json, dbName)
+            await this._closeUserAppConnection()
+            resolve()
+          } catch (e) {
+            reject(e)
+          }
+        } else {
+          await this._closeUserAppConnection()
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+        }
+      })
+    })
+  }
+
+  async _grantWriteAccess (peer, json, dbName) {
+    const userAppKey = Buffer.from(json.key, 'hex')
+    try {
+      await this.appsDBs[dbName].authorizeAsync(userAppKey)
+    } catch (err) {
+      throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
+    }
+    this.setState(STATES.WRITE_ACCESS_PROVIDED)
+    const data = { msg: 'writeAccessGranted' }
+    const encryptedMsg = await encrypt(this.key, data, 'base64')
+    peer.send(JSON.stringify(encryptedMsg))
   }
 
   _createDBAndSyncApp (dbName) {
@@ -530,6 +612,22 @@ class Masq {
   /**
    * Private methods
    */
+
+  _removeDb () {
+    if (this.dbName) {
+      debug(`### Clean operation : The userApp db ${this.dbName} exists, we delete it.`)
+      this._stopReplicate(this.dbName)
+      window.indexedDB.deleteDatabase(this.dbName)
+    }
+  }
+
+  _clean () {
+    debug(`### Clean operation : we delete the variables`)
+    this.hub = null
+    this.dbName = null
+    this.peer = null
+    this.app = null
+  }
 
   /**
    * Generate a User app Data Encryption Key, during the register
@@ -647,11 +745,20 @@ class Masq {
     this.hubs = {}
   }
 
+  _stopReplicate (dbName) {
+    const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
+    this.appsDBs[dbName] = null
+    this.hubs[discoveryKey] = null
+    this.swarms[discoveryKey].close()
+    this.swarms[discoveryKey] = null
+  }
+
   _checkProfile () {
     if (!this.profileDB) throw new MasqError(MasqError.PROFILE_NOT_OPENED)
   }
 
   _closeUserAppConnection () {
+    this.sw.removeListener('disconnect', this.onDisconnect)
     return new Promise((resolve, reject) => {
       this.sw.on('close', () => {
         this.hub = null

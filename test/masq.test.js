@@ -335,7 +335,6 @@ describe('masq internal operations', function () {
     await masq.removeProfile()
 
     expect(window.localStorage.length).to.equal(localStorageLength - 1)
-    expect(await dbExists(dbNameApp)).to.be.false
     expect(await dbExists(dbNameProfile)).to.be.false
   })
 })
@@ -346,7 +345,7 @@ describe('masq protocol', function () {
   let keyBase64
   let masq
 
-  this.timeout(20000)
+  this.timeout(30000)
 
   before(async () => {
     masq = new Masq()
