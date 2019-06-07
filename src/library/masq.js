@@ -14,7 +14,7 @@ const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
-const STATE_DEBUG = true
+const STATE_DEBUG = false
 
 const STATES = {
   CLEAN_NEEDED: 'cleanNeeded',
