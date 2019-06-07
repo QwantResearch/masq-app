@@ -560,19 +560,28 @@ class Masq {
     const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
-    peer.once('data', async (data) => {
-      const json = await decrypt(this.key, JSON.parse(data), 'base64')
+    await this.receiveRequestWriteAccess(peer, dbName)
+  }
 
-      switch (json.msg) {
-        case 'requestWriteAccess':
+  async receiveRequestWriteAccess (peer, dbName) {
+    return new Promise(async (resolve, reject) => {
+      peer.once('data', async (data) => {
+        const json = await decrypt(this.key, JSON.parse(data), 'base64')
+
+        if (json.msg === 'requestWriteAccess') {
           this.setState(STATES.REQUEST_WRITE_ACCESS_MATERIAL)
-          await this._grantWriteAccess(this.peer, json, dbName)
-          break
-
-        default:
+          try {
+            await this._grantWriteAccess(peer, json, dbName)
+            await this._closeUserAppConnection()
+            resolve()
+          } catch (e) {
+            reject(e)
+          }
+        } else {
           await this._closeUserAppConnection()
-          return new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`)
-      }
+          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+        }
+      })
     })
   }
 
@@ -587,7 +596,6 @@ class Masq {
     const data = { msg: 'writeAccessGranted' }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
-    await this._closeUserAppConnection()
   }
 
   _createDBAndSyncApp (dbName) {
