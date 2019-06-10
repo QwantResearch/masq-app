@@ -33,4 +33,13 @@ const compressImage = (file) => {
   })
 }
 
-export { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE }
+const capitalize = (string) => (
+  string.charAt(0).toUpperCase() + string.slice(1)
+)
+
+export {
+  isUsernameAlreadyTaken,
+  compressImage,
+  capitalize,
+  MAX_IMAGE_SIZE
+}

@@ -88,5 +88,7 @@
   "Finish": "Finish",
   "Delete the application": "Delete the application",
   "Define a secret key to encrypt your data, choose it with care. There is ": "Define a secret key to encrypt your data, choose it with care. There is ",
-  "NO WAY to recover this key in case you lose it, because you only know it.": "NO WAY to recover this key in case you lose it, because you only know it."
+  "NO WAY to recover this key in case you lose it, because you only know it.": "NO WAY to recover this key in case you lose it, because you only know it.",
+  "Browser not supported": "Browser not supported",
+  "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:"
 }

@@ -9,7 +9,9 @@ import * as common from 'masq-common'
 import { Login, Applications, Devices, Settings, Navbar, Loading } from './containers'
 import { Notification } from './components'
 import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
-import { AuthApp, PersistentStorageRequest } from './modals'
+import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
+import { isBrowserSupported } from './lib/browser'
+import { capitalize } from './lib/utils'
 
 import styles from './App.module.scss'
 
@@ -36,10 +38,6 @@ const authenticatedRoutes = [
   }
 ]
 
-function capitalize (string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
 class App extends Component {
   constructor () {
     super()
@@ -53,7 +51,8 @@ class App extends Component {
       persistentStorageRequest: false,
       messages: [],
       hash: null,
-      prevPath: ''
+      prevPath: '',
+      unsupportedBrowserModal: !isBrowserSupported()
     }
 
     this.handlePersistentStorageRequestClose = this.handlePersistentStorageRequestClose.bind(this)
@@ -122,9 +121,13 @@ class App extends Component {
   }
 
   render () {
-    const { persistentStorageRequest } = this.state
+    const { persistentStorageRequest, unsupportedBrowserModal } = this.state
     const { currentUser, currentAppRequest, notification, setCurrentAppRequest, loading } = this.props
     const { pathname } = history.location
+
+    if (unsupportedBrowserModal) {
+      return <UnsupportedBrowser />
+    }
 
     return (
       <Router history={history}>

@@ -88,5 +88,7 @@
   "Finish": "Terminer",
   "Delete the application": "Supprimer l'application",
   "Define a secret key to encrypt your data, choose it with care. There is ": "Définissez une clé secrète pour chiffrer vos données, choisissez-la avec attention.\nIl n’y a ",
-  "NO WAY to recover this key in case you lose it, because you only know it.": "aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez."
+  "NO WAY to recover this key in case you lose it, because you only know it.": "aucun moyen de la récupérer en cas d'oubli car vous seul(e) la connaissez.",
+  "Browser not supported": "Navigateur non compatible",
+  "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Ce navigateur n'est pas compatible avec Masq. Merci d'essayer Masq avec l'un des navigateurs compatibles suivants:"
 }
