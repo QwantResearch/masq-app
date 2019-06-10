@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { setNotification } from '../../actions'
 import { Avatar, Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
-import { isName, isUsername, isPassword, isForceEnough } from '../../library/validators'
-import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
+import { isName, isUsername, isPassword, isForceEnough } from '../../lib/validators'
+import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../lib/utils'
 
 import styles from './Signup.module.scss'
 

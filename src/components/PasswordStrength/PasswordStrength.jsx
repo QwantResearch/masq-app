@@ -4,7 +4,7 @@ import cx from 'classnames'
 import { useTranslation } from 'react-i18next'
 import styles from './PasswordStrength.module.scss'
 import { Shield, Lock, Unlock, CheckCircle } from 'react-feather'
-const { getPasswordInfo, getForce } = require('../../library/validators')
+const { getPasswordInfo, getForce } = require('../../lib/validators')
 const NonChecked = () => (
   <div className={styles.Oval} />
 )

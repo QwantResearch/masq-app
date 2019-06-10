@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next'
 
 import { updatePassphrase, setNotification } from '../../actions'
 import { Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
-import { isPassword, isForceEnough } from '../../library/validators'
+import { isPassword, isForceEnough } from '../../lib/validators'
 
 import styles from './PasswordEdit.module.scss'
 

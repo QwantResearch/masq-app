@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { isName, isUsername, isPassword, getPasswordInfo, getForce, isForceEnough } = require('../src/library/validators')
+const { isName, isUsername, isPassword, getPasswordInfo, getForce, isForceEnough } = require('../src/lib/validators')
 
 describe('name validator', () => {
   it('should be valid', () => {

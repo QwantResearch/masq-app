@@ -1,6 +1,6 @@
 process.env.REACT_APP_SIGNALHUB_URLS = 'localhost:8080'
 
-const Masq = require('../src/library/masq').default
+const Masq = require('../src/lib/masq').default
 const { expect } = require('chai')
 const signalhub = require('signalhubws')
 const swarm = require('webrtc-swarm')

@@ -1,4 +1,4 @@
-import { Masq } from '../library'
+import { Masq } from '../lib'
 
 const masq = new Masq()
 

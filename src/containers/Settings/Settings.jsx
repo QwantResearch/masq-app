@@ -7,8 +7,8 @@ import { withTranslation } from 'react-i18next'
 import { updateUser, removeProfile, setNotification } from '../../actions'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
 import { DeleteProfileDialog, PasswordEdit } from '../../modals'
-import { isName, isUsername } from '../../library/validators'
-import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../library/utils'
+import { isName, isUsername } from '../../lib/validators'
+import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../lib/utils'
 
 import styles from './Settings.module.scss'
 
