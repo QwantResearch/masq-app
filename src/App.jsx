@@ -105,7 +105,7 @@ class App extends Component {
       }
     })
 
-    this.checkPersistentStorage()
+    // this.checkPersistentStorage()
 
     this.props.setLoading(false)
   }
