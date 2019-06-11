@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { NavLink, Redirect } from 'react-router-dom'
 import { Grid, Smartphone, Settings, ChevronDown } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { signout } from '../../actions'
 import { Typography, Dropdown, Avatar } from '../../components'
 import { ReactComponent as Logo } from '../../assets/logo-sidebar.svg'
@@ -25,9 +25,10 @@ class NavbarMobile extends React.Component {
 
   render () {
     const { hovered } = this.state
-    const { user, signout } = this.props
+    const { user, signout, t } = this.props
+
     if (!user) return <Redirect to='/' />
-    const { t } = useTranslation()
+
     return (
       <div className={styles.NavbarMobile}>
         <div className={styles.header}>
@@ -66,7 +67,8 @@ class NavbarMobile extends React.Component {
 
 NavbarMobile.propTypes = {
   user: PropTypes.object,
-  signout: PropTypes.func
+  signout: PropTypes.func,
+  t: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
@@ -77,4 +79,5 @@ const mapDispatchToProps = dispatch => ({
   signout: () => dispatch(signout())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavbarMobile)
+const translatedNavbarMobile = withTranslation()(NavbarMobile)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedNavbarMobile)
