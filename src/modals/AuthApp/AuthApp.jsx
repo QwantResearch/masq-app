@@ -116,7 +116,7 @@ class AuthApp extends React.Component {
     if (refused) {
       return (
         <div>
-          <Slash size={114} color={styles.$colorGrey300} />
+          <Slash size={114} color={styles.colorGrey300} />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>Vous avez refusé l'accès de l'application {appRequest.appId} à votre stockage Masq.</Typography>
         </div>
