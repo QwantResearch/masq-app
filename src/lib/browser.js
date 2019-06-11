@@ -1,8 +1,9 @@
 import { detect } from 'detect-browser'
 
 const SUPPORTED_BROWSERS = [
-  'chrome',
   'firefox',
+  'brave', // brave will be detected as chrome
+  'chrome',
   'safari'
 ]
 
