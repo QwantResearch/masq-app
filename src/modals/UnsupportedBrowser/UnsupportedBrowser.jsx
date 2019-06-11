@@ -19,8 +19,8 @@ const UnsupportedBrowser = () => {
         <Space size={16} />
         <Typography type='paragraph-modal'>{t('Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:')}</Typography>
         <Space size={16} />
-        {SUPPORTED_BROWSERS.map(browser => (
-          <Typography type='paragraph-modal' className={styles.fontMedium}>- {capitalize(browser)}</Typography>
+        {SUPPORTED_BROWSERS.map((browser, index) => (
+          <Typography key={index} type='paragraph-modal' className={styles.fontMedium}>- {capitalize(browser)}</Typography>
         ))}
       </div>
     </Modal>
