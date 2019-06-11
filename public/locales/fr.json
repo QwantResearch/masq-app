@@ -22,7 +22,7 @@
   "Good practices of Masq for optimal use": "Les bonnes pratiques Masq pour une utilisation optimale",
   "Your secret key is only known by YOU, we never have access to it": "Votre clé secrète est connue de vous seul, nous n'y avons jamais accès.",
   "Your data is encrypted and decrypted locally. That is why your secret key is never sent to our servers, we never have acces to it": "Vos données sont chiffrées et déchiffrées au niveau local. Ainsi votre mot de passe (clé secrète), n’est jamais envoyé vers nos serveurs et nous n'y avons jamais accès.",
-  "Keep the Masq window in the background in order to allow data synchronization (coming soon)": "Keep the Masq window in the background in order to allow data synchronisation (coming soon)",
+  "Keep the Masq window in the background in order to allow data synchronization (coming soon)": "Gardez la fenêtre Masq ouverte en arrière-plan pour synchroniser vos données (bientôt)",
   "To benefit from real time synchronization and always have up-to-date data, keep the Masq window opened in the background on all your devices": "Afin de profiter un maximum de la synchronisation en temps réel et d'avoir toujours vos données à jour, il est nécessaire de laisser l'application Masq en arrière-plan sur tous vos appareils.",
   "Contact us": "Contactez-nous",
   "Loading...": "Chargement en cours",
