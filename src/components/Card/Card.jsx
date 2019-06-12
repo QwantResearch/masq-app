@@ -5,6 +5,7 @@ import Image from './Image'
 import { Typography } from '..'
 
 import styles from './Card.module.scss'
+import Space from '../Space'
 
 const Description = ({ description }) => (
   <div className={styles.Description}>
@@ -20,10 +21,13 @@ const Card = ({ minHeight, image, title, actions, description, footer, color, wi
   <div className={styles.Card} style={{ minHeight, width }}>
     {image && <Image image={image} />}
     <div className={styles.content}>
-      <div className={styles.Header}>
-        <div className={styles.marker} style={{ backgroundColor: color }} />
-        {actions}
-      </div>
+      {(actions || color) && (
+        <div className={styles.Header}>
+          <div className={styles.marker} style={{ backgroundColor: color }} />
+          {actions}
+        </div>
+      )}
+      {!color && !actions && <Space size={14} />}
       {title && <Typography type='title-card'>{title}</Typography>}
       {description && <Description description={description} /> }
       {footer}
