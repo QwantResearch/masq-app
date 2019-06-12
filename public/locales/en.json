@@ -49,7 +49,6 @@
   "Error during the connection with the application. Please retry.": "Error during the connection with the application. Please retry.",
   "Refuse": "Refuse",
   "Validate": "Validate",
-  "This application ask access to Masq.\n            If you are not the one who initiated this request, please refuse. ": "This application ask access to Masq.\n            If you are not the one who initiated this request, please refuse. ",
   "You have authorized the application ": "You have authorized the application ",
   " to get access to your Masq storage.": " to get access to your Masq storage.",
   "You can now use the application.": "You can now use the application.",
@@ -90,5 +89,7 @@
   "Define a secret key to encrypt your data, choose it with care. There is ": "Define a secret key to encrypt your data, choose it with care. There is ",
   "NO WAY to recover this key in case you lose it, because you only know it.": "NO WAY to recover this key in case you lose it, because you only know it.",
   "Browser not supported": "Browser not supported",
-  "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:"
+  "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:",
+  "This application asks access to Masq.": "This application asks access to Masq.",
+  "If you are not the one who initiated this request, please refuse.": "If you are not the one who initiated this request, please refuse."
 }

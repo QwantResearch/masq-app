@@ -128,10 +128,8 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <div>
-          <Typography type='paragraph-modal'>
-            {t(`This application ask access to Masq.
-            If you are not the one who initiated this request, please refuse. `)}
-          </Typography>
+          <Typography type='paragraph-modal'>{t(`This application asks access to Masq.`)}</Typography>
+          <Typography type='paragraph-modal'>{t(`If you are not the one who initiated this request, please refuse.`)}</Typography>
           <Space size={30} />
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} description={appRequest.description} />
         </div>
