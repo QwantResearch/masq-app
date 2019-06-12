@@ -220,7 +220,7 @@ class Settings extends React.Component {
             <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>{t('Save')}</Button>
             <Space size={24} />
             <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
-              <Typography align='center' type='label' color={styles.colorNeutral}>
+              <Typography align='center' type='label' color={styles.colorBlueGrey}>
                 <Trash className={styles.trashIcon} size={14} color={styles.colorBlueGrey} />
                 {t('Delete the profile')}
               </Typography>
