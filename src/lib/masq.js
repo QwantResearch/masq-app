@@ -520,9 +520,9 @@ class Masq {
     if (!isGranted) {
       await this.sendAccessRefused(this.peer)
       await this._closeUserAppConnection()
+    } else {
+      await this.sendAccessGranted(this.peer)
     }
-
-    await this.sendAccessGranted(this.peer)
   }
 
   async sendAccessRefused (peer) {
