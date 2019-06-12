@@ -16,7 +16,7 @@ const Loading = () => {
         <Logo />
         <Space size={82} />
       </div>
-      <img src={animation} alt='loading' />
+      <img width={350} src={animation} alt='loading' />
       <Typography type='paragraph-landing'>{t('Loading...')}</Typography>
       <Cubes className={styles.Background} />
     </div>
