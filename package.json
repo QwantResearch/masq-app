@@ -43,8 +43,8 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "signalhubws": "git+https://github.com/QwantResearch/signalhubws#masq",
-    "typeface-asap": "^0.0.69",
-    "typeface-asap-condensed": "^0.0.72",
+    "typeface-asap": "0.0.35",
+    "typeface-asap-condensed": "0.0.35",
     "uuid": "^3.3.2",
     "webrtc-swarm": "git+https://github.com/QwantResearch/webrtc-swarm#masq"
   },
