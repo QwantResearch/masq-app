@@ -106,6 +106,9 @@ const Landing = ({ onClick, children }) => {
       <div className={styles.Footer}>
         <Qwant />
         <div className={styles.links}>
+          <a href='https://github.com/QwantResearch/masq-app/' rel='noopener noreferrer' target='_blank'>
+            <Typography type='footer'>GitHub</Typography>
+          </a>
           <a href='mailto:masq.dev@qwant.com'>
             <Typography type='footer'>{t('Contact us')}</Typography>
           </a>
