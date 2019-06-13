@@ -461,7 +461,6 @@ class Masq {
   }
 
   async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
-    this.setState(STATES.LOGGED)
     const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
@@ -472,8 +471,14 @@ class Masq {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
         if (json.msg === 'connectionEstablished') {
+          this.setState(STATES.LOGGED)
           await this._closeUserAppConnection()
           resolve({ isConnected: true })
+        } else if (json.msg === 'registerUserApp') {
+          const { name, description, imageURL } = json
+          this.app = { name, description, imageURL }
+          this.setState(STATES.USERAPP_INFO_RECEIVED)
+          resolve({ isConnected: false, ...this.app })
         } else {
           await this._closeUserAppConnection()
           reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
