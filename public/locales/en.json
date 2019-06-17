@@ -91,5 +91,6 @@
   "Browser not supported": "Browser not supported",
   "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:",
   "This application asks access to Masq.": "This application asks access to Masq.",
-  "If you are not the one who initiated this request, please refuse.": "If you are not the one who initiated this request, please refuse."
+  "If you are not the one who initiated this request, please refuse.": "If you are not the one who initiated this request, please refuse.",
+  "Your information has been updated successfully.": "Your information has been updated successfully."
 }

@@ -101,6 +101,8 @@ class Settings extends React.Component {
   }
 
   validate () {
+    const { t, setNotification } = this.props
+
     if (!this.hasChanged) {
       return
     }
@@ -117,6 +119,7 @@ class Settings extends React.Component {
     }
 
     this.props.updateUser(this.props.user.id, this.state)
+    setNotification({ title: t('Your information has been updated successfully.') })
     this.hasChanged = false
   }
 

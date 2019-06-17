@@ -91,5 +91,6 @@
   "Browser not supported": "Navigateur non compatible",
   "Your browser is not compatible with Masq. Please, try Masq with one of the compatible browsers:": "Ce navigateur n'est pas compatible avec Masq. Merci d'essayer Masq avec l'un des navigateurs compatibles suivants:",
   "This application asks access to Masq.": "Cette application demande un accès à votre stockage Masq.",
-  "If you are not the one who initiated this request, please refuse.": "Si vous n’êtes pas à l’origine de cette demande veuillez refuser cette requête."
+  "If you are not the one who initiated this request, please refuse.": "Si vous n’êtes pas à l’origine de cette demande veuillez refuser cette requête.",
+  "Your information has been updated successfully.": "Informations mises à jour avec succès."
 }
