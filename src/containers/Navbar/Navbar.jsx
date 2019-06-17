@@ -8,10 +8,10 @@ import NavBarMobile from './NavbarMobile'
 const Navbar = (props) => {
   return (
     <Fragment>
-      <MediaQuery maxWidth={500}>
+      <MediaQuery maxWidth={700}>
         <NavBarMobile {...props} />
       </MediaQuery>
-      <MediaQuery minWidth={501} maxWidth={1109}>
+      <MediaQuery minWidth={701} maxWidth={1109}>
         <NavbarMin {...props} />
       </MediaQuery>
       <MediaQuery minWidth={1110}>
