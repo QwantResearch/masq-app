@@ -73,7 +73,7 @@
   font-size: 28px;
   font-weight: bold;
   color: $color-dark-blue-100;
-  width: 400px;
+  max-width: 400px;
   text-align: center;
 }
 
@@ -99,7 +99,7 @@
   font-size: 14px;
   line-height: 1.36;
   color: $color-dark-blue-100;
-  width: 400px;
+  max-width: 400px;
 }
 
 .label {
