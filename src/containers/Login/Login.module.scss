@@ -37,6 +37,10 @@
     margin-right: auto;
     margin-left: auto;
     cursor: pointer;
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
   }
 
   .user {
