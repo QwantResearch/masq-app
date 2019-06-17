@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
 import Head from '../../assets/head-landing.svg'
+import HeadMobile from '../../assets/head-landing-mobile.svg'
 import BGLanding from '../../assets/bg-landing.svg'
 
 import { ReactComponent as Logo } from '../../assets/logo.svg'
@@ -14,17 +15,24 @@ import { ReactComponent as Windows } from '../../assets/windows-masq.svg'
 import { ReactComponent as Qwant } from '../../assets/qwant.svg'
 
 import { Button, Space, Typography } from '../../components'
+import { useWindowWidth } from '../../hooks'
 
 import styles from './Landing.module.scss'
 
 // const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
 
+const MOBILE_WIDTH = 700
+
 const Landing = ({ onClick, children }) => {
   const { t } = useTranslation()
+  const width = useWindowWidth()
 
   return (
     <div className={styles.Landing}>
-      <div className={styles.section1} style={{ backgroundImage: `url(${Head})` }}>
+      <div
+        className={styles.section1}
+        style={{ backgroundImage: `url(${width > MOBILE_WIDTH ? Head : HeadMobile})` }}
+      >
         <div className={styles.Logo}><Logo /></div>
         {/* {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>} */}
         <Space size={74} />
