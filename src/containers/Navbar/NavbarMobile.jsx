@@ -5,7 +5,7 @@ import { NavLink, Redirect } from 'react-router-dom'
 import { Grid, Smartphone, Settings, ChevronDown } from 'react-feather'
 import { withTranslation } from 'react-i18next'
 import { signout } from '../../actions'
-import { Typography, Dropdown, Avatar } from '../../components'
+import { Typography, Dropdown, Avatar, Space } from '../../components'
 import { ReactComponent as Logo } from '../../assets/logo-sidebar.svg'
 
 import styles from './NavbarMobile.module.scss'
@@ -34,10 +34,9 @@ class NavbarMobile extends React.Component {
         <div className={styles.header}>
           <div className={styles.content}>
             <Logo />
-            <div className={styles.user}
-              onClick={this.handleClick}
-            >
+            <div className={styles.user} onClick={this.handleClick}>
               <Avatar size={32} image={user.image} username={user.username} />
+              <Space size={8} direction='right' />
               <Typography type='username-alt'>{user.username}</Typography>
               <ChevronDown className={styles.chevron} size={14} color='white' />
               {hovered && <Dropdown onClick={signout} />}
