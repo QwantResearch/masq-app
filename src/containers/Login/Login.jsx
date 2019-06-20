@@ -42,7 +42,7 @@ class Login extends Component {
   }
 
   async componentDidMount () {
-    const { setCurrentAppRequest } = this.props
+    const { setCurrentAppRequest, users } = this.props
     this.props.fetchUsers()
 
     if (window.location.hash.substr(0, 7) !== '#/link/') {
@@ -56,6 +56,9 @@ class Login extends Component {
     try {
       const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
       await setCurrentAppRequest({ appId, channel, key, link: window.location.href })
+      if (!users.length) {
+        this.setState({ signup: true })
+      }
     } catch (e) {
       console.error(e)
     }
