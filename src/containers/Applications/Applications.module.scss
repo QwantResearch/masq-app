@@ -38,3 +38,16 @@
     }
   }
 }
+
+.Link {
+  display: flex;
+  align-items: center;
+  :first-child {
+    margin-right: 8px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+}
