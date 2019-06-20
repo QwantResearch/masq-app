@@ -8,6 +8,8 @@ import { fetchApps, removeApp, setNotification } from '../../actions'
 import { Card, Typography, Space } from '../../components'
 import { DeleteAppDialog } from '../../modals'
 
+import Link from './Link'
+
 import styles from './Applications.module.scss'
 
 class Apps extends PureComponent {
@@ -90,6 +92,7 @@ class Apps extends PureComponent {
                     onClick={() => this.handleTrashClick(app)}
                   />
                 }
+                footer={<Link url={new URL(app.imageURL).origin} />}
               />
             </div>
           ))}
