@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import MediaQuery from 'react-responsive'
 
@@ -16,16 +16,27 @@ const Modal = ({ onClose, width, children }) => (
   </div>
 )
 
-const ResponsiveModal = ({ onClose, width, children }) => (
-  <div>
-    <MediaQuery maxWidth={styles.mobileWidth}>
-      <Modal width='100%' onClose={onClose} children={children} />
-    </MediaQuery>
-    <MediaQuery minWidth={701}>
-      <Modal width={width} onClose={onClose} children={children} />
-    </MediaQuery>
-  </div>
-)
+const ResponsiveModal = ({ onClose, width, children }) => {
+  useEffect(() => {
+    window.document.body.style.overflow = 'hidden'
+
+    // cleanup
+    return () => {
+      window.document.body.style.overflow = 'unset'
+    }
+  }, [])
+
+  return (
+    <div>
+      <MediaQuery maxWidth={styles.mobileWidth}>
+        <Modal width='100%' onClose={onClose} children={children} />
+      </MediaQuery>
+      <MediaQuery minWidth={701}>
+        <Modal width={width} onClose={onClose} children={children} />
+      </MediaQuery>
+    </div>
+  )
+}
 
 Modal.propTypes =
 ResponsiveModal.propTypes = {
