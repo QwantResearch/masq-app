@@ -40,7 +40,7 @@ const Landing = ({ onClick, children }) => {
         {children || (
           <div>
             <div className={styles.title}>
-              <p>{t('Masq is a FREE and SECURED storage service on your devices')}</p>
+              <p>{t('Free and secured storage of your preferences and personal data on all your devices')}</p>
             </div>
             <Space size={42} />
             <div className={styles.accountBtn}>
@@ -66,7 +66,7 @@ const Landing = ({ onClick, children }) => {
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Personal data is stored on your devices')}</Typography>
             <Typography type='paragraph-landing'>
-              {t('Contrary to the most existing applications, your personnal data is stored directly on your hard drives. You are the owner of your data')}
+              {t('No more need to Cloud ! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data')}
             </Typography>
           </div>
         </div>
@@ -75,7 +75,7 @@ const Landing = ({ onClick, children }) => {
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Real time synchronization between devices (coming soon)')}</Typography>
             <Typography type='paragraph-landing'>
-              {t('Store your favorite places, search history and playlists for Qwant applications on all your devices with a real time synchronization (coming soon)')}
+              {t('Synchronize soon your Masq profile between all your devices in real time without any storage server !')}
             </Typography>
           </div>
           <Devices />
@@ -93,16 +93,16 @@ const Landing = ({ onClick, children }) => {
         <div className={styles.Shield}>
           <Shield />
           <div className={styles.text}>
-            <Typography type='title-landing'>{t('Your secret key is only known by YOU, we never have access to it')}</Typography>
+            <Typography type='title-landing'>{t('Your secret key is only known by YOU')}</Typography>
             <Typography type='paragraph-landing-dark'>
-              {t('Your data is encrypted and decrypted locally. That is why your secret key is never sent to our servers, we never have acces to it')}
+              {t('So, do not forget it :-); your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we never have acces to it')}
             </Typography>
           </div>
         </div>
 
         <div className={styles.Windows}>
           <div className={styles.text}>
-            <Typography type='title-landing'>{t('Keep the Masq window in the background in order to allow data synchronization (coming soon)')}</Typography>
+            <Typography type='title-landing'>{t('Keep the Masq window in the background in order to allow data synchronization')}</Typography>
             <Typography type='paragraph-landing-dark'>
               {t('To benefit from real time synchronization and always have up-to-date data, keep the Masq window opened in the background on all your devices')}
             </Typography>
