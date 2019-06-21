@@ -42,8 +42,8 @@ class Login extends Component {
   }
 
   async componentDidMount () {
-    const { setCurrentAppRequest, users } = this.props
-    this.props.fetchUsers()
+    const { setCurrentAppRequest } = this.props
+    const { users } = await this.props.fetchUsers()
 
     if (window.location.hash.substr(0, 7) !== '#/link/') {
       return
