@@ -66,7 +66,7 @@ const Landing = ({ onClick, children }) => {
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Personal data is stored on your devices')}</Typography>
             <Typography type='paragraph-landing'>
-              {t('No more need to Cloud ! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data')}
+              {t('No more need for the Cloud! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data')}
             </Typography>
           </div>
         </div>
@@ -75,7 +75,7 @@ const Landing = ({ onClick, children }) => {
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Real time synchronization between devices (coming soon)')}</Typography>
             <Typography type='paragraph-landing'>
-              {t('Synchronize soon your Masq profile between all your devices in real time without any storage server !')}
+              {t('Soon you can synchronize your Masq profile between all your devices in real time without any Cloud!')}
             </Typography>
           </div>
           <Devices />
@@ -95,7 +95,7 @@ const Landing = ({ onClick, children }) => {
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Your secret key is only known by YOU')}</Typography>
             <Typography type='paragraph-landing-dark'>
-              {t('So, do not forget it :-); your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we never have acces to it')}
+              {t('So, do not forget it :-) Your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we don\'t have access to it!')}
             </Typography>
           </div>
         </div>

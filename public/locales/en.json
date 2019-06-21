@@ -88,9 +88,9 @@
   "If you are not the one who initiated this request, please refuse.": "If you are not the one who initiated this request, please refuse.",
   "Your information has been updated successfully.": "Your information has been updated successfully.",
   "Free and secured storage of your preferences and personal data on all your devices": "Free and secured storage of your preferences and personal data on all your devices",
-  "No more need to Cloud ! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data": "No more need to Cloud ! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data",
-  "Synchronize soon your Masq profile between all your devices in real time without any storage server !": "Synchronize soon your Masq profile between all your devices in real time without any storage server !",
   "Your secret key is only known by YOU": "Your secret key is only known by YOU",
-  "So, do not forget it :-); your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we never have acces to it": "So, do not forget it :-); your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we never have acces to it",
-  "Keep the Masq window in the background in order to allow data synchronization": "Keep the Masq window in the background in order to allow data synchronization"
+  "Keep the Masq window in the background in order to allow data synchronization": "Gardez la fenêtre Masq ouverte en arrière-plan pour synchroniser vos données",
+  "No more need for the Cloud! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data": "No more need for the Cloud! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data",
+  "Soon you can synchronize your Masq profile between all your devices in real time without any Cloud!": "Soon you can synchronize your Masq profile between all your devices in real time without any Cloud!",
+  "So, do not forget it :-) Your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we don't have access to it!": "So, do not forget it :-) Your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we don't have access to it!"
 }
