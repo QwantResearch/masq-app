@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { CheckCircle, Slash } from 'react-feather'
+import { Slash } from 'react-feather'
 import { withTranslation } from 'react-i18next'
 
+import { ReactComponent as MapsIcon } from '../../assets/back-to-maps.svg'
 import { Modal, Button, Card, Typography, Space } from '../../components'
 import { handleUserAppLogin, handleUserAppRegister, setCurrentAppRequest, fetchApps, setLoading, setNotification } from '../../actions'
 
@@ -137,17 +138,16 @@ class AuthApp extends React.Component {
     } else {
       return (
         <div>
-          <CheckCircle size={114} color={styles.colorGreen} />
+          <MapsIcon />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>{ `${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}` }</Typography>
-          <Typography type='paragraph-modal' align='center'>{t('You can now use the application.')}</Typography>
         </div>
       )
     }
   }
 
   getTitle () {
-    const { t } = this.props
+    const { t, appRequest } = this.props
     if (this.state.refused) {
       return t('New connection request has been refused')
     }
@@ -155,7 +155,7 @@ class AuthApp extends React.Component {
     if (this.props.appRequest.isConnected === undefined) return false
 
     return this.props.appRequest.isConnected
-      ? t('New connection request has been accepted')
+      ? `${t('Go back to')} ${appRequest.appId}${t('!')} ${t('enjoy!')}`
       : t('New connection request')
   }
 
