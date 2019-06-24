@@ -43,7 +43,7 @@ class Login extends Component {
 
   async componentDidMount () {
     const { setCurrentAppRequest } = this.props
-    const { users } = await this.props.fetchUsers()
+    this.props.fetchUsers()
 
     if (window.location.hash.substr(0, 7) !== '#/link/') {
       return
@@ -56,11 +56,21 @@ class Login extends Component {
     try {
       const [ appId, msg, channel, key ] = JSON.parse(decoded) // eslint-disable-line
       await setCurrentAppRequest({ appId, channel, key, link: window.location.href })
-      if (!users.length) {
-        this.setState({ signup: true })
-      }
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    const { currentAppRequest } = this.props
+    if (!prevProps.user && this.props.user) {
+      this.props.history.push('/apps')
+    }
+
+    if (!this.props.users.length && !prevState.signup && currentAppRequest) {
+      this.setState({ signup: true }) // eslint-disable-line
+    } else if (this.props.users.length && prevState.signup) {
+      this.setState({ signup: false }) // eslint-disable-line
     }
   }
 
@@ -198,12 +208,6 @@ class Login extends Component {
         </div>
       </div>
     )
-  }
-
-  componentDidUpdate (prevProps) {
-    if (!prevProps.user && this.props.user) {
-      this.props.history.push('/apps')
-    }
   }
 
   render () {
