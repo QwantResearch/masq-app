@@ -14,7 +14,8 @@ class AuthApp extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      refused: false
+      refused: false,
+      loading: false
     }
     this.login = this.login.bind(this)
     this.handleOk = this.handleOk.bind(this)
@@ -50,7 +51,7 @@ class AuthApp extends React.Component {
   async componentDidUpdate (prevProps) {
     const { loading } = this.props
 
-    if (!this.state.refused && this.props.appRequest.isConnected === undefined) {
+    if (!this.state.refused && !this.props.appRequest.isConnected) {
       if (loading === true) return
       this.props.setLoading(true)
     } else {
@@ -77,8 +78,11 @@ class AuthApp extends React.Component {
   }
 
   async handleAccept () {
-    await this.props.handleUserAppRegister(true)
-    await this.props.fetchApps() // The apps may be added
+    this.setState({ loading: true }, async () => {
+      await this.props.handleUserAppRegister(true)
+      await this.props.fetchApps() // The apps may be added
+      this.setState({ loading: false })
+    })
   }
 
   async handleOk () {
@@ -161,9 +165,9 @@ class AuthApp extends React.Component {
 
   render () {
     const { appRequest } = this.props
-    const { refused } = this.state
+    const { refused, loading } = this.state
 
-    if (!refused && appRequest.isConnected === undefined) {
+    if ((!refused && appRequest.isConnected === undefined) || loading) {
       return false
     }
 
