@@ -4,7 +4,6 @@ import MediaQuery from 'react-responsive'
 
 import { X } from 'react-feather'
 
-import { useWindowHeight } from '../../hooks'
 import styles from './Modal.module.scss'
 
 const Modal = ({ onClose, width, children }) => (
@@ -18,12 +17,6 @@ const Modal = ({ onClose, width, children }) => (
 )
 
 const ResponsiveModal = ({ onClose, width, children }) => {
-  const vh = useWindowHeight() * 0.01
-
-  useEffect(() => {
-    document.documentElement.style.setProperty('--vh', `${vh}px`)
-  }, [])
-
   useEffect(() => {
     window.document.body.style.overflow = 'hidden'
 
