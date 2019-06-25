@@ -35,7 +35,6 @@
     }
 
     @media (max-width: $mobile-width) {
-      min-height: calc(100% - 96px);
       height: calc(100% - 96px);
       overflow-y: scroll;
     }
