@@ -92,7 +92,7 @@ class Apps extends PureComponent {
                     onClick={() => this.handleTrashClick(app)}
                   />
                 }
-                footer={<Link url={new URL(app.imageURL).origin} />}
+                footer={<Link url={new URL(app.imageURL).origin + '/maps'} />}
               />
             </div>
           ))}
