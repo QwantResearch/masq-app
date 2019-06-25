@@ -19,7 +19,10 @@ const Modal = ({ onClose, width, children }) => (
 
 const ResponsiveModal = ({ onClose, width, children }) => {
   const vh = useWindowHeight() * 0.01
-  document.documentElement.style.setProperty('--vh', `${vh}px`)
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+  }, [])
 
   useEffect(() => {
     window.document.body.style.overflow = 'hidden'

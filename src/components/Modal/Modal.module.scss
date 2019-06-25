@@ -36,9 +36,7 @@
 
     @media (max-width: $mobile-width) {
       top: 0;
-      height: calc(100vh - 96px);
       height: calc(var(--vh, 1vh) * 100 - 96px);
-      position: fixed;
     }
   }
 
