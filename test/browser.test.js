@@ -1,7 +1,7 @@
 import * as sinon from 'sinon'
 import DetectBrowser from 'detect-browser'
 
-import { isBrowserSupported, SUPPORTED_BROWSERS } from '../src/lib/browser'
+import { isBrowserSupported, SUPPORTED_BROWSERS_CODES } from '../src/lib/browser'
 
 const { expect } = require('chai')
 
@@ -19,7 +19,7 @@ describe('Browser support', () => {
   })
 
   it('should return true for browsers in whitelist', () => {
-    SUPPORTED_BROWSERS.forEach((browser) => {
+    SUPPORTED_BROWSERS_CODES.forEach((browser) => {
       stubBrowser(browser)
       expect(isBrowserSupported()).to.be.true
       stub.restore()
