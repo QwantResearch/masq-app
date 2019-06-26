@@ -8,7 +8,7 @@ import styles from './Modal.module.scss'
 
 const Modal = ({ onClose, width, children }) => (
   <div className={styles.Modal}>
-    <div className={styles.overlay} onClick={onClose} />
+    <div className={styles.overlay} />
     <div className={styles.modal} style={{ width }}>
       {onClose && <X className={styles.close} size={16} onClick={onClose} />}
       {children}
