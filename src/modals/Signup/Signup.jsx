@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 import { setNotification } from '../../actions'
 import { Avatar, Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
-import { isName, isUsername, isPassword, isForceEnough } from '../../lib/validators'
+import { isName, isUsername, isForceEnough } from '../../lib/validators'
 import { isUsernameAlreadyTaken, compressImage, MAX_IMAGE_SIZE } from '../../lib/utils'
 
 import styles from './Signup.module.scss'
@@ -47,7 +47,7 @@ class Signup extends React.Component {
       case 'firstname': return isName(field)
       case 'lastname': return isName(field)
       case 'username': return isUsername(field) && !isUsernameAlreadyTaken(field)
-      case 'password': return isPassword(field) && isForceEnough(field)
+      case 'password': return isForceEnough(field)
       case 'passwordConfirmation': return field === this.state.password
       default: return false
     }
