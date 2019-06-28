@@ -18,8 +18,6 @@ import styles from './App.module.scss'
 const history = createHashHistory()
 const { MasqError } = common.errors
 
-// listen for errors event and display them
-
 const authenticatedRoutes = [
   {
     path: '/apps',

@@ -1,7 +1,11 @@
 import * as sinon from 'sinon'
 import DetectBrowser from 'detect-browser'
 
-import { isBrowserSupported, SUPPORTED_BROWSERS_CODES } from '../src/lib/browser'
+import {
+  isBrowserSupported,
+  isBrowserStorageAvailable,
+  SUPPORTED_BROWSERS_CODES
+} from '../src/lib/browser'
 
 const { expect } = require('chai')
 
@@ -37,5 +41,10 @@ describe('Browser support', () => {
       .callsFake(() => null)
 
     expect(isBrowserSupported()).to.be.false
+  })
+
+  it('should detect that storage is not available', async () => {
+    const res = await isBrowserStorageAvailable()
+    expect(res).to.be.true
   })
 })
