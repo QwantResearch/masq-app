@@ -1,4 +1,7 @@
 import { detect } from 'detect-browser'
+import { utils } from 'masq-common'
+
+const { dbExists } = utils
 
 const SUPPORTED_BROWSERS_CODES = [
   'firefox',
@@ -26,8 +29,20 @@ const isBrowserSupported = () => {
   return !!SUPPORTED_BROWSERS_CODES.includes(browser.name)
 }
 
+const isBrowserStorageAvailable = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await dbExists('testPrivateBrowsing')
+      resolve(true)
+    } catch (err) {
+      resolve(false)
+    }
+  })
+}
+
 export {
   isBrowserSupported,
+  isBrowserStorageAvailable,
   SUPPORTED_BROWSERS,
   SUPPORTED_BROWSERS_CODES
 }
