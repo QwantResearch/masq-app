@@ -9,8 +9,9 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-import { Signup, SyncDevice, QRCodeModal } from '../../modals'
+import { Signup, SyncDevice, QRCodeModal, UnavailableStorage } from '../../modals'
 import { Landing } from '../../containers'
+import { isBrowserStorageAvailable } from '../../lib/browser'
 
 import styles from './Login.module.scss'
 
@@ -25,9 +26,11 @@ class Login extends Component {
       signup: false,
       sync: false,
       password: '',
-      qrcodeModal: false
+      qrcodeModal: false,
+      unavailableStorage: false
     }
 
+    this.onCloseUnavailableStorage = this.onCloseUnavailableStorage.bind(this)
     this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
     this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
@@ -87,8 +90,13 @@ class Login extends Component {
     this.setState({ signup: false })
   }
 
-  handleClickNewProfile () {
-    this.setState({ signup: true })
+  async handleClickNewProfile () {
+    const isStorageAvailable = await isBrowserStorageAvailable()
+    if (!isStorageAvailable) {
+      this.setState({ unavailableStorage: true })
+    } else {
+      this.setState({ signup: true })
+    }
   }
 
   handleClickSyncProfile () {
@@ -131,6 +139,10 @@ class Login extends Component {
 
   closeQRCodeModal () {
     this.setState({ qrcodeModal: false })
+  }
+
+  onCloseUnavailableStorage () {
+    this.setState({ unavailableStorage: false })
   }
 
   renderQRCodeModal () {
@@ -212,7 +224,11 @@ class Login extends Component {
 
   render () {
     const { users, currentAppRequest } = this.props
-    const { selectedUser, signup } = this.state
+    const { selectedUser, signup, unavailableStorage } = this.state
+
+    if (unavailableStorage) {
+      return <UnavailableStorage onClose={this.onCloseUnavailableStorage} />
+    }
 
     const children = () => {
       if (users.length === 0) {

@@ -98,5 +98,8 @@
   "Your data": "Your data",
   "Recommended applications": "Recommended applications",
   "The following applications are using Masq:": "The following applications are using Masq:",
-  "Open Qwant Maps": "Open Qwant Maps"
+  "Open Qwant Maps": "Open Qwant Maps",
+  "Masq can't create a profile in this browser": "Masq can't create a profile in this browser",
+  "Chances are that you are currrently browsing in a private window.": "Chances are that you are currrently browsing in a private window.",
+  "Please, try to open a normal window by selecting \"new window\" in your browser's menu and retry to create a Masq profile.": "Please, try to open a normal window by selecting \"new window\" in your browser's menu and retry to create a Masq profile."
 }
