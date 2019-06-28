@@ -29,8 +29,8 @@ const isBrowserSupported = () => {
   return !!SUPPORTED_BROWSERS_CODES.includes(browser.name)
 }
 
-const isBrowserStorageAvailable = () => {
-  return new Promise(async (resolve, reject) => {
+const isBrowserStorageAvailable = async () => {
+  return new Promise(async (resolve) => {
     try {
       await dbExists('testPrivateBrowsing')
       resolve(true)

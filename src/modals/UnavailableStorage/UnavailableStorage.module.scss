@@ -1,0 +1,15 @@
+@import '../../styles/colors.scss';
+
+.UnsupportedBrowser {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  height: 100%;
+  padding-bottom: 32px;
+
+  .fontMedium {
+    font-weight: 500;
+  }
+}
