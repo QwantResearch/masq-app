@@ -123,6 +123,9 @@ const Landing = ({ onClick, children }) => {
           <a href='https://help.qwant.com' rel='noopener noreferrer' target='_blank'>
             <Typography type='footer'>F.A.Q.</Typography>
           </a>
+          <a href='https://betterweb.qwant.com' rel='noopener noreferrer' target='_blank'>
+            <Typography type='footer'>Blog</Typography>
+          </a>
         </div>
       </div>
     </div>
