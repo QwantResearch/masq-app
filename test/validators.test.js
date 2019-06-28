@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { isName, isUsername, isPassword, getPasswordInfo, getForce, isForceEnough } = require('../src/lib/validators')
+const { isName, isUsername, getPasswordInfo, getForce, isForceEnough } = require('../src/lib/validators')
 
 describe('name validator', () => {
   it('should be valid', () => {
@@ -62,32 +62,6 @@ describe('username validator', () => {
   })
 })
 
-describe('password validator (check only authoried caracters)', () => {
-  it('should be valid', () => {
-    const str = 'somePassword9$'
-    expect(isPassword(str)).to.be.true
-  })
-
-  it('should be valid', () => {
-    const str = '!?$#%@()\\-*/@^+*&:<>:{};~\'.|'
-    expect(isPassword(str)).to.be.true
-  })
-
-  it('empty is forbbiden', () => {
-    expect(isPassword('')).to.be.false
-  })
-
-  it('spaces are forbidden', () => {
-    const str = 'some Password9$'
-    expect(isPassword(str)).to.be.false
-  })
-
-  it('not authorized special caracters are forbidden', () => {
-    const str = 'shor²'
-    expect(isPassword(str)).to.be.false
-  })
-})
-
 describe('password rules checker', () => {
   it('should return true if password contains lowercase', () => {
     const str = 'somePassword9$'
@@ -100,6 +74,26 @@ describe('password rules checker', () => {
   it('should return true if password contains specialCharacter', () => {
     const str = 'somePassword9$'
     expect(getPasswordInfo(str).specialCharacter).to.be.true
+  })
+  it('should return true if password contains specialCharacter', () => {
+    const str = 'somePassword9$'
+    expect(getPasswordInfo(str).specialCharacter).to.be.true
+  })
+  it('should return true if password contains specialCharacter =', () => {
+    const str = 'somePassword9='
+    expect(getPasswordInfo(str).specialCharacter).to.be.true
+  })
+  it('should return true if password contains specialCharacter `', () => {
+    const str = 'somePassword9`'
+    expect(getPasswordInfo(str).specialCharacter).to.be.true
+  })
+  it('should return true if password contains specialCharacter "', () => {
+    const str = 'somePassword9"'
+    expect(getPasswordInfo(str).specialCharacter).to.be.true
+  })
+  it('should return false if password contains a special Character not in the whitelist : ex ² "', () => {
+    const str = 'somePassword²'
+    expect(getPasswordInfo(str).specialCharacter).to.be.false
   })
   it('should return true if password contains number', () => {
     const str = 'somePassword9$'

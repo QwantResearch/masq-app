@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next'
 
 import { updatePassphrase, setNotification } from '../../actions'
 import { Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
-import { isPassword, isForceEnough } from '../../lib/validators'
+import { isForceEnough } from '../../lib/validators'
 
 import styles from './PasswordEdit.module.scss'
 
@@ -41,7 +41,7 @@ class PasswordEdit extends React.Component {
     }
 
     switch (fieldName) {
-      case 'password': return isPassword(field) && isForceEnough(field) && this.state.password !== this.state.currentPassword
+      case 'password': return isForceEnough(field) && this.state.password !== this.state.currentPassword
       case 'passwordConfirmation': return field === this.state.password
       default: return false
     }
@@ -62,8 +62,7 @@ class PasswordEdit extends React.Component {
       currentPasswordError: false
     })
 
-    if (!isPassword(password) ||
-        !isForceEnough(password) ||
+    if (!isForceEnough(password) ||
         (password === currentPassword)) {
       return this.setState({
         showErrors: true
