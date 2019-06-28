@@ -27,4 +27,4 @@ const getPasswordInfo = str => ({
 
 const computeScore = info => Object.keys(info).reduce((acc, cur) => acc + (info[cur] ? 1 : 0), 0)
 
-export { isName, isUsername, isPassword, getPasswordInfo, getForce, isForceEnough }
+export { isName, isUsername, getPasswordInfo, getForce, isForceEnough }
