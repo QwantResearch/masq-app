@@ -8,9 +8,13 @@ import { fetchApps, removeApp, setNotification } from '../../actions'
 import { Card, Typography, Space } from '../../components'
 import { DeleteAppDialog } from '../../modals'
 
+import { ReactComponent as MapsIcon } from '../../assets/apps-maps.svg'
+
 import Link from './Link'
 
 import styles from './Applications.module.scss'
+
+const MAPS_URL = 'https://qwant.com/maps'
 
 class Apps extends PureComponent {
   constructor (props) {
@@ -75,7 +79,20 @@ class Apps extends PureComponent {
 
         <Space size={16} />
 
-        {apps.length === 0 && <Typography type='paragraph'>{t('You do not have a registered application yet')}</Typography>}
+        {apps.length === 0 && (
+          <React.Fragment>
+            <Typography type='subtitle-page'>{t('You do not have a registered application yet')}</Typography>
+            <Space size={42} />
+            <Typography type='title-page'>{t('Recommended applications')}</Typography>
+            <Space size={16} />
+            <Typography type='subtitle-page'>{t('The following applications are using Masq:')}</Typography>
+            <Space size={24} />
+            <div className={styles.recommendedApps}>
+              <MapsIcon className={styles.icon} onClick={() => window.open(MAPS_URL, '_blank')} />
+              <Link url={MAPS_URL} label={t('Open Qwant Maps')} />
+            </div>
+          </React.Fragment>
+        )}
 
         <div className={styles.cards}>
           {apps.map((app, index) => (
