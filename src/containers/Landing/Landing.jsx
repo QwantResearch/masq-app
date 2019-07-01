@@ -120,6 +120,9 @@ const Landing = ({ onClick, children }) => {
           <a href='mailto:masq.dev@qwant.com'>
             <Typography type='footer'>{t('Contact us')}</Typography>
           </a>
+          <a href='https://about.qwant.com/fr/legal/masq-by-qwant-vos-donnees-personnelles/' rel='noopener noreferrer' target='_blank'>
+            <Typography type='footer'>{t('Your data')}</Typography>
+          </a>
           <a href='https://help.qwant.com' rel='noopener noreferrer' target='_blank'>
             <Typography type='footer'>F.A.Q.</Typography>
           </a>
