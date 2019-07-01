@@ -18,6 +18,7 @@ Typography.propTypes = {
     'title-landing2',
     'title-modal',
     'title-page',
+    'subtitle-page',
     'title-card',
     'paragraph',
     'paragraph-landing',

@@ -12,7 +12,7 @@
 
   .topSection {
     display: flex;
-    height: 50px;
+    // height: 50px;
     justify-content: space-between;
   }
 
@@ -35,6 +35,17 @@
       &:hover {
         color: $color-blue-grey;
       }
+    }
+  }
+
+  .recommendedApps {
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    align-items: center;
+
+    .icon {
+      cursor: pointer;
     }
   }
 }
