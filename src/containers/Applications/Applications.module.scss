@@ -46,6 +46,10 @@
 
     .icon {
       cursor: pointer;
+      @media (max-width: $mobile-width) {
+        width: 100px;
+        height: 100px;
+      }
     }
   }
 }
