@@ -19,7 +19,7 @@ const debug = (function () {
     case ('development'):
       return console.log
     default:
-      return () => { }
+      return () => {}
   }
 })()
 
@@ -545,7 +545,10 @@ class Masq {
     const appNonce = app ? app.appNonce : await this._genNonce()
 
     const id = app ? app.id : await this.addApp({
-      ...this.app, appId: this.appId, appDEK, appNonce
+      ...this.app,
+      appId: this.appId,
+      appDEK,
+      appNonce
     })
 
     const privateProfile = await this.getProfile()
@@ -642,7 +645,7 @@ class Masq {
    * @returns {String} -The secret key in hex format
    */
   async _genAppDEK () {
-    const key = await genAESKey(true, 'AES-GCM', 128)
+    const key = await genAESKey(true, 'AES-GCM', 256)
     const extractedKey = await exportKey(key)
     const hexKey = Buffer.from(extractedKey).toString('hex')
     return hexKey
