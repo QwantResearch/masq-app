@@ -122,7 +122,7 @@ class Login extends Component {
   }
 
   goBack () {
-    this.setState({ selectedUser: null })
+    this.setState({ selectedUser: null, password: '' })
   }
 
   openQRCodeModal () {
