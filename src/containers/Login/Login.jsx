@@ -48,6 +48,8 @@ class Login extends Component {
     const { setCurrentAppRequest } = this.props
     this.props.fetchUsers()
 
+    this.isStorageAvailable = await isBrowserStorageAvailable()
+
     if (window.location.hash.substr(0, 7) !== '#/link/') {
       return
     }
@@ -91,8 +93,7 @@ class Login extends Component {
   }
 
   async handleClickNewProfile () {
-    const isStorageAvailable = await isBrowserStorageAvailable()
-    if (!isStorageAvailable) {
+    if (!this.isStorageAvailable) {
       this.setState({ unavailableStorage: true })
     } else {
       this.setState({ signup: true })
