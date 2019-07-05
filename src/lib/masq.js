@@ -65,9 +65,9 @@ if (process.env.REACT_APP_REMOTE_WEBRTC && process.env.REACT_APP_REMOTE_WEBRTC =
 
 const swarmOpts = { config: { iceServers: STUN_TURN } }
 
-const requiredParametersDevice = [
-  'name'
-]
+// const requiredParametersDevice = [
+//   'name'
+// ]
 
 const requiredParametersApp = [
   'name',
@@ -357,7 +357,7 @@ class Masq {
    * @param {object} device The device
    */
   addDevice (device) {
-    checkObject(device, requiredParametersDevice)
+    // checkObject(device, requiredParametersDevice)
     return this._createResource('devices', device)
   }
 
@@ -612,6 +612,15 @@ class Masq {
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
+        console.log('this.profileId', this.profileId)
+        await this.updateDevice({
+          id: this.profileId,
+          name: 'test device',
+          apps: [{
+            appId: dbName,
+            localKey: db.local.key
+          }]
+        })
         this._startReplicate(db)
         resolve(db)
       })
