@@ -69,6 +69,14 @@ class SyncProfile {
 
     // this will block until the profile value is replicated
     await this.db.getAsync('/profile')
+    // const test = await this.db.getAsync('/profile/protectedMK')
+    // console.log('test', test)
+    await this.masq.openProfile(id, 'pass')
+
+    // await this.masq.addDevice({
+    //   name: 'copy',
+    //   localKey: this.db.local.key.toString('hex')
+    // })
 
     // We have now the profile synced, stop replication.
     // The user can now log in to start further replication of its profile and apps
@@ -102,6 +110,16 @@ class SyncProfile {
 
     await db.authorizeAsync(Buffer.from(key, 'hex'))
     await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
+  }
+
+  async pullApps (masq) {
+    const apps = await masq.getApps()
+    console.log(apps)
+
+    // this.db = await createPromisifiedHyperDB('profile-' + id, key)
+    // await dbReady(this.db)
+    // Start to replicate the profile
+    // this.masq._startReplicate(this.db)
   }
 }
 
