@@ -360,9 +360,11 @@ class Masq {
    * Add a device to a specified profile
    * @param {object} device The device
    */
-  addDevice (device) {
+  async addDevice (device) {
+    const id = this.profileDB.local.key.toString('hex')
     // checkObject(device, requiredParametersDevice)
-    return this._createResource('devices', {
+    await this.encryptAndPut(`/devices/${id}`, {
+      id,
       ...device,
       localKey: this.profileDB.local.key.toString('hex')
     })
@@ -374,6 +376,12 @@ class Masq {
   getApps () {
     this._checkProfile()
     return this._getResources('apps')
+  }
+
+  getDevice () {
+    this._checkProfile()
+    const id = this.profileDB.local.key.toString('hex')
+    return this.getAndDecrypt(`/devices/${id}`)
   }
 
   /**
@@ -619,15 +627,14 @@ class Masq {
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
-        console.log('this.profileId', this.profileId)
-        // await this.updateDevice({
-        //   id: uuidv4(),
-        //   name: 'test device'
-        //   // apps: [{
-        //   //   appId: dbName,
-        //   //   localKey: db.local.key
-        //   // }]
-        // })
+        const device = await this.getDevice()
+        await this.updateDevice({
+          ...device,
+          apps: [{
+            id: dbName,
+            localKey: db.local.key
+          }]
+        })
         this._startReplicate(db)
         resolve(db)
       })
