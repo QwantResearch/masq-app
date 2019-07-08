@@ -139,6 +139,7 @@ describe('sync-profile', function () {
     expect(devices[1].localKey).to.have.lengthOf(64)
     expect(devices[0].localKey).to.not.equal(devices[1].localKey)
 
+    expect(devices[1].apps).to.have.lengthOf(1)
     // await masq.addApp({ name: 'new app', description: 'test', appId: 'id' })
   })
 
