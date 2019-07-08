@@ -76,8 +76,7 @@ class SyncProfile {
     await this.masq.openProfile(id, 'pass')
 
     await this.masq.addDevice({
-      name: 'new device',
-      localKey: this.db.local.key.toString('hex')
+      name: 'new device'
     })
 
     // We have now the profile synced, stop replication.
