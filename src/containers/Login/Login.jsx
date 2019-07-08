@@ -54,6 +54,10 @@ class Login extends Component {
       return
     }
 
+    if (!this.isStorageAvailable) {
+      return this.setState({ unavailableStorage: true })
+    }
+
     const hash = window.location.hash.substr(7) // ignore #/link/ characters
     if (!hash.length) return
     const decoded = Buffer.from(hash, 'base64')
