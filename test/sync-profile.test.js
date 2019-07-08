@@ -12,6 +12,32 @@ const SyncProfile = require('../src/lib/sync-profile').default
 const { dbExists } = common.utils
 const { genAESKey, exportKey } = common.crypto
 
+const waitForSync = async (db1, db2) => {
+  return new Promise((resolve) => {
+    const checkVersion = () => {
+      db1.version((err, latestVersion) => {
+        if (err) { throw err }
+        db2.version((err, currentVersion) => {
+          if (err) { throw err }
+          if (currentVersion.toString('hex') === latestVersion.toString('hex')) {
+            return resolve()
+          }
+        })
+      })
+    }
+
+    db1.watch('/', () => {
+      checkVersion()
+    })
+
+    db2.watch('/', () => {
+      checkVersion()
+    })
+
+    checkVersion()
+  })
+}
+
 describe('sync-profile', function () {
   this.timeout(30000)
 
@@ -67,23 +93,20 @@ describe('sync-profile', function () {
 
     const privateProfile = await masq.openProfile(id, 'pass')
 
-    console.log('test', id)
-
-    // need to save deviceId
-    await masq.addDevice({ name: 'test' })
-
+    // we need to save a device
+    await masq.addDevice({ name: 'device test' })
     await masq.addApp(app)
+
     await masq._createDBAndSyncApp('app')
 
-    // const devices = await masq.getDevices()
-    // expect(devices).to.have.lengthOf(2)
-
+    const devicesBeforeSync = await masq.getDevices()
+    expect(devicesBeforeSync).to.have.lengthOf(1)
     expect(window.localStorage).to.have.lengthOf(1)
     expect(masq.profileDB._authorized).to.have.lengthOf(1)
 
     await Promise.all([
-      sp1.joinSecureChannel('channel2', this.keyBase64),
-      sp2.joinSecureChannel('channel2', this.keyBase64)
+      sp1.joinSecureChannel('channel-sync', this.keyBase64),
+      sp2.joinSecureChannel('channel-sync', this.keyBase64)
     ])
 
     await Promise.all([
@@ -91,22 +114,25 @@ describe('sync-profile', function () {
       sp1.pullProfile('pass')
     ])
 
+    expect(window.localStorage).to.have.lengthOf(2)
     expect(await dbExists('profile-' + id)).to.be.true
     expect(await dbExists('profile-' + idCopy)).to.be.true
-
+    // The two databases should be authorized
     expect(masq.profileDB._authorized).to.have.lengthOf(2)
-    expect(window.localStorage).to.have.lengthOf(2)
     const localStorageProfile = window.localStorage.getItem('profile-' + idCopy)
     expect(JSON.parse(localStorageProfile)).to.eql(publicProfile)
 
     const syncedProfile = await masq2.openProfile(idCopy, 'pass')
     expect(syncedProfile).to.eql(privateProfile)
 
-    const devices = await masq.getDevices()
-    console.log(devices)
-    expect(devices).to.have.lengthOf(2)
+    // 2 devices should exist from now
+    expect(await masq2.getDevices()).to.have.lengthOf(2)
 
-    sp2.pullApps(masq2)
+    await waitForSync(masq.profileDB, masq2.profileDB)
+    // masq1 should also see the new device
+    expect(await masq.getDevices()).to.have.lengthOf(2)
+
+    // await masq.addApp({ name: 'new app', description: 'test', appId: 'id' })
   })
 
   // it('should pull apps', async () => {

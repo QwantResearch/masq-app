@@ -67,22 +67,22 @@ class SyncProfile {
     const { msg: msg2 } = await decryptJSON(data, this.key)
     debug('pullProfile received', msg2)
 
+    if (msg2 !== 'writeAccessGranted') throw new Error('refused')
+
     // this will block until the profile value is replicated
     await this.db.getAsync('/profile')
     // const test = await this.db.getAsync('/profile/protectedMK')
     // console.log('test', test)
     await this.masq.openProfile(id, 'pass')
 
-    // await this.masq.addDevice({
-    //   name: 'copy',
-    //   localKey: this.db.local.key.toString('hex')
-    // })
+    await this.masq.addDevice({
+      name: 'new device',
+      localKey: this.db.local.key.toString('hex')
+    })
 
     // We have now the profile synced, stop replication.
     // The user can now log in to start further replication of its profile and apps
     this.masq._stopAllReplicates()
-
-    if (msg2 !== 'writeAccessGranted') throw new Error('refused')
   }
 
   async pushProfile (db, id, publicProfile) {
@@ -113,8 +113,8 @@ class SyncProfile {
   }
 
   async pullApps (masq) {
-    const apps = await masq.getApps()
-    console.log(apps)
+    console.log('pullApps')
+    // const apps = await masq.getApps()
 
     // this.db = await createPromisifiedHyperDB('profile-' + id, key)
     // await dbReady(this.db)
