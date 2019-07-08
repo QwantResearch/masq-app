@@ -8,7 +8,7 @@ import { isUsernameAlreadyTaken } from './utils'
 const { CustomEvent, dispatchEvent } = window
 
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBufferAsStr, updateMasterKeyAndNonce } = common.crypto
-const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
+const { dbReady, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
 
 const { MasqError, checkObject } = common.errors
 
@@ -234,6 +234,11 @@ class Masq {
     this._checkProfile()
     const dec = await get(this.profileDB, this.masterKey, this.nonce, key)
     return dec
+  }
+
+  watch (key, cb) {
+    this._checkProfile()
+    watch(this.profileDB, this.nonce, key, cb)
   }
 
   /**
@@ -612,14 +617,14 @@ class Masq {
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
         console.log('this.profileId', this.profileId)
-        await this.updateDevice({
-          id: this.profileId,
-          name: 'test device',
-          apps: [{
-            appId: dbName,
-            localKey: db.local.key
-          }]
-        })
+        // await this.updateDevice({
+        //   id: uuidv4(),
+        //   name: 'test device'
+        //   // apps: [{
+        //   //   appId: dbName,
+        //   //   localKey: db.local.key
+        //   // }]
+        // })
         this._startReplicate(db)
         resolve(db)
       })
