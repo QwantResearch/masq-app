@@ -130,7 +130,14 @@ describe('sync-profile', function () {
 
     await waitForSync(masq.profileDB, masq2.profileDB)
     // masq1 should also see the new device
-    expect(await masq.getDevices()).to.have.lengthOf(2)
+    const devices = await masq.getDevices()
+
+    expect(devices).to.have.lengthOf(2)
+    expect(devices[0]).to.haveOwnProperty('localKey')
+    expect(devices[1]).to.haveOwnProperty('localKey')
+    expect(devices[0].localKey).to.have.lengthOf(64)
+    expect(devices[1].localKey).to.have.lengthOf(64)
+    expect(devices[0].localKey).to.not.equal(devices[1].localKey)
 
     // await masq.addApp({ name: 'new app', description: 'test', appId: 'id' })
   })

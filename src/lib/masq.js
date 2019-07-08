@@ -363,7 +363,10 @@ class Masq {
    */
   addDevice (device) {
     // checkObject(device, requiredParametersDevice)
-    return this._createResource('devices', device)
+    return this._createResource('devices', {
+      ...device,
+      localKey: this.profileDB.local.key.toString('hex')
+    })
   }
 
   /**
