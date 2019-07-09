@@ -3,13 +3,13 @@ import swarm from 'webrtc-swarm'
 import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import * as common from 'masq-common'
-import { isUsernameAlreadyTaken } from './utils'
+import DetectBrowser from 'detect-browser'
+
+import { isUsernameAlreadyTaken, capitalize } from './utils'
 
 const { CustomEvent, dispatchEvent } = window
-
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBufferAsStr, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
-
 const { MasqError, checkObject } = common.errors
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
@@ -158,6 +158,16 @@ class Masq {
 
     const profile = await this.getAndDecrypt('/profile')
     this.setState(STATES.LOGGED)
+
+    // register current device if it does not exist
+    const device = await this.getDevice()
+    if (!device) {
+      const { name, os } = DetectBrowser.detect()
+      await this.addDevice({
+        name: `${capitalize(name)} - ${os}`
+      })
+    }
+
     return profile
   }
 
