@@ -278,7 +278,9 @@ describe('masq internal operations', function () {
     const devices = await masq.getDevices()
     expect(devices).to.have.lengthOf(1)
     expect(devices[0].id).to.exist
-    expect(devices[0]).to.eql(device)
+    expect(devices[0].localKey).to.exist
+    expect(devices[0].localKey).to.have.lengthOf(64)
+    expect(devices[0].name).to.eql(device.name)
   })
 
   it('update a device', async () => {
@@ -289,7 +291,10 @@ describe('masq internal operations', function () {
     await masq.updateDevice(device)
     const updatedDevices = await masq.getDevices()
     expect(updatedDevices).to.have.lengthOf(1)
-    expect(updatedDevices[0]).to.eql(device)
+    expect(devices[0].id).to.exist
+    expect(devices[0].localKey).to.exist
+    expect(devices[0].localKey).to.have.lengthOf(64)
+    expect(updatedDevices[0].name).to.eql(device.name)
   })
 
   it('should throw if there is no id in device', async () => {
