@@ -76,7 +76,8 @@ class SyncProfile {
     await this.masq.openProfile(id, 'pass')
 
     await this.masq.addDevice({
-      name: 'new device'
+      name: 'new device',
+      apps: []
     })
 
     // We have now the profile synced, stop replication.
@@ -111,14 +112,23 @@ class SyncProfile {
     await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
   }
 
-  async pullApps (masq) {
-    console.log('pullApps')
-    // const apps = await masq.getApps()
+  async pullApps (masq, prefix = '') {
+    const device = await masq.getDevice()
+    const allDevices = await masq.getDevices()
+    const otherDevices = allDevices.filter(d => {
+      return d.localKey !== masq.profileDB.local.key.toString('hex')
+    })
 
-    // this.db = await createPromisifiedHyperDB('profile-' + id, key)
-    // await dbReady(this.db)
-    // Start to replicate the profile
-    // this.masq._startReplicate(this.db)
+    for (let otherDevice of otherDevices) {
+      // d.apps, copy key, and add own localKey
+      const newApps = otherDevice.apps.filter(({ key }) => {
+        return !(device.apps.find(app => app.key === key))
+      })
+
+      for (let newApp of newApps) {
+        await masq._createDBAndSyncApp(newApp.id + prefix, newApp.key)
+      }
+    }
   }
 }
 
