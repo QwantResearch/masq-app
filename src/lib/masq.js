@@ -98,7 +98,7 @@ const dispatchMasqError = (errorCode) => {
 }
 
 class Masq {
-  constructor () {
+  constructor (dbNameSuffix = '') {
     this.profileId = null
     this.profileDB = null
 
@@ -113,6 +113,8 @@ class Masq {
     this.peer = null
     this.app = null
     this.dbName = null // used only during userApp registration
+
+    this.dbNameSuffix = dbNameSuffix
 
     // init state
     this.state = STATES.NOT_LOGGED
@@ -642,7 +644,7 @@ class Masq {
   }
 
   _watchAndAuthorizeApps () {
-    watch(this.profileDB, this.nonce, '/devices', async () => {
+    const syncApps = async () => {
       const allDevices = await this.getDevices()
       const otherDevices = allDevices.filter(d => {
         return d.localKey !== this.profileDB.local.key.toString('hex')
@@ -652,22 +654,28 @@ class Masq {
         for (let app of otherDevice.apps) {
           if (!this.appsDBs[app.discoveryKey]) {
             // Add app
+            await this._createDBAndSyncApp(app.id + '-copy', app.key)
             continue
           }
 
           const keyBuf = Buffer.from(app.localKey, 'hex')
 
-          if (await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf)) {
-          } else {
+          if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
             await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
           }
         }
       }
+    }
+
+    watch(this.profileDB, this.nonce, '/devices', async () => {
+      await syncApps()
     })
+
+    syncApps()
   }
 
   _createDBAndSyncApp (dbName, hex = null) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const db = openOrCreateDB(dbName, hex)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {

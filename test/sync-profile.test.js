@@ -69,7 +69,7 @@ describe('sync-profile', function () {
     const sp1 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const sp2 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const masq = new Masq()
-    const masq2 = new Masq()
+    const masq2 = new Masq('-copy')
     const profile = {
       firstname: '',
       lastname: '',
@@ -94,7 +94,6 @@ describe('sync-profile', function () {
     const privateProfile = await masq.openProfile(id, 'pass')
 
     // we need to save a device
-    await masq.addDevice({ name: 'device test' })
     await masq.addApp(app)
     await masq._createDBAndSyncApp('app')
 
@@ -148,7 +147,8 @@ describe('sync-profile', function () {
     expect(masq.appsDBs[device1.apps[0].id]).to.exist
     expect(masq.appsDBs[device1.apps[0].id]._authorized).to.have.lengthOf(1)
 
-    await sp2.pullApps(masq2, '-copy')
+    // await sp2.pullApps(masq2, '-copy')
+    await new Promise((resolve) => { setTimeout(resolve, 5000) })
 
     let device2 = await masq2.getDevice()
     expect(device2.apps).to.have.lengthOf(1)
@@ -166,9 +166,8 @@ describe('sync-profile', function () {
     expect(masq2.appsDBs[appid + '-copy']._authorized).to.have.lengthOf(2)
 
     await masq2._createDBAndSyncApp('app2')
-    await waitForSync(masq2.profileDB, masq.profileDB)
 
-    await sp1.pullApps(masq, '-copy')
+    await new Promise((resolve) => { setTimeout(resolve, 5000) })
 
     device1 = await masq.getDevice()
     device2 = await masq2.getDevice()
