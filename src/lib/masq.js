@@ -64,9 +64,9 @@ if (process.env.REACT_APP_REMOTE_WEBRTC && process.env.REACT_APP_REMOTE_WEBRTC =
 
 const swarmOpts = { config: { iceServers: STUN_TURN } }
 
-// const requiredParametersDevice = [
-//   'name'
-// ]
+const requiredParametersDevice = [
+  'name'
+]
 
 const requiredParametersApp = [
   'name',
@@ -382,7 +382,7 @@ class Masq {
    */
   async addDevice (device) {
     const id = this.profileDB.local.key.toString('hex')
-    // checkObject(device, requiredParametersDevice)
+    checkObject(device, requiredParametersDevice)
     await this.encryptAndPut(`/devices/${id}`, {
       id,
       ...device,
