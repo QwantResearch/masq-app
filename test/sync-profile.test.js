@@ -96,7 +96,6 @@ describe('sync-profile', function () {
     // we need to save a device
     await masq.addDevice({ name: 'device test' })
     await masq.addApp(app)
-
     await masq._createDBAndSyncApp('app')
 
     const devicesBeforeSync = await masq.getDevices()
@@ -139,12 +138,46 @@ describe('sync-profile', function () {
     expect(devices[1].localKey).to.have.lengthOf(64)
     expect(devices[0].localKey).to.not.equal(devices[1].localKey)
 
-    // expect(devices[1].apps).to.have.lengthOf(1)
+    let device1 = await masq.getDevice()
+    expect(device1.apps).to.have.lengthOf(1)
+    expect(device1.apps[0].id).to.exist
+    expect(device1.apps[0].key).to.have.lengthOf(64)
+    expect(device1.apps[0].localKey).to.have.lengthOf(64)
+    expect(device1.apps[0].localKey).to.equal(device1.apps[0].key)
 
-    // await masq.addApp({ name: 'new app', description: 'test', appId: 'id' })
+    expect(masq.appsDBs[device1.apps[0].id]).to.exist
+    expect(masq.appsDBs[device1.apps[0].id]._authorized).to.have.lengthOf(1)
+
+    await sp2.pullApps(masq2, '-copy')
+
+    let device2 = await masq2.getDevice()
+    expect(device2.apps).to.have.lengthOf(1)
+    expect(device2.apps[0].id).to.exist
+    expect(device2.apps[0].key).to.have.lengthOf(64)
+    expect(device2.apps[0].localKey).to.have.lengthOf(64)
+    expect(device2.apps[0].localKey).to.not.equal(device2.apps[0].key)
+
+    expect(masq2.appsDBs[device2.apps[0].id]).to.exist
+
+    await new Promise((resolve) => { setTimeout(resolve, 5000) })
+
+    const appid = device1.apps[0].id
+    expect(masq.appsDBs[appid]._authorized).to.have.lengthOf(2)
+    expect(masq2.appsDBs[appid + '-copy']._authorized).to.have.lengthOf(2)
+
+    await masq2._createDBAndSyncApp('app2')
+    await waitForSync(masq2.profileDB, masq.profileDB)
+
+    await sp1.pullApps(masq, '-copy')
+
+    device1 = await masq.getDevice()
+    device2 = await masq2.getDevice()
+    expect(device1.apps).to.have.lengthOf(2)
+    expect(device2.apps).to.have.lengthOf(2)
+
+    await new Promise((resolve) => { setTimeout(resolve, 5000) })
+
+    expect(masq.appsDBs['app2' + '-copy']._authorized).to.have.lengthOf(2)
+    expect(masq2.appsDBs['app2']._authorized).to.have.lengthOf(2)
   })
-
-  // it('should pull apps', async () => {
-
-  // })
 })

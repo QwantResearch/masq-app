@@ -86,8 +86,8 @@ const requiredParametersProfile = [
  * Open or create a hyperdb instance
  * @param {string} name The indexeddb store name
  */
-const openOrCreateDB = (name) => {
-  return createPromisifiedHyperDB(name)
+const openOrCreateDB = (name, key = null) => {
+  return createPromisifiedHyperDB(name, key)
 }
 
 const dispatchMasqError = (errorCode) => {
@@ -153,7 +153,11 @@ class Masq {
       const dbName = `app-${profileId}-${app.id}`
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
-      db.on('ready', () => this._startReplicate(db))
+      db.on('ready', () => {
+        const discoveryKey = db.discoveryKey.toString('hex')
+        this.appsDBs[discoveryKey] = db
+        this._startReplicate(db)
+      })
     })
 
     const profile = await this.getAndDecrypt('/profile')
@@ -164,9 +168,12 @@ class Masq {
     if (!device) {
       const { name, os } = DetectBrowser.detect()
       await this.addDevice({
-        name: `${capitalize(name)} - ${os}`
+        name: `${capitalize(name)} - ${os}`,
+        apps: []
       })
     }
+
+    this._watchAndAuthorizeApps()
 
     return profile
   }
@@ -360,6 +367,7 @@ class Masq {
     checkObject(app, requiredParametersApp)
     const dbName = `app-${this.profileId}-${app.id}`
     const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
+    // missing key
     const sw = this.swarms[discoveryKey]
     sw.close()
     window.indexedDB.deleteDatabase(dbName)
@@ -376,7 +384,8 @@ class Masq {
     await this.encryptAndPut(`/devices/${id}`, {
       id,
       ...device,
-      localKey: this.profileDB.local.key.toString('hex')
+      localKey: this.profileDB.local.key.toString('hex'),
+      apps: []
     })
   }
 
@@ -632,17 +641,46 @@ class Masq {
     peer.send(JSON.stringify(encryptedMsg))
   }
 
-  _createDBAndSyncApp (dbName) {
+  _watchAndAuthorizeApps () {
+    watch(this.profileDB, this.nonce, '/devices', async () => {
+      const allDevices = await this.getDevices()
+      const otherDevices = allDevices.filter(d => {
+        return d.localKey !== this.profileDB.local.key.toString('hex')
+      })
+
+      for (let otherDevice of otherDevices) {
+        for (let app of otherDevice.apps) {
+          if (!this.appsDBs[app.discoveryKey]) {
+            // Add app
+            continue
+          }
+
+          const keyBuf = Buffer.from(app.localKey, 'hex')
+
+          if (await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf)) {
+          } else {
+            await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
+          }
+        }
+      }
+    })
+  }
+
+  _createDBAndSyncApp (dbName, hex = null) {
     return new Promise((resolve, reject) => {
-      const db = openOrCreateDB(dbName)
+      const db = openOrCreateDB(dbName, hex)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
+        const discoveryKey = db.discoveryKey.toString('hex')
+        this.appsDBs[discoveryKey] = db
         const device = await this.getDevice()
         await this.updateDevice({
           ...device,
-          apps: [{
+          apps: [...device.apps, {
             id: dbName,
-            localKey: db.local.key
+            key: db.key.toString('hex'),
+            discoveryKey: db.discoveryKey.toString('hex'),
+            localKey: db.local.key.toString('hex')
           }]
         })
         this._startReplicate(db)
