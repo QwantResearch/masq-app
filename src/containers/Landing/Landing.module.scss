@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .Landing {
   width: 100%;
@@ -54,8 +55,17 @@
     }
 
     .accountBtn {
-      width: 340px;
       margin: auto;
+      width: 340px;
+      max-width: 340px;
+
+      @media (max-width: $mobile-width) {
+        width: 100%;
+      }
+
+      .createProfileBtn {
+        width: 100% !important;
+      }
     }
   }
 

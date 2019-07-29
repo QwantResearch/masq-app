@@ -4,12 +4,13 @@ import cx from 'classnames'
 
 import styles from './Button.module.scss'
 
-const Button = ({ onClick, color, children, width, height, borderRadius, secondary }) => (
+const Button = ({ onClick, color, children, width, height, borderRadius, secondary, className }) => (
   <button
     className={cx(
       styles.Button,
       { [styles[color]]: !secondary },
-      { [styles.secondary]: secondary }
+      { [styles.secondary]: secondary },
+      className
     )}
     onClick={onClick}
     style={{
@@ -41,7 +42,8 @@ Button.propTypes = {
   height: PropTypes.number,
   secondary: PropTypes.bool,
   children: PropTypes.string,
-  borderRadius: PropTypes.number
+  borderRadius: PropTypes.number,
+  className: PropTypes.string
 }
 
 export default Button
