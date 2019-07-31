@@ -14,6 +14,7 @@ const Button = ({ onClick, color, children, width, height, borderRadius, seconda
     onClick={onClick}
     style={{
       width,
+      maxWidth: width,
       height,
       borderRadius,
       padding: width ? 0 : `0px ${height}px` }}
