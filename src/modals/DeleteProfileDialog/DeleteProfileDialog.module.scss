@@ -10,14 +10,15 @@
   height: 100%;
 
   .buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
     @media (min-width: $mobile-width + 1px) {
-      display: flex;
-      >:first-child {
-        margin-right: 12px;
-      }
+      justify-content: space-between;
     }
 
     @media (max-width: $mobile-width) {
+      display: flex;
       flex-direction: column;
       >:first-child {
         margin-bottom: 12px;

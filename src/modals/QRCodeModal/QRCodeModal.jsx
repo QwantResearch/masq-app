@@ -18,7 +18,7 @@ class QRCodeModal extends Component {
     const { onClose, currentAppRequest } = this.props
 
     return (
-      <Modal width={511} onClose={onClose}>
+      <Modal width={400} onClose={onClose}>
         <div className={styles.QRCode}>
           <Typography type='title-modal'>Connexion avec un autre appareil</Typography>
           <Typography type='paragraph-modal'>Scannez le QRCode suivant sur votre téléphone, ou copiez le lien suivant sur un autre appareil pour vous connecter depuis celui-ci.</Typography>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Slash } from 'react-feather'
@@ -102,10 +102,10 @@ class AuthApp extends React.Component {
 
     if (appRequest.isConnected === false) {
       return (
-        <Fragment>
+        <div className={styles.buttons}>
           <Button width={185} onClick={this.handleRefuse} color='danger'>{t('Refuse')}</Button>
           <Button width={185} onClick={this.handleAccept} color='success'>{t('Validate')}</Button>
-        </Fragment>
+        </div>
       )
     }
 
@@ -124,6 +124,7 @@ class AuthApp extends React.Component {
           <Slash size={114} color={styles.colorGrey300} />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>Vous avez refusé l'accès de l'application {appRequest.appId} à votre stockage Masq.</Typography>
+          <Space size={12} />
         </div>
       )
     }
@@ -133,10 +134,13 @@ class AuthApp extends React.Component {
     if (appRequest.isConnected === false) {
       return (
         <div>
-          <Typography type='paragraph-modal'>{t(`This application asks access to Masq.`)}</Typography>
-          <Typography type='paragraph-modal'>{t(`If you are not the one who initiated this request, please refuse.`)}</Typography>
+          <Typography type='paragraph-modal'>
+            {t(`This application asks access to Masq.`)}
+            {t(`If you are not the one who initiated this request, please refuse.`)}
+          </Typography>
           <Space size={30} />
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} description={appRequest.description} />
+          <Space size={40} />
         </div>
       )
     } else {
@@ -145,6 +149,7 @@ class AuthApp extends React.Component {
           <MapsIcon />
           <Space size={28} />
           <Typography type='paragraph-modal' align='center'>{ `${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}` }</Typography>
+          <Space size={12} />
         </div>
       )
     }
@@ -172,16 +177,14 @@ class AuthApp extends React.Component {
     }
 
     return (
-      <Modal width={511}>
+      <Modal width={400}>
         <div className={styles.AuthApp}>
           <div className={styles.content}>
             <Typography type='title-modal'>{this.getTitle()}</Typography>
             <Space size={32} />
             {this.renderText()}
           </div>
-          <div className={styles.buttons}>
-            {this.renderButtons()}
-          </div>
+          {this.renderButtons()}
         </div>
       </Modal>
     )

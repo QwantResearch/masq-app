@@ -11,10 +11,10 @@
 
   .buttons {
     display: flex;
+    width: 100%;
+    align-items: center;
     @media (min-width: $mobile-width + 1px) {
-      >:first-child {
-        margin-right: 12px;
-      }
+      justify-content: space-between;
     }
 
     @media (max-width: $mobile-width) {

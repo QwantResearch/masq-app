@@ -8,7 +8,7 @@ import styles from './DeleteAppDialog.module.scss'
 const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal width={465} onClose={onClose}>
+    <Modal width={400} padding={40} onClose={onClose}>
       <div className={styles.ConfirmDialog}>
         <Typography type='title-modal'>{`${t('Deletion of the application')} ${app.appId}`}</Typography>
         <Space size={32} />
@@ -18,7 +18,6 @@ const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => {
         </Typography>
         <Space size={36} />
         <Card
-          width={378}
           title={app.name}
           image={app.imageURL}
           description={app.description} />
