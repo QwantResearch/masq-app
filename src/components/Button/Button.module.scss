@@ -11,7 +11,10 @@
   transition: box-shadow 0.5s;
 
   @media (max-width: $mobile-width) {
-    width: 320px !important;
+    &:not(.secondary) {
+      width: 320px !important;
+      max-width: 100% !important;
+    }
   }
 
   span {

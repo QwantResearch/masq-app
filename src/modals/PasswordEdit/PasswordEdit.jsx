@@ -88,7 +88,7 @@ class PasswordEdit extends React.Component {
     const { onClose, t } = this.props
 
     return (
-      <Modal onClose={onClose} width={511}>
+      <Modal onClose={onClose} width={400}>
         <div className={styles.PasswordEdit}>
           <Typography type='title-modal'>{t('Update your secret key')}</Typography>
           <Space size={28} />
