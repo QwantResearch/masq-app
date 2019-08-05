@@ -57,7 +57,8 @@ const QRCodeModal = ({ onClose, currentAppRequest }) => {
         />
         <Space size={8} />
         {copied && <Pill>{t('Link Copied !')}</Pill>}
-        <Space size={48} />
+        {!copied && <Space size={28} />}
+        <Space size={16} />
       </div>
     </Modal>
   )
