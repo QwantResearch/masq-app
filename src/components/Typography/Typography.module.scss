@@ -140,3 +140,16 @@
   font-size: 55px;
   color: white;
 }
+
+.line {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  &:before,
+  &:after {
+    border-top: 1px solid $color-grey-200;
+    content: "";
+    flex: 1;
+    margin: 0 12px;
+  }
+}

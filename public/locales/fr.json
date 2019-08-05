@@ -98,11 +98,16 @@
   "Recommended applications": "Applications recommandées",
   "The following applications are using Masq:": "Les applications suivantes utilisent Masq :",
   "Open Qwant Maps": "Ouvrir Qwant Maps",
-  "Connection failure, please retry.": "__STRING_NOT_TRANSLATED__",
+  "Add a device": "Ajouter un appareil",
+  "Scan this QR Code with the device you want to synchronize:": "Scannez ce QR Code avec l’appareil que vous voulez synchroniser :",
+  "Copy the following link and paste it in the browser you want to use:": "Copiez le lien ci-dessous et collez le dans le navigateur que vous souhaitez utiliser :",
+  "Link Copied !": "Lien Copié !",
+  "Connection failure, please retry.": "Connexion interrompue, veuillez réessayer.",
   "on": "sur",
   "This device": "Cet appareil",
   "You have refused the access of the application": "Vous avez refusé l'accès de l'application",
   "to your Masq storage.": "à votre stockage Masq.",
   "Import a picture": "Importer une photo",
-  "The selected picture is too big, make it smaller please.": "L'image sélectionnée est trop lourde. Veuillez en choisir une autre."
+  "The selected picture is too big, make it smaller please.": "L'image sélectionnée est trop lourde. Veuillez en choisir une autre.",
+  "or": "ou"
 }

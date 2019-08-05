@@ -7,7 +7,7 @@ import cx from 'classnames'
 import { Typography } from '..'
 import styles from './TextField.module.scss'
 
-const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick, password }) => {
+const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick, password, readOnly, height }) => {
   const [visible, setVisible] = useState(false)
 
   const handleClick = () => {
@@ -36,14 +36,18 @@ const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus
         autoFocus={autoFocus}
         placeholder={placeholder}
         defaultValue={defaultValue}
+        readOnly={readOnly}
+        style={{ height }}
       />
       <label htmlFor='field'>{label}</label>
 
-      {(password || button) && <div onClick={handleClick} className={styles.button}>
-        {password && visible && defaultValue.length > 0 && <EyeOff />}
-        {password && !visible && defaultValue.length > 0 && <Eye />}
-        {button && <Typography type='textFieldButton'>{button}</Typography>}
-      </div>}
+      {(password || button) && (
+        <div onClick={handleClick} className={styles.button} style={{ height: height }}>
+          {password && visible && defaultValue.length > 0 && <EyeOff />}
+          {password && !visible && defaultValue.length > 0 && <Eye />}
+          {button && <Typography type='textFieldButton'>{button}</Typography>}
+        </div>
+      )}
     </div>
   )
 }
@@ -80,11 +84,15 @@ TextField.propTypes = {
 
   defaultValue: PropTypes.string,
 
-  button: PropTypes.string,
+  button: PropTypes.object,
 
   onClick: PropTypes.func,
 
-  password: PropTypes.bool
+  password: PropTypes.bool,
+
+  readOnly: PropTypes.bool,
+
+  height: PropTypes.number
 }
 
 export default TextField

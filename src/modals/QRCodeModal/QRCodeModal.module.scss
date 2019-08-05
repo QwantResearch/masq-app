@@ -6,18 +6,37 @@
   align-items: center;
   height: 100%;
   width: 100%;
-  margin-top: 48px;
 
   input {
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.7px;
-    color: $color-blue;
-    margin-bottom: 48px;
-    border: 1px solid $color-dark-blue-100;
   }
 
-  .loader {
-    margin-top: 32px;
+  .input {
+    input {
+      color: $color-blue;
+    }
+
   }
+  .copied {
+    input {
+      color: white;
+      background-color: $color-blue;
+      border: solid 1px #353c52;
+    }
+    svg {
+      color: white;
+    }
+  }
+}
+
+.pill {
+  height: 28px;
+  width: 120px;
+  line-height: 28px;
+  background-color: $color-green;
+  color: white;
+  border-radius: 50px;
+  font-size: 14px;
+  text-align: center;
 }

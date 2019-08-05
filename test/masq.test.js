@@ -334,8 +334,8 @@ describe('masq internal operations', function () {
 
     await masq.removeProfile()
 
-    expect(window.localStorage.length).to.equal(localStorageLength - 1)
     expect(await dbExists(dbNameProfile)).to.be.false
+    expect(window.localStorage.length).to.equal(localStorageLength - 1)
   })
 })
 
