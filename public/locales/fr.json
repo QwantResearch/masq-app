@@ -26,7 +26,6 @@
   "Applications": "Applications",
   "Devices": "Appareils",
   "Settings": "Paramètres",
-  "The chosen image is too big, please select a smaller image": "L'image sélectionnée est trop lourde. Veuillez en choisir une autre.",
   "Profile succesfully removed.": "Profil supprimé avec succès",
   "My settings": "Mes paramètres",
   "Username (displayed)": "Pseudo (affiché)",
@@ -98,5 +97,12 @@
   "Your data": "Vos données",
   "Recommended applications": "Applications recommandées",
   "The following applications are using Masq:": "Les applications suivantes utilisent Masq :",
-  "Open Qwant Maps": "Ouvrir Qwant Maps"
+  "Open Qwant Maps": "Ouvrir Qwant Maps",
+  "Connection failure, please retry.": "__STRING_NOT_TRANSLATED__",
+  "on": "sur",
+  "This device": "Cet appareil",
+  "You have refused the access of the application": "Vous avez refusé l'accès de l'application",
+  "to your Masq storage.": "à votre stockage Masq.",
+  "Import a picture": "Importer une photo",
+  "The selected picture is too big, make it smaller please.": "L'image sélectionnée est trop lourde. Veuillez en choisir une autre."
 }

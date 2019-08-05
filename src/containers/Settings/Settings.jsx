@@ -88,7 +88,7 @@ class Settings extends React.Component {
 
     const image = await compressImage(file)
     if (image.size > MAX_IMAGE_SIZE) {
-      setNotification({ title: t('The chosen image is too big, please select a smaller image'), error: true })
+      setNotification({ title: t('The selected picture is too big, make it smaller please.'), error: true })
       return
     }
 

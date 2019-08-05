@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { createHashHistory } from 'history'
 import { Router, Route, Redirect } from 'react-router-dom'
 import DetectBrowser from 'detect-browser'
+import { withTranslation } from 'react-i18next'
 import * as common from 'masq-common'
 
 import { Login, Applications, Devices, Settings, Navbar, Loading } from './containers'
@@ -75,12 +76,12 @@ class App extends Component {
 
   async componentDidMount () {
     console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
-
+    const { t } = this.props
     window.addEventListener('MasqError', (e) => {
       if (e.detail === MasqError.REPLICATION_SIGNALLING_ERROR) {
         this.props.setNotification({
           error: true,
-          title: 'Echec de connexion, merci de réessayer.'
+          title: t('Connection failure, please retry.')
         })
       }
     })
@@ -88,8 +89,8 @@ class App extends Component {
     if (!this.props.devices.length) {
       const { name, os } = DetectBrowser.detect()
       this.props.addDevice({
-        name: `${capitalize(name)} sur ${os}`,
-        description: 'Cet appareil',
+        name: `${capitalize(name)} ${t('on')} ${os}`,
+        description: t('This device'),
         color: '#40ae6c'
       })
     }
@@ -195,7 +196,8 @@ App.propTypes = {
   notification: PropTypes.object,
   loading: PropTypes.bool,
   setLoading: PropTypes.func,
-  setNotification: PropTypes.func
+  setNotification: PropTypes.func,
+  t: PropTypes.func
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+const translatedApp = withTranslation()(App)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedApp)

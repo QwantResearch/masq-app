@@ -26,7 +26,6 @@
   "Applications": "Applications",
   "Devices": "Devices",
   "Settings": "Settings",
-  "The chosen image is too big, please select a smaller image": "The chosen image is too big, please select a smaller image",
   "Profile succesfully removed.": "Profile succesfully removed.",
   "My settings": "My settings",
   "Username (displayed)": "Username (displayed)",
@@ -87,7 +86,7 @@
   "Your information has been updated successfully.": "Your information has been updated successfully.",
   "Free and secured storage of your preferences and personal data on all your devices": "Free and secured storage of your preferences and personal data on all your devices",
   "Your secret key is only known by YOU": "Your secret key is only known by YOU",
-  "Keep the Masq window in the background in order to allow data synchronization": "Gardez la fenêtre Masq ouverte en arrière-plan pour synchroniser vos données",
+  "Keep the Masq window in the background in order to allow data synchronization": "Keep the Masq window in the background in order to allow data synchronization",
   "No more need for the Cloud! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data": "No more need for the Cloud! Your preferences and personnal data are stored directly on your devices, they are encrypted to gurantee their security. You are the owner of your data",
   "Soon you can synchronize your Masq profile between all your devices in real time without any Cloud!": "Soon you can synchronize your Masq profile between all your devices in real time without any Cloud!",
   "So, do not forget it :-) Your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we don't have access to it!": "So, do not forget it :-) Your data is encrypted and decrypted on your device. That is why your secret key is never sent to our servers, we don't have access to it!",
@@ -98,5 +97,12 @@
   "Your data": "Your data",
   "Recommended applications": "Recommended applications",
   "The following applications are using Masq:": "The following applications are using Masq:",
-  "Open Qwant Maps": "Open Qwant Maps"
+  "Open Qwant Maps": "Open Qwant Maps",
+  "Connection failure, please retry.": "Connection failure, please retry.",
+  "on": "on",
+  "This device": "This device",
+  "You have refused the access of the application": "You have refused the access of the application",
+  "to your Masq storage.": "to your Masq storage.",
+  "Import a picture": "Import a picture",
+  "The selected picture is too big, make it smaller please.": "The selected picture is too big, make it smaller please."
 }

@@ -71,7 +71,7 @@ class Signup extends React.Component {
   }
 
   async onImageChange (event) {
-    const { setNotification } = this.props
+    const { setNotification, t } = this.props
     const reader = new window.FileReader()
     const file = event.target.files[0]
     if (!file) {
@@ -80,7 +80,7 @@ class Signup extends React.Component {
 
     const image = await compressImage(file)
     if (image.size > MAX_IMAGE_SIZE) {
-      setNotification({ title: 'L\'image sélectionnée est trop lourde. Veuillez en choisir une autre.', error: true })
+      setNotification({ title: t('The selected picture is too big, make it smaller please.'), error: true })
       return
     }
 
@@ -156,7 +156,7 @@ class Signup extends React.Component {
           />
 
           <Space size={21} />
-          <Button width={190} height={40} maxWidth={185} borderRadius={3} secondary onClick={this.openDialog}>Importer une photo</Button>
+          <Button width={190} height={40} maxWidth={185} borderRadius={3} secondary onClick={this.openDialog}>{t('Import a picture')}</Button>
         </div>
 
         <Space size={32} />
