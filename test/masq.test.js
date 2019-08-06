@@ -20,7 +20,7 @@ const wait = async (timeout = 1000) => new Promise((resolve, reject) => {
 })
 
 describe('masq internal operations', function () {
-  this.timeout(30000)
+  this.timeout(60000)
 
   let masq
 

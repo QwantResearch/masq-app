@@ -24,6 +24,8 @@ module.exports = function (config) {
     webpackMiddleware: {
       stats: 'errors-only',
       devtool: 'inline-source-map'
-    }
+    },
+    browserDisconnectTimeout: 60000,
+    browserNoActivityTimeout: 60000
   })
 }
