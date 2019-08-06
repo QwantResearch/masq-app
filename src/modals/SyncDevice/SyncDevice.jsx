@@ -1,101 +1,85 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { RefreshCw, CheckCircle, XCircle } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 
-import { setSyncStep } from '../../actions'
-import { Modal, Button, Loader, Typography } from '../../components'
+import { Modal, Button, Space, Typography } from '../../components'
 
 import styles from './SyncDevice.module.scss'
-import { CheckCircle } from 'react-feather'
 
-class SyncDevice extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleOnClose = this.handleOnClose.bind(this)
-  }
+const SyncDeviceModal = ({ children }) => {
+  return <Modal width={400}>
+    <div className={styles.SyncDevice}>
+      {children}
+    </div>
+  </Modal>
+}
 
-  componentDidMount () {
-    const that = this
-    const timer = setInterval(() => {
-      that.props.setSyncStep(that.props.syncStep + 1)
-      if (that.props.syncStep === 2) clearInterval(timer)
-    }, 3000)
-  }
+const SyncDeviceModalSyncing = ({ t, setSyncStep }) => (
+  <SyncDeviceModal>
+    <Typography type='title-modal'>{t('Synchronization in progress...')}</Typography>
+    <Space size={80} />
+    <RefreshCw className={styles.refeshIcon} size={124} color={styles.colorCyan} />
+    <Space size={32} />
+    <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('Please wait, we are retrieving your profile')}</Typography>
+    <Space size={79} />
+    <Button color='neutral' onClick={() => setSyncStep(1)}>{t('cancel')}</Button>
+    <Space size={32} />
+  </SyncDeviceModal>
+)
 
-  copyLink () {
-    const link = document.querySelector('input')
-    link.select()
-    document.execCommand('copy')
-  }
+const SyncDeviceModalFinished = ({ t, setSyncStep }) => (
+  <SyncDeviceModal>
+    <Typography type='title-modal'>{t('Synchronization finished!')}</Typography>
+    <Space size={80} />
+    <CheckCircle size={124} color={styles.colorGreen} />
+    <Space size={32} />
+    <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('You can now use your profile on your new device!')}</Typography>
+    <Space size={60} />
+    <Button color='neutral' onClick={() => setSyncStep(2)}>{t('close')}</Button>
+    <Space size={32} />
+  </SyncDeviceModal>
+)
 
-  handleOnClose () {
-    this.props.setSyncStep(0) // Reset syncStep
-    this.props.onClose()
-  }
+const SyncDeviceModalError = ({ t, setSyncStep }) => (
+  <SyncDeviceModal>
+    <Typography type='title-modal'>{t('Synchronization failure')}</Typography>
+    <Space size={80} />
+    <XCircle size={124} color={styles.colorRed} />
+    <Space size={32} />
+    <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('We were unable to retrieve your profile, please try again.')}</Typography>
+    <Space size={60} />
+    <Button color='neutral' onClick={() => setSyncStep(0)}>{t('go back')}</Button>
+    <Space size={32} />
+  </SyncDeviceModal>
+)
 
-  renderSyncLink () {
-    return (
-      <Modal width={400} onClose={this.handleOnClose}>
-        <div className={styles.SyncDevice}>
-          <Typography type='title-modal'>Ajouter un appareil</Typography>
-          <Typography type='paragraph-modal'>Copiez-collez le lien suivant pour synchroniser votre profil et vos applications avec un autre appareil.</Typography>
-          <input id='link' readOnly defaultValue='qwa.nt/0BJ8ZX' />
-          <Button onClick={this.copyLink}>Copier</Button>
-        </div>
-      </Modal>
-    )
-  }
+const SyncDevice = () => {
+  const [syncStep, setSyncStep] = useState(0)
+  const { t } = useTranslation()
 
-  renderSyncLoading () {
-    return (
-      <Modal width={400} onClose={this.handleOnClose}>
-        <div className={styles.SyncDevice}>
-          <Typography type='title-modal'>Ajouter un appareil</Typography>
-          <Typography type='paragraph-modal'>Synchronisation en cours, veuillez patienter...</Typography>
-          <div className={styles.loader}>
-            <Loader />
-          </div>
-        </div>
-      </Modal>
-    )
-  }
-  renderSyncComplete () {
-    return (
-      <Modal width={400} onClose={this.handleOnClose}>
-        <div className={styles.SyncDevice}>
-          <CheckCircle width={160} height={160} color={styles.colorGreen} />
-          <p>Synchronisation terminée. Vous pouvez maintenant vous connecter</p>
-          <Button onClick={this.handleOnClose}>Ok</Button>
-        </div>
-      </Modal>
-    )
-  }
-
-  render () {
-    const { syncStep } = this.props
-    return (
-      <div>
-        {/* <Notification style={{ position: 'relative' }} title='Lien copié dans le presse-papier' /> */}
-        { syncStep === 0 && this.renderSyncLink() }
-        { syncStep === 1 && this.renderSyncLoading() }
-        { syncStep === 2 && this.renderSyncComplete() }
-      </div>
-    )
+  switch (syncStep) {
+    case 0:
+      return <SyncDeviceModalSyncing t={t} setSyncStep={setSyncStep} />
+    case 1:
+      return <SyncDeviceModalFinished t={t} setSyncStep={setSyncStep} />
+    default:
+      return <SyncDeviceModalError t={t} setSyncStep={setSyncStep} />
   }
 }
 
-SyncDevice.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  setSyncStep: PropTypes.func.isRequired,
-  syncStep: PropTypes.number
+SyncDeviceModalSyncing.propTypes =
+SyncDeviceModalFinished.propTypes =
+SyncDeviceModalError.propTypes = {
+  t: PropTypes.func,
+  setSyncStep: PropTypes.func
 }
 
-const mapStateToProps = state => ({
-  syncStep: state.masq.syncStep
-})
+SyncDeviceModal.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
+}
 
-const mapDispatchToProps = (dispatch) => ({
-  setSyncStep: (step) => dispatch(setSyncStep(step))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SyncDevice)
+export default SyncDevice
