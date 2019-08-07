@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import QRCode from 'qrcode.react'
 import { Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +17,7 @@ Pill.propTypes = {
   children: PropTypes.string.isRequired
 }
 
-const QRCodeModal = ({ onClose, currentAppRequest }) => {
+const QRCodeModal = ({ onClose, link }) => {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
 
@@ -37,7 +36,7 @@ const QRCodeModal = ({ onClose, currentAppRequest }) => {
         <Space size={32} />
         <Typography maxWidth={320} type='paragraph-modal' align='center'>{t('Scan this QR Code with the device you want to synchronize:')}</Typography>
         <Space size={18} />
-        <QRCode value={currentAppRequest.link} />
+        <QRCode value={link} />
         <Space size={26} />
         <Typography line align='center' type='paragraph-modal' color={styles.colorBlueGrey}>{t('or')}</Typography>
         <Space size={22} />
@@ -50,7 +49,7 @@ const QRCodeModal = ({ onClose, currentAppRequest }) => {
           )}
           readonly
           id='link'
-          defaultValue={currentAppRequest.link}
+          defaultValue={link}
           button={<Copy style={{ height: 40 }} />}
           height={36}
           onClick={() => copyLink()}
@@ -66,11 +65,7 @@ const QRCodeModal = ({ onClose, currentAppRequest }) => {
 
 QRCodeModal.propTypes = {
   onClose: PropTypes.func,
-  currentAppRequest: PropTypes.object
+  link: PropTypes.string
 }
 
-const mapStateToProps = state => ({
-  currentAppRequest: state.masq.currentAppRequest
-})
-
-export default connect(mapStateToProps)(QRCodeModal)
+export default QRCodeModal

@@ -1,0 +1,13 @@
+@import '../../styles/colors.scss';
+
+.FloatingButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50px;
+  color: white;
+  background-color: $color-blue;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+}
