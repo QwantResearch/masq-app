@@ -2,9 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { Card, Button, Typography, Space } from '../../components'
+import { Plus } from 'react-feather'
+import MediaQuery from 'react-responsive'
+
+import { Card, Button, Typography, Space, FloatingButton } from '../../components'
 import { withTranslation } from 'react-i18next'
-import { SyncDevice } from '../../modals'
+import { QRCodeModal } from '../../modals'
 
 import styles from './Devices.module.scss'
 
@@ -13,33 +16,37 @@ class Devices extends React.Component {
     super(props)
     this.state = { addDevice: false }
     this.handleAddDeviceClick = this.handleAddDeviceClick.bind(this)
-    this.renderSyncModal = this.renderSyncModal.bind(this)
-    this.handleSyncModalClosed = this.handleSyncModalClosed.bind(this)
+    this.handleAddDeviceClose = this.handleAddDeviceClose.bind(this)
   }
 
   handleAddDeviceClick () {
     this.setState({ addDevice: true })
   }
 
-  handleSyncModalClosed () {
+  handleAddDeviceClose () {
     this.setState({ addDevice: false })
-  }
-
-  renderSyncModal () {
-    return this.state.addDevice ? <SyncDevice onClose={this.handleSyncModalClosed} /> : false
   }
 
   render () {
     const { user, devices, t } = this.props
+    const { addDevice } = this.state
 
     if (!user) return <Redirect to='/' />
 
     return (
       <div className={styles.Devices}>
-        {this.renderSyncModal()}
+        {addDevice && <QRCodeModal link='https://qwant.com' onClose={this.handleAddDeviceClose} />}
+
         <div className={styles.topSection}>
           <Typography type='title-page'>{t('My devices')}</Typography>
-          <Button secondary>{t('Add a new devce (coming soon)')}</Button>
+          <MediaQuery minWidth={701}>
+            <Button
+              className={styles.addDeviceBtn}
+              onClick={() => this.handleAddDeviceClick()}
+            >
+              {t('Add a new device')}
+            </Button>
+          </MediaQuery>
         </div>
 
         <Space size={16} />
@@ -50,6 +57,12 @@ class Devices extends React.Component {
             </div>
           ))}
         </div>
+
+        <MediaQuery maxWidth={styles.mobileWidth}>
+          <FloatingButton className={styles.FloatingButton} onClick={() => this.handleAddDeviceClick()}>
+            <Plus />
+          </FloatingButton>
+        </MediaQuery>
       </div>
     )
   }
