@@ -40,7 +40,7 @@ const STATES = {
 
 let STUN_TURN = []
 
-if (process.env.REACT_APP_REMOTE_WEBRTC && process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
+if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
   if (process.env.REACT_APP_STUN_URLS) {
     const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
       u => {
@@ -99,7 +99,7 @@ const dispatchMasqError = (errorCode) => {
 }
 
 class Masq {
-  constructor (dbNameSuffix = '') {
+  constructor () {
     this.profileId = null
     this.profileDB = null
 
@@ -114,8 +114,6 @@ class Masq {
     this.peer = null
     this.app = null
     this.dbName = null // used only during userApp registration
-
-    this.dbNameSuffix = dbNameSuffix
 
     // init state
     this.state = STATES.NOT_LOGGED
@@ -171,7 +169,7 @@ class Masq {
     if (!device) {
       const { name, os } = DetectBrowser.detect()
       await this.addDevice({
-        name: `${capitalize(name)} - ${os}`,
+        name: `${capitalize(name)} - ${capitalize(os)}`,
         apps: []
       })
     }

@@ -44,7 +44,7 @@ class SyncProfile {
 
     data = await waitForDataFromPeer(this.peer)
     const { msg, id, key, publicProfile } = await decryptJSON(data, this.key)
-    debug('pullProfile received', msg, id, key)
+    debug('pullProfile received:', msg, id, key)
 
     if (!id || !key || !publicProfile || msg !== 'pushProfile') throw new Error('refused')
 
@@ -65,18 +65,14 @@ class SyncProfile {
 
     data = await waitForDataFromPeer(this.peer)
     const { msg: msg2 } = await decryptJSON(data, this.key)
-    debug('pullProfile received', msg2)
+    debug('pullProfile received:', msg2)
 
     if (msg2 !== 'writeAccessGranted') throw new Error('refused')
 
-    // this will block until the profile value is replicated
+    // this should block until the profile value is replicated
     await this.db.getAsync('/profile')
-    // const test = await this.db.getAsync('/profile/protectedMK')
-    // console.log('test', test)
-    await this.masq.openProfile(id, 'pass')
-
     // We have now the profile synced, stop replication.
-    // The user can now log in to start further replication of its profile and apps
+    // The user can now log in to start further replication of the profile and apps
     this.masq._stopAllReplicates()
   }
 
@@ -99,7 +95,7 @@ class SyncProfile {
 
     data = await waitForDataFromPeer(this.peer)
     const { msg: msg2, key } = await decryptJSON(data, this.key)
-    debug('pushProfile received', msg2, key)
+    debug('pushProfile received:', msg2, key)
 
     if (!key || msg2 !== 'requestWriteAccess') throw new Error('msg not expected' + msg2)
 

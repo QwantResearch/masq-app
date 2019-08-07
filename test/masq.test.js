@@ -286,14 +286,15 @@ describe('masq internal operations', function () {
   it('update a device', async () => {
     const devices = await masq.getDevices()
     const device = devices[0]
+    expect(devices[0].id).to.exist
+    expect(devices[0].localKey).to.exist
+    expect(devices[0].localKey).to.have.lengthOf(64)
+
     device.name = 'new name'
 
     await masq.updateDevice(device)
     const updatedDevices = await masq.getDevices()
     expect(updatedDevices).to.have.lengthOf(1)
-    expect(devices[0].id).to.exist
-    expect(devices[0].localKey).to.exist
-    expect(devices[0].localKey).to.have.lengthOf(64)
     expect(updatedDevices[0].name).to.eql(device.name)
   })
 
