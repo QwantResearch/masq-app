@@ -13,12 +13,12 @@ const { dbExists } = common.utils
 const { genAESKey, exportKey } = common.crypto
 
 const waitForSync = async (db1, db2) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const checkVersion = () => {
       db1.version((err, latestVersion) => {
-        if (err) { throw err }
+        if (err) return reject(err)
         db2.version((err, currentVersion) => {
-          if (err) { throw err }
+          if (err) return reject(err)
           if (currentVersion.toString('hex') === latestVersion.toString('hex')) {
             return resolve()
           }
@@ -39,7 +39,7 @@ const waitForSync = async (db1, db2) => {
 }
 
 describe('sync-profile', function () {
-  this.timeout(30000)
+  this.timeout(60000)
 
   before(async () => {
     this.cryptoKey = await genAESKey(true, 'AES-GCM', 128)
