@@ -26,7 +26,8 @@ const TextField = ({ className, id, label, error, type, onChange, onKeyUp, autoF
         styles.TextField,
         error ? [styles.error] : [styles.default],
         { [styles.password]: password },
-        { [styles.large]: large }
+        { [styles.large]: large },
+        { [styles.textFieldButton]: button }
       )}
     >
       <input

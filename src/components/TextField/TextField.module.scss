@@ -25,6 +25,7 @@
     outline: none;
     padding-left: 16px;
     padding-right: 16px;
+    text-overflow: ellipsis;
   }
 
   .button {
@@ -36,6 +37,12 @@
     height: 32px;
     cursor: pointer;
     color: $color-dark-blue-100;
+  }
+}
+
+.textFieldButton {
+  input {
+    padding-right: 48px;
   }
 }
 
