@@ -1,12 +1,15 @@
 import signalhub from 'signalhubws'
 import swarm from 'webrtc-swarm'
 import * as common from 'masq-common'
+import uuidv4 from 'uuid'
 
 import Masq from './masq'
 import { waitForPeer, waitForDataFromPeer, sendEncryptedJSON, decryptJSON, debug } from './utils'
 
 const { dbReady, createPromisifiedHyperDB } = common.utils
-const { importKey } = common.crypto
+const { genAESKey, exportKey } = common.crypto
+
+const { REACT_APP_SIGNALHUB_URLS } = process.env
 
 class SyncProfile {
   constructor (options) {
@@ -17,21 +20,46 @@ class SyncProfile {
     this.peer = null
     this.db = null
     this.masq = new Masq()
-    this.hubUrl = options.hubUrl
-    this.swarmOptions = options
-      ? options.swarmOptions || null
-      : null
+    this.hubUrl = options ? options.hubUrl : REACT_APP_SIGNALHUB_URLS
+    this.swarmOptions = options ? options.swarmOptions : null
   }
 
-  async joinSecureChannel (channel, rawKey) {
-    debug('joinSecureChannel', channel)
-    this.key = await importKey(Buffer.from(rawKey, 'base64'))
+  async init (channel = null, key = null) {
+    this.channel = channel || this._getRandomChannel()
+    this.key = key || await this._genKey()
+  }
 
-    this.hub = signalhub(channel, this.hubUrl)
-    this.hub.on('error', () => {})
+  async _genKey () {
+    const key = await genAESKey(true, 'AES-GCM', 256)
+    return key
+  }
+
+  async _getKeyBase64 () {
+    const key = await exportKey(this.key)
+    return Buffer.from(key).toString('base64')
+  }
+
+  _getRandomChannel () {
+    return uuidv4()
+  }
+
+  async getSecureLink () {
+    const secureLink = new URL(window.location)
+    const requestType = 'pullProfile'
+    const keyBase64 = await this._getKeyBase64()
+    const hashParams = JSON.stringify([requestType, this.channel, keyBase64])
+    secureLink.hash = '/sync/' + Buffer.from(hashParams).toString('base64')
+
+    return secureLink
+  }
+
+  async joinSecureChannel () {
+    this.hub = signalhub(this.channel, this.hubUrl)
+    this.hub.on('error', (err) => { throw err })
 
     this.sw = swarm(this.hub, this.swarmOptions)
     this.sw.on('disconnect', () => { })
+    this.sw.on('error', (err) => { throw err })
 
     const peer = await waitForPeer(this.sw)
     this.peer = peer
