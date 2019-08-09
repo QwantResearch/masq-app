@@ -9,7 +9,6 @@
   "My applications": "Mes applications",
   "You do not have a registered application yet": "Vous n'avez pas d'applications pour le moment",
   "My devices": "Mes appareils",
-  "Add a new devce (coming soon)": "Ajouter un appareil (bientôt)",
   "Create a new profile": "Créer un nouveau profil",
   "Respects your privacy": "Respect de la vie privée",
   "Masq allows you to store all your preferences while guaranteeing your privacy": "Masq vous permet de stocker les données personnelles de vos applications tout en garantissant le respect de votre vie privée.",
@@ -119,5 +118,6 @@
   "close": "fermer",
   "go back": "retour",
   "You can choose from": "Vous pouvez choisir parmi ",
-  "1 special character ": "1 caractère spécial "
+  "1 special character ": "1 caractère spécial ",
+  "Add a new device": "Ajouter un appareil"
 }
