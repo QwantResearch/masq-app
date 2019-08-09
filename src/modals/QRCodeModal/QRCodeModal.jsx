@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import QRCode from 'qrcode.react'
 import { Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
+import { connect } from 'react-redux'
 
 import { Modal, Typography, Space, TextField } from '../../components'
+import SyncProfile from '../../lib/sync-profile'
 
 import styles from './QRCodeModal.module.scss'
 
@@ -17,12 +19,22 @@ Pill.propTypes = {
   children: PropTypes.string.isRequired
 }
 
-const QRCodeModal = ({ onClose, link }) => {
+const QRCodeModal = ({ onClose }) => {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
+  const [link, setLink] = useState('')
+
+  useEffect(() => {
+    const gen = async () => {
+      const sp = new SyncProfile()
+      await sp.init()
+      setLink(await sp.getSecureLink())
+    }
+    gen()
+  }, [])
 
   const copyLink = () => {
-    const link = document.querySelector('input')
+    const link = document.querySelector('#qrcode input')
     link.select()
     document.execCommand('copy')
     setCopied(true)
@@ -31,7 +43,7 @@ const QRCodeModal = ({ onClose, link }) => {
 
   return (
     <Modal width={300} padding={78} onClose={onClose}>
-      <div className={styles.QRCode}>
+      <div id='qrcode' className={styles.QRCode}>
         <Typography type='title-modal'>{t('Add a device')}</Typography>
         <Space size={32} />
         <Typography maxWidth={320} type='paragraph-modal' align='center'>{t('Scan this QR Code with the device you want to synchronize:')}</Typography>
@@ -48,8 +60,8 @@ const QRCodeModal = ({ onClose, link }) => {
             { [styles.copied]: copied }
           )}
           readonly
-          id='link'
           defaultValue={link}
+          value={link}
           button={<Copy style={{ height: 40 }} />}
           height={36}
           onClick={() => copyLink()}
@@ -64,8 +76,12 @@ const QRCodeModal = ({ onClose, link }) => {
 }
 
 QRCodeModal.propTypes = {
-  onClose: PropTypes.func,
-  link: PropTypes.string
+  onClose: PropTypes.func
 }
 
-export default QRCodeModal
+const mapStateToProps = (state) => ({
+  user: state.masq.currentUser,
+  devices: state.masq.devices
+})
+
+export default connect(mapStateToProps)(QRCodeModal)

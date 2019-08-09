@@ -10,7 +10,6 @@ const Masq = require('../src/lib/masq').default
 const SyncProfile = require('../src/lib/sync-profile').default
 
 const { dbExists } = common.utils
-const { genAESKey, exportKey } = common.crypto
 
 const waitForSync = async (db1, db2) => {
   return new Promise((resolve, reject) => {
@@ -41,25 +40,20 @@ const waitForSync = async (db1, db2) => {
 describe('sync-profile', function () {
   this.timeout(60000)
 
-  before(async () => {
-    this.cryptoKey = await genAESKey(true, 'AES-GCM', 128)
-    this.key = await exportKey(this.cryptoKey)
-    this.keyBase64 = Buffer.from(this.key).toString('base64')
-  })
-
   after(() => {
     window.localStorage.clear()
   })
 
   it('should join the secure channel', async () => {
     const sp = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
+    await sp.init('channel')
     const hub = signalhub('channel', REACT_APP_SIGNALHUB_URLS)
     const sw = swarm(hub)
 
     const join = new Promise((resolve) => {
       sw.on('close', () => resolve())
       sw.on('peer', () => sw.close())
-      sp.joinSecureChannel('channel', this.keyBase64)
+      sp.joinSecureChannel()
     })
 
     await join
@@ -68,6 +62,8 @@ describe('sync-profile', function () {
   it('should sync the profile', async () => {
     const sp1 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const sp2 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
+    await sp1.init('channel-sync')
+    await sp2.init('channel-sync', sp1.key)
     const masq = new Masq()
     const masq2 = new Masq('-copy')
     const profile = {
@@ -103,8 +99,8 @@ describe('sync-profile', function () {
     expect(masq.profileDB._authorized).to.have.lengthOf(1)
 
     await Promise.all([
-      sp1.joinSecureChannel('channel-sync', this.keyBase64),
-      sp2.joinSecureChannel('channel-sync', this.keyBase64)
+      sp1.joinSecureChannel(),
+      sp2.joinSecureChannel()
     ])
 
     await Promise.all([
