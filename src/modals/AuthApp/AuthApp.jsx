@@ -123,7 +123,7 @@ class AuthApp extends React.Component {
         <div>
           <Slash size={114} color={styles.colorGrey300} />
           <Space size={28} />
-          <Typography type='paragraph-modal' align='center'>`${t(`You have refused the access of the application`)} ${appRequest.appId} ${t(`to your Masq storage.`)}`</Typography>
+          <Typography type='paragraph-modal' align='center'>{`${t(`You have refused the access of the application`)} ${appRequest.appId} ${t(`to your Masq storage.`)}`}</Typography>
           <Space size={12} />
         </div>
       )
