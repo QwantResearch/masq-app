@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { connect } from 'react-redux'
 
 import { Modal, Typography, Space, TextField } from '../../components'
+import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
 import styles from './QRCodeModal.module.scss'
@@ -23,14 +24,20 @@ const QRCodeModal = ({ onClose }) => {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const [link, setLink] = useState('')
+  const [syncStep, setSyncStep] = useState(null)
 
   useEffect(() => {
-    const gen = async () => {
+    const startSync = async () => {
       const sp = new SyncProfile()
       await sp.init()
-      setLink(await sp.getSecureLink())
+      const secureLink = await sp.getSecureLink()
+      setLink(secureLink)
+      await sp.joinSecureChannel()
+      // Start Sync animation
+      setSyncStep('syncing')
+      await sp.pushProfile()
     }
-    gen()
+    startSync()
   }, [])
 
   const copyLink = () => {
@@ -39,6 +46,10 @@ const QRCodeModal = ({ onClose }) => {
     document.execCommand('copy')
     setCopied(true)
     setTimeout(() => setCopied(false), 3000)
+  }
+
+  if (syncStep) {
+    return <SyncDevice step={syncStep} onClick={() => console.log('onClick')} />
   }
 
   return (
