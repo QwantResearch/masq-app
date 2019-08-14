@@ -50,7 +50,7 @@ class SyncProfile {
     const hashParams = JSON.stringify([requestType, this.channel, keyBase64])
     secureLink.hash = '/sync/' + Buffer.from(hashParams).toString('base64')
 
-    return secureLink
+    return secureLink.toString()
   }
 
   async joinSecureChannel () {

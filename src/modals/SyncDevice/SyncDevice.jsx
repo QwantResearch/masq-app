@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { RefreshCw, CheckCircle, XCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +17,7 @@ const SyncDeviceModal = ({ children }) => {
   )
 }
 
-const SyncDeviceModalSyncing = ({ t, setSyncStep }) => (
+const SyncDeviceModalSyncing = ({ t, onClick }) => (
   <SyncDeviceModal>
     <Typography type='title-modal'>{t('Synchronization in progress...')}</Typography>
     <Space size={80} />
@@ -25,12 +25,12 @@ const SyncDeviceModalSyncing = ({ t, setSyncStep }) => (
     <Space size={32} />
     <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('Please wait, we are retrieving your profile')}</Typography>
     <Space size={79} />
-    <Button color='neutral' onClick={() => setSyncStep(1)}>{t('cancel')}</Button>
+    <Button color='neutral' onClick={onClick}>{t('cancel')}</Button>
     <Space size={32} />
   </SyncDeviceModal>
 )
 
-const SyncDeviceModalFinished = ({ t, setSyncStep }) => (
+const SyncDeviceModalFinished = ({ t, onClick }) => (
   <SyncDeviceModal>
     <Typography type='title-modal'>{t('Synchronization finished!')}</Typography>
     <Space size={80} />
@@ -38,12 +38,12 @@ const SyncDeviceModalFinished = ({ t, setSyncStep }) => (
     <Space size={32} />
     <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('You can now use your profile on your new device!')}</Typography>
     <Space size={60} />
-    <Button color='neutral' onClick={() => setSyncStep(2)}>{t('close')}</Button>
+    <Button color='neutral' onClick={onClick}>{t('close')}</Button>
     <Space size={32} />
   </SyncDeviceModal>
 )
 
-const SyncDeviceModalError = ({ t, setSyncStep }) => (
+const SyncDeviceModalError = ({ t, onClick }) => (
   <SyncDeviceModal>
     <Typography type='title-modal'>{t('Synchronization failure')}</Typography>
     <Space size={80} />
@@ -51,22 +51,21 @@ const SyncDeviceModalError = ({ t, setSyncStep }) => (
     <Space size={32} />
     <Typography maxWidth={280} align='center' type='paragraph-modal'>{t('We were unable to retrieve your profile, please try again.')}</Typography>
     <Space size={60} />
-    <Button color='neutral' onClick={() => setSyncStep(0)}>{t('go back')}</Button>
+    <Button color='neutral' onClick={onClick}>{t('go back')}</Button>
     <Space size={32} />
   </SyncDeviceModal>
 )
 
-const SyncDevice = () => {
-  const [syncStep, setSyncStep] = useState(0)
+const SyncDevice = ({ step }) => {
   const { t } = useTranslation()
 
-  switch (syncStep) {
-    case 0:
-      return <SyncDeviceModalSyncing t={t} setSyncStep={setSyncStep} />
-    case 1:
-      return <SyncDeviceModalFinished t={t} setSyncStep={setSyncStep} />
+  switch (step) {
+    case 'syncing':
+      return <SyncDeviceModalSyncing t={t} />
+    case 'finished':
+      return <SyncDeviceModalFinished t={t} />
     default:
-      return <SyncDeviceModalError t={t} setSyncStep={setSyncStep} />
+      return <SyncDeviceModalError t={t} />
   }
 }
 
@@ -74,7 +73,7 @@ SyncDeviceModalSyncing.propTypes =
 SyncDeviceModalFinished.propTypes =
 SyncDeviceModalError.propTypes = {
   t: PropTypes.func,
-  setSyncStep: PropTypes.func
+  onClick: PropTypes.func
 }
 
 SyncDeviceModal.propTypes = {
@@ -82,6 +81,10 @@ SyncDeviceModal.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired
+}
+
+SyncDevice.propTypes = {
+  step: PropTypes.oneOf(['syncing', 'finished', 'error']).isRequired
 }
 
 export default SyncDevice
