@@ -5,9 +5,8 @@ import uuidv4 from 'uuid/v4'
 import * as common from 'masq-common'
 import DetectBrowser from 'detect-browser'
 
-import { isUsernameAlreadyTaken, capitalize } from './utils'
+import { isUsernameAlreadyTaken, capitalize, dispatchMasqError } from './utils'
 
-const { CustomEvent, dispatchEvent } = window
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBufferAsStr, updateMasterKeyAndNonce } = common.crypto
 const { dbReady, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
 const { MasqError, checkObject } = common.errors
@@ -89,13 +88,6 @@ const requiredParametersProfile = [
  */
 const openOrCreateDB = (name, key = null) => {
   return createPromisifiedHyperDB(name, key)
-}
-
-const dispatchMasqError = (errorCode) => {
-  const event = new CustomEvent('MasqError', {
-    detail: errorCode
-  })
-  dispatchEvent(event)
 }
 
 class Masq {

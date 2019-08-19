@@ -66,6 +66,13 @@ const decryptJSON = async (message, key) => (
   decrypt(key, JSON.parse(message), 'base64')
 )
 
+const dispatchMasqError = (errorCode) => {
+  const event = new window.CustomEvent('MasqError', {
+    detail: errorCode
+  })
+  window.dispatchEvent(event)
+}
+
 const debug = (() => (process.env.NODE_ENV === 'production' ? () => {} : console.log))()
 
 export {
@@ -77,5 +84,6 @@ export {
   waitForDataFromPeer,
   sendEncryptedJSON,
   decryptJSON,
-  debug
+  debug,
+  dispatchMasqError
 }
