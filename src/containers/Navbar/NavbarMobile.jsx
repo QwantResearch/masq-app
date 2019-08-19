@@ -37,7 +37,7 @@ class NavbarMobile extends React.Component {
             <div className={styles.user} onClick={this.handleClick}>
               <Avatar size={32} image={user.image} username={user.username} />
               <Space size={8} direction='right' />
-              <Typography type='username-alt'>{user.username}</Typography>
+              <Typography type='username'>{user.username}</Typography>
               <ChevronDown className={styles.chevron} size={14} color='white' />
               {hovered && <Dropdown onClick={signout} />}
             </div>
