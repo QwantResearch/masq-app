@@ -4,10 +4,18 @@ import * as common from 'masq-common'
 import uuidv4 from 'uuid'
 
 import Masq from './masq'
-import { waitForPeer, waitForDataFromPeer, sendEncryptedJSON, decryptJSON, debug } from './utils'
+import {
+  waitForPeer,
+  waitForDataFromPeer,
+  sendEncryptedJSON,
+  decryptJSON,
+  debug,
+  dispatchMasqError
+} from './utils'
 
 const { dbReady, createPromisifiedHyperDB } = common.utils
 const { genAESKey, exportKey } = common.crypto
+const { MasqError } = common.errors
 
 const { REACT_APP_SIGNALHUB_URLS } = process.env
 
@@ -55,7 +63,9 @@ class SyncProfile {
 
   async joinSecureChannel () {
     this.hub = signalhub(this.channel, this.hubUrl)
-    this.hub.on('error', (err) => { throw err })
+    this.hub.on('error', () => {
+      dispatchMasqError(MasqError.REPLICATION_SIGNALLING_ERROR)
+    })
 
     this.sw = swarm(this.hub, this.swarmOptions)
     this.sw.on('disconnect', () => { })
