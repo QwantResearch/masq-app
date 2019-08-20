@@ -56,16 +56,16 @@ const SyncDeviceModalError = ({ t, onClick }) => (
   </SyncDeviceModal>
 )
 
-const SyncDevice = ({ step }) => {
+const SyncDevice = ({ step, onClick }) => {
   const { t } = useTranslation()
 
   switch (step) {
     case 'syncing':
-      return <SyncDeviceModalSyncing t={t} />
+      return <SyncDeviceModalSyncing t={t} onClick={onClick} />
     case 'finished':
-      return <SyncDeviceModalFinished t={t} />
+      return <SyncDeviceModalFinished t={t} onClick={onClick} />
     default:
-      return <SyncDeviceModalError t={t} />
+      return <SyncDeviceModalError t={t} onClick={onClick} />
   }
 }
 
@@ -84,7 +84,8 @@ SyncDeviceModal.propTypes = {
 }
 
 SyncDevice.propTypes = {
-  step: PropTypes.oneOf(['syncing', 'finished', 'error']).isRequired
+  step: PropTypes.oneOf(['syncing', 'finished', 'error']).isRequired,
+  onClick: PropTypes.func
 }
 
 export default SyncDevice

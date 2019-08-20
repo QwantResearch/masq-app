@@ -13,7 +13,7 @@ module.exports = function (config) {
     singleRun: true,
     concurrency: Infinity,
     preprocessors: {
-      'test/**/*.js': [ 'webpack', 'sourcemap' ]
+      'test/**/*.js': ['webpack', 'sourcemap']
     },
     webpack: {
       mode: 'development',

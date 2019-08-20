@@ -14,7 +14,7 @@ import {
 } from './utils'
 
 const { dbReady, createPromisifiedHyperDB } = common.utils
-const { genAESKey, exportKey } = common.crypto
+const { genAESKey, exportKey, importKey } = common.crypto
 const { MasqError } = common.errors
 
 const { REACT_APP_SIGNALHUB_URLS } = process.env
@@ -34,7 +34,7 @@ class SyncProfile {
 
   async init (channel = null, key = null) {
     this.channel = channel || this._getRandomChannel()
-    this.key = key || await this._genKey()
+    this.key = key ? await importKey(key) : await this._genKey()
   }
 
   async _genKey () {
@@ -63,13 +63,15 @@ class SyncProfile {
 
   async joinSecureChannel () {
     this.hub = signalhub(this.channel, this.hubUrl)
-    this.hub.on('error', () => {
+    this.hub.on('error', _ => {
       dispatchMasqError(MasqError.REPLICATION_SIGNALLING_ERROR)
     })
 
     this.sw = swarm(this.hub, this.swarmOptions)
-    this.sw.on('disconnect', () => { })
-    this.sw.on('error', (err) => { throw err })
+    this.sw.on('disconnect', () => {})
+    this.sw.on('error', _ => {
+      dispatchMasqError(MasqError.REPLICATION_SIGNALLING_ERROR)
+    })
 
     const peer = await waitForPeer(this.sw)
     this.peer = peer
@@ -84,7 +86,9 @@ class SyncProfile {
     const { msg, id, key, publicProfile } = await decryptJSON(data, this.key)
     debug('pullProfile received:', msg, id, key)
 
-    if (!id || !key || !publicProfile || msg !== 'pushProfile') throw new Error('refused')
+    if (!id || !key || !publicProfile || msg !== 'pushProfile') {
+      throw new Error('refused')
+    }
 
     // Create profile database
     this.db = await createPromisifiedHyperDB('profile-' + id, key)
@@ -115,6 +119,10 @@ class SyncProfile {
   }
 
   async pushProfile (db, id, publicProfile) {
+    if (!db || !id || !publicProfile) {
+      throw new Error('Missing parameters')
+    }
+
     let data
 
     data = await waitForDataFromPeer(this.peer)
@@ -135,7 +143,9 @@ class SyncProfile {
     const { msg: msg2, key } = await decryptJSON(data, this.key)
     debug('pushProfile received:', msg2, key)
 
-    if (!key || msg2 !== 'requestWriteAccess') throw new Error('msg not expected' + msg2)
+    if (!key || msg2 !== 'requestWriteAccess') {
+      throw new Error('msg not expected' + msg2)
+    }
 
     await db.authorizeAsync(Buffer.from(key, 'hex'))
     await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
