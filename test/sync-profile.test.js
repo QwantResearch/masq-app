@@ -63,7 +63,8 @@ describe('sync-profile', function () {
     const sp1 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     const sp2 = new SyncProfile({ hubUrl: REACT_APP_SIGNALHUB_URLS })
     await sp1.init('channel-sync')
-    await sp2.init('channel-sync', sp1.key)
+    const keyBase64 = await sp1._getKeyBase64()
+    await sp2.init('channel-sync', Buffer.from(keyBase64, 'base64'))
     const masq = new Masq()
     const masq2 = new Masq('-copy')
     const profile = {
