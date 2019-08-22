@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 process.env.CHROME_BIN = require('puppeteer').executablePath()
 
 module.exports = function (config) {
@@ -19,7 +21,12 @@ module.exports = function (config) {
       mode: 'development',
       node: {
         fs: 'empty'
-      }
+      },
+      plugins: [
+        new webpack.EnvironmentPlugin({
+          NODE_ENV: 'test'
+        })
+      ]
     },
     webpackMiddleware: {
       stats: 'errors-only',
