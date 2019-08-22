@@ -8,7 +8,7 @@ import DetectBrowser from 'detect-browser'
 import { isUsernameAlreadyTaken, capitalize, dispatchMasqError } from './utils'
 
 const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKeyAndNonce, decryptMasterKeyAndNonce, genRandomBufferAsStr, updateMasterKeyAndNonce } = common.crypto
-const { dbReady, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
+const { dbReady, dbExists, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
 const { MasqError, checkObject } = common.errors
 const MasqMessages = common.messages.UserAppLogin
 
@@ -142,15 +142,18 @@ class Masq {
     this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
-    apps.forEach(app => {
+    apps.forEach(async (app) => {
       const dbName = `app-${profileId}-${app.id}`
+
+      // app is not replicated yet
+      if (!(await dbExists(dbName))) return
+
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
-      db.on('ready', () => {
-        const discoveryKey = db.discoveryKey.toString('hex')
-        this.appsDBs[discoveryKey] = db
-        this._startReplicate(db)
-      })
+      await dbReady(db)
+      const discoveryKey = db.discoveryKey.toString('hex')
+      this.appsDBs[discoveryKey] = db
+      this._startReplicate(db)
     })
 
     const profile = await this.getAndDecrypt('/profile')
@@ -359,11 +362,12 @@ class Masq {
   removeApp (app) {
     checkObject(app, requiredParametersApp)
     const dbName = `app-${this.profileId}-${app.id}`
-    const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
-    // missing key
-    const sw = this.swarms[discoveryKey]
-    sw.close()
-    window.indexedDB.deleteDatabase(dbName)
+    if (this.appsDBs[dbName]) {
+      const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
+      const sw = this.swarms[discoveryKey]
+      sw.close()
+      window.indexedDB.deleteDatabase(dbName)
+    }
     return this._deleteResource('apps', app)
   }
 
@@ -645,7 +649,8 @@ class Masq {
         for (let app of otherDevice.apps) {
           if (!this.appsDBs[app.discoveryKey]) {
             // Add app
-            await this._createDBAndSyncApp(app.id + '-copy', app.key)
+            const id = process.env.NODE_ENV === 'test' ? app.id + '-copy' : app.id
+            await this._createDBAndSyncApp(id, app.key)
             continue
           }
 
