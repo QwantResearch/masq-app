@@ -26,6 +26,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   const [copied, setCopied] = useState(false)
   const [link, setLink] = useState('')
   const [syncStep, setSyncStep] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     const startSync = async () => {
@@ -33,19 +34,26 @@ const QRCodeModal = ({ onClose, profile }) => {
       await sp.init()
       const secureLink = await sp.getSecureLink()
       setLink(secureLink)
-      await sp.joinSecureChannel()
-      // Start Sync animation
-      setSyncStep('syncing')
-      const publicProfile = {
-        username: profile.username,
-        image: profile.image,
-        id: profile.id
-      }
 
-      const db = await createPromisifiedHyperDB(`profile-${profile.id}`) // HACK
-      await dbReady(db)
-      await sp.pushProfile(db, profile.id, publicProfile)
-      setSyncStep('finished') // TODO: Sync status ?
+      try {
+        await sp.joinSecureChannel()
+        // Start Sync animation
+        setSyncStep('syncing')
+        const publicProfile = {
+          username: profile.username,
+          image: profile.image,
+          id: profile.id
+        }
+        const db = await createPromisifiedHyperDB(`profile-${profile.id}`) // HACK
+        await dbReady(db)
+        await sp.pushProfile(db, profile.id, publicProfile)
+        setSyncStep('finished')
+      } catch (e) {
+        if (e.message === 'alreadySynced') {
+          setMessage(t('This profile is already synchronized on this device.'))
+        }
+        setSyncStep('error')
+      }
     }
     startSync()
   }, [])
@@ -59,7 +67,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   if (syncStep) {
-    return <SyncDevice step={syncStep} onClick={onClose} />
+    return <SyncDevice step={syncStep} onClick={onClose} message={message} />
   }
 
   return (

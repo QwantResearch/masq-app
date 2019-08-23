@@ -13,7 +13,7 @@ import {
   dispatchMasqError
 } from './utils'
 
-const { dbReady, createPromisifiedHyperDB } = common.utils
+const { dbReady, dbExists, createPromisifiedHyperDB } = common.utils
 const { genAESKey, exportKey, importKey } = common.crypto
 const { MasqError } = common.errors
 
@@ -90,8 +90,18 @@ class SyncProfile {
       throw new Error('refused')
     }
 
+    const dbName = 'profile-' + id
+    const alreadySynced = await dbExists(dbName)
+    if (alreadySynced) {
+      const json = {
+        msg: 'alreadySynced'
+      }
+      await sendEncryptedJSON(json, this.key, this.peer)
+      throw new Error('alreadySynced')
+    }
+
     // Create profile database
-    this.db = await createPromisifiedHyperDB('profile-' + id, key)
+    this.db = await createPromisifiedHyperDB(dbName, key)
     await dbReady(this.db)
     // Start to replicate the profile
     this.masq._startReplicate(this.db)
@@ -142,6 +152,10 @@ class SyncProfile {
     data = await waitForDataFromPeer(this.peer)
     const { msg: msg2, key } = await decryptJSON(data, this.key)
     debug('pushProfile received:', msg2, key)
+
+    if (msg2 === 'alreadySynced') {
+      throw new Error('alreadySynced')
+    }
 
     if (!key || msg2 !== 'requestWriteAccess') {
       throw new Error('msg not expected' + msg2)
