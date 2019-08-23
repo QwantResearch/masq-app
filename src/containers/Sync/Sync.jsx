@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
 const Sync = ({ history }) => {
   const [syncStep, setSyncStep] = useState('syncing')
+  const [message, setMessage] = useState(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (window.location.hash.substring(0, 7) !== '#/sync/') return
@@ -25,6 +28,9 @@ const Sync = ({ history }) => {
         await sp.pullProfile()
         setSyncStep('finished')
       } catch (e) {
+        if (e.message === 'alreadySynced') {
+          setMessage(t('This profile is already synchronized on this device.'))
+        }
         setSyncStep('error')
       }
     }
@@ -36,7 +42,7 @@ const Sync = ({ history }) => {
     history.push('/')
   }
 
-  return <SyncDevice step={syncStep} onClick={onClick} />
+  return <SyncDevice step={syncStep} onClick={onClick} message={message} />
 }
 
 Sync.propTypes = {
