@@ -25,7 +25,7 @@ class NavbarMax extends React.Component {
           <Space size={22} />
           <Avatar {...user} size={54} />
           <Space size={8} />
-          <Typography type='username'>{user.username}</Typography>
+          <Typography id='navbar-username-output' type='username'>{user.username}</Typography>
         </div>
         <div className={styles.nav}>
           <NavLink to='/apps' className={styles.navElement} activeClassName={styles.active}>

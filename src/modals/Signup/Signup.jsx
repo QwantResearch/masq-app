@@ -160,9 +160,9 @@ class Signup extends React.Component {
         </div>
 
         <Space size={32} />
-
         <TextField
           className={styles.TextField}
+          id='signup-username-input'
           defaultValue={this.state.username}
           error={!this.isValid('username')}
           onChange={(e) => this.onChange('username', e)}
@@ -177,7 +177,7 @@ class Signup extends React.Component {
         <Space size={32} />
 
         <div className={styles.buttons}>
-          <Button onClick={this.next} width={185}>{t('Next')}</Button>
+          <Button onClick={this.next} id='signup-next-btn' width={185}>{t('Next')}</Button>
         </div>
       </React.Fragment>
     )
@@ -198,6 +198,7 @@ class Signup extends React.Component {
           password
           className={styles.TextField}
           defaultValue={password}
+          id='secret-key-input'
           autoFocus
           type='password'
           label={this.isValid('password')
@@ -212,6 +213,7 @@ class Signup extends React.Component {
         <TextField
           password
           className={styles.TextField}
+          id='secret-key-confirmation-input'
           type='password'
           defaultValue={passwordConfirmation}
           label={this.isValid('passwordConfirmation')
@@ -226,7 +228,7 @@ class Signup extends React.Component {
 
         <div className={styles.buttons}>
           <Button width={142} color='neutral' onClick={this.previous}>{t('Previous')}</Button>
-          <Button width={142} onClick={this.finish}>{t('Finish')}</Button>
+          <Button width={142} id='password-finish-btn' onClick={this.finish}>{t('Finish')}</Button>
         </div>
       </React.Fragment>
     )

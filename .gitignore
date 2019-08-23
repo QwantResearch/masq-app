@@ -6,6 +6,8 @@
 
 # testing
 /coverage
+browserstack.err
+local.log
 
 # production
 /build

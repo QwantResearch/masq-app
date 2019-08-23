@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 import styles from './Typography.module.scss'
 
-const Typography = ({ className, maxWidth, type, children, color, align, line }) => (
+const Typography = ({ className, id, maxWidth, type, children, color, align, line }) => (
   <p
     className={cx(
       { [styles.line]: line },
@@ -12,6 +12,7 @@ const Typography = ({ className, maxWidth, type, children, color, align, line })
       styles[type],
       className
     )}
+    id={id}
     style={{
       color,
       textAlign: align,
@@ -24,6 +25,7 @@ const Typography = ({ className, maxWidth, type, children, color, align, line })
 
 Typography.propTypes = {
   className: PropTypes.string,
+  id: PropTypes.string,
   maxWidth: PropTypes.number,
   children: PropTypes.any.isRequired,
   color: PropTypes.string,

@@ -7,7 +7,7 @@ import cx from 'classnames'
 import { Typography } from '..'
 import styles from './TextField.module.scss'
 
-const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick, password, readOnly, height }) => {
+const TextField = ({ className, id, label, error, type, onChange, onKeyUp, autoFocus, placeholder, defaultValue, large, button, onClick, password, readOnly, height }) => {
   const [visible, setVisible] = useState(false)
 
   const handleClick = () => {
@@ -34,6 +34,7 @@ const TextField = ({ className, label, error, type, onChange, onKeyUp, autoFocus
         type={visible ? 'text' : type}
         onKeyUp={onKeyUp}
         autoFocus={autoFocus}
+        id={id}
         placeholder={placeholder}
         defaultValue={defaultValue}
         readOnly={readOnly}
@@ -63,6 +64,7 @@ TextField.defaultProps = {
 TextField.propTypes = {
   large: PropTypes.bool,
   className: PropTypes.string,
+  id: PropTypes.string,
 
   /** The label of the text field */
   label: PropTypes.string,

@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import { Eye } from 'react-feather'
 
-import { TextField, Typography } from '../src/components'
+import { TextField } from '../src/components'
 
 TextField.displayName = 'TextField'
 
