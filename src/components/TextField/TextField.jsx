@@ -86,7 +86,7 @@ TextField.propTypes = {
 
   defaultValue: PropTypes.string,
 
-  button: PropTypes.object,
+  button: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 
   onClick: PropTypes.func,
 
