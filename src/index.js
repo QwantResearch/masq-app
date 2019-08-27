@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { Provider } from 'react-redux'
@@ -16,12 +16,22 @@ import './styles/index.scss'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const store = createStore(
-  rootReducer,
-  composeEnhancer(applyMiddleware(thunkMiddleware))
-)
+const store = (() => {
+  const store = createStore(
+    rootReducer,
+    composeEnhancer(applyMiddleware(thunkMiddleware))
+  )
 
-render(
+  if (module.hot) {
+    module.hot.accept('./reducers', () => {
+      store.replaceReducer(rootReducer)
+    })
+  }
+
+  return store
+})()
+
+const render = () => ReactDOM.render(
   <Provider store={store}>
     <Suspense fallback='loading'>
       <App />
@@ -29,6 +39,14 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+
+render()
+
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    render()
+  })
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
