@@ -10,7 +10,6 @@
   "My applications": "My applications",
   "You do not have a registered application yet": "You do not have a registered application yet",
   "My devices": "My devices",
-  "Add a new devce (coming soon)": "Add a new devce (coming soon)",
   "Create a new profile": "Create a new profile",
   "Respects your privacy": "Respects your privacy",
   "Masq allows you to store all your preferences while guaranteeing your privacy": "Masq allows you to store all your preferences while guaranteeing your privacy",
@@ -109,5 +108,15 @@
   "to your Masq storage.": "to your Masq storage.",
   "Import a picture": "Import a picture",
   "The selected picture is too big, make it smaller please.": "The selected picture is too big, make it smaller please.",
-  "or": "or"
+  "or": "or",
+  "Please wait, we are retrieving your profile": "Please wait, we are retrieving your profile",
+  "You can now use your profile on your new device!": "You can now use your profile on your new device!",
+  "We were unable to retrieve your profile, please try again.": "We were unable to retrieve your profile, please try again.",
+  "cancel": "cancel",
+  "close": "close",
+  "go back": "go back",
+  "Synchronization in progress...": "Synchronization in progress...",
+  "Synchronization finished!": "Synchronization finished!",
+  "Synchronization failure": "Synchronization failure",
+  "Add a new device": "Add a new device"
 }

@@ -10,7 +10,6 @@
   "My applications": "Mes applications",
   "You do not have a registered application yet": "Vous n'avez pas d'applications pour le moment",
   "My devices": "Mes appareils",
-  "Add a new devce (coming soon)": "Ajouter un appareil (bientôt)",
   "Create a new profile": "Créer un nouveau profil",
   "Respects your privacy": "Respect de la vie privée",
   "Masq allows you to store all your preferences while guaranteeing your privacy": "Masq vous permet de stocker les données personnelles de vos applications tout en garantissant le respect de votre vie privée.",
@@ -109,5 +108,15 @@
   "to your Masq storage.": "à votre stockage Masq.",
   "Import a picture": "Importer une photo",
   "The selected picture is too big, make it smaller please.": "L'image sélectionnée est trop lourde. Veuillez en choisir une autre.",
-  "or": "ou"
+  "or": "ou",
+  "Synchronization in progress...": "Synchronisation en cours…",
+  "Please wait, we are retrieving your profile": "Patience, nous recupérons votre profil",
+  "Synchronization finished!": "Synchronisation terminée !",
+  "You can now use your profile on your new device!": "Vous pouvez utiliser votre profil sur ce nouvel appareil !",
+  "Synchronization failure": "Echec de la synchronisation",
+  "We were unable to retrieve your profile, please try again.": "Nous n’avons pas pu récupérer votre profil, veuillez réessayer à nouveau.",
+  "cancel": "annuler",
+  "close": "fermer",
+  "go back": "retour",
+  "Add a new device": "Ajouter un appareil"
 }
