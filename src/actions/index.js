@@ -141,3 +141,5 @@ export const updatePassphrase = (oldPass, newPass) => {
     return masq.updatePassphrase(oldPass, newPass)
   }
 }
+
+export const getMasqInstance = () => masq
