@@ -637,36 +637,39 @@ class Masq {
     peer.send(JSON.stringify(encryptedMsg))
   }
 
-  _watchAndAuthorizeApps () {
-    const syncApps = async () => {
-      const allDevices = await this.getDevices()
-      const otherDevices = allDevices.filter(d => {
-        return d.localKey !== this.profileDB.local.key.toString('hex')
-      })
+  async syncApps () {
+    const allDevices = await this.getDevices()
+    const otherDevices = allDevices.filter(d => {
+      return d.localKey !== this.profileDB.local.key.toString('hex')
+    })
 
-      for (let otherDevice of otherDevices) {
-        for (let app of otherDevice.apps) {
-          if (!this.appsDBs[app.discoveryKey]) {
-            // Add app
-            const id = process.env.NODE_ENV === 'test' ? app.id + '-copy' : app.id
+    for (let otherDevice of otherDevices) {
+      for (let app of otherDevice.apps) {
+        if (!this.appsDBs[app.discoveryKey]) {
+          // Add app
+          const id = process.env.NODE_ENV === 'test' ? app.id + '-copy' : app.id
+          if (!await dbExists(id)) {
             await this._createDBAndSyncApp(id, app.key)
-            continue
           }
+          continue
+        }
 
-          const keyBuf = Buffer.from(app.localKey, 'hex')
+        // Authorize app
+        const keyBuf = Buffer.from(app.localKey, 'hex')
 
-          if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
-            await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
-          }
+        if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
+          await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
         }
       }
     }
+  }
 
+  _watchAndAuthorizeApps () {
     watch(this.profileDB, this.nonce, '/devices', async () => {
-      await syncApps()
+      await this.syncApps()
     })
 
-    syncApps()
+    this.syncApps()
   }
 
   _createDBAndSyncApp (dbName, hex = null) {
