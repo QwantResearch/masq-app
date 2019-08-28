@@ -5,15 +5,13 @@ import { Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import * as common from 'masq-common'
 
+import { getMasqInstance } from '../../actions'
 import { Modal, Typography, Space, TextField } from '../../components'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
 import styles from './QRCodeModal.module.scss'
-
-const { createPromisifiedHyperDB, dbReady } = common.utils
 
 const Pill = ({ children }) => <div className={styles.pill}>{children}</div>
 
@@ -44,8 +42,8 @@ const QRCodeModal = ({ onClose, profile }) => {
           image: profile.image,
           id: profile.id
         }
-        const db = await createPromisifiedHyperDB(`profile-${profile.id}`) // HACK
-        await dbReady(db)
+        const masq = getMasqInstance()
+        const db = masq.profileDB
         await sp.pushProfile(db, profile.id, publicProfile)
         setSyncStep('finished')
       } catch (e) {
