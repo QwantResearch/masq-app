@@ -142,17 +142,19 @@ class Masq {
     this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
-    apps.forEach(async (app) => {
+    for (let app of apps) {
       const dbName = `app-${profileId}-${app.id}`
 
       // app is not replicated yet
-      if (!(await dbExists(dbName))) return
+      if (!(await dbExists(dbName))) {
+        continue
+      }
 
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       await dbReady(db)
       this._startReplicate(db)
-    })
+    }
 
     const profile = await this.getAndDecrypt('/profile')
     this.setState(STATES.LOGGED)
@@ -669,16 +671,21 @@ class Masq {
     }
   }
 
-  _watchAndAuthorizeApps () {
-    watch(this.profileDB, this.nonce, '/devices', async () => {
-      await this.syncApps()
-    })
+  /**
+   * Private methods
+   */
 
+  _watchAndAuthorizeApps () {
+    watch(this.profileDB, this.nonce, '/devices', () => this.syncApps())
     this.syncApps()
   }
 
   _createDBAndSyncApp (dbName, hex = null) {
     return new Promise((resolve) => {
+      if (this.appsDBs[dbName]) {
+        return resolve(this.appsDBs[dbName])
+      }
+
       const db = openOrCreateDB(dbName, hex)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
