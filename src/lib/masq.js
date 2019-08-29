@@ -150,8 +150,6 @@ class Masq {
       const db = openOrCreateDB(dbName)
       this.appsDBs[dbName] = db
       await dbReady(db)
-      const discoveryKey = db.discoveryKey.toString('hex')
-      this.appsDBs[discoveryKey] = db
       this._startReplicate(db)
     })
 
@@ -645,15 +643,25 @@ class Masq {
 
     for (let otherDevice of otherDevices) {
       for (let app of otherDevice.apps) {
-        if (!this.appsDBs[app.discoveryKey]) {
+        let { id } = app
+
+        // HACK for tests. We can't use the same dbName
+        if (process.env.NODE_ENV === 'test') {
+          if (id.substring(id.length - 5) === '-copy') {
+            id = id.substring(0, id.length - 5)
+          } else {
+            id = id + '-copy'
+          }
+        }
+
+        if (!this.appsDBs[id]) {
           // Add app
-          const id = process.env.NODE_ENV === 'test' ? app.id + '-copy' : app.id
           await this._createDBAndSyncApp(id, app.key)
         } else {
           // Authorize app
           const keyBuf = Buffer.from(app.localKey, 'hex')
-          if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
-            await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
+          if (!(await this.appsDBs[id].authorizedAsync(keyBuf))) {
+            await this.appsDBs[id].authorizeAsync(keyBuf)
           }
         }
       }
@@ -673,8 +681,6 @@ class Masq {
       const db = openOrCreateDB(dbName, hex)
       this.appsDBs[dbName] = db
       db.on('ready', async () => {
-        const discoveryKey = db.discoveryKey.toString('hex')
-        this.appsDBs[discoveryKey] = db
         const device = await this.getDevice()
         await this.updateDevice({
           ...device,
@@ -690,10 +696,6 @@ class Masq {
       })
     })
   }
-
-  /**
-   * Private methods
-   */
 
   _removeDb () {
     if (this.dbName) {
