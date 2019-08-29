@@ -649,17 +649,13 @@ class Masq {
         if (!this.appsDBs[app.discoveryKey]) {
           // Add app
           const id = process.env.NODE_ENV === 'test' ? app.id + '-copy' : app.id
-          if (!await dbExists(id)) {
-            await this._createDBAndSyncApp(id, app.key)
+          await this._createDBAndSyncApp(id, app.key)
+        } else {
+          // Authorize app
+          const keyBuf = Buffer.from(app.localKey, 'hex')
+          if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
+            await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
           }
-          continue
-        }
-
-        // Authorize app
-        const keyBuf = Buffer.from(app.localKey, 'hex')
-
-        if (!(await this.appsDBs[app.discoveryKey].authorizedAsync(keyBuf))) {
-          await this.appsDBs[app.discoveryKey].authorizeAsync(keyBuf)
         }
       }
     }
