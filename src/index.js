@@ -7,6 +7,10 @@ import { Provider } from 'react-redux'
 import 'typeface-asap'
 import 'typeface-asap-condensed'
 
+/* polyfills */
+import 'react-app-polyfill/ie11'
+import 'core-js/es7/array'
+
 import './i18n'
 import * as serviceWorker from './serviceWorker'
 import rootReducer from './reducers'
