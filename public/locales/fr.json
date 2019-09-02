@@ -4,7 +4,6 @@
   "1 lowercase": "1 minuscule",
   "1 uppercase": "1 majuscule",
   "1 number": "1 chiffre",
-  "1 special character (!?$#@...)": "1 caractère spécial (!?$#@...)",
   "12 characters": "12 caractères",
   "Application succesfully deleted": "Application supprimée avec succès",
   "My applications": "Mes applications",
@@ -118,5 +117,7 @@
   "We were unable to retrieve your profile, please try again.": "Nous n’avons pas pu récupérer votre profil, veuillez réessayer à nouveau.",
   "cancel": "annuler",
   "close": "fermer",
-  "go back": "retour"
+  "go back": "retour",
+  "You can choose from": "Vous pouvez choisir parmi ",
+  "1 special character ": "1 caractère spécial "
 }

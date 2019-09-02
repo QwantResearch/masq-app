@@ -4,7 +4,6 @@
   "1 lowercase": "1 lowercase",
   "1 uppercase": "1 uppercase",
   "1 number": "1 number",
-  "1 special character (!?$#@...)": "1 special character (!?$#@...)",
   "12 characters": "12 characters",
   "Application succesfully deleted": "Application succesfully deleted",
   "My applications": "My applications",
@@ -118,5 +117,7 @@
   "go back": "go back",
   "Synchronization in progress...": "Synchronization in progress...",
   "Synchronization finished!": "Synchronization finished!",
-  "Synchronization failure": "Synchronization failure"
+  "Synchronization failure": "Synchronization failure",
+  "You can choose from": "You can choose from",
+  "1 special character ": "1 special character "
 }

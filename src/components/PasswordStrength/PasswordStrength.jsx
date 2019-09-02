@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
+import MediaQuery from 'react-responsive'
 import { useTranslation } from 'react-i18next'
 import styles from './PasswordStrength.module.scss'
-import { Shield, Lock, Unlock, CheckCircle } from 'react-feather'
+import { Shield, Lock, Unlock, CheckCircle, Info } from 'react-feather'
 const { getPasswordInfo, getForce } = require('../../lib/validators')
 const NonChecked = () => (
   <div className={styles.Oval} />
@@ -14,6 +15,46 @@ const Description = () => {
   return (
     <div className={styles.Description}>
       {t('To be completely secure, the key must contain at least')}:
+    </div>
+  )
+}
+
+const InfoMessage = ({ top, left }) => {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.Bubble} style={{ top: top, left: left }} >
+      <div className={styles.BubbleText} >
+        {t('You can choose from')}{`: ="!?$#%@()\\-_/@^+*&:<>{};~'\`.|[] `}
+      </div>
+    </div>
+
+  )
+}
+InfoMessage.propTypes = {
+  top: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired
+}
+
+const InfoButton = () => {
+  const [visible, setVisible] = useState(false)
+  const handleClick = () => {
+    setVisible(!visible)
+  }
+
+  const handleMouseLeave = () => {
+    setVisible(false)
+  }
+
+  return (
+    <div className={styles.InfoIcon}>
+      <Info onMouseLeave={() => handleMouseLeave()} onClick={() => handleClick()} width={14} height={14} color='#353c52' />
+      <MediaQuery maxWidth={700}>
+        {visible && <InfoMessage top={16} left={-20} />}
+      </MediaQuery>
+      <MediaQuery minWidth={701} >
+        {visible && <InfoMessage top={16} left={15} />}
+      </MediaQuery>
+
     </div>
   )
 }
@@ -32,7 +73,7 @@ const Item = ({ fulfilled, text }) => {
       printedRule = t('1 number')
       break
     case 'specialCharacter':
-      printedRule = t('1 special character (!?$#@...)')
+      printedRule = t('1 special character ')
       break
     case 'secureLength':
       printedRule = t('12 characters')
@@ -48,6 +89,7 @@ const Item = ({ fulfilled, text }) => {
       {Icon}
       <div className={styles.textItem}>
         {printedRule}
+        {text === 'specialCharacter' && <InfoButton />}
       </div>
     </div>
   )
