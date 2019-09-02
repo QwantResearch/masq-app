@@ -123,7 +123,7 @@ class AuthApp extends React.Component {
         <div>
           <Slash size={114} color={styles.colorGrey300} />
           <Space size={28} />
-          <Typography type='paragraph-modal' align='center'>{`${t(`You have refused the access of the application`)} ${appRequest.appId} ${t(`to your Masq storage.`)}`}</Typography>
+          <Typography type='paragraph-modal' align='center'>{`${t('You have refused the access of the application')} ${appRequest.appId} ${t('to your Masq storage.')}`}</Typography>
           <Space size={12} />
         </div>
       )
@@ -135,8 +135,8 @@ class AuthApp extends React.Component {
       return (
         <div>
           <Typography type='paragraph-modal'>
-            {t(`This application asks access to Masq.`)}
-            {t(`If you are not the one who initiated this request, please refuse.`)}
+            {t('This application asks access to Masq.')}
+            {t('If you are not the one who initiated this request, please refuse.')}
           </Typography>
           <Space size={30} />
           <Card minHeight={64} title={appRequest.name} image={appRequest.imageURL} description={appRequest.description} />
@@ -148,7 +148,7 @@ class AuthApp extends React.Component {
         <div>
           <MapsIcon />
           <Space size={28} />
-          <Typography type='paragraph-modal' align='center'>{ `${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}` }</Typography>
+          <Typography type='paragraph-modal' align='center'>{`${t('You have authorized the application ')} ${appRequest.appId} ${t(' to get access to your Masq storage.')}`}</Typography>
           <Space size={12} />
         </div>
       )

@@ -66,12 +66,14 @@ class Apps extends PureComponent {
 
     return (
       <div className={styles.Apps}>
-        {confirmDialog && <DeleteAppDialog
-          app={appToRemove}
-          onConfirm={() => this.confirmDelete()}
-          onCancel={() => this.closeConfirmDialog()}
-          onClose={() => this.closeConfirmDialog()}
-        />}
+        {confirmDialog && (
+          <DeleteAppDialog
+            app={appToRemove}
+            onConfirm={() => this.confirmDelete()}
+            onCancel={() => this.closeConfirmDialog()}
+            onClose={() => this.closeConfirmDialog()}
+          />
+        )}
 
         <div className={styles.topSection}>
           <Typography type='title-page'>{t('My applications')}</Typography>
@@ -80,7 +82,7 @@ class Apps extends PureComponent {
         <Space size={16} />
 
         {apps.length === 0 && (
-          <React.Fragment>
+          <>
             <Typography type='subtitle-page'>{t('You do not have a registered application yet')}</Typography>
             <Space size={42} />
             <Typography type='title-page'>{t('Recommended applications')}</Typography>
@@ -91,7 +93,7 @@ class Apps extends PureComponent {
               <MapsIcon className={styles.icon} onClick={() => window.open(MAPS_URL, '_blank')} />
               <Link url={MAPS_URL} label={t('Open Qwant Maps')} />
             </div>
-          </React.Fragment>
+          </>
         )}
 
         <div className={styles.cards}>

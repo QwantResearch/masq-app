@@ -282,7 +282,7 @@ describe('masq internal operations', function () {
   })
 
   it('update a device', async () => {
-    let devices = await masq.getDevices()
+    const devices = await masq.getDevices()
     const device = devices[0]
     device.name = 'new name'
 
@@ -320,7 +320,7 @@ describe('masq internal operations', function () {
     // Add an app
     await masq.addApp(app)
 
-    let apps = await masq.getApps()
+    const apps = await masq.getApps()
     expect(apps).to.have.lengthOf(1)
 
     // Simulate a synchronization of the app db

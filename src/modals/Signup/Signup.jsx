@@ -26,11 +26,11 @@ class Signup extends React.Component {
     this.validationEnabled = false
     this.refAvatar = React.createRef()
 
-    this.next = this.next.bind(this)
-    this.finish = this.finish.bind(this)
+    this.handleNext = this.handleNext.bind(this)
+    this.handleFinish = this.handleFinish.bind(this)
     this.isValid = this.isValid.bind(this)
-    this.previous = this.previous.bind(this)
-    this.openDialog = this.openDialog.bind(this)
+    this.handlePrevious = this.handlePrevious.bind(this)
+    this.handleOpenDialog = this.handleOpenDialog.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
   }
 
@@ -54,7 +54,7 @@ class Signup extends React.Component {
   }
 
   getUsernameLabel (...labels) {
-    const username = this.state['username']
+    const username = this.state.username
 
     if (this.isValid('username')) {
       return labels[0]
@@ -91,11 +91,11 @@ class Signup extends React.Component {
     reader.readAsDataURL(image)
   }
 
-  openDialog () {
+  handleOpenDialog () {
     this.refAvatar.current.openDialog()
   }
 
-  next () {
+  handleNext () {
     const fieldsToValidate = ['lastname', 'firstname', 'username']
     this.validationEnabled = true
 
@@ -112,12 +112,12 @@ class Signup extends React.Component {
     this.forceUpdate()
   }
 
-  previous () {
+  handlePrevious () {
     this.currentStep--
     this.forceUpdate()
   }
 
-  finish () {
+  handleFinish () {
     const { onSignup } = this.props
     this.validationEnabled = true
 
@@ -135,16 +135,16 @@ class Signup extends React.Component {
     }
 
     if (this.currentStep === 0) {
-      this.next()
+      this.handleNext()
     } else {
-      this.finish()
+      this.handleFinish()
     }
   }
 
   renderFirstStep () {
     const { t } = this.props
     return (
-      <React.Fragment>
+      <>
         <div className={styles.avatar}>
           <Avatar
             size={120}
@@ -156,7 +156,7 @@ class Signup extends React.Component {
           />
 
           <Space size={21} />
-          <Button width={190} height={40} maxWidth={185} borderRadius={3} secondary onClick={this.openDialog}>{t('Import a picture')}</Button>
+          <Button width={190} height={40} maxWidth={185} borderRadius={3} secondary onClick={this.handleOpenDialog}>{t('Import a picture')}</Button>
         </div>
 
         <Space size={32} />
@@ -177,9 +177,9 @@ class Signup extends React.Component {
         <Space size={32} />
 
         <div className={styles.buttons}>
-          <Button onClick={this.next} id='signup-next-btn' width={185}>{t('Next')}</Button>
+          <Button onClick={this.handleNext} id='signup-next-btn' width={185}>{t('Next')}</Button>
         </div>
-      </React.Fragment>
+      </>
     )
   }
 
@@ -188,10 +188,10 @@ class Signup extends React.Component {
     const { password, passwordConfirmation } = this.state
 
     return (
-      <React.Fragment>
+      <>
         <Typography type='paragraph-modal' align='justify' inline>
-          {t(`Define a secret key to encrypt your data, choose it with care. There is `)}
-          <span className={styles.fontMedium}>{t(`NO WAY to recover this key in case you lose it, because you only know it.`)}</span>
+          {t('Define a secret key to encrypt your data, choose it with care. There is ')}
+          <span className={styles.fontMedium}>{t('NO WAY to recover this key in case you lose it, because you only know it.')}</span>
         </Typography>
         <Space size={14} />
         <TextField
@@ -227,10 +227,10 @@ class Signup extends React.Component {
         <Space size={30} />
 
         <div className={styles.buttons}>
-          <Button width={142} color='neutral' onClick={this.previous}>{t('Previous')}</Button>
-          <Button width={142} id='password-finish-btn' onClick={this.finish}>{t('Finish')}</Button>
+          <Button width={142} color='neutral' onClick={this.handlePrevious}>{t('Previous')}</Button>
+          <Button width={142} id='password-finish-btn' onClick={this.handleFinish}>{t('Finish')}</Button>
         </div>
-      </React.Fragment>
+      </>
     )
   }
 

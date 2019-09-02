@@ -214,7 +214,7 @@ class Masq {
   async removeProfile () {
     // Remove every apps data
     const apps = await this.getApps()
-    for (let app of apps) {
+    for (const app of apps) {
       await this.removeApp(app)
     }
 
@@ -403,10 +403,9 @@ class Masq {
    * @param {string} appId The app id (url for instance)
    */
   async handleUserAppLogin (channel, rawKey, appId) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.appId = appId
       this._checkProfile()
-      this.key = await importKey(Buffer.from(rawKey, 'base64'))
 
       this.hub = signalhub(channel, HUB_URLS)
       this.hub.on('error', async () => {
@@ -425,6 +424,7 @@ class Masq {
       this.sw.on('disconnect', this.onDisconnect)
 
       this.sw.once('peer', async (peer) => {
+        this.key = await importKey(Buffer.from(rawKey, 'base64'))
         this.peer = peer
         this.setState(STATES.CHECK_USER_APP)
         peer.on('error', async (err) => {
@@ -467,7 +467,7 @@ class Masq {
   }
 
   async receiveEndOfConnection (peer) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
         if (json.msg === 'connectionEstablished') {
@@ -495,7 +495,7 @@ class Masq {
   }
 
   async receiveRegisterRequest (peer) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
@@ -572,7 +572,7 @@ class Masq {
   }
 
   async receiveRequestWriteAccess (peer, dbName) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
@@ -630,7 +630,7 @@ class Masq {
   }
 
   _clean () {
-    debug(`### Clean operation : we delete the variables`)
+    debug('### Clean operation : we delete the variables')
     this.hub = null
     this.dbName = null
     this.peer = null
@@ -664,12 +664,12 @@ class Masq {
   }
 
   async _decryptValue (ciphertext) {
-    let decryptedMsg = await decrypt(this.masterKey, ciphertext)
+    const decryptedMsg = await decrypt(this.masterKey, ciphertext)
     return decryptedMsg
   }
 
   async _encryptValue (plaintext) {
-    let encryptedMsg = await encrypt(this.masterKey, plaintext)
+    const encryptedMsg = await encrypt(this.masterKey, plaintext)
     return encryptedMsg
   }
 
@@ -681,7 +681,7 @@ class Masq {
 
   async _createResource (name, res) {
     const id = uuidv4()
-    res['id'] = id
+    res.id = id
     await this.encryptAndPut(`/${name}/${id}`, res)
 
     return id

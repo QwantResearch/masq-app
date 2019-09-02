@@ -9,5 +9,10 @@ module.exports = {
     rules: {
       'no-unused-expressions': 'off'
     }
-  }]
+  }],
+  settings: {
+    react: {
+      version: "detect"
+    }
+  }
 }

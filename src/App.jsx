@@ -139,8 +139,7 @@ class App extends Component {
             <AuthApp
               onClose={() => setCurrentAppRequest(null)}
               appRequest={currentAppRequest}
-            />
-          }
+            />}
 
           {persistentStorageRequest && <PersistentStorageRequest onClose={this.handlePersistentStorageRequestClose} />}
 

@@ -29,7 +29,7 @@ const Card = ({ minHeight, image, title, actions, description, footer, color, wi
       )}
       {!color && !actions && <Space size={14} />}
       {title && <Typography type='title-card'>{title}</Typography>}
-      {description && <Description description={description} /> }
+      {description && <Description description={description} />}
       {footer}
     </div>
   </div>

@@ -30,15 +30,15 @@ class Login extends Component {
 
     this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
     this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
-    this.onPasswordChange = this.onPasswordChange.bind(this)
-    this.closeQRCodeModal = this.closeQRCodeModal.bind(this)
-    this.openQRCodeModal = this.openQRCodeModal.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
+    this.handleCloseQRCodeModal = this.handleCloseQRCodeModal.bind(this)
+    this.handleOpenQRCodeModal = this.handleOpenQRCodeModal.bind(this)
     this.renderQRCode = this.renderQRCodeModal()
-    this.onPasswordKeyUp = this.onPasswordKeyUp.bind(this)
+    this.handlePasswordKeyUp = this.handlePasswordKeyUp.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.connect = this.connect.bind(this)
-    this.goBack = this.goBack.bind(this)
+    this.handleConnect = this.handleConnect.bind(this)
+    this.handleGoBack = this.handleGoBack.bind(this)
   }
 
   async componentDidMount () {
@@ -99,19 +99,19 @@ class Login extends Component {
     this.setState({ selectedUser: user })
   }
 
-  onPasswordChange (e) {
+  handlePasswordChange (e) {
     this.setState({
       password: e.target.value
     })
   }
 
-  async onPasswordKeyUp (e) {
+  async handlePasswordKeyUp (e) {
     if (e.key === 'Enter') {
-      this.connect()
+      this.handleConnect()
     }
   }
 
-  async connect () {
+  async handleConnect () {
     const { signin } = this.props
     const { password, selectedUser } = this.state
     try {
@@ -121,15 +121,15 @@ class Login extends Component {
     }
   }
 
-  goBack () {
+  handleGoBack () {
     this.setState({ selectedUser: null, password: '' })
   }
 
-  openQRCodeModal () {
+  handleOpenQRCodeModal () {
     this.setState({ qrcodeModal: true })
   }
 
-  closeQRCodeModal () {
+  handleCloseQRCodeModal () {
     this.setState({ qrcodeModal: false })
   }
 
@@ -137,7 +137,7 @@ class Login extends Component {
     if (this.props.currentAppRequest && remoteWebRTCEnabled) {
       return (
         <div style={{ marginBottom: 32 }}>
-          <Button onClick={this.openQRCodeModal}>Connect with another device</Button>
+          <Button onClick={this.handleOpenQRCodeModal}>Connect with another device</Button>
         </div>
       )
     }
@@ -149,7 +149,7 @@ class Login extends Component {
 
     return (
       <div className={styles.usersSelection}>
-        {qrcodeModal && <QRCodeModal onClose={this.closeQRCodeModal} />}
+        {qrcodeModal && <QRCodeModal onClose={this.handleCloseQRCodeModal} />}
         <Typography type='title'>{t('Who is it ?')}</Typography>
         <Space size={34} />
         {/* { this.renderQRCodeModal() } */}
@@ -192,16 +192,16 @@ class Login extends Component {
             height={46}
             autoFocus
             type='password'
-            onChange={this.onPasswordChange}
+            onChange={this.handlePasswordChange}
             error={this.state.isWrongPassword}
             label={this.state.isWrongPassword ? t('Wrong password, please try again') : ''}
-            onKeyUp={this.onPasswordKeyUp}
+            onKeyUp={this.handlePasswordKeyUp}
             defaultValue={password}
           />
           <Space size={19} />
-          <Button width={302} onClick={this.connect}>{t('Validate')}</Button>
+          <Button width={302} onClick={this.handleConnect}>{t('Validate')}</Button>
           <Space size={32} />
-          <div className={styles.goback} onClick={this.goBack}>
+          <div className={styles.goback} onClick={this.handleGoBack}>
             <ChevronLeft />
             <Typography type='label'>{t('Change profile')}</Typography>
           </div>
@@ -243,8 +243,7 @@ class Login extends Component {
           <Space size={82} />
           {selectedUser
             ? this.renderPassword()
-            : this.renderUsersSelection()
-          }
+            : this.renderUsersSelection()}
         </div>
 
         <Cubes className={styles.Background} />
