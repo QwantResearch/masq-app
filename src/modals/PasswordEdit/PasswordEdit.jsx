@@ -22,14 +22,14 @@ class PasswordEdit extends React.Component {
 
     this.onChange = this.onChange.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
-    this.updatePassphrase = this.updatePassphrase.bind(this)
+    this.handleUpdatePassphrase = this.handleUpdatePassphrase.bind(this)
   }
 
   handleKeyUp (e) {
     if (e.key !== 'Enter') {
       return
     }
-    this.updatePassphrase()
+    this.handleUpdatePassphrase()
   }
 
   isValid (fieldName) {
@@ -53,7 +53,7 @@ class PasswordEdit extends React.Component {
     })
   }
 
-  async updatePassphrase () {
+  async handleUpdatePassphrase () {
     const { currentPassword, password } = this.state
     const { t } = this.props
     this.validationEnabled = true
@@ -137,7 +137,7 @@ class PasswordEdit extends React.Component {
 
           <div className={styles.buttons}>
             <Button width={142} color='neutral' onClick={onClose}>{t('Cancel')}</Button>
-            <Button width={142} onClick={this.updatePassphrase}>{t('Save')}</Button>
+            <Button width={142} onClick={this.handleUpdatePassphrase}>{t('Save')}</Button>
           </div>
         </div>
       </Modal>

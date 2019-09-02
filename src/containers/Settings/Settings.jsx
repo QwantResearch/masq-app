@@ -26,14 +26,14 @@ class Settings extends React.Component {
     }
 
     this.hasChanged = false
-    this.validate = this.validate.bind(this)
+    this.handleValidate = this.handleValidate.bind(this)
     this.isValid = this.isValid.bind(this)
     this.handleKeyUp = this.handleKeyUp.bind(this)
     this.confirmDelete = this.confirmDelete.bind(this)
-    this.openConfirmDialog = this.openConfirmDialog.bind(this)
+    this.handleOpenConfirmDialog = this.handleOpenConfirmDialog.bind(this)
     this.closeConfirmDialog = this.closeConfirmDialog.bind(this)
-    this.openPasswordEditModal = this.openPasswordEditModal.bind(this)
-    this.closePasswordEditModal = this.closePasswordEditModal.bind(this)
+    this.handleOpenPasswordEditModal = this.handleOpenPasswordEditModal.bind(this)
+    this.handleClosePasswordEditModal = this.handleClosePasswordEditModal.bind(this)
   }
 
   componentDidMount () {
@@ -61,7 +61,7 @@ class Settings extends React.Component {
   }
 
   getUsernameLabel (...labels) {
-    const username = this.state['username']
+    const username = this.state.username
 
     if (this.isValid('username')) {
       return labels[0]
@@ -100,7 +100,7 @@ class Settings extends React.Component {
     reader.readAsDataURL(image)
   }
 
-  validate () {
+  handleValidate () {
     const { t, setNotification } = this.props
 
     if (!this.hasChanged) {
@@ -125,11 +125,11 @@ class Settings extends React.Component {
 
   handleKeyUp (e) {
     if (e.key === 'Enter') {
-      this.validate()
+      this.handleValidate()
     }
   }
 
-  openConfirmDialog () {
+  handleOpenConfirmDialog () {
     this.setState({
       confirmDialog: true
     })
@@ -149,13 +149,13 @@ class Settings extends React.Component {
     })
   }
 
-  openPasswordEditModal () {
+  handleOpenPasswordEditModal () {
     this.setState({
       passwordEditModal: true
     })
   }
 
-  closePasswordEditModal () {
+  handleClosePasswordEditModal () {
     this.setState({
       passwordEditModal: false
     })
@@ -213,16 +213,16 @@ class Settings extends React.Component {
                   defaultValue='password'
                   label={t('Secret key')}
                   button={t('Update')}
-                  onClick={this.openPasswordEditModal}
+                  onClick={this.handleOpenPasswordEditModal}
                 />
               </div>
             </div>
           </div>
 
           <div className={styles.rightSection}>
-            <Button width={193} secondary={!this.hasChanged} onClick={this.validate}>{t('Save')}</Button>
+            <Button width={193} secondary={!this.hasChanged} onClick={this.handleValidate}>{t('Save')}</Button>
             <Space size={24} />
-            <div className={styles.deleteButton} onClick={this.openConfirmDialog}>
+            <div className={styles.deleteButton} onClick={this.handleOpenConfirmDialog}>
               <Typography align='center' type='label' color={styles.colorBlueGrey}>
                 <Trash className={styles.trashIcon} size={14} color={styles.colorBlueGrey} />
                 {t('Delete the profile')}
@@ -232,7 +232,7 @@ class Settings extends React.Component {
         </div>
 
         {passwordEditModal && (
-          <PasswordEdit onClose={this.closePasswordEditModal} />
+          <PasswordEdit onClose={this.handleClosePasswordEditModal} />
         )}
 
         {confirmDialog && (

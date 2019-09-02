@@ -20,7 +20,8 @@ const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => {
         <Card
           title={app.name}
           image={app.imageURL}
-          description={app.description} />
+          description={app.description}
+        />
         <Space size={32} />
         <div className={styles.buttons}>
           <Button width={185} color='neutral' onClick={onCancel}>{t('Cancel')}</Button>

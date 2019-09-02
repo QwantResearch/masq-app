@@ -22,9 +22,9 @@ const Description = () => {
 const InfoMessage = ({ top, left }) => {
   const { t } = useTranslation()
   return (
-    <div className={styles.Bubble} style={{ top: top, left: left }} >
-      <div className={styles.BubbleText} >
-        {t('You can choose from')}{`: ="!?$#%@()\\-_/@^+*&:<>{};~'\`.|[] `}
+    <div className={styles.Bubble} style={{ top: top, left: left }}>
+      <div className={styles.BubbleText}>
+        {t('You can choose from')}{': ="!?$#%@()\\-_/@^+*&:<>{};~\'`.|[] '}
       </div>
     </div>
 
@@ -51,7 +51,7 @@ const InfoButton = () => {
       <MediaQuery maxWidth={700}>
         {visible && <InfoMessage top={16} left={-20} />}
       </MediaQuery>
-      <MediaQuery minWidth={701} >
+      <MediaQuery minWidth={701}>
         {visible && <InfoMessage top={16} left={15} />}
       </MediaQuery>
 
@@ -135,14 +135,18 @@ ForceBar.defaultProps = {
 }
 const PasswordRules = ({ force, passwordInfo }) => {
   const lockIcon = force > 1
-    ? <Lock
-      size={30}
-      className={cx(styles.lockIcon, styles[`force-${force}`])}
-    />
-    : <Unlock
-      size={30}
-      className={cx(styles.lockIcon, styles[`force-${force}`])}
-    />
+    ? (
+      <Lock
+        size={30}
+        className={cx(styles.lockIcon, styles[`force-${force}`])}
+      />
+    )
+    : (
+      <Unlock
+        size={30}
+        className={cx(styles.lockIcon, styles[`force-${force}`])}
+      />
+    )
   return (
     <div className={styles.PasswordRules}>
       <ul>
@@ -163,7 +167,6 @@ const PasswordRules = ({ force, passwordInfo }) => {
         {lockIcon}
       </div>
     </div>
-
   )
 }
 

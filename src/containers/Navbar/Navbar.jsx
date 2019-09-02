@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import MediaQuery from 'react-responsive'
 
 import NavbarMin from './NavbarMin'
@@ -7,7 +7,7 @@ import NavBarMobile from './NavbarMobile'
 
 const Navbar = (props) => {
   return (
-    <Fragment>
+    <>
       <MediaQuery maxWidth={700}>
         <NavBarMobile {...props} />
       </MediaQuery>
@@ -17,7 +17,7 @@ const Navbar = (props) => {
       <MediaQuery minWidth={1110}>
         <NavbarMax {...props} />
       </MediaQuery>
-    </Fragment>
+    </>
   )
 }
 

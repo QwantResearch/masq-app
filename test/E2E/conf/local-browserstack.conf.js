@@ -27,7 +27,7 @@ exports.config = Object.assign(master.config, {
     return new Promise((resolve, reject) => {
       exports.bs_local = new browserstack.Local()
       if (!exports.bs_local.isRunning()) {
-        exports.bs_local.start({ 'key': exports.config.key }, function (error) {
+        exports.bs_local.start({ key: exports.config.key }, function (error) {
           if (error) return reject(error)
           console.log('Connected. Now testing...')
           resolve()

@@ -9,7 +9,8 @@ import styles from './Modal.module.scss'
 const Modal = ({ onClose, width, padding, children }) => (
   <div className={styles.Modal}>
     <div className={styles.overlay} onClick={onClose} />
-    <div className={styles.modal}
+    <div
+      className={styles.modal}
       style={{
         width,
         paddingLeft: padding,

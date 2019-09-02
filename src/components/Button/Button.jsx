@@ -18,7 +18,8 @@ const Button = ({ onClick, color, children, width, height, borderRadius, seconda
       maxWidth: width,
       height,
       borderRadius,
-      padding: width ? 0 : `0px ${height}px` }}
+      padding: width ? 0 : `0px ${height}px`
+    }}
   >
     <span>{children}</span>
   </button>

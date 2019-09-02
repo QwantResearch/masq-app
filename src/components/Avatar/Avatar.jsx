@@ -41,7 +41,8 @@ export default class Avatar extends React.Component {
           { [styles.mobile]: size <= 32 }
         )}
       >
-        <input name='avatar' type='file' ref='fileDialog'
+        <input
+          name='avatar' type='file' ref='fileDialog'
           style={{ display: 'none' }} onChange={onChange}
           accept='.jpg, .jpeg, .png'
         />

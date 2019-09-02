@@ -8,11 +8,13 @@ import { Modal, Button, Space, Typography } from '../../components'
 import styles from './SyncDevice.module.scss'
 
 const SyncDeviceModal = ({ children }) => {
-  return <Modal width={400}>
-    <div className={styles.SyncDevice}>
-      {children}
-    </div>
-  </Modal>
+  return (
+    <Modal width={400}>
+      <div className={styles.SyncDevice}>
+        {children}
+      </div>
+    </Modal>
+  )
 }
 
 const SyncDeviceModalSyncing = ({ t, setSyncStep }) => (

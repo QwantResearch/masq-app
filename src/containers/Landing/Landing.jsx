@@ -8,7 +8,7 @@ import BGLanding from '../../assets/bg-landing.svg'
 
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Box } from '../../assets/box.svg'
-import { ReactComponent as HDD } from '../../assets/hard-disk.svg'
+import { ReactComponent as Hdd } from '../../assets/hard-disk.svg'
 import { ReactComponent as Devices } from '../../assets/devices.svg'
 import { ReactComponent as Shield } from '../../assets/shield.svg'
 import { ReactComponent as Windows } from '../../assets/windows-masq.svg'
@@ -62,7 +62,7 @@ const Landing = ({ onClick, children }) => {
         </div>
 
         <div className={styles.Hdd}>
-          <HDD />
+          <Hdd />
           <div className={styles.text}>
             <Typography type='title-landing'>{t('Personal data is stored on your devices')}</Typography>
             <Typography type='paragraph-landing'>
