@@ -12,6 +12,11 @@ const receiveApps = apps => ({
   apps
 })
 
+const receiveDevices = devices => ({
+  type: 'RECEIVE_DEVICES',
+  devices
+})
+
 export const setSyncStep = syncStep => {
   return {
     type: 'SET_SYNC_STEP',
@@ -75,6 +80,13 @@ export const addDevice = device => ({
   type: 'ADD_DEVICE',
   device
 })
+
+export const fetchDevices = () => {
+  return function (dispatch) {
+    return masq.getDevices()
+      .then(devices => dispatch(receiveDevices(devices)))
+  }
+}
 
 export const fetchApps = () => {
   return function (dispatch) {

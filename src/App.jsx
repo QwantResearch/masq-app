@@ -12,32 +12,51 @@ import { Notification } from './components'
 import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
 import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
 import { isBrowserSupported } from './lib/browser'
-import { capitalize } from './lib/utils'
 
 import styles from './App.module.scss'
 
 const history = createHashHistory()
 const { MasqError } = common.errors
 
-// listen for errors event and display them
-
 const authenticatedRoutes = [
   {
     path: '/apps',
-    sidebar: Navbar,
-    main: Applications
+    container: Applications
   },
   {
     path: '/devices',
-    sidebar: Navbar,
-    main: Devices
+    container: Devices
   },
   {
     path: '/settings',
-    sidebar: Navbar,
-    main: Settings
+    container: Settings
   }
 ]
+
+const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/',
+              state: { from: history.location }
+            }}
+          />
+        )
+      }
+    />
+  )
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func,
+  isAuthenticated: PropTypes.bool
+}
 
 class App extends Component {
   constructor () {
@@ -86,15 +105,6 @@ class App extends Component {
       }
     })
 
-    if (!this.props.devices.length) {
-      const { name, os } = DetectBrowser.detect()
-      this.props.addDevice({
-        name: `${capitalize(name)} ${t('on')} ${os}`,
-        description: t('This device'),
-        color: '#40ae6c'
-      })
-    }
-
     history.listen(location => {
       const paths = ['/apps', '/devices', '/settings']
       if (location.pathname !== this.state.prevPath &&
@@ -133,6 +143,24 @@ class App extends Component {
     return (
       <Router history={history}>
         <div>
+          <Route exact path='/sync/:hash' component={Sync} />
+          <Route exact path='/link/:hash' component={Login} />
+          <Route exact path='/' component={Login} />
+          <Route path='/loading' component={Loading} />
+          {authenticatedRoutes.map((route, index) => (
+            <PrivateRoute
+              key={index}
+              path={route.path}
+              isAuthenticated={!!currentUser}
+              component={() => (
+                <div className={styles.layout}>
+                  <Navbar />
+                  <route.container />
+                </div>
+              )}
+            />
+          ))}
+
           {loading && pathname !== '/loading' && <Redirect to='/loading' />}
           {notification && <Notification {...notification} />}
           {currentUser && currentAppRequest &&
@@ -142,29 +170,6 @@ class App extends Component {
             />}
 
           {persistentStorageRequest && <PersistentStorageRequest onClose={this.handlePersistentStorageRequestClose} />}
-
-          <Route exact path='/sync/:hash' component={Sync} />
-          <Route exact path='/link/:hash' component={Login} />
-          <Route exact path='/' component={Login} />
-          <Route path='/loading' component={Loading} />
-
-          <div className={styles.layout}>
-            {authenticatedRoutes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                component={route.sidebar}
-              />
-            ))}
-
-            {authenticatedRoutes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                component={route.main}
-              />
-            ))}
-          </div>
         </div>
       </Router>
     )
@@ -174,7 +179,6 @@ class App extends Component {
 const mapStateToProps = state => ({
   currentAppRequest: state.masq.currentAppRequest,
   currentUser: state.masq.currentUser,
-  devices: state.masq.devices,
   users: state.masq.users,
   notification: state.notification.currentNotification,
   loading: state.loading.loading
@@ -192,7 +196,6 @@ App.propTypes = {
   currentAppRequest: PropTypes.object,
   setCurrentAppRequest: PropTypes.func,
   addDevice: PropTypes.func,
-  devices: PropTypes.arrayOf(PropTypes.object),
   notification: PropTypes.object,
   loading: PropTypes.bool,
   setLoading: PropTypes.func,
