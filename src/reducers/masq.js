@@ -15,6 +15,8 @@ const masq = (state = {
       return { ...state, users: action.users }
     case 'RECEIVE_APPS':
       return { ...state, apps: action.apps }
+    case 'RECEIVE_DEVICES':
+      return { ...state, devices: action.devices }
     case 'SET_CURRENT_APP_REQUEST':
       return { ...state, currentAppRequest: action.app }
     case 'UPDATE_CURRENT_APP_REQUEST':

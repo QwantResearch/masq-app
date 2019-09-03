@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 import { Plus } from 'react-feather'
 import MediaQuery from 'react-responsive'
 
+import { fetchDevices } from '../../actions'
 import { Card, Button, Typography, Space, FloatingButton } from '../../components'
 import { withTranslation } from 'react-i18next'
 import { QRCodeModal } from '../../modals'
@@ -19,6 +19,10 @@ class Devices extends React.Component {
     this.handleAddDeviceClose = this.handleAddDeviceClose.bind(this)
   }
 
+  componentDidMount () {
+    this.props.fetchDevices()
+  }
+
   handleAddDeviceClick () {
     this.setState({ addDevice: true })
   }
@@ -28,10 +32,8 @@ class Devices extends React.Component {
   }
 
   render () {
-    const { user, devices, t } = this.props
+    const { devices, t } = this.props
     const { addDevice } = this.state
-
-    if (!user) return <Redirect to='/' />
 
     return (
       <div className={styles.Devices}>
@@ -53,7 +55,12 @@ class Devices extends React.Component {
         <div className={styles.cards}>
           {devices.map((device, index) => (
             <div key={index} className={styles.Card}>
-              <Card title={device.name} color={device.color} description={device.description} />
+              <Card
+                minHeight={120}
+                title={device.name}
+                color={styles.colorGreen}
+                description={device.current ? 'This device' : ''}
+              />
             </div>
           ))}
         </div>
@@ -73,10 +80,14 @@ const mapStateToProps = (state) => ({
   devices: state.masq.devices
 })
 
+const mapDispatchToProps = dispatch => ({
+  fetchDevices: () => dispatch(fetchDevices())
+})
+
 Devices.propTypes = {
-  user: PropTypes.object,
   devices: PropTypes.arrayOf(PropTypes.object),
-  t: PropTypes.func
+  t: PropTypes.func,
+  fetchDevices: PropTypes.func.isRequired
 }
 const translatedDevices = withTranslation()(Devices)
-export default connect(mapStateToProps)(translatedDevices)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedDevices)
