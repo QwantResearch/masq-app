@@ -402,9 +402,13 @@ class Masq {
   /**
    * Get all devices of the current profile
    */
-  getDevices () {
+  async getDevices () {
     this._checkProfile()
-    return this._getResources('devices')
+    const id = this.profileDB.local.key.toString('hex')
+    const devices = await this._getResources('devices')
+    return devices.map(d =>
+      d.id === id ? { ...d, current: true } : d
+    )
   }
 
   /**
