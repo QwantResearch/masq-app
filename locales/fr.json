@@ -4,12 +4,12 @@
   "1 lowercase": "1 minuscule",
   "1 uppercase": "1 majuscule",
   "1 number": "1 chiffre",
-  "1 special character (!?$#@...)": "1 caractère spécial (!?$#@...)",
   "12 characters": "12 caractères",
   "Application succesfully deleted": "Application supprimée avec succès",
   "My applications": "Mes applications",
   "You do not have a registered application yet": "Vous n'avez pas d'applications pour le moment",
   "My devices": "Mes appareils",
+  "Add a new devce (coming soon)": "Ajouter un appareil (bientôt)",
   "Create a new profile": "Créer un nouveau profil",
   "Respects your privacy": "Respect de la vie privée",
   "Masq allows you to store all your preferences while guaranteeing your privacy": "Masq vous permet de stocker les données personnelles de vos applications tout en garantissant le respect de votre vie privée.",
@@ -118,5 +118,6 @@
   "cancel": "annuler",
   "close": "fermer",
   "go back": "retour",
-  "Add a new device": "Ajouter un appareil"
+  "You can choose from": "Vous pouvez choisir parmi ",
+  "1 special character ": "1 caractère spécial "
 }

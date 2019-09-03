@@ -4,12 +4,12 @@
   "1 lowercase": "1 lowercase",
   "1 uppercase": "1 uppercase",
   "1 number": "1 number",
-  "1 special character (!?$#@...)": "1 special character (!?$#@...)",
   "12 characters": "12 characters",
   "Application succesfully deleted": "Application succesfully deleted",
   "My applications": "My applications",
   "You do not have a registered application yet": "You do not have a registered application yet",
   "My devices": "My devices",
+  "Add a new devce (coming soon)": "Add a new devce (coming soon)",
   "Create a new profile": "Create a new profile",
   "Respects your privacy": "Respects your privacy",
   "Masq allows you to store all your preferences while guaranteeing your privacy": "Masq allows you to store all your preferences while guaranteeing your privacy",
@@ -118,5 +118,6 @@
   "Synchronization in progress...": "Synchronization in progress...",
   "Synchronization finished!": "Synchronization finished!",
   "Synchronization failure": "Synchronization failure",
-  "Add a new device": "Add a new device"
+  "You can choose from": "You can choose from",
+  "1 special character ": "1 special character "
 }
