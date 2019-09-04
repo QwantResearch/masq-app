@@ -116,6 +116,25 @@ class Masq {
     this.state = newState
   }
 
+  async createNewDevice () {
+    const { name, os } = DetectBrowser.detect()
+    const devices = await this.getDevices()
+    let deviceName = `${capitalize(name)} - ${capitalize(os)}`
+
+    const count = devices.reduce((acc, { name }) => (
+      (name.substring(0, deviceName.length) === deviceName) ? acc + 1 : acc
+    ), 0)
+
+    if (count > 0) {
+      deviceName = `${deviceName} - ${count}`
+    }
+
+    await this.addDevice({
+      name: deviceName,
+      apps: []
+    })
+  }
+
   /**
    * Open and replicate a profile database
    */
@@ -162,11 +181,7 @@ class Masq {
     // register current device if it does not exist
     const device = await this.getDevice()
     if (!device) {
-      const { name, os } = DetectBrowser.detect()
-      await this.addDevice({
-        name: `${capitalize(name)} - ${capitalize(os)}`,
-        apps: []
-      })
+      await this.createNewDevice()
     }
 
     this._watchAndAuthorizeApps()
