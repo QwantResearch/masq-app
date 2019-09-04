@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-import { Signup, SyncDevice, QRCodeModal } from '../../modals'
+import { Signup, SyncDevice, QRCodeModal, AddProfile } from '../../modals'
 import { Landing } from '../../containers'
 
 import styles from './Login.module.scss'
@@ -25,10 +25,11 @@ class Login extends Component {
       signup: false,
       sync: false,
       password: '',
-      qrcodeModal: false
+      qrcodeModal: false,
+      addProfile: false
     }
 
-    this.handleClickSyncProfile = this.handleClickSyncProfile.bind(this)
+    this.handleCloseAddProfile = this.handleCloseAddProfile.bind(this)
     this.handleClickNewProfile = this.handleClickNewProfile.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
     this.handleCloseQRCodeModal = this.handleCloseQRCodeModal.bind(this)
@@ -39,6 +40,7 @@ class Login extends Component {
     this.handleClose = this.handleClose.bind(this)
     this.handleConnect = this.handleConnect.bind(this)
     this.handleGoBack = this.handleGoBack.bind(this)
+    this.handleOpenSignup = this.handleOpenSignup.bind(this)
   }
 
   async componentDidMount () {
@@ -87,12 +89,16 @@ class Login extends Component {
     this.setState({ signup: false })
   }
 
-  handleClickNewProfile () {
-    this.setState({ signup: true })
+  handleOpenSignup () {
+    this.setState({ signup: true, addProfile: false })
   }
 
-  handleClickSyncProfile () {
-    this.setState({ sync: true })
+  handleClickNewProfile () {
+    this.setState({ addProfile: true })
+  }
+
+  handleCloseAddProfile () {
+    this.setState({ addProfile: false })
   }
 
   selectUser (user) {
@@ -145,7 +151,7 @@ class Login extends Component {
 
   renderUsersSelection () {
     const { users, t } = this.props
-    const { signup, sync, qrcodeModal } = this.state
+    const { signup, sync, qrcodeModal, addProfile } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -165,6 +171,7 @@ class Login extends Component {
         </div>
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
         {sync && <SyncDevice onClose={this.handleClose} />}
+        {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
       </div>
     )
   }

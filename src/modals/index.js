@@ -8,3 +8,4 @@ export { default as DeleteProfileDialog } from './DeleteProfileDialog/DeleteProf
 export { default as DeleteAppDialog } from './DeleteAppDialog/DeleteAppDialog'
 export { default as PasswordEdit } from './PasswordEdit/PasswordEdit'
 export { default as UnsupportedBrowser } from './UnsupportedBrowser/UnsupportedBrowser'
+export { default as AddProfile } from './AddProfile/AddProfile'
