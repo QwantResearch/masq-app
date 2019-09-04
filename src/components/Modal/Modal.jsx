@@ -13,6 +13,7 @@ const Modal = ({ onClose, width, padding, children }) => (
       className={styles.modal}
       style={{
         width,
+        paddingTop: padding,
         paddingLeft: padding,
         paddingRight: padding
       }}

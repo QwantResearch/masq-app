@@ -119,5 +119,8 @@
   "Synchronization failure": "Synchronization failure",
   "You can choose from": "You can choose from",
   "1 special character ": "1 special character ",
-  "Add a new device": "Add a new device"
+  "Add a new device": "Add a new device",
+  "This profile is already synchronized on this device.": "This profile is already synchronized on this device.",
+  "Add a new profile": "Add a new profile",
+  "Sync an existing profile": "Sync an existing profile"
 }

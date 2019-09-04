@@ -42,7 +42,7 @@ Button.propTypes = {
     'neutral',
     'light'
   ]),
-  width: PropTypes.number,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   height: PropTypes.number,
   secondary: PropTypes.bool,
   children: PropTypes.string,
