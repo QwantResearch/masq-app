@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-import { Signup, SyncDevice, QRCodeModal, AddProfile } from '../../modals'
+import { Signup, SyncDevice, QRCodeModal, AddProfile, SyncUrl } from '../../modals'
 import { Landing } from '../../containers'
 
 import styles from './Login.module.scss'
@@ -41,6 +41,8 @@ class Login extends Component {
     this.handleConnect = this.handleConnect.bind(this)
     this.handleGoBack = this.handleGoBack.bind(this)
     this.handleOpenSignup = this.handleOpenSignup.bind(this)
+    this.handleOpenSync = this.handleOpenSync.bind(this)
+    this.handleCloseSyncUrl = this.handleCloseSyncUrl.bind(this)
   }
 
   async componentDidMount () {
@@ -93,12 +95,20 @@ class Login extends Component {
     this.setState({ signup: true, addProfile: false })
   }
 
+  handleOpenSync () {
+    this.setState({ sync: true, addProfile: false })
+  }
+
   handleClickNewProfile () {
     this.setState({ addProfile: true })
   }
 
   handleCloseAddProfile () {
     this.setState({ addProfile: false })
+  }
+
+  handleCloseSyncUrl () {
+    this.setState({ sync: false })
   }
 
   selectUser (user) {
@@ -151,7 +161,7 @@ class Login extends Component {
 
   renderUsersSelection () {
     const { users, t } = this.props
-    const { signup, sync, qrcodeModal, addProfile } = this.state
+    const { signup, sync, syncing, qrcodeModal, addProfile } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -170,8 +180,9 @@ class Login extends Component {
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickNewProfile} />
         </div>
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-        {sync && <SyncDevice onClose={this.handleClose} />}
-        {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
+        {syncing && <SyncDevice onClose={this.handleClose} />}
+        {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
+        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
       </div>
     )
   }
