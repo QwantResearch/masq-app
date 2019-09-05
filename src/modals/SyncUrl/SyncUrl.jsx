@@ -10,7 +10,7 @@ const SyncUrl = ({ onClose, onSync }) => {
 
   return (
     <Modal width={400} padding={40} onClose={onClose}>
-      <div className={styles.AddProfile}>
+      <div className={styles.SyncUrl}>
         <Typography type='title-modal'>{t('Synchronize a profile')}</Typography>
         <div className={styles.content}>
           <Space size={32} />
@@ -24,7 +24,6 @@ const SyncUrl = ({ onClose, onSync }) => {
             <Button color='neutral' width={185} onClick={onClose}>{t('Cancel')}</Button>
             <Button width={185} onClick={onSync}>{t('Synchronize')}</Button>
           </div>
-          <Space size={32} />
         </div>
       </div>
     </Modal>
