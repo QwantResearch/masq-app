@@ -142,7 +142,7 @@ class Masq {
     this._startReplicate(this.profileDB)
 
     const apps = await this.getApps()
-    for (let app of apps) {
+    for (const app of apps) {
       const dbName = `app-${profileId}-${app.id}`
 
       // app is not replicated yet
@@ -644,8 +644,8 @@ class Masq {
       return d.localKey !== this.profileDB.local.key.toString('hex')
     })
 
-    for (let otherDevice of otherDevices) {
-      for (let app of otherDevice.apps) {
+    for (const otherDevice of otherDevices) {
+      for (const app of otherDevice.apps) {
         let { id } = app
 
         // HACK for tests. We can't use the same dbName

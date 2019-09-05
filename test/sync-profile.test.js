@@ -174,6 +174,6 @@ describe('sync-profile', function () {
     await new Promise((resolve) => { setTimeout(resolve, 5000) })
 
     expect(masq.appsDBs['app2' + '-copy']._authorized).to.have.lengthOf(2)
-    expect(masq2.appsDBs['app2']._authorized).to.have.lengthOf(2)
+    expect(masq2.appsDBs.app2._authorized).to.have.lengthOf(2)
   })
 })
