@@ -122,5 +122,9 @@
   "Add a new device": "Add a new device",
   "This profile is already synchronized on this device.": "This profile is already synchronized on this device.",
   "Add a new profile": "Add a new profile",
-  "Sync an existing profile": "Sync an existing profile"
+  "Sync an existing profile": "Sync an existing profile",
+  "Synchronize a profile": "Synchronize a profile",
+  "Copy the link displayed on your initial device, then paste it in the field \"link to existing profile\" on this device.": "Copy the link displayed on your initial device, then paste it in the field \"link to existing profile\" on this device.",
+  "Link to existing profile": "Link to existing profile",
+  "Synchronize": "Synchronize"
 }
