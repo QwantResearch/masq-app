@@ -5,19 +5,25 @@ import { useTranslation } from 'react-i18next'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
-const Sync = ({ history }) => {
+const Sync = ({ link, onClose }) => {
   const [syncStep, setSyncStep] = useState('syncing')
   const [message, setMessage] = useState(null)
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (window.location.hash.substring(0, 7) !== '#/sync/') return
-    const hash = window.location.hash.substr(7) // ignore #/sync/ characters
-
-    if (!hash.length) return
-    const decoded = Buffer.from(hash, 'base64')
+    let hash = ''
+    try {
+      if (!link.length) throw new Error('invalid link')
+      const url = new URL(link)
+      if (url.hash.substring(0, 7) !== '#/sync/') return
+      hash = url.hash.substr(7) // ignore #/sync/ characters
+      if (!hash.length) throw new Error('invalid link')
+    } catch (e) {
+      return setSyncStep('error')
+    }
 
     const startSync = async () => {
+      const decoded = Buffer.from(hash, 'base64')
       const sp = new SyncProfile()
 
       try {
@@ -38,15 +44,12 @@ const Sync = ({ history }) => {
     startSync()
   }, [])
 
-  const onClick = () => {
-    history.push('/')
-  }
-
-  return <SyncDevice step={syncStep} onClick={onClick} message={message} />
+  return <SyncDevice step={syncStep} onClick={onClose} message={message} />
 }
 
 Sync.propTypes = {
-  history: PropTypes.object.isRequired
+  link: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired
 }
 
 export default Sync

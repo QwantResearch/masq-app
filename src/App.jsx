@@ -136,7 +136,12 @@ class App extends Component {
     return (
       <Router history={history}>
         <div>
-          <Route exact path='/sync/:hash' component={Sync} />
+          <Route
+            exact
+            path='/sync/:hash'
+            component={() =>
+              <Sync link={window.location.href} onClose={() => history.push('/')} />}
+          />
           <Route exact path='/link/:hash' component={Login} />
           <Route exact path='/' component={Login} />
           <Route path='/loading' component={Loading} />
