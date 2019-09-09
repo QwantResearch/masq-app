@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
+import { fetchUsers } from '../../actions'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
-const Sync = ({ link, onClose }) => {
+const Sync = ({ link, onClose, fetchUsers }) => {
   const [syncStep, setSyncStep] = useState('syncing')
   const [message, setMessage] = useState(null)
   const { t } = useTranslation()
@@ -32,6 +34,7 @@ const Sync = ({ link, onClose }) => {
         await sp.init(channel, Buffer.from(key, 'base64'))
         await sp.joinSecureChannel()
         await sp.pullProfile()
+        await fetchUsers()
         setSyncStep('finished')
       } catch (e) {
         if (e.message === 'alreadySynced') {
@@ -49,7 +52,12 @@ const Sync = ({ link, onClose }) => {
 
 Sync.propTypes = {
   link: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  fetchUsers: PropTypes.func.isRequired
 }
 
-export default Sync
+const mapDispatchToProps = dispatch => ({
+  fetchUsers: user => dispatch(fetchUsers(user))
+})
+
+export default connect(null, mapDispatchToProps)(Sync)
