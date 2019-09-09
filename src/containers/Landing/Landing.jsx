@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
@@ -16,6 +16,7 @@ import { ReactComponent as Qwant } from '../../assets/qwant.svg'
 
 import { Button, Space, Typography } from '../../components'
 import { useWindowWidth } from '../../hooks'
+import { SyncUrl } from '../../modals'
 
 import styles from './Landing.module.scss'
 
@@ -24,8 +25,13 @@ import styles from './Landing.module.scss'
 const MOBILE_WIDTH = 700
 
 const Landing = ({ onClick, children }) => {
+  const [sync, setSync] = useState(false)
   const { t } = useTranslation()
   const width = useWindowWidth()
+
+  if (sync) {
+    return <SyncUrl onClose={() => setSync(false)} />
+  }
 
   return (
     <div className={styles.Landing}>
@@ -45,6 +51,7 @@ const Landing = ({ onClick, children }) => {
             <Space size={42} />
             <div className={styles.accountBtn}>
               <Button width={340} color='success' id='create-account-btn' onClick={onClick}>{t('Create a new profile')}</Button>
+              <a onClick={() => setSync(true)}><Typography type='sync-profile-landing'>{t('Already got a profile ? SYNCHRONIZE IT')}</Typography></a>
             </div>
           </div>
         )}

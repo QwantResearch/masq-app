@@ -9,7 +9,7 @@ import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
-import { Sync, Landing } from '../../containers'
+import { Landing } from '../../containers'
 import { Signup, SyncDevice, QRCodeModal, AddProfile, SyncUrl } from '../../modals'
 
 import styles from './Login.module.scss'
@@ -26,8 +26,7 @@ class Login extends Component {
       sync: false,
       password: '',
       qrcodeModal: false,
-      addProfile: false,
-      link: null
+      addProfile: false
     }
 
     this.handleClickAddProfile = this.handleClickAddProfile.bind(this)
@@ -44,9 +43,7 @@ class Login extends Component {
     this.handleGoBack = this.handleGoBack.bind(this)
     this.handleOpenSignup = this.handleOpenSignup.bind(this)
     this.handleOpenSync = this.handleOpenSync.bind(this)
-    this.handleCloseSync = this.handleCloseSync.bind(this)
     this.handleCloseSyncUrl = this.handleCloseSyncUrl.bind(this)
-    this.handleSync = this.handleSync.bind(this)
   }
 
   async componentDidMount () {
@@ -103,10 +100,6 @@ class Login extends Component {
     this.setState({ sync: true, addProfile: false })
   }
 
-  handleCloseSync () {
-    this.setState({ link: null })
-  }
-
   handleClickNewProfile () {
     this.setState({ signup: true })
   }
@@ -161,10 +154,6 @@ class Login extends Component {
     this.setState({ addProfile: true })
   }
 
-  handleSync (link) {
-    this.setState({ link, sync: false })
-  }
-
   renderQRCodeModal () {
     if (this.props.currentAppRequest && remoteWebRTCEnabled) {
       return (
@@ -176,8 +165,8 @@ class Login extends Component {
   }
 
   renderUsersSelection () {
-    const { users, history, t } = this.props
-    const { signup, sync, syncing, qrcodeModal, addProfile, link } = this.state
+    const { users, t } = this.props
+    const { signup, sync, syncing, qrcodeModal, addProfile } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -197,8 +186,7 @@ class Login extends Component {
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
         {syncing && <SyncDevice onClose={this.handleClose} />}
         {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
-        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onSync={this.handleSync} />}
-        {link !== null && <Sync link={link} history={history} onClose={this.handleCloseSync} />}
+        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
       </div>
     )
   }
