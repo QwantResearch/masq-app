@@ -47,7 +47,8 @@ Typography.propTypes = {
     'label-nav',
     'footer',
     'textFieldButton',
-    'avatarUsername'
+    'avatarUsername',
+    'sync-profile-landing'
   ]).isRequired,
   align: PropTypes.string,
   line: PropTypes.bool

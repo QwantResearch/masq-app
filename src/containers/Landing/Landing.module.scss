@@ -15,7 +15,6 @@
   .section1 {
     padding: 68px 20px 0 20px;
     min-height: 660px;
-    // background-color: $color-dark-blue-100;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom center;
@@ -55,7 +54,11 @@
 
     .accountBtn {
       display: flex;
-      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      > :first-child {
+        margin-bottom: 26px;
+      }
     }
   }
 

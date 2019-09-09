@@ -2,12 +2,18 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Button, Modal, Typography, Space, TextField } from '../../components'
+import { Sync } from '../../containers'
 
 import styles from './SyncUrl.module.scss'
 
-const SyncUrl = ({ onClose, onSync }) => {
+const SyncUrl = ({ onClose }) => {
   const { t } = useTranslation()
   const [url, setUrl] = useState('')
+  const [syncing, setSyncing] = useState(false)
+
+  if (syncing) {
+    return <Sync link={url} onClose={onClose} />
+  }
 
   return (
     <Modal width={400} padding={40} onClose={onClose}>
@@ -27,7 +33,7 @@ const SyncUrl = ({ onClose, onSync }) => {
           <Space size={32} />
           <div className={styles.buttons}>
             <Button color='neutral' width={185} onClick={onClose}>{t('Cancel')}</Button>
-            <Button width={185} onClick={() => onSync(url)}>{t('Synchronize')}</Button>
+            <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
           </div>
         </div>
       </div>
@@ -36,8 +42,7 @@ const SyncUrl = ({ onClose, onSync }) => {
 }
 
 SyncUrl.propTypes = {
-  onClose: PropTypes.func,
-  onSync: PropTypes.func.isRequired
+  onClose: PropTypes.func
 }
 
 export default SyncUrl
