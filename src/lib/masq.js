@@ -11,6 +11,7 @@ const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey
 const { dbReady, createPromisifiedHyperDB, put, get, list, del } = common.utils
 
 const { MasqError, checkObject } = common.errors
+const MasqMessages = common.messages.UserAppLogin
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
@@ -461,7 +462,7 @@ class Masq {
   }
 
   async sendAuthorized (peer, userAppDbId, userAppDEK, username, profileImage, userAppNonce) {
-    const data = { msg: 'authorized', userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const data = { msg: MasqMessages.AUTHORIZED, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
   }
@@ -470,11 +471,11 @@ class Masq {
     return new Promise((resolve, reject) => {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
-        if (json.msg === 'connectionEstablished') {
+        if (json.msg === MasqMessages.CONNECTION_ESTABLISHED) {
           this.setState(STATES.LOGGED)
           await this._closeUserAppConnection()
           resolve({ isConnected: true })
-        } else if (json.msg === 'registerUserApp') {
+        } else if (json.msg === MasqMessages.REGISTER_USER_APP) {
           const { name, description, imageURL } = json
           this.app = { name, description, imageURL }
           this.setState(STATES.USERAPP_INFO_RECEIVED)
@@ -489,7 +490,7 @@ class Masq {
 
   async sendNotAuthorized (peer) {
     this.setState(STATES.REGISTER_NEEDED)
-    const data = { msg: 'notAuthorized' }
+    const data = { msg: MasqMessages.NOT_AUTHORIZED }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
   }
@@ -499,7 +500,7 @@ class Masq {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
-        if (json.msg === 'registerUserApp') {
+        if (json.msg === MasqMessages.REGISTER_USER_APP) {
           const { name, description, imageURL } = json
           this.app = { name, description, imageURL }
           this.setState(STATES.USERAPP_INFO_RECEIVED)
@@ -532,7 +533,7 @@ class Masq {
 
   async sendAccessRefused (peer) {
     this.setState(STATES.USER_REFUSED)
-    const data = { msg: 'masqAccessRefused' }
+    const data = { msg: MasqMessages.MASQ_ACCESS_REFUSED }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
   }
@@ -565,7 +566,7 @@ class Masq {
     const profileImage = privateProfile.image
     const userAppNonce = appNonce
 
-    const data = { msg: 'masqAccessGranted', key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const data = { msg: MasqMessages.MASQ_ACCESS_GRANTED, key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
     await this.receiveRequestWriteAccess(peer, dbName)
@@ -576,7 +577,7 @@ class Masq {
       peer.once('data', async (data) => {
         const json = await decrypt(this.key, JSON.parse(data), 'base64')
 
-        if (json.msg === 'requestWriteAccess') {
+        if (json.msg === MasqMessages.REQUEST_WRITE_ACCESS) {
           this.setState(STATES.REQUEST_WRITE_ACCESS_MATERIAL)
           try {
             await this._grantWriteAccess(peer, json, dbName)
@@ -601,7 +602,7 @@ class Masq {
       throw new MasqError(MasqError.AUTHORIZE_DB_KEY_FAILED)
     }
     this.setState(STATES.WRITE_ACCESS_PROVIDED)
-    const data = { msg: 'writeAccessGranted' }
+    const data = { msg: MasqMessages.WRITE_ACCESS_GRANTED }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
   }
