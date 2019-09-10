@@ -59,7 +59,7 @@ class Devices extends React.Component {
                 minHeight={120}
                 title={device.name}
                 color={styles.colorGreen}
-                description={device.current ? 'This device' : ''}
+                description={device.current ? t('This device') : ''}
               />
             </div>
           ))}

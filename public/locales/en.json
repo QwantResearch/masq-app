@@ -101,7 +101,6 @@
   "Copy the following link and paste it in the browser you want to use:": "Copy the following link and paste it in the browser you want to use:",
   "Link Copied !": "Link Copied !",
   "Connection failure, please retry.": "Connection failure, please retry.",
-  "on": "on",
   "This device": "This device",
   "You have refused the access of the application": "You have refused the access of the application",
   "to your Masq storage.": "to your Masq storage.",
@@ -126,5 +125,6 @@
   "Synchronize a profile": "Synchronize a profile",
   "Copy the link displayed on your initial device, then paste it in the field \"link to existing profile\" on this device.": "Copy the link displayed on your initial device, then paste it in the field \"link to existing profile\" on this device.",
   "Link to existing profile": "Link to existing profile",
-  "Synchronize": "Synchronize"
+  "Synchronize": "Synchronize",
+  "Already got a profile ? SYNCHRONIZE IT": "Already got a profile ? SYNCHRONIZE IT"
 }
