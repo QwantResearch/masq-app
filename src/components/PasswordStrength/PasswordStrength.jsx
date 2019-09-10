@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
 import MediaQuery from 'react-responsive'
 import { useTranslation } from 'react-i18next'
 import styles from './PasswordStrength.module.scss'
 import { Shield, Lock, Unlock, CheckCircle, Info } from 'react-feather'
+import { useOutsideClick } from '../../hooks'
 const { getPasswordInfo, getForce } = require('../../lib/validators')
 const NonChecked = () => (
   <div className={styles.Oval} />
@@ -36,25 +37,27 @@ InfoMessage.propTypes = {
 }
 
 const InfoButton = () => {
-  const [visible, setVisible] = useState(false)
-  const handleClick = () => {
-    setVisible(!visible)
-  }
+  const [isVisible, setVisible] = useState(false)
+  const wrapperRef = useRef(null)
+  const isOutside = useOutsideClick(wrapperRef)
 
-  const handleMouseLeave = () => {
+  if (isOutside && isVisible) {
     setVisible(false)
   }
 
   return (
     <div className={styles.InfoIcon}>
-      <Info onMouseLeave={() => handleMouseLeave()} onClick={() => handleClick()} width={14} height={14} color='#353c52' />
-      <MediaQuery maxWidth={700}>
-        {visible && <InfoMessage top={16} left={-20} />}
-      </MediaQuery>
-      <MediaQuery minWidth={701}>
-        {visible && <InfoMessage top={16} left={15} />}
-      </MediaQuery>
-
+      <Info onClick={() => setVisible(true)} width={14} height={14} color='#353c52' />
+      {isVisible && (
+        <div ref={wrapperRef}>
+          <MediaQuery maxWidth={700}>
+            <InfoMessage top={16} left={-20} />
+          </MediaQuery>
+          <MediaQuery minWidth={701}>
+            <InfoMessage top={16} left={15} />
+          </MediaQuery>
+        </div>
+      )}
     </div>
   )
 }
