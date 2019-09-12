@@ -32,7 +32,7 @@ const SyncUrl = ({ onClose }) => {
           />
           <Space size={32} />
           <div className={styles.buttons}>
-            <Button color='neutral' width={185} onClick={onClose}>{t('Cancel')}</Button>
+            <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
             <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
           </div>
         </div>
