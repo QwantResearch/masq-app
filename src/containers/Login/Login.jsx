@@ -72,10 +72,14 @@ class Login extends Component {
       this.props.history.push('/apps')
     }
 
-    if (!this.props.users.length && !prevState.signup && currentAppRequest) {
-      this.setState({ signup: true }) // eslint-disable-line
-    } else if (this.props.users.length && prevState.signup) {
-      this.setState({ signup: false }) // eslint-disable-line
+    if (!this.props.users.length &&
+        !prevState.addProfile &&
+        currentAppRequest &&
+        !prevState.signup &&
+        !prevState.sync) {
+      this.setState({ addProfile: true }) // eslint-disable-line
+    } else if (this.props.users.length && prevState.addProfile) {
+      this.setState({ addProfile: false }) // eslint-disable-line
     }
   }
 
@@ -234,7 +238,7 @@ class Login extends Component {
 
   render () {
     const { users, currentAppRequest } = this.props
-    const { selectedUser, signup } = this.state
+    const { selectedUser, signup, addProfile, sync } = this.state
 
     const children = () => {
       if (users.length === 0) {
@@ -250,7 +254,9 @@ class Login extends Component {
       return (
         <div>
           {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-          <Landing onClick={this.handleClickNewProfile}>
+          {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
+          {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
+          <Landing onClick={this.handleClickAddProfile}>
             {children()}
           </Landing>
         </div>
