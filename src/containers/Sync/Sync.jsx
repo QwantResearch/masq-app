@@ -34,7 +34,6 @@ const Sync = ({ link, onClose, fetchUsers }) => {
         await sp.init(channel, Buffer.from(key, 'base64'))
         await sp.joinSecureChannel()
         await sp.pullProfile()
-        await fetchUsers()
         setSyncStep('finished')
       } catch (e) {
         if (e.message === 'alreadySynced') {
@@ -45,6 +44,8 @@ const Sync = ({ link, onClose, fetchUsers }) => {
     }
 
     startSync()
+
+    return () => fetchUsers
   }, [])
 
   return <SyncDevice step={syncStep} onClick={onClose} message={message} />
