@@ -19,22 +19,20 @@ const SyncUrl = ({ onClose }) => {
     <Modal width={400} padding={40} onClose={onClose}>
       <div className={styles.SyncUrl}>
         <Typography type='title-modal'>{t('Synchronize a profile')}</Typography>
-        <div className={styles.content}>
-          <Space size={32} />
-          <p className={styles.text}>
-            {t('Copy the link displayed on your initial device, then paste it in the field "link to existing profile" on this device.')}
-          </p>
-          <Space size={32} />
-          <TextField
-            className={styles.textField}
-            label={t('Link to existing profile')}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          <Space size={32} />
-          <div className={styles.buttons}>
-            <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
-            <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
-          </div>
+        <Space size={32} />
+        <p className={styles.text}>
+          {t('Copy the link displayed on your initial device, then paste it in the field "link to existing profile" on this device.')}
+        </p>
+        <Space size={32} />
+        <TextField
+          className={styles.textField}
+          label={t('Link to existing profile')}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <Space size={32} />
+        <div className={styles.buttons}>
+          <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
+          <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
         </div>
       </div>
     </Modal>
