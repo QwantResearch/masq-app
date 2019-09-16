@@ -45,7 +45,7 @@ const Sync = ({ link, onClose, fetchUsers }) => {
 
     startSync()
 
-    return () => fetchUsers
+    return () => fetchUsers()
   }, [])
 
   return <SyncDevice step={syncStep} onClick={onClose} message={message} />
