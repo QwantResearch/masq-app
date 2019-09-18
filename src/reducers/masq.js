@@ -1,5 +1,5 @@
 const masq = (state = {
-  syncStep: 0,
+  syncStep: '',
   users: [],
   apps: [],
   devices: [],
