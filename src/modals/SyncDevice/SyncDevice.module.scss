@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .SyncDevice {
   display: flex;
@@ -7,15 +8,19 @@
   height: 100%;
   width: 100%;
 
-  input {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.7px;
-    text-align: center;
-    color: $color-blue;
-    margin-bottom: 48px;
-    outline: none;
-    border: 0;
+  // input {
+    // width: 100%;
+  //   font-size: 14px;
+  //   font-weight: 600;
+  //   letter-spacing: 0.7px;
+  //   text-align: center;
+  //   color: $color-blue;
+  //   margin-bottom: 48px;
+  //   outline: none;
+  //   border: 0;
+  // }
+  .textField {
+    width: 100%;
   }
 
   .loader {
@@ -35,4 +40,19 @@
     }
   }
 
+  .buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $mobile-width) {
+      display: flex;
+      flex-direction: column-reverse;
+      >:first-child {
+        margin-top: 12px;
+        width: 100%;
+      }
+    }
+  }
 }

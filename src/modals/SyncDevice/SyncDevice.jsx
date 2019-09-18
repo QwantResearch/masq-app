@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { RefreshCw, CheckCircle, XCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 
-import { Modal, Button, Space, Typography } from '../../components'
+import { Modal, Button, Space, Typography, Avatar, TextField } from '../../components'
 
 import styles from './SyncDevice.module.scss'
 
@@ -31,6 +31,42 @@ const SyncDeviceModalSyncing = ({ t, onClick, message }) => (
     <Space size={32} />
   </SyncDeviceModal>
 )
+
+const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error, onKeyUp }) => {
+  const [password, setPassword] = useState('')
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
+  // TODO: handle enter key
+
+  return (
+    <SyncDeviceModal>
+      <Typography type='title-modal'>{t('Saisir votre clé secrète pour finaliser la synchronisation')}</Typography>
+      <Space size={32} />
+      <Avatar size={90} username={username} image={avatar} />
+      <Space size={12} />
+      <Typography type='username' color='#353c52'>{username}</Typography>
+      <Space size={32} />
+      <TextField
+        error={error}
+        label={error ? t('Wrong password, please try again') : ''}
+        className={styles.textField}
+        height={46}
+        password
+        type='password'
+        defaultValue={password}
+        onChange={handlePassword}
+        onKeyUp={onKeyUp}
+      />
+      <Space size={48} />
+      <div className={styles.buttons}>
+        <Button width='185px' color='neutral' onClick={onClose}>{t('cancel')}</Button>
+        <Button width='185px' onClick={() => onClick(password)}>{t('Finish')}</Button>
+      </div>
+    </SyncDeviceModal>
+  )
+}
 
 const SyncDeviceModalFinished = ({ t, onClick, message }) => (
   <SyncDeviceModal>
@@ -62,12 +98,14 @@ const SyncDeviceModalError = ({ t, onClick, message }) => (
   </SyncDeviceModal>
 )
 
-const SyncDevice = ({ step, onClick, message }) => {
+const SyncDevice = ({ step, onClick, onClose, message, profile, error, onKeyUp }) => {
   const { t } = useTranslation()
 
   switch (step) {
     case 'syncing':
       return <SyncDeviceModalSyncing t={t} onClick={onClick} message={message} />
+    case 'password':
+      return <SyncDeviceModalPassword t={t} error={error} onClose={onClose} message={message} avatar={profile.image} username={profile.username} onClick={onClick} onKeyUp={onKeyUp} />
     case 'finished':
       return <SyncDeviceModalFinished t={t} onClick={onClick} message={message} />
     default:
@@ -83,6 +121,16 @@ SyncDeviceModalError.propTypes = {
   message: PropTypes.string
 }
 
+SyncDeviceModalPassword.propTypes = {
+  t: PropTypes.func,
+  onClick: PropTypes.func,
+  avatar: PropTypes.string,
+  username: PropTypes.string,
+  onClose: PropTypes.func,
+  error: PropTypes.bool,
+  onKeyUp: PropTypes.func
+}
+
 SyncDeviceModal.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -91,9 +139,13 @@ SyncDeviceModal.propTypes = {
 }
 
 SyncDevice.propTypes = {
-  step: PropTypes.oneOf(['syncing', 'finished', 'error']).isRequired,
+  step: PropTypes.oneOf(['syncing', 'password', 'finished', 'error']).isRequired,
   message: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onClose: PropTypes.func,
+  profile: PropTypes.object,
+  error: PropTypes.bool,
+  onKeyUp: PropTypes.func
 }
 
 export default SyncDevice

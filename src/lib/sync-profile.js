@@ -123,9 +123,8 @@ class SyncProfile {
 
     // this should block until the profile value is replicated
     await this.db.getAsync('/profile')
-    // We have now the profile synced, stop replication.
     // The user can now log in to start further replication of the profile and apps
-    this.masq._stopAllReplicates()
+    // this.masq._stopAllReplicates()
   }
 
   async pushProfile (db, id, publicProfile) {

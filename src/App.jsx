@@ -139,8 +139,12 @@ class App extends Component {
           <Route
             exact
             path='/sync/:hash'
-            component={() =>
-              <Sync link={window.location.href} onClose={() => history.push('/')} />}
+            component={() => (
+              <Sync
+                link={window.location.href}
+                onClose={() => currentUser ? history.push('/apps') : history.push('/')}
+              />
+            )}
           />
           <Route exact path='/link/:hash' component={Login} />
           <Route exact path='/' component={Login} />
