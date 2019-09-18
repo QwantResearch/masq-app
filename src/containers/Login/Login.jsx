@@ -10,7 +10,7 @@ import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space } from '../../components'
 import { Landing } from '../../containers'
-import { Signup, SyncDevice, QRCodeModal, AddProfile, SyncUrl } from '../../modals'
+import { Signup, QRCodeModal, AddProfile, SyncUrl } from '../../modals'
 
 import styles from './Login.module.scss'
 
@@ -170,7 +170,7 @@ class Login extends Component {
 
   renderUsersSelection () {
     const { users, t } = this.props
-    const { signup, sync, syncing, qrcodeModal, addProfile } = this.state
+    const { signup, sync, qrcodeModal, addProfile } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -188,7 +188,6 @@ class Login extends Component {
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickAddProfile} />
         </div>
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-        {syncing && <SyncDevice onClose={this.handleClose} />}
         {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
         {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
       </div>
