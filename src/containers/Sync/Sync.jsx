@@ -15,8 +15,10 @@ class Sync extends Component {
       errorPass: false,
       message: null
     }
+    this.sp = null
     this.startSync = this.startSync.bind(this)
     this.authenticate = this.authenticate.bind(this)
+    this.handleClose = this.handleClose.bind(this)
     this.handlePasswordKeyUp = this.handlePasswordKeyUp.bind(this)
   }
 
@@ -39,14 +41,14 @@ class Sync extends Component {
   async startSync (hash) {
     const { t } = this.props
     const decoded = Buffer.from(hash, 'base64')
-    const sp = new SyncProfile()
+    this.sp = new SyncProfile()
 
     try {
       const [msg, channel, key] = JSON.parse(decoded)
       if (msg !== 'pullProfile') throw new Error('Unexpected message')
-      await sp.init(channel, Buffer.from(key, 'base64'))
-      await sp.joinSecureChannel()
-      await sp.pullProfile()
+      await this.sp.init(channel, Buffer.from(key, 'base64'))
+      await this.sp.joinSecureChannel()
+      await this.sp.pullProfile()
       const masq = getMasqInstance()
       const profiles = await masq.getProfiles()
       const profile = profiles[profiles.length - 1]
@@ -54,6 +56,7 @@ class Sync extends Component {
       this.props.setSyncStep('password')
     } catch (e) {
       this.setState({ message: 'error' })
+      this.props.setSyncStep('error')
       if (e.message === 'alreadySynced') {
         this.setState({ message: t('This profile is already synchronized on this device.') })
       }
@@ -62,7 +65,9 @@ class Sync extends Component {
 
   async authenticate (pass) {
     try {
+      this.props.setSyncStep('syncing')
       await this.props.signin(this.state.profile, pass)
+      await this.sp.requestWriteAccess()
       this.props.setSyncStep('finished')
     } catch (e) {
       this.setState({ errorPass: true })
@@ -75,13 +80,22 @@ class Sync extends Component {
     }
   }
 
+  async handleClose () {
+    const { profile } = this.state
+    const dbName = `profile-${profile.id}`
+    window.indexedDB.deleteDatabase(dbName)
+    window.localStorage.removeItem(dbName)
+    await this.sp.abort()
+    this.props.onClose()
+  }
+
   render () {
     const { message, profile, errorPass } = this.state
-    const { onClose, syncStep } = this.props
+    const { syncStep } = this.props
     if (!syncStep || !syncStep.length) return null
     return syncStep === 'password'
-      ? <SyncDevice step='password' error={errorPass} onClose={onClose} profile={profile} onClick={(pass) => this.authenticate(pass)} onKeyUp={this.handlePasswordKeyUp} />
-      : <SyncDevice step={syncStep} message={message} onClick={onClose} />
+      ? <SyncDevice step='password' error={errorPass} onClose={() => this.handleClose()} profile={profile} onClick={(pass) => this.authenticate(pass)} onKeyUp={this.handlePasswordKeyUp} />
+      : <SyncDevice step={syncStep} message={message} onClick={() => this.handleClose()} />
   }
 }
 

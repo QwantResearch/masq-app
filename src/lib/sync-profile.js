@@ -78,11 +78,9 @@ class SyncProfile {
   }
 
   async pullProfile () {
-    let data
-
     await sendEncryptedJSON({ msg: 'pullProfile' }, this.key, this.peer)
 
-    data = await waitForDataFromPeer(this.peer)
+    const data = await waitForDataFromPeer(this.peer)
     const { msg, id, key, publicProfile } = await decryptJSON(data, this.key)
     debug('pullProfile received:', msg, id, key)
 
@@ -107,7 +105,16 @@ class SyncProfile {
     this.masq._startReplicate(this.db)
     // store public profile
     this.masq._setProfileToLocalStorage(publicProfile)
+  }
 
+  async abort () {
+    const json = {
+      msg: 'abort'
+    }
+    await sendEncryptedJSON(json, this.key, this.peer)
+  }
+
+  async requestWriteAccess () {
     const json = {
       msg: 'requestWriteAccess',
       key: this.db.local.key.toString('hex')
@@ -115,7 +122,7 @@ class SyncProfile {
 
     await sendEncryptedJSON(json, this.key, this.peer)
 
-    data = await waitForDataFromPeer(this.peer)
+    const data = await waitForDataFromPeer(this.peer)
     const { msg: msg2 } = await decryptJSON(data, this.key)
     debug('pullProfile received:', msg2)
 
@@ -137,7 +144,9 @@ class SyncProfile {
     data = await waitForDataFromPeer(this.peer)
     const { msg } = await decryptJSON(data, this.key)
 
-    if (msg !== 'pullProfile') throw new Error('msg not expected' + msg)
+    if (msg !== 'pullProfile') {
+      throw new Error('msg not expected ' + msg)
+    }
 
     const json = {
       msg: 'pushProfile',
@@ -154,10 +163,10 @@ class SyncProfile {
 
     if (msg2 === 'alreadySynced') {
       throw new Error('alreadySynced')
-    }
-
-    if (!key || msg2 !== 'requestWriteAccess') {
-      throw new Error('msg not expected' + msg2)
+    } else if (msg2 === 'abort') {
+      throw new Error('abort')
+    } else if (!key || msg2 !== 'requestWriteAccess') {
+      throw new Error('msg not expected ' + msg2)
     }
 
     await db.authorizeAsync(Buffer.from(key, 'hex'))

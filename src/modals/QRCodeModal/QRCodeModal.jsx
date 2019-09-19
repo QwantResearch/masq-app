@@ -47,7 +47,9 @@ const QRCodeModal = ({ onClose, profile }) => {
         await sp.pushProfile(db, profile.id, publicProfile)
         setSyncStep('finished')
       } catch (e) {
-        if (e.message === 'alreadySynced') {
+        if (e.message === 'abort') {
+          setMessage(t('The sync process has been aborted, please try again.'))
+        } else if (e.message === 'alreadySynced') {
           setMessage(t('This profile is already synchronized on this device.'))
         }
         setSyncStep('error')
