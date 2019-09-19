@@ -87,6 +87,9 @@ class Sync extends Component {
     window.localStorage.removeItem(dbName)
     await this.sp.abort()
     this.props.onClose()
+    // FIXME: Workaround to avoir a bug where Chrome blocks
+    // when trying to find a previously deleted IndexedDB
+    window.location.reload()
   }
 
   render () {
