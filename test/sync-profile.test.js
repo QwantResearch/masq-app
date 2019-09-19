@@ -106,7 +106,7 @@ describe('sync-profile', function () {
 
     await Promise.all([
       sp2.pushProfile(masq.profileDB, idCopy, publicProfile),
-      sp1.pullProfile('pass')
+      sp1.pullProfile('pass').then(() => sp1.requestWriteAccess())
     ])
 
     expect(window.localStorage).to.have.lengthOf(2)
