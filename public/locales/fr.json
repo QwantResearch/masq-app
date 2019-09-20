@@ -126,5 +126,7 @@
   "Copy the link displayed on your initial device, then paste it in the field \"link to existing profile\" on this device.": "Copiez le lien affiché sur votre appareil initial, puis collez le dans le champ « lien du profil existant » sur cet appareil.",
   "Link to existing profile": "Lien du profil existant",
   "Synchronize": "Synchroniser",
-  "Already got a profile ? SYNCHRONIZE IT": "Déjà un profil ? SYNCHRONISEZ-LE"
+  "Already got a profile ? SYNCHRONIZE IT": "Déjà un profil ? SYNCHRONISEZ-LE",
+  "The sync process has been aborted, please try again.": "La synchronisation à été interrompue, merci de réessayer.",
+  "Please enter you secret key to finish the synchronization process": "Saisir votre clé secrète pour finaliser la synchronisation"
 }
