@@ -42,7 +42,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error,
 
   return (
     <SyncDeviceModal>
-      <Typography type='title-modal'>{t('Saisir votre clé secrète pour finaliser la synchronisation')}</Typography>
+      <Typography type='title-modal'>{t('Please enter you secret key to finish the synchronization process')}</Typography>
       <Space size={32} />
       <Avatar size={90} username={username} image={avatar} />
       <Space size={12} />
