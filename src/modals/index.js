@@ -11,3 +11,4 @@ export { default as UnsupportedBrowser } from './UnsupportedBrowser/UnsupportedB
 export { default as AddProfile } from './AddProfile/AddProfile'
 export { default as SyncMethod } from './SyncMethod/SyncMethod'
 export { default as SyncUrl } from './SyncUrl/SyncUrl'
+export { default as Scanner } from './Scanner/Scanner'
