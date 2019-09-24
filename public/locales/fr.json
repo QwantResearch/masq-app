@@ -128,5 +128,7 @@
   "Synchronize": "Synchroniser",
   "Already got a profile ? SYNCHRONIZE IT": "Déjà un profil ? SYNCHRONISEZ-LE",
   "The sync process has been aborted, please try again.": "La synchronisation à été interrompue, merci de réessayer.",
-  "Please enter you secret key to finish the synchronization process": "Saisir votre clé secrète pour finaliser la synchronisation"
+  "Please enter you secret key to finish the synchronization process": "Saisir votre clé secrète pour finaliser la synchronisation",
+  "Scan QR code": "Scanner un QR code",
+  "Position this phone in front of your initial device to scan the QR code": "Placez ce téléphone face à votre appareil initial pour scanner le QR code"
 }
