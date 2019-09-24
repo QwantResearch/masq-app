@@ -23,10 +23,10 @@ class Scanner extends Component {
     return (
       <Modal onClose={onClose} padding={0} width={350}>
         <Space size={32} />
-        <Typography type='title-modal'>Scan QR code</Typography>
+        <Typography type='title-modal'>{t('Scan QR code')}</Typography>
         <Space size={32} />
         <div style={{ marginLeft: 16, marginRight: 16 }}>
-          <Typography type='paragraph-modal' align='center'>Placez ce téléphone face à votre appareil initial pour scanner le QR code</Typography>
+          <Typography type='paragraph-modal' align='center'>{t('Position this phone in front of your initial device to scan the QR code')}</Typography>
         </div>
         <Space size={32} />
         <div className={styles.Scanner}>

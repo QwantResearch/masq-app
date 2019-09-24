@@ -141,5 +141,7 @@
   "Copy the link displayed on your original device and paste it into this mobile:": "Copy the link displayed on your original device and paste it into this mobile:",
   "Paste the profile link": "Paste the profile link",
   "The sync process has been aborted, please try again.": "The sync process has been aborted, please try again.",
-  "Please enter you secret key to finish the synchronization process": "Please enter you secret key to finish the synchronization process"
+  "Please enter you secret key to finish the synchronization process": "Please enter you secret key to finish the synchronization process",
+  "Scan QR code": "Scan QR code",
+  "Position this phone in front of your initial device to scan the QR code": "Position this phone in front of your initial device to scan the QR code"
 }
