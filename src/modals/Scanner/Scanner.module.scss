@@ -1,8 +1,57 @@
 .Scanner {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .crossHairTop {
+    width: 1px;
+    height: 40px;
+    background-color: #c8cbd3;
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    z-index: 2;
+  }
+
+  .crossHairRight {
+    width: 40px;
+    height: 1px;
+    background-color: #c8cbd3;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    z-index: 2;
+  }
+
+  .crossHairBottom {
+    width: 1px;
+    height: 40px;
+    background-color: #c8cbd3;
+    position: absolute;
+    left: 50%;
+    bottom: 40px;
+    z-index: 2;
+  }
+
+  .crossHairLeft {
+    width: 40px;
+    height: 1px;
+    background-color: #c8cbd3;
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    z-index: 2;
+  }
+
   .reader {
     div {
       box-shadow: #c8cbd3 0px 0px 0px 1px inset !important;
       border: 60px solid rgba(27, 32, 40, 0.8) !important;
     }
   }
+
+}
+.button {
+  display: block;
+  margin: auto;
 }
