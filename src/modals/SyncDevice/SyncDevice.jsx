@@ -32,13 +32,16 @@ const SyncDeviceModalSyncing = ({ t, onClick, message }) => (
   </SyncDeviceModal>
 )
 
-const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error, onKeyUp }) => {
+const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error }) => {
   const [password, setPassword] = useState('')
   const handlePassword = (e) => {
     setPassword(e.target.value)
   }
-
-  // TODO: handle enter key
+  const handleKeyUp = (e) => {
+    if (e.key === 'Enter') {
+      onClick(password)
+    }
+  }
 
   return (
     <SyncDeviceModal>
@@ -57,7 +60,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error,
         type='password'
         defaultValue={password}
         onChange={handlePassword}
-        onKeyUp={onKeyUp}
+        onKeyUp={handleKeyUp}
       />
       <Space size={48} />
       <div className={styles.buttons}>
@@ -127,8 +130,7 @@ SyncDeviceModalPassword.propTypes = {
   avatar: PropTypes.string,
   username: PropTypes.string,
   onClose: PropTypes.func,
-  error: PropTypes.bool,
-  onKeyUp: PropTypes.func
+  error: PropTypes.bool
 }
 
 SyncDeviceModal.propTypes = {
