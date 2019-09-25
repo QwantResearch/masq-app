@@ -13,13 +13,13 @@ class Sync extends Component {
     this.state = {
       profile: { username: '', image: '' },
       errorPass: false,
-      message: null
+      message: null,
+      pass: ''
     }
     this.sp = null
     this.startSync = this.startSync.bind(this)
     this.authenticate = this.authenticate.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.handlePasswordKeyUp = this.handlePasswordKeyUp.bind(this)
   }
 
   componentDidMount () {
@@ -64,23 +64,23 @@ class Sync extends Component {
   }
 
   async authenticate (pass) {
+    const { profile } = this.state
+    const { signin, setSyncStep } = this.props
     try {
-      this.props.setSyncStep('syncing')
-      await this.props.signin(this.state.profile, pass)
+      setSyncStep('syncing')
+      await signin(profile, pass)
       await this.sp.requestWriteAccess()
-      this.props.setSyncStep('finished')
+      setSyncStep('finished')
     } catch (e) {
       this.setState({ errorPass: true })
     }
   }
 
-  handlePasswordKeyUp (e) {
-    if (e.key === 'Enter') {
-      this.authenticate(this.state.pass)
-    }
-  }
-
   async handleClose () {
+    if (this.props.syncStep === 'finished') {
+      return this.props.onClose()
+    }
+
     const { profile } = this.state
     const dbName = `profile-${profile.id}`
     window.indexedDB.deleteDatabase(dbName)
@@ -97,7 +97,7 @@ class Sync extends Component {
     const { syncStep } = this.props
     if (!syncStep || !syncStep.length) return null
     return syncStep === 'password'
-      ? <SyncDevice step='password' error={errorPass} onClose={() => this.handleClose()} profile={profile} onClick={(pass) => this.authenticate(pass)} onKeyUp={this.handlePasswordKeyUp} />
+      ? <SyncDevice step='password' error={errorPass} onClose={() => this.handleClose()} profile={profile} onClick={(pass) => this.authenticate(pass)} />
       : <SyncDevice step={syncStep} message={message} onClick={() => this.handleClose()} />
   }
 }
