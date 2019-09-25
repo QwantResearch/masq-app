@@ -67,8 +67,8 @@ class Sync extends Component {
     const { profile } = this.state
     const { signin, setSyncStep } = this.props
     try {
-      setSyncStep('syncing')
       await signin(profile, pass)
+      setSyncStep('syncing')
       await this.sp.requestWriteAccess()
       setSyncStep('finished')
     } catch (e) {
