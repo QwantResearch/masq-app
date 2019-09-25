@@ -8,6 +8,15 @@ import { Modal, Typography, Space, Button } from '../../components'
 import styles from './Scanner.module.scss'
 
 class Scanner extends Component {
+  async componentDidMount () {
+    try {
+      await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    } catch (e) {
+      // Camera can't be opened
+      this.props.onClose()
+    }
+  }
+
   handleScan (url) {
     if (url) {
       window.open(url)

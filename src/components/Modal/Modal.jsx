@@ -49,7 +49,10 @@ const ResponsiveModal = ({ onClose, width, children, padding }) => {
 Modal.propTypes =
 ResponsiveModal.propTypes = {
   onClose: PropTypes.func,
-  children: PropTypes.object,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object
+  ]),
   width: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
