@@ -10,7 +10,7 @@ import * as common from 'masq-common'
 import { Login, Applications, Devices, Settings, Navbar, Loading, Sync } from './containers'
 import { Notification } from './components'
 import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
-import { AuthApp, PersistentStorageRequest, UnsupportedBrowser, Scanner } from './modals'
+import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
 import { isBrowserSupported } from './lib/browser'
 
 import styles from './App.module.scss'
@@ -162,9 +162,6 @@ class App extends Component {
               )}
             />
           ))}
-
-          <Scanner />
-
           {loading && pathname !== '/loading' && <Redirect to='/loading' />}
           {notification && <Notification {...notification} />}
           {currentUser && currentAppRequest &&
