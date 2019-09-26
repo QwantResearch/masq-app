@@ -11,7 +11,7 @@ const AddProfile = ({ onSync, onClose, onSignup }) => {
   return (
     <Modal width={400} padding={40} onClose={onClose}>
       <div className={styles.AddProfile}>
-        <Typography type='title-modal'>{t('Add a new profile')}</Typography>
+        <Typography type='title-modal' align='center'>{t('Add a new profile')}</Typography>
         <div className={styles.content}>
           <Space size={32} />
           <Button width='100%' color='success' onClick={onSignup}>{t('Create a new profile')}</Button>
