@@ -6,7 +6,7 @@ import { HelpCircle } from 'react-feather'
 
 import styles from './SyncMethod.module.scss'
 
-const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose, onSync }) => {
+const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose, onSync, onScanner }) => {
   const { t } = useTranslation()
 
   return (
@@ -17,7 +17,7 @@ const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose,
           <Space size={5} />
           <p className={styles.text}>{t('Hold your device over the QR Code so that it\'s clearly visible within your smartphone\'s screen:')}</p>
           <Space size={30} />
-          <Button width='100%'>{t('Scan the QR code')}</Button>
+          <Button width='100%' onClick={onScanner}>{t('Scan the QR code')}</Button>
           <Space size={25} />
           <div onClick={onOpenOnboardingQrCode} className={styles.onBoardingMessage}>
             <HelpCircle size={14} color='#353c52' />
@@ -51,6 +51,7 @@ const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose,
 SyncMethod.propTypes = {
   onClose: PropTypes.func,
   onSync: PropTypes.func,
+  onScanner: PropTypes.func,
   onOpenOnboardingCopyLink: PropTypes.func,
   onOpenOnboardingQrCode: PropTypes.func
 }

@@ -11,7 +11,7 @@ import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
 import { Avatar, Button, TextField, Typography, Space, OnBoardingQrCode, OnBoardingCopyLink } from '../../components'
 import { Landing } from '../../containers'
-import { Signup, QRCodeModal, AddProfile, SyncUrl, SyncMethod } from '../../modals'
+import { Signup, QRCodeModal, AddProfile, SyncUrl, SyncMethod, Scanner } from '../../modals'
 import MediaQuery from 'react-responsive'
 
 import styles from './Login.module.scss'
@@ -26,6 +26,7 @@ class Login extends Component {
       isLoggedIn: false,
       signup: false,
       sync: false,
+      scanner: false,
       password: '',
       qrcodeModal: false,
       addProfile: false,
@@ -50,6 +51,8 @@ class Login extends Component {
     this.handleOpenSignup = this.handleOpenSignup.bind(this)
     this.handleOpenSync = this.handleOpenSync.bind(this)
     this.handleCloseSyncUrl = this.handleCloseSyncUrl.bind(this)
+    this.handleOpenScanner = this.handleOpenScanner.bind(this)
+    this.handleCloseScanner = this.handleCloseScanner.bind(this)
     this.handleOpenSyncMethod = this.handleOpenSyncMethod.bind(this)
     this.handleCloseSyncMethod = this.handleCloseSyncMethod.bind(this)
     this.handleCloseOnboardingQrCode = this.handleCloseOnboardingQrCode.bind(this)
@@ -115,6 +118,7 @@ class Login extends Component {
   }
 
   handleOpenSync () {
+    console.log('handleOpenSync')
     this.setState({ sync: true, addProfile: false })
   }
 
@@ -214,9 +218,28 @@ class Login extends Component {
     }
   }
 
+  handleOpenScanner () {
+    console.log('handleOpenScanner')
+    this.setState({ scanner: true })
+  }
+
+  handleCloseScanner () {
+    this.setState({ scanner: false })
+  }
+
   renderUsersSelection () {
     const { users, t } = this.props
-    const { signup, sync, qrcodeModal, addProfile, showOnboardingCopyLink, showOnboardingCopyLinkFromSyncProfile, showOnboardingQrCode, syncMethod } = this.state
+    const {
+      signup,
+      sync,
+      qrcodeModal,
+      addProfile,
+      showOnboardingCopyLink,
+      showOnboardingCopyLinkFromSyncProfile,
+      showOnboardingQrCode,
+      syncMethod,
+      scanner
+    } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -249,6 +272,7 @@ class Login extends Component {
             onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
             onClose={this.handleCloseSyncMethod}
             onSync={this.handleOpenSync}
+            onScanner={this.handleOpenScanner}
           />)}
         {showOnboardingCopyLink && (
           <OnBoardingCopyLink
@@ -263,6 +287,7 @@ class Login extends Component {
             onClose={this.handleCloseOnboardingQrCode}
           />)}
         {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLinkFromSyncProfile} />}
+        {scanner && <Scanner onClose={this.handleCloseScanner} />}
       </div>
     )
   }
@@ -310,7 +335,16 @@ class Login extends Component {
 
   render () {
     const { users, currentAppRequest } = this.props
-    const { selectedUser, signup, addProfile, sync, showOnboardingCopyLinkFromSyncProfile, syncMethod, showOnboardingCopyLink, showOnboardingQrCode } = this.state
+    const {
+      selectedUser,
+      signup,
+      addProfile,
+      sync,
+      showOnboardingCopyLinkFromSyncProfile,
+      syncMethod,
+      showOnboardingCopyLink,
+      showOnboardingQrCode
+    } = this.state
 
     const children = () => {
       if (users.length === 0) {
