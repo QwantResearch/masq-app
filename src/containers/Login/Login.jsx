@@ -4,13 +4,15 @@ import PropTypes from 'prop-types'
 import { ChevronLeft } from 'react-feather'
 
 import { withTranslation } from 'react-i18next'
+
 import { signin, signup, fetchUsers, setCurrentAppRequest } from '../../actions'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
-import { Avatar, Button, TextField, Typography, Space } from '../../components'
+import { Avatar, Button, TextField, Typography, Space, OnBoardingQrCode, OnBoardingCopyLink } from '../../components'
 import { Landing } from '../../containers'
-import { Signup, QRCodeModal, AddProfile, SyncUrl } from '../../modals'
+import { Signup, QRCodeModal, AddProfile, SyncUrl, SyncMethod } from '../../modals'
+import MediaQuery from 'react-responsive'
 
 import styles from './Login.module.scss'
 
@@ -26,7 +28,11 @@ class Login extends Component {
       sync: false,
       password: '',
       qrcodeModal: false,
-      addProfile: false
+      addProfile: false,
+      syncMethod: false,
+      showOnboardingQrCode: false,
+      showOnboardingCopyLink: false,
+      showOnboardingCopyLinkFromSyncProfile: false
     }
 
     this.handleClickAddProfile = this.handleClickAddProfile.bind(this)
@@ -44,6 +50,14 @@ class Login extends Component {
     this.handleOpenSignup = this.handleOpenSignup.bind(this)
     this.handleOpenSync = this.handleOpenSync.bind(this)
     this.handleCloseSyncUrl = this.handleCloseSyncUrl.bind(this)
+    this.handleOpenSyncMethod = this.handleOpenSyncMethod.bind(this)
+    this.handleCloseSyncMethod = this.handleCloseSyncMethod.bind(this)
+    this.handleCloseOnboardingQrCode = this.handleCloseOnboardingQrCode.bind(this)
+    this.handleOpenOnboardingQrCode = this.handleOpenOnboardingQrCode.bind(this)
+    this.handleCloseOnboardingCopyLink = this.handleCloseOnboardingCopyLink.bind(this)
+    this.handleOpenOnboardingCopyLink = this.handleOpenOnboardingCopyLink.bind(this)
+    this.handleOpenOnboardingCopyLinkFromSyncProfile = this.handleOpenOnboardingCopyLinkFromSyncProfile.bind(this)
+    this.handleCloseOnboardingCopyLinkFromSyncProfile = this.handleCloseOnboardingCopyLinkFromSyncProfile.bind(this)
   }
 
   async componentDidMount () {
@@ -158,6 +172,38 @@ class Login extends Component {
     this.setState({ addProfile: true })
   }
 
+  handleOpenOnboardingQrCode () {
+    this.setState({ showOnboardingQrCode: true })
+  }
+
+  handleOpenOnboardingCopyLink () {
+    this.setState({ showOnboardingCopyLink: true })
+  }
+
+  handleOpenOnboardingCopyLinkFromSyncProfile () {
+    this.setState({ showOnboardingCopyLinkFromSyncProfile: true, sync: false })
+  }
+
+  handleCloseOnboardingQrCode () {
+    this.setState({ showOnboardingQrCode: false })
+  }
+
+  handleCloseOnboardingCopyLink () {
+    this.setState({ showOnboardingCopyLink: false })
+  }
+
+  handleCloseOnboardingCopyLinkFromSyncProfile () {
+    this.setState({ showOnboardingCopyLinkFromSyncProfile: false, sync: true })
+  }
+
+  handleOpenSyncMethod () {
+    this.setState({ syncMethod: true })
+  }
+
+  handleCloseSyncMethod () {
+    this.setState({ syncMethod: false })
+  }
+
   renderQRCodeModal () {
     if (this.props.currentAppRequest && remoteWebRTCEnabled) {
       return (
@@ -170,7 +216,7 @@ class Login extends Component {
 
   renderUsersSelection () {
     const { users, t } = this.props
-    const { signup, sync, qrcodeModal, addProfile } = this.state
+    const { signup, sync, qrcodeModal, addProfile, showOnboardingCopyLink, showOnboardingCopyLinkFromSyncProfile, showOnboardingQrCode, syncMethod } = this.state
 
     return (
       <div className={styles.usersSelection}>
@@ -188,8 +234,35 @@ class Login extends Component {
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickAddProfile} />
         </div>
         {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-        {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
-        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
+        {addProfile &&
+          <div>
+            <MediaQuery maxWidth={700}>
+              <AddProfile onSync={this.handleOpenSyncMethod} onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
+            </MediaQuery>
+            <MediaQuery minWidth={701}>
+              <AddProfile onSync={this.handleOpenSync} onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
+            </MediaQuery>
+          </div>}
+        {syncMethod && (
+          <SyncMethod
+            onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLink}
+            onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
+            onClose={this.handleCloseSyncMethod}
+            onSync={this.handleOpenSync}
+          />)}
+        {showOnboardingCopyLink && (
+          <OnBoardingCopyLink
+            onClose={this.handleCloseOnboardingCopyLink}
+          />)}
+        {showOnboardingCopyLinkFromSyncProfile && (
+          <OnBoardingCopyLink
+            onClose={this.handleCloseOnboardingCopyLinkFromSyncProfile}
+          />)}
+        {showOnboardingQrCode && (
+          <OnBoardingQrCode
+            onClose={this.handleCloseOnboardingQrCode}
+          />)}
+        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLinkFromSyncProfile} />}
       </div>
     )
   }
@@ -237,7 +310,7 @@ class Login extends Component {
 
   render () {
     const { users, currentAppRequest } = this.props
-    const { selectedUser, signup, addProfile, sync } = this.state
+    const { selectedUser, signup, addProfile, sync, showOnboardingCopyLinkFromSyncProfile, syncMethod, showOnboardingCopyLink, showOnboardingQrCode } = this.state
 
     const children = () => {
       if (users.length === 0) {
@@ -253,8 +326,35 @@ class Login extends Component {
       return (
         <div>
           {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
-          {addProfile && <AddProfile onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} onSync={this.handleOpenSync} />}
-          {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
+          {addProfile &&
+            <div>
+              <MediaQuery maxWidth={700}>
+                <AddProfile onSync={this.handleOpenSyncMethod} onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
+              </MediaQuery>
+              <MediaQuery minWidth={701}>
+                <AddProfile onSync={this.handleOpenSync} onClose={this.handleCloseAddProfile} onSignup={this.handleOpenSignup} />}
+              </MediaQuery>
+            </div>}
+          {syncMethod && (
+            <SyncMethod
+              onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLink}
+              onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
+              onClose={this.handleCloseSyncMethod}
+              onSync={this.handleOpenSync}
+            />)}
+          {showOnboardingCopyLink && (
+            <OnBoardingCopyLink
+              onClose={this.handleCloseOnboardingCopyLink}
+            />)}
+          {showOnboardingCopyLinkFromSyncProfile && (
+            <OnBoardingCopyLink
+              onClose={this.handleCloseOnboardingCopyLinkFromSyncProfile}
+            />)}
+          {showOnboardingQrCode && (
+            <OnBoardingQrCode
+              onClose={this.handleCloseOnboardingQrCode}
+            />)}
+          {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLinkFromSyncProfile} />}
           <Landing onClick={this.handleClickAddProfile}>
             {children()}
           </Landing>

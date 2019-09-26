@@ -1,0 +1,141 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+.OnBoarding {
+ 
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #6c7694, #353c52);
+    z-index: 2;
+  }
+
+  .onBoarding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: $color-dark-blue-100;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.16);
+    opacity: 1;
+
+    @media (min-width: $mobile-width + 1px) {
+      border-radius: 6px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding-left:56px; 
+    padding-right:56px; 
+    }
+    @media (max-width: $mobile-width) {
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
+
+  .bullets {
+    display: flex;
+    flex-direction: row;
+    .bulletActive {
+      width: 5px;
+      height: 5px;
+      background-color: $color-grey-200;
+      border-radius: 50%;
+      margin-left: 5px
+    }
+    
+    .bulletNotActive {
+      width: 5px;
+      height: 5px;
+      background-color: $color-blue-grey;
+      border-radius: 50%;
+      margin-left: 5px
+    }
+  }
+
+  .hidden { visibility: hidden }
+  
+  .slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 140px;
+
+    .next {
+      color:$color-grey-300;
+      position: relative;
+      left:15px;
+      cursor: pointer;
+      .chevronRight {
+        position: absolute;
+        top:6px;
+        right:5px
+      }
+    }
+
+    .previous {
+      color:$color-grey-300;    
+      position: relative;
+      cursor: pointer;
+      right:15px;
+
+      .chevronLeft {
+        position: absolute;
+        top:6px;
+        right:8px
+      }
+      
+    }
+    
+    .Rectangle {
+      height: 129px;
+      border: solid 1px #979797;
+      background-color: #d8d8d8;
+
+      @media (min-width: $mobile-width + 1px) {
+        width: 225px;
+      }
+  
+      @media (max-width: $mobile-width) {
+        width: 200px;
+      }
+    }
+  }
+  
+  .finishButon {
+    position: fixed;
+    @media (min-width: $mobile-width + 1px) {
+      bottom: 25px;
+    }
+
+    @media (max-width: $mobile-width) {
+      bottom: 85px;
+    }
+  }
+
+  .text {
+    max-width: 320px;
+	}
+
+	.title {
+    max-width: 320px;
+	}
+
+  .close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    color: $color-grey-300;
+    opacity: 0.4;
+    cursor: pointer;
+    margin-bottom: 44px;
+  }
+}

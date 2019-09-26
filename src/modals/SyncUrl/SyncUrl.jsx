@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { Button, Modal, Typography, Space, TextField } from '../../components'
 import { Sync } from '../../containers'
+import { HelpCircle } from 'react-feather'
 
 import styles from './SyncUrl.module.scss'
 
-const SyncUrl = ({ onClose }) => {
+const SyncUrl = ({ onClose, onOpenOnboardingCopyLink }) => {
   const { t } = useTranslation()
   const [url, setUrl] = useState('')
   const [syncing, setSyncing] = useState(false)
@@ -34,13 +35,20 @@ const SyncUrl = ({ onClose }) => {
           <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
           <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
         </div>
+        <Space size={54} />
+        <div onClick={onOpenOnboardingCopyLink} className={styles.onBoardingMessage}>
+          <HelpCircle size={14} color='#353c52' />
+          <Space size={5} direction='left' />
+          <Typography color={styles.colorBlueGrey} type='label'>{t('How to find the profile link?')}</Typography>
+        </div>
       </div>
     </Modal>
   )
 }
 
 SyncUrl.propTypes = {
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  onOpenOnboardingCopyLink: PropTypes.func
 }
 
 export default SyncUrl

@@ -5,7 +5,7 @@ import { Button, Modal, Typography, Space } from '../../components'
 
 import styles from './AddProfile.module.scss'
 
-const AddProfile = ({ onClose, onSignup, onSync }) => {
+const AddProfile = ({ onSync, onClose, onSignup }) => {
   const { t } = useTranslation()
 
   return (

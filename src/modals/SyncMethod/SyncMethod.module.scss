@@ -1,0 +1,35 @@
+@import '../../styles/colors.scss';
+
+.SyncMethod {
+  height: 100%;
+  text-align: center;
+  .content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .text {
+      font-size: 14px;
+      color: $color-blue-grey;
+    }
+    .onBoardingMessage {
+      cursor: pointer;
+      display:flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .separation {
+      display:flex;
+      flex-direction: row;
+      align-items: center;
+      .divider {   
+        width: 150px;
+        height: 1px;
+        background-color: $color-grey-200;
+      }
+    }
+  }
+}
+
+

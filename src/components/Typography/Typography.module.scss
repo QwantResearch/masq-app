@@ -34,7 +34,7 @@
   font-size: 28px;
   font-weight: 600;
   line-height: 1.14;
-  color: #00cafc;
+  color: $color-cyan;
   @media (max-width: 700px) {
     font-size: 22px;
     line-height: 1.36;
@@ -48,7 +48,7 @@
   font-stretch: condensed;
   line-height: 1.18;
   text-align: center;
-  color: #252a39;
+  color: $color-dark-blue-100;
   @media (max-width: 700px) {
     font-size: 28px;
     line-height: 1.14;
@@ -85,9 +85,14 @@
   font-size: 28px;
   font-weight: bold;
   color: $color-dark-blue-100;
-  // max-width: 400px;
-  text-align: center;
 }
+
+.title-onboarding {
+  font-size: 28px;
+  color: white;
+  max-width: 361px; 
+}
+
 
 .paragraph {
   font-size: 14px;
@@ -98,7 +103,13 @@
 .paragraph-landing {
   font-size: 18px;
   line-height: 1.22;
-  color: #e0e1e6;
+  color: $color-grey-200;
+}
+
+.paragraph-onboarding {
+  font-size: 16px;
+  line-height: 1.22;
+  color: $color-grey-250;
 }
 
 .paragraph-landing-dark {

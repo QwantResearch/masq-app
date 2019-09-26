@@ -1,8 +1,10 @@
 $color-grey-100: #f4f6fa;
 $color-grey-200: #e0e1e6;
+$color-grey-250: #d8d8d8;
 $color-grey-300: #c8cbd3;
 :export { colorGrey100: $color-grey-100 }
 :export { colorGrey200: $color-grey-200 }
+:export { colorGrey250: $color-grey-250; }
 :export { colorGrey300: $color-grey-300; }
 
 $color-dark-blue-100: #252a39;
