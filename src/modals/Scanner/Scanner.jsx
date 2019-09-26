@@ -31,7 +31,6 @@ class Scanner extends Component {
     const { t, onClose } = this.props
     return (
       <Modal onClose={onClose} padding={0} width={350}>
-        <Space size={32} />
         <Typography type='title-modal'>{t('Scan QR code')}</Typography>
         <Space size={32} />
         <div style={{ marginLeft: 16, marginRight: 16 }}>
