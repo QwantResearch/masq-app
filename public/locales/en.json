@@ -130,5 +130,6 @@
   "The sync process has been aborted, please try again.": "The sync process has been aborted, please try again.",
   "Please enter you secret key to finish the synchronization process": "Please enter you secret key to finish the synchronization process",
   "Scan QR code": "Scan QR code",
-  "Position this phone in front of your initial device to scan the QR code": "Position this phone in front of your initial device to scan the QR code"
+  "Position this phone in front of your initial device to scan the QR code": "Position this phone in front of your initial device to scan the QR code",
+  "This synchronization link is invalid. Please go back to the profile you want to import and generate a new link or QR code.": "This synchronization link is invalid. Please go back to the profile you want to import and generate a new link or QR code."
 }

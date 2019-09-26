@@ -23,17 +23,19 @@ class Sync extends Component {
   }
 
   componentDidMount () {
-    const { link, setSyncStep } = this.props
+    const { link, setSyncStep, t } = this.props
     let hash = ''
     try {
       setSyncStep('syncing')
-      if (!link.length) throw new Error('invalid link')
       const url = new URL(link)
       if (url.hash.substring(0, 7) !== '#/sync/') return
       hash = url.hash.substr(7) // ignore #/sync/ characters
       if (!hash.length) throw new Error('invalid link')
       this.startSync(hash)
     } catch (e) {
+      if (e.message === 'Failed to construct \'URL\': Invalid URL') {
+        this.setState({ message: t('This synchronization link is invalid. Please go back to the profile you want to import and generate a new link or QR code.') })
+      }
       setSyncStep('error')
     }
   }

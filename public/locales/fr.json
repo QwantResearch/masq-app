@@ -130,5 +130,6 @@
   "The sync process has been aborted, please try again.": "La synchronisation à été interrompue, merci de réessayer.",
   "Please enter you secret key to finish the synchronization process": "Saisir votre clé secrète pour finaliser la synchronisation",
   "Scan QR code": "Scanner un QR code",
-  "Position this phone in front of your initial device to scan the QR code": "Placez ce téléphone face à votre appareil initial pour scanner le QR code"
+  "Position this phone in front of your initial device to scan the QR code": "Placez ce téléphone face à votre appareil initial pour scanner le QR code",
+  "This synchronization link is invalid. Please go back to the profile you want to import and generate a new link or QR code.": "Ce lien d'importation est incorrect. Veuillez retourner au profil que vous voulez importer et générer un nouveau lien ou code QR."
 }
