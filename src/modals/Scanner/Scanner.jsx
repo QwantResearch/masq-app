@@ -19,7 +19,7 @@ class Scanner extends Component {
 
   handleScan (url) {
     if (url) {
-      window.open(url)
+      window.location.replace(url)
     }
   }
 

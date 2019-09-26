@@ -343,7 +343,8 @@ class Login extends Component {
       showOnboardingCopyLinkFromSyncProfile,
       syncMethod,
       showOnboardingCopyLink,
-      showOnboardingQrCode
+      showOnboardingQrCode,
+      scanner
     } = this.state
 
     const children = () => {
@@ -375,6 +376,7 @@ class Login extends Component {
               onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
               onClose={this.handleCloseSyncMethod}
               onSync={this.handleOpenSync}
+              onScanner={this.handleOpenScanner}
             />)}
           {showOnboardingCopyLink && (
             <OnBoardingCopyLink
@@ -392,6 +394,7 @@ class Login extends Component {
           <Landing onClick={this.handleClickAddProfile}>
             {children()}
           </Landing>
+          {scanner && <Scanner onClose={this.handleCloseScanner} />}
         </div>
       )
     }
