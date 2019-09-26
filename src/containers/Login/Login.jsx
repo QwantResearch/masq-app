@@ -32,8 +32,7 @@ class Login extends Component {
       addProfile: false,
       syncMethod: false,
       showOnboardingQrCode: false,
-      showOnboardingCopyLink: false,
-      showOnboardingCopyLinkFromSyncProfile: false
+      showOnboardingCopyLink: false
     }
 
     this.handleClickAddProfile = this.handleClickAddProfile.bind(this)
@@ -59,7 +58,6 @@ class Login extends Component {
     this.handleOpenOnboardingQrCode = this.handleOpenOnboardingQrCode.bind(this)
     this.handleCloseOnboardingCopyLink = this.handleCloseOnboardingCopyLink.bind(this)
     this.handleOpenOnboardingCopyLink = this.handleOpenOnboardingCopyLink.bind(this)
-    this.handleOpenOnboardingCopyLinkFromSyncProfile = this.handleOpenOnboardingCopyLinkFromSyncProfile.bind(this)
     this.handleCloseOnboardingCopyLinkFromSyncProfile = this.handleCloseOnboardingCopyLinkFromSyncProfile.bind(this)
   }
 
@@ -184,10 +182,6 @@ class Login extends Component {
     this.setState({ showOnboardingCopyLink: true })
   }
 
-  handleOpenOnboardingCopyLinkFromSyncProfile () {
-    this.setState({ showOnboardingCopyLinkFromSyncProfile: true, sync: false })
-  }
-
   handleCloseOnboardingQrCode () {
     this.setState({ showOnboardingQrCode: false })
   }
@@ -286,7 +280,7 @@ class Login extends Component {
           <OnBoardingQrCode
             onClose={this.handleCloseOnboardingQrCode}
           />)}
-        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLinkFromSyncProfile} />}
+        {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
         {scanner && <Scanner onClose={this.handleCloseScanner} />}
       </div>
     )
@@ -340,7 +334,6 @@ class Login extends Component {
       signup,
       addProfile,
       sync,
-      showOnboardingCopyLinkFromSyncProfile,
       syncMethod,
       showOnboardingCopyLink,
       showOnboardingQrCode,
@@ -382,15 +375,12 @@ class Login extends Component {
             <OnBoardingCopyLink
               onClose={this.handleCloseOnboardingCopyLink}
             />)}
-          {showOnboardingCopyLinkFromSyncProfile && (
-            <OnBoardingCopyLink
-              onClose={this.handleCloseOnboardingCopyLinkFromSyncProfile}
-            />)}
           {showOnboardingQrCode && (
             <OnBoardingQrCode
               onClose={this.handleCloseOnboardingQrCode}
-            />)}
-          {sync && <SyncUrl onClose={this.handleCloseSyncUrl} onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLinkFromSyncProfile} />}
+            />
+          )}
+          {sync && <SyncUrl onClose={this.handleCloseSyncUrl} />}
           <Landing onClick={this.handleClickAddProfile}>
             {children()}
           </Landing>

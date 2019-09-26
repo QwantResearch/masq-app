@@ -1,19 +1,24 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal, Typography, Space, TextField } from '../../components'
+import { Button, Modal, Typography, Space, TextField, OnBoardingCopyLink } from '../../components'
 import { Sync } from '../../containers'
 import { HelpCircle } from 'react-feather'
 
 import styles from './SyncUrl.module.scss'
 
-const SyncUrl = ({ onClose, onOpenOnboardingCopyLink }) => {
+const SyncUrl = ({ onClose }) => {
   const { t } = useTranslation()
   const [url, setUrl] = useState('')
   const [syncing, setSyncing] = useState(false)
+  const [onboarding, setOnboarding] = useState(false)
 
   if (syncing) {
     return <Sync link={url} onClose={onClose} />
+  }
+
+  if (onboarding) {
+    return <OnBoardingCopyLink onClose={() => setOnboarding(false)} />
   }
 
   return (
@@ -36,7 +41,7 @@ const SyncUrl = ({ onClose, onOpenOnboardingCopyLink }) => {
           <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
         </div>
         <Space size={54} />
-        <div onClick={onOpenOnboardingCopyLink} className={styles.onBoardingMessage}>
+        <div onClick={() => setOnboarding(true)} className={styles.onBoardingMessage}>
           <HelpCircle size={14} color='#353c52' />
           <Space size={5} direction='left' />
           <Typography color={styles.colorBlueGrey} type='label'>{t('How to find the profile link?')}</Typography>
@@ -47,8 +52,7 @@ const SyncUrl = ({ onClose, onOpenOnboardingCopyLink }) => {
 }
 
 SyncUrl.propTypes = {
-  onClose: PropTypes.func,
-  onOpenOnboardingCopyLink: PropTypes.func
+  onClose: PropTypes.func
 }
 
 export default SyncUrl
