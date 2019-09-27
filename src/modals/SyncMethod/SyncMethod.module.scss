@@ -8,8 +8,10 @@
     height: 100%;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
+
     .text {
+      width: 90%;
       font-size: 14px;
       color: $color-blue-grey;
     }
@@ -17,7 +19,6 @@
       cursor: pointer;
       display:flex;
       flex-direction: row;
-      align-items: center;
     }
     .separation {
       display:flex;

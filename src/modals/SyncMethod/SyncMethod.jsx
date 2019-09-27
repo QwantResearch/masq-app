@@ -12,19 +12,15 @@ const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose,
   return (
     <Modal width={400} padding={40} onClose={onClose}>
       <div className={styles.SyncMethod}>
-        <Typography type='title-modal'>{t('Synchronization method')}</Typography>
+        <Typography style={{ width: '70%' }} type='title-modal'>{t('Synchronization method')}</Typography>
         <div className={styles.content}>
-          <Space size={5} />
           <p className={styles.text}>{message}</p>
-          <Space size={30} />
-          <Button width='100%' onClick={onScanner}>{t('Scan the QR code')}</Button>
-          <Space size={25} />
+          <Button width='90%' onClick={onScanner}>{t('Scan the QR code')}</Button>
           <div onClick={onOpenOnboardingQrCode} className={styles.onBoardingMessage}>
             <HelpCircle size={14} color='#353c52' />
             <Space size={5} direction='left' />
             <Typography color={styles.colorBlueGrey} type='label'>{t('How to display the QR code?')}</Typography>
           </div>
-          <Space size={59} />
           <div className={styles.separation}>
             <div className={styles.divider} />
             <Space size={5} direction='left' />
@@ -32,11 +28,8 @@ const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose,
             <Space size={5} direction='left' />
             <div className={styles.divider} />
           </div>
-          <Space size={59} />
           <p className={styles.text}>{t('Copy the link displayed on your original device and paste it into this mobile:')}</p>
-          <Space size={30} />
-          <Button width='100%' onClick={onSync}>{t('Paste the profile link')}</Button>
-          <Space size={25} />
+          <Button width='90%' onClick={onSync}>{t('Paste the profile link')}</Button>
           <div onClick={onOpenOnboardingCopyLink} className={styles.onBoardingMessage}>
             <HelpCircle size={14} color='#353c52' />
             <Space size={5} direction='left' />
