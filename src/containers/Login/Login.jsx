@@ -116,7 +116,6 @@ class Login extends Component {
   }
 
   handleOpenSync () {
-    console.log('handleOpenSync')
     this.setState({ sync: true, addProfile: false })
   }
 
@@ -213,7 +212,6 @@ class Login extends Component {
   }
 
   handleOpenScanner () {
-    console.log('handleOpenScanner')
     this.setState({ scanner: true })
   }
 
