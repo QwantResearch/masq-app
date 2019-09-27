@@ -169,9 +169,9 @@ class Settings extends React.Component {
 
     return (
       <div className={styles.Settings}>
+        <Typography type='title-page'>{t('My settings')}</Typography>
         <div className={styles.page}>
           <div>
-            <Typography type='title-page'>{t('My settings')}</Typography>
             <Space size={30} />
             <div className={styles.content}>
               <div className={styles.avatar}>
