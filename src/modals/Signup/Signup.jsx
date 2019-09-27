@@ -238,7 +238,7 @@ class Signup extends React.Component {
     const { t } = this.props
 
     return (
-      <Modal onClose={this.props.onClose} padding={100} width={350}>
+      <Modal onClose={this.props.onClose} padding={64} width={350}>
         <div className={styles.Signup}>
           <Typography type='title-modal'>{t('Create a new profile')}</Typography>
           <Space size={28} />
