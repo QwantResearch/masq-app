@@ -18,6 +18,7 @@ const Button = ({ className, onClick, color, children, width, height, borderRadi
       width,
       maxWidth: width,
       height,
+      minHeight: height,
       borderRadius,
       padding: width ? 0 : `0px ${height}px`
     }}
