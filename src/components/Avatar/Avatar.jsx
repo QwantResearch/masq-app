@@ -32,7 +32,7 @@ export default class Avatar extends React.Component {
 
     return (
       <div
-        style={{ width: size, height: size }}
+        style={{ width: size, height: size, minHeight: size, minWidth: size }}
         onClick={upload ? this.openDialog : null}
         className={classNames(
           styles.Avatar,
