@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 
-import { getMasqInstance, signin, setSyncStep } from '../../actions'
+import { signin, setSyncStep } from '../../actions'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
@@ -51,9 +51,7 @@ class Sync extends Component {
       await this.sp.init(channel, Buffer.from(key, 'base64'))
       await this.sp.joinSecureChannel()
       await this.sp.pullProfile()
-      const masq = getMasqInstance()
-      const profiles = await masq.getProfiles()
-      const profile = profiles[profiles.length - 1]
+      const profile = this.sp.publicProfile
       this.setState({ profile })
       this.props.setSyncStep('password')
     } catch (e) {

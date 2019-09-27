@@ -105,6 +105,7 @@ class SyncProfile {
     this.masq._startReplicate(this.db)
     // store public profile
     this.masq._setProfileToLocalStorage(publicProfile)
+    this.publicProfile = publicProfile
   }
 
   async abort () {
