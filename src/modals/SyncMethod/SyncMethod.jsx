@@ -8,14 +8,14 @@ import styles from './SyncMethod.module.scss'
 
 const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose, onSync, onScanner }) => {
   const { t } = useTranslation()
-
+  const message = t(`Hold your device over the QR Code so that it is clearly visible within your smartphone's screen:`) //eslint-disable-line
   return (
     <Modal width={400} padding={40} onClose={onClose}>
       <div className={styles.SyncMethod}>
         <Typography type='title-modal'>{t('Synchronization method')}</Typography>
         <div className={styles.content}>
           <Space size={5} />
-          <p className={styles.text}>{t('Hold your device over the QR Code so that it\'s clearly visible within your smartphone\'s screen:')}</p>
+          <p className={styles.text}>{message}</p>
           <Space size={30} />
           <Button width='100%' onClick={onScanner}>{t('Scan the QR code')}</Button>
           <Space size={25} />
