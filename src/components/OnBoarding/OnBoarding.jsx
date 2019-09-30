@@ -107,7 +107,7 @@ const OnBoarding = ({ t, curStep, totalSteps, onClose, width, height, padding, c
           <Typography type='paragraph-onboarding'>{text} </Typography>
         </div>
         <Space size={23} />
-        {(!lastStep) && <Bullets curStep={curStep} totalSteps={totalSteps} />}
+        {<Bullets curStep={curStep} totalSteps={totalSteps} />}
         {onClose && <X className={styles.close} size={25} onClick={onClose} />}
         {children}
         <div className={styles.finishButon}>
