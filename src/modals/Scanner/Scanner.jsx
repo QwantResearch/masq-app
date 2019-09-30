@@ -8,6 +8,11 @@ import { Modal, Typography, Space, Button } from '../../components'
 import styles from './Scanner.module.scss'
 
 class Scanner extends Component {
+  constructor (props) {
+    super(props)
+    this.handleError = this.handleError.bind(this)
+  }
+
   handleScan (url) {
     if (url) {
       window.location.replace(url)
