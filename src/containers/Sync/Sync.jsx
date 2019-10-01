@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 
-import { signin, setSyncStep } from '../../actions'
+import { signin, setSyncStep, getMasqInstance } from '../../actions'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
 
@@ -70,6 +70,8 @@ class Sync extends Component {
       await signin(profile, pass)
       setSyncStep('syncing')
       await this.sp.requestWriteAccess()
+      const masq = getMasqInstance()
+      await this.sp.waitUntilAppsDBsAreWritable(masq)
       setSyncStep('finished')
     } catch (e) {
       this.setState({ errorPass: true })
