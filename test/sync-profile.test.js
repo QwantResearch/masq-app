@@ -104,10 +104,8 @@ describe('sync-profile', function () {
       sp2.joinSecureChannel()
     ])
 
-    await Promise.all([
-      sp2.pushProfile(masq.profileDB, idCopy, publicProfile),
-      sp1.pullProfile('pass').then(() => sp1.requestWriteAccess())
-    ])
+    sp2.pushProfile(masq.profileDB, idCopy, publicProfile)
+    await sp1.pullProfile('pass').then(() => sp1.requestWriteAccess())
 
     expect(window.localStorage).to.have.lengthOf(2)
     expect(await dbExists('profile-' + id)).to.be.true
@@ -128,6 +126,7 @@ describe('sync-profile', function () {
     const devices = await masq.getDevices()
 
     sp1.waitUntilAppsDBsAreWritable(masq2)
+    await sp1.sendEnd()
 
     expect(devices).to.have.lengthOf(2)
     expect(devices[0]).to.haveOwnProperty('localKey')
