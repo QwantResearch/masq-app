@@ -115,6 +115,13 @@ class SyncProfile {
     await sendEncryptedJSON(json, this.key, this.peer)
   }
 
+  async sendEnd () {
+    const json = {
+      msg: 'end'
+    }
+    await sendEncryptedJSON(json, this.key, this.peer)
+  }
+
   async requestWriteAccess () {
     const json = {
       msg: 'requestWriteAccess',
@@ -178,6 +185,12 @@ class SyncProfile {
 
     await db.authorizeAsync(Buffer.from(key, 'hex'))
     await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
+
+    data = await waitForDataFromPeer(this.peer)
+    const { msg: msg3 } = await decryptJSON(data, this.key)
+    if (msg3 !== 'end') {
+      throw new Error('msg not expected ' + msg3)
+    }
   }
 
   async waitUntilAppsDBsAreWritable (masq) {

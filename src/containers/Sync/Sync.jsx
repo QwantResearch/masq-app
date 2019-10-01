@@ -72,6 +72,7 @@ class Sync extends Component {
       await this.sp.requestWriteAccess()
       const masq = getMasqInstance()
       await this.sp.waitUntilAppsDBsAreWritable(masq)
+      await this.sp.sendEnd()
       setSyncStep('finished')
     } catch (e) {
       this.setState({ errorPass: true })
