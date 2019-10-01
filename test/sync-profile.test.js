@@ -127,6 +127,8 @@ describe('sync-profile', function () {
     // masq1 should also see the new device
     const devices = await masq.getDevices()
 
+    sp1.waitUntilAppsDBsAreWritable(masq2)
+
     expect(devices).to.have.lengthOf(2)
     expect(devices[0]).to.haveOwnProperty('localKey')
     expect(devices[1]).to.haveOwnProperty('localKey')

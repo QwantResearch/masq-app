@@ -179,6 +179,37 @@ class SyncProfile {
     await db.authorizeAsync(Buffer.from(key, 'hex'))
     await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
   }
+
+  async waitUntilAppsDBsAreWritable (masq) {
+    if (!masq) throw new Error('missing masq parameter')
+
+    const areDBsWritable = async () => {
+      const apps = await masq.getApps()
+
+      if (Object.keys(masq.appsDBs).length !== apps.length) {
+        return false
+      }
+
+      for (const key of Object.keys(masq.appsDBs)) {
+        const db = masq.appsDBs[key]
+        if (await db.authorizedAsync(db.local.key) === false) {
+          return false
+        }
+      }
+
+      return true
+    }
+
+    return new Promise((resolve) => {
+      const interval = setInterval(async () => {
+        const ok = await areDBsWritable()
+        if (ok) {
+          clearInterval(interval)
+          return resolve()
+        }
+      }, 500)
+    })
+  }
 }
 
 export default SyncProfile
