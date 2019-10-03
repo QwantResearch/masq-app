@@ -8,10 +8,9 @@ import styles from './PersistentStorageRequest.module.scss'
 const PermanentStorageRequest = ({ onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal width={511} onClose={onClose}>
+    <Modal title={t('Storage authorization')} width={511} onClose={onClose}>
       <div className={styles.PermanentStorage}>
         <div>
-          <Typography type='title-modal'>{t('Storage authorization')}</Typography> />
           <Space size={32} />
           <Typography type='paragraph-modal'>
             {`${t('In order to store your data securely,')}

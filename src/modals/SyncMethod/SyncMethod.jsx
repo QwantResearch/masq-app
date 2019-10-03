@@ -10,9 +10,8 @@ const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose,
   const { t } = useTranslation()
   const message = t(`Hold your device over the QR Code so that it is clearly visible within your smartphone's screen:`) //eslint-disable-line
   return (
-    <Modal width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Synchronization method')} width={400} height={600} padding={40} onClose={onClose}>
       <div className={styles.SyncMethod}>
-        <Typography style={{ width: '70%' }} type='title-modal'>{t('Synchronization method')}</Typography>
         <div className={styles.content}>
           <p className={styles.text}>{message}</p>
           <Button width='90%' onClick={onScanner}>{t('Scan the QR code')}</Button>

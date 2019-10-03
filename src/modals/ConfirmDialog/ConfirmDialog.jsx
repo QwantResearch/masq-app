@@ -9,9 +9,8 @@ const ConfirmDialog = ({ title, text, onConfirm, onCancel, onClose }) => {
   const { t } = useTranslation()
 
   return (
-    <Modal width={400} onClose={onClose}>
+    <Modal title={title} width={400} onClose={onClose}>
       <div className={styles.ConfirmDialog}>
-        <span className={styles.title}>{title}</span>
         <p className='subtitle'>{text}</p>
         <div className={styles.buttons}>
           <Button onClick={onCancel}>{t('Cancel')}</Button>

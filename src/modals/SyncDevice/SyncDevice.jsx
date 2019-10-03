@@ -7,9 +7,9 @@ import { Modal, Button, Space, Typography, Avatar, TextField } from '../../compo
 
 import styles from './SyncDevice.module.scss'
 
-const SyncDeviceModal = ({ children }) => {
+const SyncDeviceModal = ({ title, children }) => {
   return (
-    <Modal width={400} padding={32}>
+    <Modal title={title} width={400} padding={32}>
       <div className={styles.SyncDevice}>
         {children}
       </div>
@@ -18,8 +18,7 @@ const SyncDeviceModal = ({ children }) => {
 }
 
 const SyncDeviceModalSyncing = ({ t, onClick, message }) => (
-  <SyncDeviceModal>
-    <Typography type='title-modal'>{t('Synchronization in progress...')}</Typography>
+  <SyncDeviceModal title={t('Synchronization in progress...')}>
     <Space size={80} />
     <RefreshCw className={styles.refeshIcon} size={124} color={styles.colorCyan} />
     <Space size={32} />
@@ -44,8 +43,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
   }
 
   return (
-    <SyncDeviceModal>
-      <Typography type='title-modal'>{t('Please enter you secret key to finish the synchronization process')}</Typography>
+    <SyncDeviceModal title={t('Please enter you secret key to finish the synchronization process')}>
       <Space size={32} />
       <Avatar size={90} username={username} image={avatar} />
       <Space size={12} />
@@ -72,8 +70,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
 }
 
 const SyncDeviceModalFinished = ({ t, onClick, message }) => (
-  <SyncDeviceModal>
-    <Typography type='title-modal'>{t('Synchronization finished!')}</Typography>
+  <SyncDeviceModal title={t('Synchronization finished!')}>
     <Space size={80} />
     <CheckCircle size={124} color={styles.colorGreen} />
     <Space size={32} />
@@ -87,8 +84,7 @@ const SyncDeviceModalFinished = ({ t, onClick, message }) => (
 )
 
 const SyncDeviceModalError = ({ t, onClick, message }) => (
-  <SyncDeviceModal>
-    <Typography type='title-modal'>{t('Synchronization failure')}</Typography>
+  <SyncDeviceModal title={t('Synchronization failure')}>
     <Space size={80} />
     <XCircle size={124} color={styles.colorRed} />
     <Space size={32} />
@@ -137,7 +133,8 @@ SyncDeviceModal.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ]).isRequired,
+  title: PropTypes.string.isRequired
 }
 
 SyncDevice.propTypes = {

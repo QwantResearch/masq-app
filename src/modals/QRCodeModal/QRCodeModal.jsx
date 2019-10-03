@@ -71,9 +71,8 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   return (
-    <Modal width={300} padding={78} onClose={onClose}>
+    <Modal title={t('Add a device')} width={300} padding={78} onClose={onClose}>
       <div id='qrcode' className={styles.QRCode}>
-        <Typography type='title-modal'>{t('Add a device')}</Typography>
         <Space size={32} />
         <Typography maxWidth={320} type='paragraph-modal' align='center'>
           {t('Scan this QR Code with the device you want to synchronize:')}

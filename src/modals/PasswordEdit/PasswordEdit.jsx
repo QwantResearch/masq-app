@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withTranslation } from 'react-i18next'
 
 import { updatePassphrase, setNotification } from '../../actions'
-import { Modal, Button, TextField, Typography, Space, PasswordStrength } from '../../components'
+import { Modal, Button, TextField, Space, PasswordStrength } from '../../components'
 import { isForceEnough } from '../../lib/validators'
 
 import styles from './PasswordEdit.module.scss'
@@ -88,9 +88,8 @@ class PasswordEdit extends React.Component {
     const { onClose, t } = this.props
 
     return (
-      <Modal onClose={onClose} width={400}>
+      <Modal title={t('Update your secret key')} onClose={onClose} width={400}>
         <div className={styles.PasswordEdit}>
-          <Typography type='title-modal'>{t('Update your secret key')}</Typography>
           <Space size={28} />
           <TextField
             password
