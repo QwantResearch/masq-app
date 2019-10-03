@@ -7,9 +7,9 @@ import { Modal, Button, Space, Typography, Avatar, TextField } from '../../compo
 
 import styles from './SyncDevice.module.scss'
 
-const SyncDeviceModal = ({ title, children }) => {
+const SyncDeviceModal = ({ title, children, onClose }) => {
   return (
-    <Modal title={title} width={400} padding={32}>
+    <Modal title={title} width={400} padding={32} onClose={onClose}>
       <div className={styles.SyncDevice}>
         {children}
       </div>
@@ -17,8 +17,8 @@ const SyncDeviceModal = ({ title, children }) => {
   )
 }
 
-const SyncDeviceModalSyncing = ({ t, onClick, message }) => (
-  <SyncDeviceModal title={t('Synchronization in progress...')}>
+const SyncDeviceModalSyncing = ({ t, onClick, message, onClose }) => (
+  <SyncDeviceModal title={t('Synchronization in progress...')} onClose={onClose}>
     <Space size={80} />
     <RefreshCw className={styles.refeshIcon} size={124} color={styles.colorCyan} />
     <Space size={32} />
@@ -43,7 +43,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
   }
 
   return (
-    <SyncDeviceModal title={t('Please enter you secret key to finish the synchronization process')}>
+    <SyncDeviceModal title={t('Please enter you secret key to finish the synchronization process')} onClose={onClose}>
       <Space size={32} />
       <Avatar size={90} username={username} image={avatar} />
       <Space size={12} />
@@ -69,8 +69,8 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
   )
 }
 
-const SyncDeviceModalFinished = ({ t, onClick, message }) => (
-  <SyncDeviceModal title={t('Synchronization finished!')}>
+const SyncDeviceModalFinished = ({ t, onClick, message, onClose }) => (
+  <SyncDeviceModal title={t('Synchronization finished!')} onClose={onClose}>
     <Space size={80} />
     <CheckCircle size={124} color={styles.colorGreen} />
     <Space size={32} />
@@ -83,8 +83,8 @@ const SyncDeviceModalFinished = ({ t, onClick, message }) => (
   </SyncDeviceModal>
 )
 
-const SyncDeviceModalError = ({ t, onClick, message }) => (
-  <SyncDeviceModal title={t('Synchronization failure')}>
+const SyncDeviceModalError = ({ t, onClick, message, onClose }) => (
+  <SyncDeviceModal title={t('Synchronization failure')} onClose={onClose}>
     <Space size={80} />
     <XCircle size={124} color={styles.colorRed} />
     <Space size={32} />
@@ -102,13 +102,13 @@ const SyncDevice = ({ step, onClick, onClose, message, profile, error, onKeyUp }
 
   switch (step) {
     case 'syncing':
-      return <SyncDeviceModalSyncing t={t} onClick={onClick} message={message} />
+      return <SyncDeviceModalSyncing t={t} onClick={onClick} message={message} onClose={onClose} />
     case 'password':
       return <SyncDeviceModalPassword t={t} error={error} onClose={onClose} message={message} avatar={profile.image} username={profile.username} onClick={onClick} onKeyUp={onKeyUp} />
     case 'finished':
-      return <SyncDeviceModalFinished t={t} onClick={onClick} message={message} />
+      return <SyncDeviceModalFinished t={t} onClick={onClick} message={message} onClose={onClose} />
     default:
-      return <SyncDeviceModalError t={t} onClick={onClick} message={message} />
+      return <SyncDeviceModalError t={t} onClick={onClick} message={message} onClose={onClose} />
   }
 }
 
@@ -117,7 +117,8 @@ SyncDeviceModalFinished.propTypes =
 SyncDeviceModalError.propTypes = {
   t: PropTypes.func,
   onClick: PropTypes.func,
-  message: PropTypes.string
+  message: PropTypes.string,
+  onClose: PropTypes.func.isRequired
 }
 
 SyncDeviceModalPassword.propTypes = {
@@ -134,14 +135,15 @@ SyncDeviceModal.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired
 }
 
 SyncDevice.propTypes = {
   step: PropTypes.oneOf(['syncing', 'password', 'finished', 'error']).isRequired,
   message: PropTypes.string,
   onClick: PropTypes.func,
-  onClose: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
   profile: PropTypes.object,
   error: PropTypes.bool,
   onKeyUp: PropTypes.func
