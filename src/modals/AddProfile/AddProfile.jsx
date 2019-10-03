@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal, Typography, Space } from '../../components'
+import { Button, Modal, Space } from '../../components'
 
 import styles from './AddProfile.module.scss'
 
@@ -9,9 +9,8 @@ const AddProfile = ({ onSync, onClose, onSignup }) => {
   const { t } = useTranslation()
 
   return (
-    <Modal width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Add a new profile')} width={400} padding={40} onClose={onClose}>
       <div className={styles.AddProfile}>
-        <Typography type='title-modal' align='center'>{t('Add a new profile')}</Typography>
         <div className={styles.content}>
           <Space size={32} />
           <Button width='100%' color='success' onClick={onSignup}>{t('Create a new profile')}</Button>
@@ -19,7 +18,6 @@ const AddProfile = ({ onSync, onClose, onSignup }) => {
           <p className={styles.text}>{t('or')}</p>
           <Space size={16} />
           <Button width='100%' onClick={onSync}>{t('Sync an existing profile')}</Button>
-          <Space size={32} />
         </div>
       </div>
     </Modal>

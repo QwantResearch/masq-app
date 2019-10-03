@@ -22,9 +22,8 @@ const SyncUrl = ({ onClose }) => {
   }
 
   return (
-    <Modal width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Synchronize a profile')} width={400} padding={40} onClose={onClose}>
       <div className={styles.SyncUrl}>
-        <Typography type='title-modal'>{t('Synchronize a profile')}</Typography>
         <Space size={32} />
         <p className={styles.text}>
           {t('Copy the link displayed on your initial device, then paste it in the field "link to existing profile" on this device.')}

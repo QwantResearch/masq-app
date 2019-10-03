@@ -34,6 +34,7 @@ Typography.propTypes = {
     'title-landing',
     'title-landing2',
     'title-modal',
+    'title-modal-mobile',
     'title-onboarding',
     'title-page',
     'subtitle-page',
