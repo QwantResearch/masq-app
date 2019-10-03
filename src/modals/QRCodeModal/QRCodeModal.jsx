@@ -67,7 +67,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   if (syncStep) {
-    return <SyncDevice step={syncStep} onClick={onClose} message={message} />
+    return <SyncDevice step={syncStep} onClick={onClose} onClose={onClose} message={message} />
   }
 
   return (

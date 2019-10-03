@@ -98,7 +98,7 @@ class Sync extends Component {
     if (!syncStep || !syncStep.length) return null
     return syncStep === 'password'
       ? <SyncDevice step='password' error={errorPass} onClose={() => this.handleClose()} profile={profile} onClick={(pass) => this.authenticate(pass)} />
-      : <SyncDevice step={syncStep} message={message} onClick={() => this.handleClose()} />
+      : <SyncDevice step={syncStep} message={message} onClick={() => this.handleClose()} onClose={() => this.handleClose()} />
   }
 }
 
