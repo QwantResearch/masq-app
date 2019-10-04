@@ -15,8 +15,9 @@ const isUsernameAlreadyTaken = (username, id) => {
 
   const publicProfiles = ids.map(id => JSON.parse(window.localStorage.getItem(id)))
 
+  const _username = username.toUpperCase()
   return publicProfiles.find(p =>
-    (id && p.id === id) ? false : p.username === username
+    (id && p.id === id) ? false : p.username.toUpperCase() === _username
   )
 }
 

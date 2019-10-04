@@ -47,6 +47,7 @@ class Sync extends Component {
 
     try {
       const [msg, channel, key] = JSON.parse(decoded)
+
       if (msg !== 'pullProfile') throw new Error('Unexpected message')
       await this.sp.init(channel, Buffer.from(key, 'base64'))
       await this.sp.joinSecureChannel()
@@ -57,8 +58,15 @@ class Sync extends Component {
     } catch (e) {
       this.setState({ message: 'error' })
       this.props.setSyncStep('error')
-      if (e.message === 'alreadySynced') {
-        this.setState({ message: t('This profile is already synchronized on this device.') })
+      switch (e.message) {
+        case 'alreadySynced':
+          this.setState({ message: t('This profile is already synchronized on this device.') })
+          break
+        case 'usernameAlreadyExists':
+          this.setState({ message: t('A profile with the same username already exists in this device, rename it and try again.') })
+          break
+        default:
+          this.setState({ message: t('Error during the synchronization. Please retry.') })
       }
     }
   }

@@ -98,6 +98,19 @@ class SyncProfile {
       throw new Error('alreadySynced')
     }
 
+    const existingsProfiles = await this.masq.getProfiles()
+    const importedUsername = publicProfile.username.toUpperCase()
+    const usernameExist = existingsProfiles.find(_profile => _profile.username.toUpperCase() === importedUsername)
+
+    // HACK for tests. To test sync we create two dbs on the same device
+    if (usernameExist && process.env.NODE_ENV !== 'test') {
+      const json = {
+        msg: 'usernameAlreadyExists'
+      }
+      await sendEncryptedJSON(json, this.key, this.peer)
+      throw new Error('usernameAlreadyExists')
+    }
+
     // Create profile database
     this.db = await createPromisifiedHyperDB(dbName, key)
     await dbReady(this.db)

@@ -47,10 +47,18 @@ const QRCodeModal = ({ onClose, profile }) => {
         await sp.pushProfile(db, profile.id, publicProfile)
         setSyncStep('finished')
       } catch (e) {
-        if (e.message === 'abort') {
-          setMessage(t('The sync process has been aborted, please try again.'))
-        } else if (e.message === 'alreadySynced') {
-          setMessage(t('This profile is already synchronized on this device.'))
+        switch (e.message) {
+          case 'abort':
+            setMessage(t('The sync process has been aborted, please try again.'))
+            break
+          case 'alreadySynced':
+            setMessage(t('This profile is already synchronized on this device.'))
+            break
+          case 'usernameAlreadyExists':
+            setMessage(t('A profile with the same username already exists in this device, rename it and try again.'))
+            break
+          default:
+            setMessage(t('Error during the synchronization. Please retry.'))
         }
         setSyncStep('error')
       }

@@ -70,7 +70,7 @@ describe('masq internal operations', function () {
   it('trying to register a profile with an existing username should fail', async () => {
     let err = null
     const profile = {
-      username: 'JDoe',
+      username: 'jdoe',
       firstname: 'John',
       lastname: 'Doe',
       password: PASSPHRASE,
