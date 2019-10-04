@@ -9,7 +9,7 @@ import * as common from 'masq-common'
 
 import { Login, Applications, Devices, Settings, Navbar, Loading, Sync } from './containers'
 import { Notification } from './components'
-import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
+import { getMasqInstance, refreshUser, addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
 import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
 import { isBrowserSupported } from './lib/browser'
 
@@ -59,6 +59,7 @@ class App extends Component {
     this.dbMasqPublic = null
     this.dbs = {} // all replicated dbs
     this.sw = null
+    this.watchers = {}
 
     this.state = {
       persistentStorageRequest: false,
@@ -122,6 +123,19 @@ class App extends Component {
     if (prevProps.loading && !this.props.loading) {
       history.push(prevPath)
     }
+    if (!prevProps.currentUser && this.props.currentUser) {
+      const masq = getMasqInstance()
+      const handleUpdate = async () => {
+        await masq.updatePublicProfile()
+        const updatedPrivateProdfile = await masq.getProfile()
+        this.props.refreshUser(updatedPrivateProdfile.id, updatedPrivateProdfile)
+      }
+      this.watchers.profile = masq.addWatcher('/profile', handleUpdate)
+    }
+  }
+
+  componentWillUnmount () {
+    this.watchers.profile.destroy()
   }
 
   render () {
@@ -186,6 +200,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  refreshUser: (id, user) => dispatch(refreshUser(id, user)),
   addDevice: device => dispatch(addDevice(device)),
   setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app)),
   setLoading: value => dispatch(setLoading(value)),
@@ -196,6 +211,7 @@ App.propTypes = {
   currentUser: PropTypes.object,
   currentAppRequest: PropTypes.object,
   setCurrentAppRequest: PropTypes.func,
+  refreshUser: PropTypes.func,
   addDevice: PropTypes.func,
   notification: PropTypes.object,
   loading: PropTypes.bool,

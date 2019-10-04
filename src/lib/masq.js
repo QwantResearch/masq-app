@@ -98,6 +98,7 @@ class Masq {
     this.appsDBs = {}
     this.swarms = {}
     this.hubs = {}
+    this.watchers = []
 
     this.sw = null // sw used during login and registration
     this.hub = null
@@ -133,6 +134,21 @@ class Masq {
       name: deviceName,
       apps: []
     })
+  }
+
+  async updatePublicProfile () {
+    const profile = await this.getAndDecrypt('/profile')
+    const pubProfile = this._getProfilesFromLocalStorage().filter(_profile => _profile.id === profile.id)[0]
+
+    if (pubProfile.username !== profile.username || pubProfile.image !== profile.image) {
+      const updatedPublicProfile = {
+        username: profile.username,
+        image: profile.image,
+        id: profile.id
+      }
+
+      this._setProfileToLocalStorage(updatedPublicProfile)
+    }
   }
 
   /**
@@ -697,6 +713,25 @@ class Masq {
   _watchAndAuthorizeApps () {
     watch(this.profileDB, this.nonce, '/devices', () => this.syncApps())
     this.syncApps()
+  }
+
+  /*
+   * Set a watcher for the given key (e.g /devices, /profile)
+   * Apply handleUpdate for each update
+   *
+   * @param {string} key The key path
+   * @param {function} handleUpdate The function to apply for each update
+   * @returns The watcher
+   */
+  addWatcher (key, handleUpdate) {
+    const watcher = watch(this.profileDB, this.nonce, key, handleUpdate)
+    this.watchers.push(watcher)
+  }
+
+  destroyWatchers () {
+    this.watchers.forEach(watcher => {
+      if (watcher) { watcher.destroy() }
+    })
   }
 
   _createDBAndSyncApp (dbName, hex = null) {

@@ -54,6 +54,16 @@ export const updateUser = (id, update) => {
   }
 }
 
+export const refreshUser = (id, update) => {
+  const profile = { ...update, id }
+  return function (dispatch) {
+    return dispatch({
+      type: 'SIGNIN',
+      profile
+    })
+  }
+}
+
 export const signup = user => {
   const { password } = user
   return function (dispatch) {
