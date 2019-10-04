@@ -11,6 +11,7 @@ const { encrypt, decrypt, importKey, exportKey, genAESKey, genEncryptedMasterKey
 const { dbReady, dbExists, createPromisifiedHyperDB, put, get, list, del, watch } = common.utils
 const { MasqError, checkObject } = common.errors
 const MasqMessages = common.messages.UserAppLogin
+const { getSelectedCandidates } = common.peerUtils
 
 const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
@@ -879,7 +880,9 @@ class Masq {
     })
 
     this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
-    this.swarms[discoveryKey].on('peer', peer => {
+    this.swarms[discoveryKey].on('peer', async peer => {
+      console.log('### peerUtils _startReplicate')
+      console.log(await getSelectedCandidates(peer))
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
     })
