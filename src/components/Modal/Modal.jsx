@@ -77,4 +77,9 @@ ResponsiveModal.propTypes = {
   title: PropTypes.string.isRequired
 }
 
+Modal.propTypes =
+ResponsiveModal.defaultProps = {
+  padding: 32
+}
+
 export default ResponsiveModal
