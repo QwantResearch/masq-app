@@ -88,7 +88,8 @@ class Sync extends Component {
   }
 
   async handleClose () {
-    if (this.props.syncStep === 'finished') {
+    if (this.props.syncStep === 'finished' ||
+        this.props.syncStep === 'error') {
       return this.props.onClose()
     }
 
