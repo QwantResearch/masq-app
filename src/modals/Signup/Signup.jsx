@@ -130,10 +130,6 @@ class Signup extends React.Component {
   }
 
   handleKeyUp (e) {
-    if (e.key !== 'Enter') {
-      return
-    }
-
     if (this.currentStep === 0) {
       this.handleNext()
     } else {
@@ -160,24 +156,27 @@ class Signup extends React.Component {
         </div>
 
         <Space size={32} />
-        <TextField
-          className={styles.TextField}
-          id='signup-username-input'
-          defaultValue={this.state.username}
-          error={!this.isValid('username')}
-          onChange={(e) => this.onChange('username', e)}
-          onKeyUp={this.handleKeyUp}
-          label={this.getUsernameLabel(
-            t('Username'),
-            t('Username already used, please use another one'),
-            t('The username must not contain spaces, and can contain only the following special characters: !?$#@()-*')
-          )}
-        />
+        <form onSubmit={this.handleKeyUp}>
+          <TextField
+            className={styles.TextField}
+            id='signup-username-input'
+            defaultValue={this.state.username}
+            error={!this.isValid('username')}
+            onChange={(e) => this.onChange('username', e)}
+            label={this.getUsernameLabel(
+              t('Username'),
+              t('Username already used, please use another one'),
+              t('The username must not contain spaces, and can contain only the following special characters: !?$#@()-*')
+            )}
+            required
+            autoComplete='username'
+          />
+        </form>
 
         <Space size={32} />
 
         <div className={styles.buttons}>
-          <Button onClick={this.handleNext} id='signup-next-btn' width={185}>{t('Next')}</Button>
+          <Button onClick={this.handleNext} type='submit' id='signup-next-btn' width={185}>{t('Next')}</Button>
         </div>
       </>
     )
@@ -185,7 +184,7 @@ class Signup extends React.Component {
 
   renderSecondStep () {
     const { t } = this.props
-    const { password, passwordConfirmation } = this.state
+    const { password, passwordConfirmation, username } = this.state
 
     return (
       <>
@@ -194,42 +193,48 @@ class Signup extends React.Component {
           <span className={styles.fontMedium}>{t('NO WAY to recover this key in case you lose it, because you only know it.')}</span>
         </Typography>
         <Space size={14} />
-        <TextField
-          password
-          className={styles.TextField}
-          defaultValue={password}
-          id='secret-key-input'
-          autoFocus
-          type='password'
-          label={this.isValid('password')
-            ? t('Secret key')
-            : t('The secret key must contain at least 6 characters and respect two rules minimum.')}
-          error={!this.isValid('password')}
-          onChange={(e) => this.onChange('password', e)}
-        />
-        <Space size={14} />
-        <PasswordStrength password={password} />
-        <Space size={14} />
-        <TextField
-          password
-          className={styles.TextField}
-          id='secret-key-confirmation-input'
-          type='password'
-          defaultValue={passwordConfirmation}
-          label={this.isValid('passwordConfirmation')
-            ? t('Secret key confirmation')
-            : t('Two secret keys do not match')}
-          error={!this.isValid('passwordConfirmation')}
-          onKeyUp={this.handleKeyUp}
-          onChange={(e) => this.onChange('passwordConfirmation', e)}
-        />
+        <form onSubmit={this.handleKeyUp}>
+          <input style={{ display: 'none' }} autoComplete='username' type='text' defaultValue={username} />
+          <TextField
+            password
+            className={styles.TextField}
+            defaultValue={password}
+            id='secret-key-input'
+            autoFocus
+            type='password'
+            label={this.isValid('password')
+              ? t('Secret key')
+              : t('The secret key must contain at least 6 characters and respect two rules minimum.')}
+            error={!this.isValid('password')}
+            onChange={(e) => this.onChange('password', e)}
+            autoComplete='new-password'
+            required
+          />
+          <Space size={14} />
+          <PasswordStrength password={password} />
+          <Space size={14} />
+          <TextField
+            password
+            className={styles.TextField}
+            id='secret-key-confirmation-input'
+            type='password'
+            defaultValue={passwordConfirmation}
+            label={this.isValid('passwordConfirmation')
+              ? t('Secret key confirmation')
+              : t('Two secret keys do not match')}
+            error={!this.isValid('passwordConfirmation')}
+            onChange={(e) => this.onChange('passwordConfirmation', e)}
+            autoComplete='new-password'
+            required
+          />
 
-        <Space size={30} />
+          <Space size={30} />
 
-        <div className={styles.buttons}>
-          <Button width={142} color='neutral' onClick={this.handlePrevious}>{t('Previous')}</Button>
-          <Button width={142} id='password-finish-btn' onClick={this.handleFinish}>{t('Finish')}</Button>
-        </div>
+          <div className={styles.buttons}>
+            <Button type='button' width={142} color='neutral' onClick={this.handlePrevious}>{t('Previous')}</Button>
+            <Button type='submit' width={142} id='password-finish-btn'>{t('Finish')}</Button>
+          </div>
+        </form>
       </>
     )
   }
