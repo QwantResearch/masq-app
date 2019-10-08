@@ -170,7 +170,7 @@ class Login extends Component {
   }
 
   handleClickAddProfile () {
-    this.setState({ addProfile: true })
+    this.setState({ addProfile: true, syncMethod: false, signup: false })
   }
 
   handleOpenOnboardingQrCode () {
@@ -248,7 +248,7 @@ class Login extends Component {
           ))}
           <PlusSquare className={styles.PlusSquare} onClick={this.handleClickAddProfile} />
         </div>
-        {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
+        {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} onBack={this.handleClickAddProfile} />}
         {addProfile &&
           <div>
             <MediaQuery maxWidth={700}>
@@ -263,9 +263,9 @@ class Login extends Component {
             onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLink}
             onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
             onClose={this.handleCloseSyncMethod}
-            onBack={this}
             onSync={this.handleOpenSync}
             onScanner={this.handleOpenScanner}
+            onBack={this.handleClickAddProfile}
           />)}
         {showOnboardingCopyLink && (
           <OnBoardingCopyLink
@@ -352,7 +352,7 @@ class Login extends Component {
     if (!currentAppRequest || users.length === 0) {
       return (
         <div>
-          {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} />}
+          {signup && <Signup onSignup={this.handleSignup} onClose={this.handleClose} onBack={this.handleClickAddProfile} />}
           {addProfile &&
             <div>
               <MediaQuery maxWidth={700}>
@@ -369,6 +369,7 @@ class Login extends Component {
               onClose={this.handleCloseSyncMethod}
               onSync={this.handleOpenSync}
               onScanner={this.handleOpenScanner}
+              onBack={this.handleClickAddProfile}
             />)}
           {showOnboardingCopyLink && (
             <OnBoardingCopyLink

@@ -6,11 +6,11 @@ import { HelpCircle } from 'react-feather'
 
 import styles from './SyncMethod.module.scss'
 
-const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose, onSync, onScanner }) => {
+const SyncMethod = ({ onOpenOnboardingCopyLink, onOpenOnboardingQrCode, onClose, onBack, onSync, onScanner }) => {
   const { t } = useTranslation()
   const message = t(`Hold your device over the QR Code so that it is clearly visible within your smartphone's screen:`) //eslint-disable-line
   return (
-    <Modal title={t('Synchronization method')} mobileHeader width={400} height={600} padding={40} onClose={onClose}>
+    <Modal title={t('Synchronization method')} onBack={onBack} mobileHeader width={400} height={600} padding={40} onClose={onClose}>
       <div className={styles.SyncMethod}>
         <div className={styles.content}>
           <p className={styles.text}>{message}</p>
@@ -45,7 +45,8 @@ SyncMethod.propTypes = {
   onSync: PropTypes.func,
   onScanner: PropTypes.func,
   onOpenOnboardingCopyLink: PropTypes.func,
-  onOpenOnboardingQrCode: PropTypes.func
+  onOpenOnboardingQrCode: PropTypes.func,
+  onBack: PropTypes.func
 }
 
 export default SyncMethod
