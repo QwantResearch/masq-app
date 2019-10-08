@@ -77,6 +77,10 @@ class SyncProfile {
     this.peer = peer
   }
 
+  getSw () {
+    return this.sw
+  }
+
   async pullProfile () {
     await sendEncryptedJSON({ msg: 'pullProfile' }, this.key, this.peer)
 
