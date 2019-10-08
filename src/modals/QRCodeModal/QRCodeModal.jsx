@@ -25,11 +25,13 @@ const QRCodeModal = ({ onClose, profile }) => {
   const [link, setLink] = useState('')
   const [syncStep, setSyncStep] = useState(null)
   const [message, setMessage] = useState(null)
+  const [sp, setSp] = useState(null)
 
   useEffect(() => {
     const startSync = async () => {
       const sp = new SyncProfile()
       await sp.init()
+      setSp(sp)
       const secureLink = await sp.getSecureLink()
       setLink(secureLink)
 
@@ -74,8 +76,14 @@ const QRCodeModal = ({ onClose, profile }) => {
     setTimeout(() => setCopied(false), 3000)
   }
 
+  const handleClose = () => {
+    const sw = sp.getSw()
+    sw.close()
+    onClose()
+  }
+
   if (syncStep) {
-    return <SyncDevice step={syncStep} onClick={onClose} onClose={onClose} message={message} />
+    return <SyncDevice step={syncStep} onClick={onClose} onClose={() => handleClose()} message={message} />
   }
 
   return (
