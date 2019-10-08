@@ -263,6 +263,7 @@ class Login extends Component {
             onOpenOnboardingCopyLink={this.handleOpenOnboardingCopyLink}
             onOpenOnboardingQrCode={this.handleOpenOnboardingQrCode}
             onClose={this.handleCloseSyncMethod}
+            onBack={this}
             onSync={this.handleOpenSync}
             onScanner={this.handleOpenScanner}
           />)}

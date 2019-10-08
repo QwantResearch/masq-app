@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Modal, Typography, Space, TextField, OnBoardingCopyLink } from '../../components'
 import { Sync } from '../../containers'
 import { HelpCircle } from 'react-feather'
+import { useMediaQuery } from 'react-responsive'
 
 import styles from './SyncUrl.module.scss'
 
@@ -12,6 +13,7 @@ const SyncUrl = ({ onClose }) => {
   const [url, setUrl] = useState('')
   const [syncing, setSyncing] = useState(false)
   const [onboarding, setOnboarding] = useState(false)
+  const isMobile = useMediaQuery({ maxWidth: styles.mobileWidth })
 
   if (syncing) {
     return <Sync link={url} onClose={onClose} />
@@ -36,7 +38,7 @@ const SyncUrl = ({ onClose }) => {
         />
         <Space size={32} />
         <div className={styles.buttons}>
-          <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
+          {!isMobile && <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>}
           <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
         </div>
         <Space size={54} />
