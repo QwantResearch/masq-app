@@ -22,7 +22,7 @@ const SyncUrl = ({ onClose }) => {
   }
 
   return (
-    <Modal title={t('Synchronize a profile')} width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Paste profile link')} width={400} padding={40} onClose={onClose}>
       <div className={styles.SyncUrl}>
         <Space size={32} />
         <p className={styles.text}>
