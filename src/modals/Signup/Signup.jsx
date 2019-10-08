@@ -235,10 +235,10 @@ class Signup extends React.Component {
   }
 
   render () {
-    const { t } = this.props
+    const { t, onBack } = this.props
 
     return (
-      <Modal title={t('Create a new profile')} mobileHeader onClose={this.props.onClose} padding={64} width={380}>
+      <Modal title={t('Create a new profile')} mobileHeader onClose={this.props.onClose} padding={64} width={380} onBack={onBack}>
         <div className={styles.Signup}>
           <Space size={28} />
           {this.currentStep === 0 && this.renderFirstStep()}
@@ -253,7 +253,8 @@ Signup.propTypes = {
   onSignup: PropTypes.func,
   onClose: PropTypes.func,
   setNotification: PropTypes.func,
-  t: PropTypes.func
+  t: PropTypes.func,
+  onBack: PropTypes.func
 }
 
 const mapDispatchToProps = dispatch => ({
