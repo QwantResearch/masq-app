@@ -56,7 +56,7 @@ class Sync extends Component {
 
       if (msg !== 'pullProfile') throw new Error('Unexpected message')
       await this.sp.init(channel, Buffer.from(key, 'base64'))
-      await promiseTimeout(5000, this.sp.joinSecureChannel())
+      await promiseTimeout(15000, this.sp.joinSecureChannel())
       await this.sp.pullProfile()
       const profile = this.sp.publicProfile
       this.setState({ profile })
