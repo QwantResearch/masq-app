@@ -6,6 +6,7 @@ import { withTranslation } from 'react-i18next'
 import { signin, setSyncStep, getMasqInstance } from '../../actions'
 import { SyncDevice } from '../../modals'
 import SyncProfile from '../../lib/sync-profile'
+import { promiseTimeout } from '../../lib/utils'
 
 class Sync extends Component {
   constructor (props) {
@@ -55,7 +56,7 @@ class Sync extends Component {
 
       if (msg !== 'pullProfile') throw new Error('Unexpected message')
       await this.sp.init(channel, Buffer.from(key, 'base64'))
-      await this.sp.joinSecureChannel()
+      await promiseTimeout(5000, this.sp.joinSecureChannel())
       await this.sp.pullProfile()
       const profile = this.sp.publicProfile
       this.setState({ profile })
@@ -66,6 +67,9 @@ class Sync extends Component {
       switch (e.message) {
         case 'alreadySynced':
           this.setState({ message: t('This profile is already synchronized on this device.') })
+          break
+        case 'timeout':
+          this.setState({ message: t('The link has expired. Please retry with a fresh link.') })
           break
         case 'usernameAlreadyExists':
           this.setState({ message: t('A profile with the same username already exists in this device, rename it and try again.') })
@@ -97,7 +101,9 @@ class Sync extends Component {
         this.props.syncStep === 'error') {
       return this.props.onClose()
     }
-
+    if (this.props.syncStep === 'error') {
+      return this.props.onClose()
+    }
     const { profile } = this.state
     const dbName = `profile-${profile.id}`
     window.indexedDB.deleteDatabase(dbName)
