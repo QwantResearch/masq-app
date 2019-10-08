@@ -19,22 +19,6 @@
     text-align: center;
   }
 
-  .buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    @media (max-width: $mobile-width) {
-      display: flex;
-      flex-direction: column-reverse;
-      >:first-child {
-        margin-top: 12px;
-        width: 100%;
-      }
-    }
-  }
-
   .onBoardingMessage {
     cursor: pointer;
     display:flex;

@@ -35,10 +35,7 @@ const SyncUrl = ({ onClose }) => {
           onChange={(e) => setUrl(e.target.value)}
         />
         <Space size={32} />
-        <div className={styles.buttons}>
-          <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>
-          <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
-        </div>
+        <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
         <Space size={54} />
         <div onClick={() => setOnboarding(true)} className={styles.onBoardingMessage}>
           <HelpCircle size={14} color='#353c52' />
