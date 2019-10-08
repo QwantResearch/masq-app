@@ -62,7 +62,6 @@ class Sync extends Component {
       this.setState({ profile })
       this.props.setSyncStep('password')
     } catch (e) {
-      this.setState({ message: 'error' })
       this.props.setSyncStep('error')
       switch (e.message) {
         case 'alreadySynced':
