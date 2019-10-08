@@ -9,7 +9,7 @@ const AddProfile = ({ onSync, onClose, onSignup }) => {
   const { t } = useTranslation()
 
   return (
-    <Modal title={t('Add a new profile')} width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Add a new profile')} mobileHeader width={400} padding={40} onClose={onClose}>
       <div className={styles.AddProfile}>
         <div className={styles.content}>
           <Space size={32} />

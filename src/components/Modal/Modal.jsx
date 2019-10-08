@@ -1,43 +1,51 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import MediaQuery from 'react-responsive'
+import { useMediaQuery } from 'react-responsive'
 import { X, ArrowLeft } from 'react-feather'
 
 import styles from './Modal.module.scss'
-import { Typography } from '../../components'
+import { Typography, Space } from '../../components'
 
-const Modal = ({ title, onClose, width, padding, children }) => (
-  <div className={styles.Modal}>
-    <div className={styles.overlay} onClick={onClose} />
-    <div
-      className={styles.modal}
-      style={{
-        width,
-        paddingTop: padding,
-        paddingLeft: padding,
-        paddingRight: padding
-      }}
-    >
-      <MediaQuery maxWidth={styles.mobileWidth}>
-        <div className={styles.mobileHeader}>
-          <div className={styles.backButton} onClick={onClose}>
-            <ArrowLeft />
-          </div>
-          <Typography type='title-modal-mobile'>{title}</Typography>
+const Modal = ({ title, mobileHeader, onClose, onBack, width, padding, children }) => {
+  const isMobile = useMediaQuery({ maxWidth: styles.mobileWidth })
+
+  return (
+    <div className={styles.Modal}>
+      <div className={styles.overlay} onClick={onClose} />
+      <div
+        className={styles.modal}
+        style={{
+          width,
+          paddingLeft: padding,
+          paddingRight: padding
+        }}
+      >
+        {isMobile && mobileHeader
+          ? (
+            <div className={styles.mobileHeader}>
+              <div className={styles.backButton} onClick={onBack || onClose}>
+                <ArrowLeft />
+              </div>
+              <Typography type='title-modal-mobile'>{title}</Typography>
+            </div>
+          ) : (
+            <div>
+              <Space size={32} />
+              {onClose && <X className={styles.close} size={16} onClick={onClose} />}
+              <Typography type='title-modal'>{title}</Typography>
+            </div>
+          )}
+        <div className={styles.content}>
+          {children}
         </div>
-      </MediaQuery>
-      <MediaQuery minWidth={701}>
-        {onClose && <X className={styles.close} size={16} onClick={onClose} />}
-        <Typography type='title-modal'>{title}</Typography>
-      </MediaQuery>
-      <div className={styles.content}>
-        {children}
       </div>
     </div>
-  </div>
-)
+  )
+}
 
-const ResponsiveModal = ({ title, onClose, width, children, padding }) => {
+const ResponsiveModal = ({ title, mobileHeader, onClose, width, children, padding, onBack }) => {
+  const isMobile = useMediaQuery({ maxWidth: styles.mobileWidth })
+
   useEffect(() => {
     window.document.body.style.overflow = 'hidden'
 
@@ -49,12 +57,9 @@ const ResponsiveModal = ({ title, onClose, width, children, padding }) => {
 
   return (
     <div>
-      <MediaQuery maxWidth={styles.mobileWidth}>
-        <Modal title={title} width='100%' onClose={onClose} children={children} />
-      </MediaQuery>
-      <MediaQuery minWidth={701}>
-        <Modal title={title} width={width} onClose={onClose} children={children} padding={padding} />
-      </MediaQuery>
+      {isMobile
+        ? <Modal title={title} mobileHeader={mobileHeader} onBack={onBack} width='100%' onClose={onClose} children={children} />
+        : <Modal title={title} width={width} onClose={onClose} children={children} padding={padding} />}
     </div>
   )
 }
@@ -62,6 +67,7 @@ const ResponsiveModal = ({ title, onClose, width, children, padding }) => {
 Modal.propTypes =
 ResponsiveModal.propTypes = {
   onClose: PropTypes.func,
+  onBack: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.array,
     PropTypes.object
@@ -74,7 +80,8 @@ ResponsiveModal.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  mobileHeader: PropTypes.bool
 }
 
 Modal.defaultProps =
