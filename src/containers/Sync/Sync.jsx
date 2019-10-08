@@ -22,18 +22,22 @@ class Sync extends Component {
     this.handleClose = this.handleClose.bind(this)
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { link, setSyncStep, t } = this.props
     let hash = ''
     try {
       setSyncStep('syncing')
       const url = new URL(link)
-      if (url.hash.substring(0, 7) !== '#/sync/') return
+      if (url.hash.substring(0, 7) !== '#/sync/' ||
+          url.origin !== window.location.origin) {
+        throw new Error('invalid link')
+      }
       hash = url.hash.substr(7) // ignore #/sync/ characters
       if (!hash.length) throw new Error('invalid link')
-      this.startSync(hash)
+      await this.startSync(hash)
     } catch (e) {
-      if (e.message === 'Failed to construct \'URL\': Invalid URL') {
+      if (e.message === 'Failed to construct \'URL\': Invalid URL' ||
+          e.message === 'invalid link') {
         this.setState({ message: t('This synchronization link is invalid. Please go back to the profile you want to import and generate a new link or QR code.') })
       }
       setSyncStep('error')
@@ -47,6 +51,7 @@ class Sync extends Component {
 
     try {
       const [msg, channel, key] = JSON.parse(decoded)
+      if (!msg || !channel || !key) throw new Error('invalid link')
 
       if (msg !== 'pullProfile') throw new Error('Unexpected message')
       await this.sp.init(channel, Buffer.from(key, 'base64'))
