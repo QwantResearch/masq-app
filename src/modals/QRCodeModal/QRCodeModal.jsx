@@ -79,7 +79,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   return (
-    <Modal title={t('Add a device')} width={300} padding={78} onClose={onClose}>
+    <Modal title={t('Add a device')} mobileHeader width={300} padding={78} onClose={onClose}>
       <div id='qrcode' className={styles.QRCode}>
         <Space size={32} />
         <Typography maxWidth={320} type='paragraph-modal' align='center'>

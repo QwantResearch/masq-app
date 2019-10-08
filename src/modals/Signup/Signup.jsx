@@ -243,7 +243,7 @@ class Signup extends React.Component {
     const { t } = this.props
 
     return (
-      <Modal title={t('Create a new profile')} onClose={this.props.onClose} padding={64} width={380}>
+      <Modal title={t('Create a new profile')} mobileHeader onClose={this.props.onClose} padding={64} width={380}>
         <div className={styles.Signup}>
           <Space size={28} />
           {this.currentStep === 0 && this.renderFirstStep()}

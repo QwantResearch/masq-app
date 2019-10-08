@@ -8,7 +8,7 @@ import styles from './DeleteAppDialog.module.scss'
 const ConfirmDialog = ({ app, onConfirm, onCancel, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal title={t('Deletion of the application')} width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Deletion of the application')} mobileHeader width={400} padding={40} onClose={onClose}>
       <div className={styles.ConfirmDialog}>
         <Space size={32} />
         <Typography type='paragraph-modal'>
