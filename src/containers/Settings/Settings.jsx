@@ -177,11 +177,9 @@ class Settings extends React.Component {
               <div className={styles.avatar}>
                 <Avatar upload size={192} image={this.state.image} onChange={(e) => this.onImageChange(e)} username={user.username} />
               </div>
-
-              <div className={styles.inputs}>
+              <form className={styles.inputs} onSubmit={this.handleValidate}>
                 <TextField
                   error={!this.isValid('username')}
-                  onKeyUp={this.handleKeyUp}
                   defaultValue={this.state.username}
                   onChange={(e) => this.onChange('username', e)}
                   label={this.getUsernameLabel(
@@ -192,7 +190,6 @@ class Settings extends React.Component {
                 />
                 <TextField
                   error={!this.isValid('firstname')}
-                  onKeyUp={this.handleKeyUp}
                   defaultValue={this.state.firstname}
                   onChange={(e) => this.onChange('firstname', e)}
                   label={this.isValid('firstname')
@@ -201,7 +198,6 @@ class Settings extends React.Component {
                 />
                 <TextField
                   error={!this.isValid('lastname')}
-                  onKeyUp={this.handleKeyUp}
                   defaultValue={this.state.lastname}
                   onChange={(e) => this.onChange('lastname', e)}
                   label={this.isValid('lastname')
@@ -215,7 +211,7 @@ class Settings extends React.Component {
                   button={t('Update')}
                   onClick={this.handleOpenPasswordEditModal}
                 />
-              </div>
+              </form>
             </div>
           </div>
 
