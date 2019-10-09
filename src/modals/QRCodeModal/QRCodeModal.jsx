@@ -77,8 +77,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   const handleClose = () => {
-    const sw = sp.getSw()
-    sw.close()
+    sp.sw.close()
     onClose()
   }
 
