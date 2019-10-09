@@ -31,16 +31,19 @@ const SyncUrl = ({ onClose }) => {
           {t('Copy the link displayed on your initial device, then paste it in the field "link to existing profile" on this device.')}
         </p>
         <Space size={32} />
-        <TextField
-          className={styles.textField}
-          label={t('Link to existing profile')}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <Space size={32} />
-        <div className={styles.buttons}>
-          {!isMobile && <Button color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>}
-          <Button width={185} onClick={() => setSyncing(true)}>{t('Synchronize')}</Button>
-        </div>
+
+        <form style={{ width: '100%' }} onSubmit={() => setSyncing(true)}>
+          <TextField
+            className={styles.textField}
+            label={t('Link to existing profile')}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <Space size={32} />
+          <div className={styles.buttons}>
+            {!isMobile && <Button type='button' color='neutral' width={185} onClick={onClose}>{t('go back')}</Button>}
+            <Button type='submit' width={185}>{t('Synchronize')}</Button>
+          </div>
+        </form>
         <Space size={54} />
         <div onClick={() => setOnboarding(true)} className={styles.onBoardingMessage}>
           <HelpCircle size={14} color='#353c52' />
