@@ -62,7 +62,9 @@
 
     .content {
       height: 100%;
-      margin: 0 0 32px 0px;
+      padding: 0 0 32px 0px;
+      margin: 0;
+      overflow-y: auto;
     }
   }
 

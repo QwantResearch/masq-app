@@ -79,7 +79,7 @@ const QRCodeModal = ({ onClose, profile }) => {
   }
 
   return (
-    <Modal title={t('Add a device')} mobileHeader width={300} padding={78} onClose={onClose}>
+    <Modal title={t('Add a device')} mobileHeader width={320} padding={78} onClose={onClose}>
       <div id='qrcode' className={styles.QRCode}>
         <Space size={32} />
         <Typography maxWidth={320} type='paragraph-modal' align='center'>
@@ -105,9 +105,8 @@ const QRCodeModal = ({ onClose, profile }) => {
         <Space size={24} />
         <TextField
           className={classNames(styles.input, { [styles.copied]: copied })}
-          readonly
+          readOnly
           defaultValue={link}
-          value={link}
           button={<Copy style={{ height: 40 }} />}
           height={36}
           onClick={() => copyLink()}
