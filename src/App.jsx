@@ -135,7 +135,9 @@ class App extends Component {
   }
 
   componentWillUnmount () {
-    this.watchers.profile.destroy()
+    if (this.watchers.profile) {
+      this.watchers.profile.destroy()
+    }
   }
 
   render () {
