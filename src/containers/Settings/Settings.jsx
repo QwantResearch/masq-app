@@ -100,7 +100,8 @@ class Settings extends React.Component {
     reader.readAsDataURL(image)
   }
 
-  handleValidate () {
+  handleValidate (e) {
+    e.preventDefault()
     const { t, setNotification } = this.props
 
     if (!this.hasChanged) {
@@ -179,6 +180,7 @@ class Settings extends React.Component {
               </div>
               <form className={styles.inputs} onSubmit={this.handleValidate}>
                 <TextField
+                  autoComplete='username'
                   error={!this.isValid('username')}
                   defaultValue={this.state.username}
                   onChange={(e) => this.onChange('username', e)}
@@ -189,6 +191,7 @@ class Settings extends React.Component {
                   )}
                 />
                 <TextField
+                  autoComplete='firstname'
                   error={!this.isValid('firstname')}
                   defaultValue={this.state.firstname}
                   onChange={(e) => this.onChange('firstname', e)}
@@ -197,6 +200,7 @@ class Settings extends React.Component {
                     : t('The firstname can only contain alphanumeric characters and spaces')}
                 />
                 <TextField
+                  autoComplete='lastname'
                   error={!this.isValid('lastname')}
                   defaultValue={this.state.lastname}
                   onChange={(e) => this.onChange('lastname', e)}
@@ -205,6 +209,7 @@ class Settings extends React.Component {
                     : t('The lastname can only contain alphanumeric characters and spaces')}
                 />
                 <TextField
+                  autoComplete='current-password'
                   type='password'
                   defaultValue='password'
                   label={t('Secret key')}
