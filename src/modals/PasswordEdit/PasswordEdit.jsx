@@ -85,14 +85,16 @@ class PasswordEdit extends React.Component {
 
   render () {
     const { currentPassword, password, passwordConfirmation, currentPasswordError } = this.state
-    const { onClose, t } = this.props
+    const { onClose, username, t } = this.props
 
     return (
       <Modal title={t('Update your secret key')} mobileHeader onClose={onClose} width={400}>
-        <div className={styles.PasswordEdit}>
+        <form className={styles.PasswordEdit} onSubmit={this.handleUpdatePassphrase}>
+          <input style={{ display: 'none' }} autoComplete='username' type='text' defaultValue={username} />
           <Space size={28} />
           <TextField
             password
+            autoComplete='current-password'
             className={styles.TextField}
             defaultValue={currentPassword}
             autoFocus
@@ -108,6 +110,7 @@ class PasswordEdit extends React.Component {
             password
             className={styles.TextField}
             type='password'
+            autoComplete='new-password'
             defaultValue={password}
             label={this.isValid('password')
               ? t('New secret key')
@@ -123,6 +126,7 @@ class PasswordEdit extends React.Component {
             password
             className={styles.TextField}
             type='password'
+            autoComplete='new-password'
             defaultValue={passwordConfirmation}
             label={this.isValid('passwordConfirmation')
               ? t('Secret key confirmation')
@@ -135,25 +139,30 @@ class PasswordEdit extends React.Component {
           <Space size={30} />
 
           <div className={styles.buttons}>
-            <Button width={142} color='neutral' onClick={onClose}>{t('Cancel')}</Button>
-            <Button width={142} onClick={this.handleUpdatePassphrase}>{t('Save')}</Button>
+            <Button width={142} type='button' color='neutral' onClick={onClose}>{t('Cancel')}</Button>
+            <Button width={142} type='submit'>{t('Save')}</Button>
           </div>
-        </div>
+        </form>
       </Modal>
     )
   }
 }
 
 PasswordEdit.propTypes = {
+  username: PropTypes.string.isRequired,
   onClose: PropTypes.func,
   updatePassphrase: PropTypes.func.isRequired,
   setNotification: PropTypes.func.isRequired,
   t: PropTypes.func
 }
 
+const mapStateToProps = (state) => ({
+  username: state.masq.currentUser.username
+})
+
 const mapDispatchToProps = dispatch => ({
   updatePassphrase: (oldPass, newPass) => dispatch(updatePassphrase(oldPass, newPass)),
   setNotification: (notif) => dispatch(setNotification(notif))
 })
 const translatedPasswordEdit = withTranslation()(PasswordEdit)
-export default connect(null, mapDispatchToProps)(translatedPasswordEdit)
+export default connect(mapStateToProps, mapDispatchToProps)(translatedPasswordEdit)
