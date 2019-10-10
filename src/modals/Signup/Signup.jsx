@@ -31,7 +31,6 @@ class Signup extends React.Component {
     this.isValid = this.isValid.bind(this)
     this.handlePrevious = this.handlePrevious.bind(this)
     this.handleOpenDialog = this.handleOpenDialog.bind(this)
-    this.handleKeyUp = this.handleKeyUp.bind(this)
   }
 
   isValid (fieldName) {
@@ -95,7 +94,8 @@ class Signup extends React.Component {
     this.refAvatar.current.openDialog()
   }
 
-  handleNext () {
+  handleNext (e) {
+    e.preventDefault()
     const fieldsToValidate = ['lastname', 'firstname', 'username']
     this.validationEnabled = true
 
@@ -117,7 +117,8 @@ class Signup extends React.Component {
     this.forceUpdate()
   }
 
-  handleFinish () {
+  handleFinish (e) {
+    e.preventDefault()
     const { onSignup } = this.props
     this.validationEnabled = true
 
@@ -127,14 +128,6 @@ class Signup extends React.Component {
     }
 
     onSignup(this.state)
-  }
-
-  handleKeyUp (e) {
-    if (this.currentStep === 0) {
-      this.handleNext()
-    } else {
-      this.handleFinish()
-    }
   }
 
   renderFirstStep () {
@@ -156,7 +149,7 @@ class Signup extends React.Component {
         </div>
 
         <Space size={32} />
-        <form onSubmit={this.handleKeyUp}>
+        <form onSubmit={this.handleNext}>
           <TextField
             className={styles.TextField}
             id='signup-username-input'
@@ -171,13 +164,13 @@ class Signup extends React.Component {
             required
             autoComplete='username'
           />
+
+          <Space size={32} />
+
+          <div className={styles.buttons}>
+            <Button type='submit' id='signup-next-btn' width={185}>{t('Next')}</Button>
+          </div>
         </form>
-
-        <Space size={32} />
-
-        <div className={styles.buttons}>
-          <Button onClick={this.handleNext} type='submit' id='signup-next-btn' width={185}>{t('Next')}</Button>
-        </div>
       </>
     )
   }
@@ -193,7 +186,7 @@ class Signup extends React.Component {
           <span className={styles.fontMedium}>{t('NO WAY to recover this key in case you lose it, because you only know it.')}</span>
         </Typography>
         <Space size={14} />
-        <form onSubmit={this.handleKeyUp}>
+        <form onSubmit={this.handleFinish}>
           <input style={{ display: 'none' }} autoComplete='username' type='text' defaultValue={username} />
           <TextField
             password
