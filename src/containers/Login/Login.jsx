@@ -302,25 +302,29 @@ class Login extends Component {
         <Space size={16} />
 
         <div className={styles.passwordSection}>
-          <TextField
-            password
-            large
-            height={46}
-            autoFocus
-            type='password'
-            onChange={this.handlePasswordChange}
-            error={this.state.isWrongPassword}
-            label={this.state.isWrongPassword ? t('Wrong password, please try again') : ''}
-            onKeyUp={this.handlePasswordKeyUp}
-            defaultValue={password}
-          />
-          <Space size={19} />
-          <Button width={302} onClick={this.handleConnect}>{t('Validate')}</Button>
-          <Space size={32} />
-          <div className={styles.goback} onClick={this.handleGoBack}>
-            <ChevronLeft />
-            <Typography type='label'>{t('Change profile')}</Typography>
-          </div>
+          <form onSubmit={this.handleConnect}>
+            <input style={{ display: 'none' }} autoComplete='username' type='text' defaultValue={selectedUser.username} />
+            <TextField
+              password
+              large
+              height={46}
+              autoFocus
+              autoComplete='password'
+              type='password'
+              onChange={this.handlePasswordChange}
+              error={this.state.isWrongPassword}
+              label={this.state.isWrongPassword ? t('Wrong password, please try again') : ''}
+              onKeyUp={this.handlePasswordKeyUp}
+              defaultValue={password}
+            />
+            <Space size={19} />
+            <Button width={302} type='submit'>{t('Validate')}</Button>
+            <Space size={32} />
+            <div className={styles.goback} onClick={this.handleGoBack}>
+              <ChevronLeft />
+              <Typography type='label'>{t('Change profile')}</Typography>
+            </div>
+          </form>
         </div>
       </div>
     )
