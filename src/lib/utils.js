@@ -76,8 +76,25 @@ const dispatchMasqError = (errorCode) => {
 
 const debug = (() => (process.env.NODE_ENV === 'production' ? () => {} : console.log))()
 
+const promiseTimeout = function (ms, promise) {
+  // Create a promise that rejects in <ms> milliseconds
+  const timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      clearTimeout(id)
+      reject(new Error('timeout'))
+    }, ms)
+  })
+
+  // Returns a race between our timeout and the passed in promise
+  return Promise.race([
+    promise,
+    timeout
+  ])
+}
+
 export {
   isUsernameAlreadyTaken,
+  promiseTimeout,
   compressImage,
   MAX_IMAGE_SIZE,
   waitForPeer,
