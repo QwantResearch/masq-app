@@ -97,7 +97,7 @@ class QRCodeModal extends React.Component {
     }
 
     return (
-      <Modal title={t('Add a device')} mobileHeader width={320} padding={78} onClose={() => this.handleClose()}>
+      <Modal title={t('Add a device')} mobileHeader onClose={() => this.handleClose()}>
         <div id='qrcode' className={styles.QRCode}>
           <Space size={32} />
           <Typography maxWidth={320} type='paragraph-modal' align='center'>

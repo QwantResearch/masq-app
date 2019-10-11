@@ -27,7 +27,7 @@ class Scanner extends Component {
   render () {
     const { t, onClose } = this.props
     return (
-      <Modal title={t('Scan QR code')} mobileHeader onClose={onClose} padding={0} width={350}>
+      <Modal title={t('Scan QR code')} mobileHeader onClose={onClose}>
         <Space size={32} />
         <div style={{ marginLeft: 16, marginRight: 16 }}>
           <Typography type='paragraph-modal' align='center'>{t('Position this phone in front of your initial device to scan the QR code')}</Typography>

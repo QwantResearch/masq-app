@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .AddProfile {
   height: 100%;
@@ -8,6 +9,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    @media (min-width: $mobile-width + 1px) {
+      width: 400px
+    }
+
     .text {
       font-size: 14px;
       color: $color-blue-grey;

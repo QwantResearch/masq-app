@@ -11,7 +11,7 @@ const UnsupportedBrowser = () => {
   const { t } = useTranslation()
 
   return (
-    <Modal width={400}>
+    <Modal>
       <div className={styles.UnsupportedBrowser}>
         <Typography type='title-modal'>{t('Browser not supported')}</Typography>
         <Space size={16} />

@@ -9,7 +9,7 @@ import styles from './SyncDevice.module.scss'
 
 const SyncDeviceModal = ({ title, children, onClose }) => {
   return (
-    <Modal title={title} width={400} padding={32} onClose={onClose}>
+    <Modal title={title} onClose={onClose}>
       <div className={styles.SyncDevice}>
         {children}
       </div>
