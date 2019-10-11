@@ -24,6 +24,8 @@
 }
 
 .buttons {
+  display: flex;
+  justify-content: center;
   @media (min-width: $mobile-width + 1px) {
     >:nth-child(2) {
       margin-left: 12px;
