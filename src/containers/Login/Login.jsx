@@ -42,7 +42,6 @@ class Login extends Component {
     this.handleCloseQRCodeModal = this.handleCloseQRCodeModal.bind(this)
     this.handleOpenQRCodeModal = this.handleOpenQRCodeModal.bind(this)
     this.renderQRCode = this.renderQRCodeModal()
-    this.handlePasswordKeyUp = this.handlePasswordKeyUp.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.handleConnect = this.handleConnect.bind(this)
@@ -141,13 +140,8 @@ class Login extends Component {
     })
   }
 
-  async handlePasswordKeyUp (e) {
-    if (e.key === 'Enter') {
-      this.handleConnect()
-    }
-  }
-
-  async handleConnect () {
+  async handleConnect (e) {
+    e.preventDefault()
     const { signin } = this.props
     const { password, selectedUser } = this.state
     try {
@@ -314,7 +308,6 @@ class Login extends Component {
               onChange={this.handlePasswordChange}
               error={this.state.isWrongPassword}
               label={this.state.isWrongPassword ? t('Wrong password, please try again') : ''}
-              onKeyUp={this.handlePasswordKeyUp}
               defaultValue={password}
             />
             <Space size={19} />
