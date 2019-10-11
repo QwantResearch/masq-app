@@ -92,53 +92,49 @@ class QRCodeModal extends React.Component {
     const { link, copied, syncStep, message } = this.state
     const { t, onClose } = this.props
 
+    if (syncStep) {
+      return <SyncDevice step={syncStep} onClick={onClose} onClose={() => this.handleClose()} message={message} />
+    }
+
     return (
-      <div>
-        {
-          syncStep
-            ? <SyncDevice step={syncStep} onClick={onClose} onClose={() => this.handleClose()} message={message} />
-            : (
-              <Modal title={t('Add a device')} mobileHeader width={320} padding={78} onClose={() => this.handleClose()}>
-                <div id='qrcode' className={styles.QRCode}>
-                  <Space size={32} />
-                  <Typography maxWidth={320} type='paragraph-modal' align='center'>
-                    {t('Scan this QR Code with the device you want to synchronize:')}
-                  </Typography>
-                  <Space size={18} />
-                  <QRCode value={link} />
-                  <Space size={26} />
-                  <Typography
-                    line
-                    align='center'
-                    type='paragraph-modal'
-                    color={styles.colorBlueGrey}
-                  >
-                    {t('or')}
-                  </Typography>
-                  <Space size={22} />
-                  <Typography maxWidth={320} type='paragraph-modal' align='center'>
-                    {t(
-                      'Copy the following link and paste it in the browser you want to use:'
-                    )}
-                  </Typography>
-                  <Space size={24} />
-                  <TextField
-                    className={classNames(styles.input, { [styles.copied]: copied })}
-                    readOnly
-                    defaultValue={link}
-                    button={<Copy style={{ height: 40 }} />}
-                    height={36}
-                    onClick={() => this.copyLink()}
-                  />
-                  <Space size={8} />
-                  {copied && <Pill>{t('Link Copied !')}</Pill>}
-                  {!copied && <Space size={28} />}
-                  <Space size={16} />
-                </div>
-              </Modal>
-            )
-        }
-      </div>
+      <Modal title={t('Add a device')} mobileHeader width={320} padding={78} onClose={() => this.handleClose()}>
+        <div id='qrcode' className={styles.QRCode}>
+          <Space size={32} />
+          <Typography maxWidth={320} type='paragraph-modal' align='center'>
+            {t('Scan this QR Code with the device you want to synchronize:')}
+          </Typography>
+          <Space size={18} />
+          <QRCode value={link} />
+          <Space size={26} />
+          <Typography
+            line
+            align='center'
+            type='paragraph-modal'
+            color={styles.colorBlueGrey}
+          >
+            {t('or')}
+          </Typography>
+          <Space size={22} />
+          <Typography maxWidth={320} type='paragraph-modal' align='center'>
+            {t(
+              'Copy the following link and paste it in the browser you want to use:'
+            )}
+          </Typography>
+          <Space size={24} />
+          <TextField
+            className={classNames(styles.input, { [styles.copied]: copied })}
+            readOnly
+            defaultValue={link}
+            button={<Copy style={{ height: 40 }} />}
+            height={36}
+            onClick={() => this.copyLink()}
+          />
+          <Space size={8} />
+          {copied && <Pill>{t('Link Copied !')}</Pill>}
+          {!copied && <Space size={28} />}
+          <Space size={16} />
+        </div>
+      </Modal>
     )
   }
 }
