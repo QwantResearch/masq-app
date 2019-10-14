@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import MediaQuery from 'react-responsive'
 
-import Head from '../../assets/head-landing.svg'
-import HeadMobile from '../../assets/head-landing-mobile.svg'
+import Cubes from '../../assets/cubes.svg'
 import BGLanding from '../../assets/bg-landing.svg'
 
 import { ReactComponent as Logo } from '../../assets/logo.svg'
@@ -16,14 +15,11 @@ import { ReactComponent as Windows } from '../../assets/windows-masq.svg'
 import { ReactComponent as Qwant } from '../../assets/qwant.svg'
 
 import { Button, Space, Typography, OnBoardingQrCode, OnBoardingCopyLink } from '../../components'
-import { useWindowWidth } from '../../hooks'
 import { SyncUrl, SyncMethod, Scanner } from '../../modals'
 
 import styles from './Landing.module.scss'
 
 // const remoteWebRTCEnabled = (process.env.REACT_APP_REMOTE_WEBRTC === 'true')
-
-const MOBILE_WIDTH = 700
 
 const Landing = ({ onClick, children }) => {
   const [sync, setSync] = useState(false)
@@ -32,7 +28,6 @@ const Landing = ({ onClick, children }) => {
   const [showOnboardingQrCode, setShowOnboardingQrCode] = useState(false)
   const [showOnboardingCopyLink, setShowOnboardingCopyLink] = useState(false)
   const { t } = useTranslation()
-  const width = useWindowWidth()
 
   if (sync) {
     return <SyncUrl onClose={() => setSync(false)} />
@@ -84,7 +79,6 @@ const Landing = ({ onClick, children }) => {
     <div className={styles.Landing}>
       <div
         className={styles.section1}
-        style={{ backgroundImage: `url(${width > MOBILE_WIDTH ? Head : HeadMobile})` }}
       >
         <div className={styles.Logo}><Logo /></div>
         {/* {remoteWebRTCEnabled && <div className={styles.connectBtn}><Button width={185}>Connexion</Button></div>} */}
@@ -108,6 +102,10 @@ const Landing = ({ onClick, children }) => {
             </div>
           </div>
         )}
+        <div
+          className={styles.cubes}
+          style={{ backgroundImage: `url(${Cubes})` }}
+        />
       </div>
 
       <div className={styles.section2}>
