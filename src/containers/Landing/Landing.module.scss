@@ -14,10 +14,13 @@
 
   .section1 {
     padding: 68px 20px 0 20px;
-    min-height: 660px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom center;
+
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 230px;
 
     @media (max-width: 700px) {
       .Logo {
