@@ -27,7 +27,6 @@ const SyncDeviceModalSyncing = ({ t, onClick, message, onClose }) => (
     </Typography>
     <Space size={79} />
     <Button color='neutral' onClick={onClick}>{t('cancel')}</Button>
-    <Space size={32} />
   </SyncDeviceModal>
 )
 
@@ -79,7 +78,6 @@ const SyncDeviceModalFinished = ({ t, onClick, message, onClose }) => (
     </Typography>
     <Space size={60} />
     <Button color='neutral' onClick={onClick}>{t('close')}</Button>
-    <Space size={32} />
   </SyncDeviceModal>
 )
 
@@ -93,7 +91,6 @@ const SyncDeviceModalError = ({ t, onClick, message, onClose }) => (
     </Typography>
     <Space size={60} />
     <Button color='neutral' onClick={onClick}>{t('go back')}</Button>
-    <Space size={32} />
   </SyncDeviceModal>
 )
 
