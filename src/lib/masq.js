@@ -751,12 +751,12 @@ class Masq {
     }
 
     const apps = await this.getApps()
-
-    if (apps.length === 1) {
+    for (const app of apps) {
       const myDevice = await this.getDevice()
-      const appId = `app-${profileId}-${apps[0].id}`
+      const appId = `app-${profileId}-${app.id}`
+      const exist = myDevice.apps.find(({ id }) => id === appId)
 
-      if (myDevice.apps[0] && myDevice.apps[0].id && myDevice.apps[0].id === appId) {
+      if (exist) {
         debug('App already exists in current device info')
       } else {
         debug('Add app to current device info')
@@ -771,6 +771,10 @@ class Masq {
           }]
         })
       }
+    }
+
+    if (apps.length === 1) {
+
     }
   }
 
