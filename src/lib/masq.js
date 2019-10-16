@@ -16,10 +16,10 @@ const HUB_URLS = process.env.REACT_APP_SIGNALHUB_URLS.split(',')
 
 const debug = (function () {
   switch (process.env.NODE_ENV) {
-    case ('development'):
+    case 'development':
       return console.log
     default:
-      return () => {}
+      return () => { }
   }
 })()
 
@@ -34,30 +34,27 @@ const STATES = {
   USER_ACCEPTED: 'userAccepted',
   REQUEST_WRITE_ACCESS_MATERIAL: 'requestWriteAccessMaterial',
   WRITE_ACCESS_PROVIDED: 'writeAccessProvided'
-
 }
 
 let STUN_TURN = []
 
 if (process.env.REACT_APP_REMOTE_WEBRTC === 'true') {
   if (process.env.REACT_APP_STUN_URLS) {
-    const urls = process.env.REACT_APP_STUN_URLS.split(',').map(
-      u => {
-        return { urls: u }
-      })
+    const urls = process.env.REACT_APP_STUN_URLS.split(',').map((u) => {
+      return { urls: u }
+    })
     STUN_TURN = STUN_TURN.concat(urls)
   }
 
   if (process.env.REACT_APP_TURN_URLS) {
-    const urls = process.env.REACT_APP_TURN_URLS.split(',').map(
-      u => {
-        const splitted = u.split('|')
-        return {
-          urls: splitted[0],
-          username: splitted[1],
-          credential: splitted[2]
-        }
-      })
+    const urls = process.env.REACT_APP_TURN_URLS.split(',').map((u) => {
+      const splitted = u.split('|')
+      return {
+        urls: splitted[0],
+        username: splitted[1],
+        credential: splitted[2]
+      }
+    })
     STUN_TURN = STUN_TURN.concat(urls)
   }
 }
@@ -81,7 +78,6 @@ const requiredParametersProfile = [
   'password',
   'image'
 ]
-
 /**
  * Open or create a hyperdb instance
  * @param {string} name The indexeddb store name
@@ -200,6 +196,7 @@ class Masq {
       await this.createNewDevice()
     }
 
+    this._checkVersion(profileId)
     this._watchAndAuthorizeApps()
 
     return profile
@@ -248,6 +245,8 @@ class Masq {
 
     // we do not use this.encryptAndPut because this value is not encrypted
     await db.putAsync('/profile/protectedMK', protectedMK)
+    await this._addVersion()
+
     // We do not use this.encryptAndPut method because the master key
     // is not stored in this.profileDB (only set in openProfile)
     await put(db, _masterKey, nonce, '/profile', privateProfile)
@@ -438,9 +437,7 @@ class Masq {
     this._checkProfile()
     const id = this.profileDB.local.key.toString('hex')
     const devices = await this._getResources('devices')
-    return devices.map(d =>
-      d.id === id ? { ...d, current: true } : d
-    )
+    return devices.map((d) => (d.id === id ? { ...d, current: true } : d))
   }
 
   /**
@@ -505,7 +502,14 @@ class Masq {
         try {
           if (app) {
             const privateProfile = await this.getProfile(this.profileId)
-            await this.sendAuthorized(peer, app.id, app.appDEK, privateProfile.username, privateProfile.image, app.appNonce)
+            await this.sendAuthorized(
+              peer,
+              app.id,
+              app.appDEK,
+              privateProfile.username,
+              privateProfile.image,
+              app.appNonce
+            )
             const res = await this.receiveEndOfConnection(peer)
             resolve(res)
           } else {
@@ -548,7 +552,9 @@ class Masq {
           resolve({ isConnected: false, ...this.app })
         } else {
           await this._closeUserAppConnection()
-          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+          reject(
+            new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`)
+          )
         }
       })
     })
@@ -573,7 +579,9 @@ class Masq {
           resolve({ isConnected: false, ...this.app })
         } else {
           await this._closeUserAppConnection()
-          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+          reject(
+            new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`)
+          )
         }
       })
     })
@@ -611,12 +619,14 @@ class Masq {
     const appDEK = app ? app.appDEK : await this._genAppDEK()
     const appNonce = app ? app.appNonce : await this._genNonce()
 
-    const id = app ? app.id : await this.addApp({
-      ...this.app,
-      appId: this.appId,
-      appDEK,
-      appNonce
-    })
+    const id = app
+      ? app.id
+      : await this.addApp({
+        ...this.app,
+        appId: this.appId,
+        appDEK,
+        appNonce
+      })
 
     const privateProfile = await this.getProfile()
 
@@ -632,7 +642,15 @@ class Masq {
     const profileImage = privateProfile.image
     const userAppNonce = appNonce
 
-    const data = { msg: MasqMessages.MASQ_ACCESS_GRANTED, key: dbKey, userAppDbId, userAppDEK, username, profileImage, userAppNonce }
+    const data = {
+      msg: MasqMessages.MASQ_ACCESS_GRANTED,
+      key: dbKey,
+      userAppDbId,
+      userAppDEK,
+      username,
+      profileImage,
+      userAppNonce
+    }
     const encryptedMsg = await encrypt(this.key, data, 'base64')
     peer.send(JSON.stringify(encryptedMsg))
     await this.receiveRequestWriteAccess(peer, dbName)
@@ -654,7 +672,9 @@ class Masq {
           }
         } else {
           await this._closeUserAppConnection()
-          reject(new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`))
+          reject(
+            new MasqError(MasqError.WRONG_MESSAGE, `Unexpectedly received message with type ${json.msg}`)
+          )
         }
       })
     })
@@ -675,10 +695,9 @@ class Masq {
 
   async syncApps () {
     const allDevices = await this.getDevices()
-    const otherDevices = allDevices.filter(d => {
+    const otherDevices = allDevices.filter((d) => {
       return d.localKey !== this.profileDB.local.key.toString('hex')
     })
-
     for (const otherDevice of otherDevices) {
       for (const app of otherDevice.apps) {
         let { id } = app
@@ -691,12 +710,11 @@ class Masq {
             id = id + '-copy'
           }
         }
-
         if (!this.appsDBs[id]) {
           // Add app
           await this._createDBAndSyncApp(id, app.key)
         } else {
-          // Authorize app
+        // Authorize app
           const keyBuf = Buffer.from(app.localKey, 'hex')
           if (!(await this.appsDBs[id].authorizedAsync(keyBuf))) {
             await this.appsDBs[id].authorizeAsync(keyBuf)
@@ -715,6 +733,55 @@ class Masq {
     this.syncApps()
   }
 
+  async _addVersion () {
+    if (!process.env.REACT_APP_VERSION) debug('Please specify a version number in env file.')
+    await this.profileDB.putAsync('/version', process.env.REACT_APP_VERSION)
+    debug(`The version ${process.env.REACT_APP_VERSION} has been added.`)
+  }
+
+  async _migration (profileId) {
+    debug('start migration')
+    const device = await this.getDevice()
+    if (!device) {
+      await this.createNewDevice()
+    }
+
+    const apps = await this.getApps()
+
+    if (apps.length === 1) {
+      const myDevice = await this.getDevice()
+      const appId = `app-${profileId}-${apps[0].id}`
+
+      if (myDevice.apps[0] && myDevice.apps[0].id && myDevice.apps[0].id === appId) {
+        debug('App already exists in current device info')
+      } else {
+        debug('Add app to current device info')
+        const appDb = this.appsDBs[appId] ? this.appsDBs[appId] : openOrCreateDB(appId)
+        await this.updateDevice({
+          ...myDevice,
+          apps: [...myDevice.apps, {
+            id: appId,
+            key: appDb.key.toString('hex'),
+            discoveryKey: appDb.discoveryKey.toString('hex'),
+            localKey: appDb.local.key.toString('hex')
+          }]
+        })
+      }
+    }
+  }
+
+  async _checkVersion (profileId) {
+    const currentVersion = await this.profileDB.getAsync('/version')
+    if (!currentVersion || currentVersion.value < process.env.REACT_APP_VERSION) {
+      debug(`Migration to version ${process.env.REACT_APP_VERSION}`)
+      await this._migration(profileId)
+      await this._migration(profileId)
+      this._addVersion()
+    } else {
+      debug(`Version is up-to-date : ${currentVersion.value}`)
+    }
+  }
+
   /*
    * Set a watcher for the given key (e.g /devices, /profile)
    * Apply handleUpdate for each update
@@ -729,8 +796,10 @@ class Masq {
   }
 
   destroyWatchers () {
-    this.watchers.forEach(watcher => {
-      if (watcher) { watcher.destroy() }
+    this.watchers.forEach((watcher) => {
+      if (watcher) {
+        watcher.destroy()
+      }
     })
   }
 
@@ -746,12 +815,15 @@ class Masq {
         const device = await this.getDevice()
         await this.updateDevice({
           ...device,
-          apps: [...device.apps, {
-            id: dbName,
-            key: db.key.toString('hex'),
-            discoveryKey: db.discoveryKey.toString('hex'),
-            localKey: db.local.key.toString('hex')
-          }]
+          apps: [
+            ...device.apps,
+            {
+              id: dbName,
+              key: db.key.toString('hex'),
+              discoveryKey: db.discoveryKey.toString('hex'),
+              localKey: db.local.key.toString('hex')
+            }
+          ]
         })
         this._startReplicate(db)
         resolve(db)
@@ -879,14 +951,14 @@ class Masq {
     })
 
     this.swarms[discoveryKey] = swarm(this.hubs[discoveryKey], swarmOpts)
-    this.swarms[discoveryKey].on('peer', peer => {
+    this.swarms[discoveryKey].on('peer', (peer) => {
       const stream = db.replicate({ live: true })
       pump(peer, stream, peer)
     })
   }
 
   _stopAllReplicates () {
-    Object.values(this.swarms).forEach(sw => sw.close())
+    Object.values(this.swarms).forEach((sw) => sw.close())
     this.swarms = {}
     this.hubs = {}
   }
