@@ -147,5 +147,7 @@
   "A profile with the same username already exists in this device, rename it and try again.": "Un profil avec le même nom existe sur cet appareil, merci de le renommer et recommencer la synchronisation.",
   "Error during the synchronization. Please retry.": "Echec de la synchronisation. Merci de réessayer.",
   "Paste profile link": "Coller le lien du profil",
-  "The link has expired. Please retry with a fresh link.": "Le lien a expiré, merci de réessayer avec nouveau lien."
+  "The link has expired. Please retry with a fresh link.": "Le lien a expiré, merci de réessayer avec nouveau lien.",
+  "Scanner failure": "échec du scan",
+  "To scan the QR code, you must allow this browser to access your camera. You can do this through your mobile settings. Warning: on iOS this is only possible with Safari.": "Pour scanner le QR code, vous devez autoriser ce navigateur à accéder à votre appareil photo. Vous pouvez le faire via les paramètres de votre mobile. Attention : sur iOS, cela n'est possible qu'avec Safari."
 }
