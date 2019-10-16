@@ -245,7 +245,7 @@ class Masq {
 
     // we do not use this.encryptAndPut because this value is not encrypted
     await db.putAsync('/profile/protectedMK', protectedMK)
-    await this._addVersion()
+    await this._addVersion(db)
 
     // We do not use this.encryptAndPut method because the master key
     // is not stored in this.profileDB (only set in openProfile)
@@ -733,9 +733,13 @@ class Masq {
     this.syncApps()
   }
 
-  async _addVersion () {
-    if (!process.env.REACT_APP_VERSION) debug('Please specify a version number in env file.')
-    await this.profileDB.putAsync('/version', process.env.REACT_APP_VERSION)
+  async _addVersion (db) {
+    if (!process.env.REACT_APP_VERSION) {
+      debug('Please specify a version number in env file.')
+      return
+    }
+    const _db = db || this.profileDB
+    await _db.putAsync('/version', process.env.REACT_APP_VERSION)
     debug(`The version ${process.env.REACT_APP_VERSION} has been added.`)
   }
 
@@ -775,8 +779,7 @@ class Masq {
     if (!currentVersion || currentVersion.value < process.env.REACT_APP_VERSION) {
       debug(`Migration to version ${process.env.REACT_APP_VERSION}`)
       await this._migration(profileId)
-      await this._migration(profileId)
-      this._addVersion()
+      await this._addVersion()
     } else {
       debug(`Version is up-to-date : ${currentVersion.value}`)
     }
