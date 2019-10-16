@@ -772,10 +772,6 @@ class Masq {
         })
       }
     }
-
-    if (apps.length === 1) {
-
-    }
   }
 
   async _checkVersion (profileId) {
