@@ -4,6 +4,7 @@ import pump from 'pump'
 import uuidv4 from 'uuid/v4'
 import * as common from 'masq-common'
 import DetectBrowser from 'detect-browser'
+import migration from './migrations/v0.16'
 
 import { isUsernameAlreadyTaken, capitalize, dispatchMasqError } from './utils'
 
@@ -743,42 +744,11 @@ class Masq {
     debug(`The version ${process.env.REACT_APP_VERSION} has been added.`)
   }
 
-  async _migration (profileId) {
-    debug('start migration')
-    const device = await this.getDevice()
-    if (!device) {
-      await this.createNewDevice()
-    }
-
-    const apps = await this.getApps()
-    for (const app of apps) {
-      const myDevice = await this.getDevice()
-      const appId = `app-${profileId}-${app.id}`
-      const exist = myDevice.apps.find(({ id }) => id === appId)
-
-      if (exist) {
-        debug('App already exists in current device info')
-      } else {
-        debug('Add app to current device info')
-        const appDb = this.appsDBs[appId] ? this.appsDBs[appId] : openOrCreateDB(appId)
-        await this.updateDevice({
-          ...myDevice,
-          apps: [...myDevice.apps, {
-            id: appId,
-            key: appDb.key.toString('hex'),
-            discoveryKey: appDb.discoveryKey.toString('hex'),
-            localKey: appDb.local.key.toString('hex')
-          }]
-        })
-      }
-    }
-  }
-
   async _checkVersion (profileId) {
     const currentVersion = await this.profileDB.getAsync('/version')
     if (!currentVersion || currentVersion.value < process.env.REACT_APP_VERSION) {
       debug(`Migration to version ${process.env.REACT_APP_VERSION}`)
-      await this._migration(profileId)
+      await migration(this, profileId)
       await this._addVersion()
     } else {
       debug(`Version is up-to-date : ${currentVersion.value}`)
