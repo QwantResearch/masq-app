@@ -181,7 +181,6 @@ class SyncProfile {
     data = await waitForDataFromPeer(this.peer)
     const { msg: msg2, key } = await decryptJSON(data, this.key)
     debug('pushProfile received:', msg2, key)
-    if (!key) throw new Error('no key')
 
     switch (msg2) {
       case 'alreadySynced':
@@ -189,6 +188,7 @@ class SyncProfile {
       case 'abort':
         throw new Error('abort')
       case 'requestWriteAccess':
+        if (!key) throw new Error('no key')
         await db.authorizeAsync(Buffer.from(key, 'hex'))
         await sendEncryptedJSON({ msg: 'writeAccessGranted' }, this.key, this.peer)
         break
