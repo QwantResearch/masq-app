@@ -100,6 +100,12 @@ class App extends Component {
       }
     })
 
+    const checkSyncLink = () => {
+      if (window.location.hash.substring(0, 6) === '#/sync') {
+        this.props.setSyncUrl(window.location.href)
+      }
+    }
+
     history.listen(location => {
       const paths = ['/apps', '/devices', '/settings']
       if (location.pathname !== this.state.prevPath &&
@@ -108,12 +114,12 @@ class App extends Component {
           prevPath: location.pathname
         })
       }
+
+      checkSyncLink()
     })
 
     // this.checkPersistentStorage()
-    if (window.location.hash.substring(0, 6) === '#/sync') {
-      this.props.setSyncUrl(window.location.href)
-    }
+    checkSyncLink()
 
     this.props.setLoading(false)
   }
