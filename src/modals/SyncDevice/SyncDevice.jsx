@@ -7,9 +7,9 @@ import { Modal, Button, Space, Typography, Avatar, TextField } from '../../compo
 
 import styles from './SyncDevice.module.scss'
 
-const SyncDeviceModal = ({ title, children, onClose }) => {
+const SyncDeviceModal = ({ title, children }) => {
   return (
-    <Modal title={title} onClose={onClose}>
+    <Modal title={title}>
       <div className={styles.SyncDevice}>
         {children}
       </div>
@@ -17,8 +17,8 @@ const SyncDeviceModal = ({ title, children, onClose }) => {
   )
 }
 
-const SyncDeviceModalSyncing = ({ t, onClick, message, onClose }) => (
-  <SyncDeviceModal title={t('Synchronization in progress...')} onClose={onClose}>
+const SyncDeviceModalSyncing = ({ t, onClick, message }) => (
+  <SyncDeviceModal title={t('Synchronization in progress...')}>
     <Space size={80} />
     <RefreshCw className={styles.refeshIcon} size={124} color={styles.colorCyan} />
     <Space size={32} />
@@ -42,7 +42,7 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
   }
 
   return (
-    <SyncDeviceModal title={t('Please enter you secret key to finish the synchronization process')} onClose={onClose}>
+    <SyncDeviceModal title={t('Please enter you secret key to finish the synchronization process')}>
       <Space size={32} />
       <Avatar size={90} username={username} image={avatar} />
       <Space size={12} />
@@ -68,8 +68,8 @@ const SyncDeviceModalPassword = ({ t, onClose, onClick, avatar, username, error 
   )
 }
 
-const SyncDeviceModalFinished = ({ t, onClick, message, onClose }) => (
-  <SyncDeviceModal title={t('Synchronization finished!')} onClose={onClose}>
+const SyncDeviceModalFinished = ({ t, onClick, message }) => (
+  <SyncDeviceModal title={t('Synchronization finished!')}>
     <Space size={80} />
     <CheckCircle size={124} color={styles.colorGreen} />
     <Space size={32} />
@@ -81,8 +81,8 @@ const SyncDeviceModalFinished = ({ t, onClick, message, onClose }) => (
   </SyncDeviceModal>
 )
 
-const SyncDeviceModalError = ({ t, onClick, message, onClose }) => (
-  <SyncDeviceModal title={t('Synchronization failure')} onClose={onClose}>
+const SyncDeviceModalError = ({ t, onClick, message }) => (
+  <SyncDeviceModal title={t('Synchronization failure')}>
     <Space size={80} />
     <XCircle size={124} color={styles.colorRed} />
     <Space size={32} />
@@ -99,13 +99,13 @@ const SyncDevice = ({ step, onClick, onClose, message, profile, error, onKeyUp }
 
   switch (step) {
     case 'syncing':
-      return <SyncDeviceModalSyncing t={t} onClick={onClick} message={message} onClose={onClose} />
+      return <SyncDeviceModalSyncing t={t} onClick={onClick} message={message} />
     case 'password':
       return <SyncDeviceModalPassword t={t} error={error} onClose={onClose} message={message} avatar={profile.image} username={profile.username} onClick={onClick} onKeyUp={onKeyUp} />
     case 'finished':
-      return <SyncDeviceModalFinished t={t} onClick={onClick} message={message} onClose={onClose} />
+      return <SyncDeviceModalFinished t={t} onClick={onClick} message={message} />
     default:
-      return <SyncDeviceModalError t={t} onClick={onClick} message={message} onClose={onClose} />
+      return <SyncDeviceModalError t={t} onClick={onClick} message={message} />
   }
 }
 
@@ -114,8 +114,7 @@ SyncDeviceModalFinished.propTypes =
 SyncDeviceModalError.propTypes = {
   t: PropTypes.func,
   onClick: PropTypes.func,
-  message: PropTypes.string,
-  onClose: PropTypes.func.isRequired
+  message: PropTypes.string
 }
 
 SyncDeviceModalPassword.propTypes = {
@@ -132,8 +131,7 @@ SyncDeviceModal.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired,
-  title: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired
+  title: PropTypes.string.isRequired
 }
 
 SyncDevice.propTypes = {
