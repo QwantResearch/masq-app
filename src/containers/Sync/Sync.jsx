@@ -68,7 +68,7 @@ class Sync extends Component {
           this.setState({ message: t('This profile is already synchronized on this device.') })
           break
         case 'timeout':
-          this.setState({ message: t('The link has expired. Please retry with a fresh link.') })
+          this.setState({ message: t('This import link is incorrect or the connection between the devices can not be done . Please, return to the profile you want to import and generate a new link or QR code.') })
           break
         case 'usernameAlreadyExists':
           this.setState({ message: t('A profile with the same username already exists in this device, rename it and try again.') })
