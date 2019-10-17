@@ -60,6 +60,7 @@ const waitForPeer = (sw) => (
 
 const sendEncryptedJSON = async (json, key, peer) => {
   const encryptedMsg = await encrypt(key, json, 'base64')
+  if (!peer) throw new Error('peer does not exist')
   peer.send(JSON.stringify(encryptedMsg))
 }
 
