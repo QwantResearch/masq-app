@@ -12,10 +12,6 @@ const openOrCreateDB = (name, key = null) => {
 
 const migration = async (masq, profileId) => {
   debug('start migration')
-  const device = await masq.getDevice()
-  if (!device) {
-    await masq.createNewDevice()
-  }
 
   const apps = await masq.getApps()
   for (const app of apps) {
