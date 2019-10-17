@@ -1,5 +1,6 @@
 const masq = (state = {
   syncStep: '',
+  syncUrl: '',
   users: [],
   apps: [],
   devices: [],
@@ -27,6 +28,8 @@ const masq = (state = {
       return { ...state, devices: [...state.devices, action.device] }
     case 'SET_SYNC_STEP':
       return { ...state, syncStep: action.syncStep }
+    case 'SET_SYNC_URL':
+      return { ...state, syncUrl: action.url }
     default:
       return state
   }

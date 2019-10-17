@@ -9,7 +9,7 @@ import * as common from 'masq-common'
 
 import { Login, Applications, Devices, Settings, Navbar, Loading, Sync } from './containers'
 import { Notification } from './components'
-import { getMasqInstance, refreshUser, addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
+import { getMasqInstance, refreshUser, addDevice, setCurrentAppRequest, setLoading, setNotification, setSyncStep, setSyncUrl } from './actions'
 import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
 import { isBrowserSupported } from './lib/browser'
 
@@ -70,6 +70,7 @@ class App extends Component {
     }
 
     this.handlePersistentStorageRequestClose = this.handlePersistentStorageRequestClose.bind(this)
+    this.handleResetSync = this.handleResetSync.bind(this)
   }
 
   async checkPersistentStorage () {
@@ -110,6 +111,9 @@ class App extends Component {
     })
 
     // this.checkPersistentStorage()
+    if (window.location.hash.substring(0, 6) === '#/sync') {
+      this.props.setSyncUrl(window.location.href)
+    }
 
     this.props.setLoading(false)
   }
@@ -140,9 +144,15 @@ class App extends Component {
     }
   }
 
+  handleResetSync () {
+    this.props.setSyncStep('')
+    this.props.setSyncUrl('')
+    this.props.currentUser ? history.push('/apps') : history.push('/')
+  }
+
   render () {
     const { persistentStorageRequest, unsupportedBrowserModal } = this.state
-    const { currentUser, currentAppRequest, notification, setCurrentAppRequest, loading } = this.props
+    const { currentUser, currentAppRequest, notification, setCurrentAppRequest, loading, syncUrl } = this.props
     const { pathname } = history.location
 
     if (unsupportedBrowserModal) {
@@ -152,16 +162,6 @@ class App extends Component {
     return (
       <Router history={history}>
         <div>
-          <Route
-            exact
-            path='/sync/:hash'
-            component={() => (
-              <Sync
-                link={window.location.href}
-                onClose={() => currentUser ? history.push('/apps') : history.push('/')}
-              />
-            )}
-          />
           <Route exact path='/link/:hash' component={Login} />
           <Route exact path='/' component={Login} />
           <Route path='/loading' component={Loading} />
@@ -187,6 +187,7 @@ class App extends Component {
             />}
 
           {persistentStorageRequest && <PersistentStorageRequest onClose={this.handlePersistentStorageRequestClose} />}
+          {syncUrl && <Sync link={syncUrl} onClose={this.handleResetSync} />}
         </div>
       </Router>
     )
@@ -198,7 +199,9 @@ const mapStateToProps = state => ({
   currentUser: state.masq.currentUser,
   users: state.masq.users,
   notification: state.notification.currentNotification,
-  loading: state.loading.loading
+  loading: state.loading.loading,
+  syncStep: state.masq.syncStep,
+  syncUrl: state.masq.syncUrl
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -206,7 +209,9 @@ const mapDispatchToProps = dispatch => ({
   addDevice: device => dispatch(addDevice(device)),
   setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app)),
   setLoading: value => dispatch(setLoading(value)),
-  setNotification: notif => dispatch(setNotification(notif))
+  setNotification: notif => dispatch(setNotification(notif)),
+  setSyncStep: step => dispatch(setSyncStep(step)),
+  setSyncUrl: url => dispatch(setSyncUrl(url))
 })
 
 App.propTypes = {
@@ -219,7 +224,11 @@ App.propTypes = {
   loading: PropTypes.bool,
   setLoading: PropTypes.func,
   setNotification: PropTypes.func,
-  t: PropTypes.func
+  t: PropTypes.func,
+  syncStep: PropTypes.string,
+  syncUrl: PropTypes.string,
+  setSyncUrl: PropTypes.func,
+  setSyncStep: PropTypes.func
 }
 const translatedApp = withTranslation()(App)
 export default connect(mapStateToProps, mapDispatchToProps)(translatedApp)

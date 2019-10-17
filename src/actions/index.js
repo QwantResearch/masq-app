@@ -24,6 +24,13 @@ export const setSyncStep = syncStep => {
   }
 }
 
+export const setSyncUrl = url => {
+  return {
+    type: 'SET_SYNC_URL',
+    url
+  }
+}
+
 export const signin = (user, passphrase) => {
   return function (dispatch) {
     return masq.openProfile(user.id, passphrase)
