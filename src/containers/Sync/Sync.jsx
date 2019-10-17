@@ -107,7 +107,11 @@ class Sync extends Component {
     const dbName = `profile-${profile.id}`
     window.indexedDB.deleteDatabase(dbName)
     window.localStorage.removeItem(dbName)
-    await this.sp.abort()
+    try {
+      await this.sp.abort()
+    } catch (e) {
+      // silently fail, peer is offline
+    }
     this.props.onClose()
     // FIXME: Workaround to avoir a bug where Chrome blocks
     // when trying to find a previously deleted IndexedDB
