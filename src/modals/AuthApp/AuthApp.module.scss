@@ -6,9 +6,11 @@
   flex-direction: column;
   align-items: center;
   height: 100%;
-  width: 100%;
   text-align: center;
   justify-content: space-between;
+  @media (min-width: $mobile-width + 1px) {
+    width: 400px;
+  }
 
   .appTitle {
     font-size: 32px;

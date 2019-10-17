@@ -6,7 +6,7 @@ import { X, ArrowLeft } from 'react-feather'
 import styles from './Modal.module.scss'
 import { Typography, Space } from '../../components'
 
-const Modal = ({ title, mobileHeader, onClose, onBack, width, padding, children }) => {
+const Modal = ({ title, mobileHeader, onClose, onBack, children }) => {
   const isMobile = useMediaQuery({ maxWidth: styles.mobileWidth })
 
   return (
@@ -14,11 +14,6 @@ const Modal = ({ title, mobileHeader, onClose, onBack, width, padding, children 
       <div className={styles.overlay} onClick={onClose} />
       <div
         className={styles.modal}
-        style={{
-          width,
-          paddingLeft: padding,
-          paddingRight: padding
-        }}
       >
         {isMobile && mobileHeader
           ? (
@@ -43,7 +38,7 @@ const Modal = ({ title, mobileHeader, onClose, onBack, width, padding, children 
   )
 }
 
-const ResponsiveModal = ({ title, mobileHeader, onClose, width, children, padding, onBack }) => {
+const ResponsiveModal = ({ title, mobileHeader, onClose, width, children, onBack }) => {
   const isMobile = useMediaQuery({ maxWidth: styles.mobileWidth })
 
   useEffect(() => {
@@ -58,8 +53,8 @@ const ResponsiveModal = ({ title, mobileHeader, onClose, width, children, paddin
   return (
     <div>
       {isMobile
-        ? <Modal title={title} mobileHeader={mobileHeader} onBack={onBack} width='100%' onClose={onClose} children={children} />
-        : <Modal title={title} width={width} onClose={onClose} children={children} padding={padding} />}
+        ? <Modal title={title} mobileHeader={mobileHeader} onBack={onBack} onClose={onClose} children={children} />
+        : <Modal title={title} onClose={onClose} children={children} />}
     </div>
   )
 }
@@ -73,10 +68,6 @@ ResponsiveModal.propTypes = {
     PropTypes.object
   ]),
   width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  padding: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]),

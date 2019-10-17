@@ -88,7 +88,7 @@ class PasswordEdit extends React.Component {
     const { onClose, username, t } = this.props
 
     return (
-      <Modal title={t('Update your secret key')} mobileHeader onClose={onClose} width={400}>
+      <Modal title={t('Update your secret key')} mobileHeader onClose={onClose}>
         <form className={styles.PasswordEdit} onSubmit={this.handleUpdatePassphrase}>
           <input style={{ display: 'none' }} autoComplete='username' type='text' defaultValue={username} />
           <Space size={28} />

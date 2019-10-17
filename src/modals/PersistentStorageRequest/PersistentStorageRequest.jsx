@@ -8,7 +8,7 @@ import styles from './PersistentStorageRequest.module.scss'
 const PermanentStorageRequest = ({ onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal title={t('Storage authorization')} width={511} onClose={onClose}>
+    <Modal title={t('Storage authorization')} onClose={onClose}>
       <div className={styles.PermanentStorage}>
         <div>
           <Space size={32} />

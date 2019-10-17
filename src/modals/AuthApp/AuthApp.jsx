@@ -177,7 +177,7 @@ class AuthApp extends React.Component {
     }
 
     return (
-      <Modal title={this.getTitle()} width={400}>
+      <Modal title={this.getTitle()}>
         <div className={styles.AuthApp}>
           <div className={styles.content}>
             <Space size={32} />

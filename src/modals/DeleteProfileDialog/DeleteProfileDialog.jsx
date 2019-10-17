@@ -9,7 +9,7 @@ import styles from './DeleteProfileDialog.module.scss'
 const ConfirmDialog = ({ username, onConfirm, onCancel, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal title={t('Deletion of the profile')} mobileHeader width={400} padding={40} onClose={onClose}>
+    <Modal title={t('Deletion of the profile')} mobileHeader onClose={onClose}>
       <div className={styles.ConfirmDialog}>
         <Space size={32} />
         <AlertCircle size={104} color='#ff3b4a' />

@@ -12,7 +12,7 @@ Space.defaultProps = {
 }
 
 Space.propTypes = {
-  size: PropTypes.number.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number.isRequired]),
   direction: PropTypes.oneOf([
     'top',
     'right',
