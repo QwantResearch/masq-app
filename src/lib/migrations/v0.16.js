@@ -1,6 +1,7 @@
-import { createPromisifiedHyperDB } from 'masq-common/utils'
+import { utils } from 'masq-common'
 import { debug } from '../utils'
 
+const { createPromisifiedHyperDB } = utils
 /**
  * Open or create a hyperdb instance
  * @param {string} name The indexeddb store name
