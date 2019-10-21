@@ -1,4 +1,5 @@
 import { Masq } from '../lib'
+import { postLog } from '../lib/utils'
 
 const masq = new Masq()
 
@@ -159,6 +160,17 @@ export const setNotification = (notification) => ({
   type: 'SET_NOTIFICATION',
   notification
 })
+
+export const addLog = (log) => {
+  return function (dispatch) {
+    return postLog(log)
+      .then((res) =>
+        dispatch({
+          type: 'ADD_LOG',
+          log: res
+        }))
+  }
+}
 
 export const setLoading = (loading) => ({
   type: 'SET_LOADING',
