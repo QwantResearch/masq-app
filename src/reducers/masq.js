@@ -4,6 +4,7 @@ const masq = (state = {
   users: [],
   apps: [],
   devices: [],
+  logs: [],
   currentUser: null,
   currentAppRequest: null
 }, action) => {
@@ -26,6 +27,8 @@ const masq = (state = {
       return { ...state, apps: [...state.apps, action.app] }
     case 'ADD_DEVICE':
       return { ...state, devices: [...state.devices, action.device] }
+    case 'ADD_LOG':
+      return { ...state, logs: [...state.logs, action.log] }
     case 'SET_SYNC_STEP':
       return { ...state, syncStep: action.syncStep }
     case 'SET_SYNC_URL':
