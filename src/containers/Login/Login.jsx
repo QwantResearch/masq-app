@@ -5,7 +5,7 @@ import { ChevronLeft } from 'react-feather'
 
 import { withTranslation } from 'react-i18next'
 
-import { signin, signup, fetchUsers, setCurrentAppRequest } from '../../actions'
+import { signin, signup, fetchUsers, setCurrentAppRequest, addLog } from '../../actions'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { ReactComponent as Cubes } from '../../assets/cubes.svg'
 import { ReactComponent as PlusSquare } from '../../assets/plus-square.svg'
@@ -111,6 +111,8 @@ class Login extends Component {
   }
 
   handleOpenSignup () {
+    const { addLog } = this.props
+    addLog({ type: 'click_handleOpenSignup' })
     this.setState({ signup: true, addProfile: false })
   }
 
@@ -131,6 +133,8 @@ class Login extends Component {
   }
 
   selectUser (user) {
+    const { addLog } = this.props
+    addLog({ type: 'click_selectUser' })
     this.setState({ selectedUser: user })
   }
 
@@ -412,6 +416,7 @@ Login.propTypes = {
   history: PropTypes.object,
   currentAppRequest: PropTypes.object,
   setCurrentAppRequest: PropTypes.func,
+  addLog: PropTypes.func,
   t: PropTypes.func
 }
 
@@ -424,6 +429,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   signin: (user, passphrase) => dispatch(signin(user, passphrase)),
   signup: user => dispatch(signup(user)),
+  addLog: log => dispatch(addLog(log)),
   fetchUsers: user => dispatch(fetchUsers(user)),
   setCurrentAppRequest: app => dispatch(setCurrentAppRequest(app))
 })
