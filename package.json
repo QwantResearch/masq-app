@@ -6,6 +6,7 @@
   "scripts": {
     "start": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts start",
     "build": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
+    "start-with-log-server": " node server/metric.js & REACT_APP_LOG_ENDPOINT='http://localhost:3010/logs' npm run start",
     "test": "npm run lint && concurrently -k -s first \"signalhubws -p 8080\" \"karma start\"",
     "test:browserstack:prod": "wdio test/E2E/conf/prod.conf.js --suite e2e",
     "test:browserstack:local": "concurrently -k -s first \"npm run start\" \"wdio test/E2E/conf/local-browserstack.conf.js --suite e2e\"",
@@ -101,6 +102,7 @@
     "react-app-polyfill": "^1.0.2",
     "sinon": "^7.3.2",
     "wdio-chromedriver-service": "^5.0.2",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "cors": "^2.8.5"
   }
 }
