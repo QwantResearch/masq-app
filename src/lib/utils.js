@@ -1,10 +1,35 @@
 
 import Compressor from 'compressorjs'
 import * as common from 'masq-common'
+import fetch from 'node-fetch'
 
 const { encrypt, decrypt } = common.crypto
 
 const MAX_IMAGE_SIZE = 100000 // 100 KB
+
+const postLog = async (log) => {
+  if (process.env.REACT_APP_LOG_ENDPOINT) {
+    try {
+      debug(`Send log ${JSON.stringify(log)} to ${process.env.REACT_APP_LOG_ENDPOINT}`)
+      const response = await fetch(process.env.REACT_APP_LOG_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          log
+        })
+      })
+      const data = await response.json()
+      return data.log
+    } catch (error) {
+      console.error('Error to post log ', log)
+    }
+  } else {
+    debug('No endpoint provided, please update REACT_APP_LOG_ENDPOINT in .env')
+    return log
+  }
+}
 
 const isUsernameAlreadyTaken = (username, id) => {
   const ids = Object
@@ -96,6 +121,7 @@ const promiseTimeout = function (ms, promise) {
 export {
   isUsernameAlreadyTaken,
   promiseTimeout,
+  postLog,
   compressImage,
   MAX_IMAGE_SIZE,
   waitForPeer,
