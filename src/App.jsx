@@ -9,7 +9,7 @@ import * as common from 'masq-common'
 
 import { Login, Applications, Devices, Settings, Navbar, Loading, Sync } from './containers'
 import { Notification } from './components'
-import { getMasqInstance, refreshUser, addDevice, setCurrentAppRequest, setLoading, setNotification, setSyncStep, setSyncUrl } from './actions'
+import { getMasqInstance, refreshUser, addDevice, setCurrentAppRequest, setLoading, setNotification, setSyncStep, setSyncUrl, fetchUsers } from './actions'
 import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
 import { isBrowserSupported } from './lib/browser'
 
@@ -122,6 +122,18 @@ class App extends Component {
     checkSyncLink()
 
     this.props.setLoading(false)
+
+    // Effectively delete databases
+    const dbsToDelete = JSON.parse(window.localStorage.getItem('dbsToDelete')) || []
+    console.log('dbsToDelete', dbsToDelete)
+    if (dbsToDelete.length > 0) {
+      dbsToDelete.forEach(db => {
+        window.indexedDB.deleteDatabase(db)
+        window.localStorage.removeItem(db)
+      })
+      window.localStorage.removeItem('dbsToDelete')
+      this.props.fetchUsers()
+    }
   }
 
   handlePersistentStorageRequestClose () {
@@ -134,6 +146,7 @@ class App extends Component {
       history.push(prevPath)
     }
     if (!prevProps.currentUser && this.props.currentUser) {
+      // just connected
       const masq = getMasqInstance()
       const handleUpdate = async () => {
         await masq.updatePublicProfile()
@@ -141,6 +154,13 @@ class App extends Component {
         this.props.refreshUser(updatedPrivateProdfile.id, updatedPrivateProdfile)
       }
       this.watchers.profile = masq.addWatcher('/profile', handleUpdate)
+    }
+
+    if (prevProps.currentUser && !this.props.currentUser) {
+      // just disconnected
+      if (window.localStorage.getItem('dbsToDelete')) {
+        window.location.reload()
+      }
     }
   }
 
@@ -217,7 +237,8 @@ const mapDispatchToProps = dispatch => ({
   setLoading: value => dispatch(setLoading(value)),
   setNotification: notif => dispatch(setNotification(notif)),
   setSyncStep: step => dispatch(setSyncStep(step)),
-  setSyncUrl: url => dispatch(setSyncUrl(url))
+  setSyncUrl: url => dispatch(setSyncUrl(url)),
+  fetchUsers: () => dispatch(fetchUsers())
 })
 
 App.propTypes = {
@@ -234,7 +255,8 @@ App.propTypes = {
   syncStep: PropTypes.string,
   syncUrl: PropTypes.string,
   setSyncUrl: PropTypes.func,
-  setSyncStep: PropTypes.func
+  setSyncStep: PropTypes.func,
+  fetchUsers: PropTypes.func
 }
 const translatedApp = withTranslation()(App)
 export default connect(mapStateToProps, mapDispatchToProps)(translatedApp)

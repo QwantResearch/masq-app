@@ -256,17 +256,20 @@ class Masq {
   }
 
   async removeProfile () {
+    const dbsToDelete = window.localStorage.getItem('dbsToDelete') || []
     // Remove every apps data
     const apps = await this.getApps()
     for (const app of apps) {
-      await this.removeApp(app)
+      const dbName = `app-${this.profileId}-${app.id}`
+      dbsToDelete.push(dbName)
     }
 
     // Remove the profile
     const dbName = `profile-${this.profileId}`
+
+    dbsToDelete.push(dbName)
+    window.localStorage.setItem('dbsToDelete', JSON.stringify(dbsToDelete))
     await this.closeProfile()
-    window.indexedDB.deleteDatabase(dbName)
-    window.localStorage.removeItem(dbName)
   }
 
   /**
@@ -397,7 +400,11 @@ class Masq {
       const discoveryKey = this.appsDBs[dbName].discoveryKey.toString('hex')
       const sw = this.swarms[discoveryKey]
       sw.close()
-      window.indexedDB.deleteDatabase(dbName)
+
+      // Add db name to the list of dbs to delete on next app reload
+      const dbsToDelete = window.localStorage.getItem('dbsToDelete') || []
+      dbsToDelete.push(dbName)
+      window.localStorage.setItem('dbsToDelete', JSON.stringify(dbsToDelete))
     }
     return this._deleteResource('apps', app)
   }
