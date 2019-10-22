@@ -12,8 +12,10 @@
 
     .text {
       width: 90%;
-      font-size: 14px;
-      color: $color-blue-grey;
+      font-size: 16px;
+      color: $color-dark-blue-100;
+      line-height: 1.38;
+      text-align: center;
     }
     .onBoardingMessage {
       cursor: pointer;
