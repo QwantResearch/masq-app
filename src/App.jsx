@@ -125,7 +125,6 @@ class App extends Component {
 
     // Effectively delete databases
     const dbsToDelete = JSON.parse(window.localStorage.getItem('dbsToDelete')) || []
-    console.log('dbsToDelete', dbsToDelete)
     if (dbsToDelete.length > 0) {
       dbsToDelete.forEach(db => {
         window.indexedDB.deleteDatabase(db)
