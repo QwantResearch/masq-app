@@ -40,12 +40,12 @@ const TextField = ({ className, id, label, error, type, onChange, onKeyUp, autoF
         placeholder={placeholder}
         defaultValue={defaultValue}
         readOnly={readOnly}
-        style={{ height }}
+        style={{ height, minHeight: height }}
       />
       <label htmlFor='field'>{label}</label>
 
       {(password || button) && (
-        <div onClick={handleClick} className={styles.button} style={{ height: height }}>
+        <div onClick={handleClick} className={styles.button} style={{ height, minHeight: height }}>
           {password && visible && defaultValue.length > 0 && <EyeOff />}
           {password && !visible && defaultValue.length > 0 && <Eye />}
           {button && <Typography type='textFieldButton'>{button}</Typography>}

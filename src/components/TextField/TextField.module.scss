@@ -21,6 +21,7 @@
 
   input {
     height: 29px;
+    min-height: 29px;
     border-radius: 3px;
     outline: none;
     padding-left: 16px;
@@ -49,6 +50,7 @@
 .large {
   input {
     height: 46px;
+    min-height: 46px;
     font-size: 20px;
     color: $color-dark-blue-100;
   }
