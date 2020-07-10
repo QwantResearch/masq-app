@@ -18,6 +18,7 @@ import styles from './App.module.scss'
 
 const history = createHashHistory()
 const { MasqError } = common.errors
+const { REACT_APP_ALERT_DATE: masqAlertDate } = process.env
 
 // listen for errors event and display them
 
@@ -77,6 +78,12 @@ class App extends Component {
   async componentDidMount () {
     console.log(`Masq version: ${process.env.REACT_APP_GIT_SHA}`)
     const { t } = this.props
+
+    this.props.setNotification({
+      error: true,
+      title: t('Masq by Qwant will be disabled starting from') + ` ${masqAlertDate}. ` + t('Learn more')
+    })
+
     window.addEventListener('MasqError', (e) => {
       if (e.detail === MasqError.REPLICATION_SIGNALLING_ERROR) {
         this.props.setNotification({
