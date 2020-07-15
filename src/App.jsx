@@ -18,7 +18,7 @@ import styles from './App.module.scss'
 
 const history = createHashHistory()
 const { MasqError } = common.errors
-const { REACT_APP_ALERT_DATE: masqAlertDate } = process.env
+const { REACT_APP_ALERT_DATE: masqAlertDate, REACT_APP_INFO_LINK: masqLink } = process.env
 
 // listen for errors event and display them
 
@@ -81,7 +81,13 @@ class App extends Component {
 
     this.props.setNotification({
       error: true,
-      title: t('Masq by Qwant will be disabled starting from') + ` ${masqAlertDate}. ` + t('Learn more')
+      title: (
+        <span>
+          {t('Masq by Qwant will be disabled starting from') + ` ${masqAlertDate}.`}
+          {' '}
+          <a href={masqLink} rel='noopener noreferrer'>{t('Learn more')}</a>
+        </span>
+      )
     })
 
     window.addEventListener('MasqError', (e) => {

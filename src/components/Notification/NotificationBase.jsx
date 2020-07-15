@@ -10,6 +10,8 @@ const NotificationBase = ({ error, title, onClose }) => {
     ? <X width={14} color='#e74538' />
     : <Check width={13} color='#308251' />
 
+  console.log('typeof title', title)
+
   return (
     <div className={styles.Notification}>
       <div className={styles.title}>
@@ -26,7 +28,7 @@ const NotificationBase = ({ error, title, onClose }) => {
 NotificationBase.propTypes = {
   error: PropTypes.bool,
   onClose: PropTypes.func,
-  title: PropTypes.string.isRequired
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
 }
 
 export default NotificationBase
