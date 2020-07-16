@@ -1,0 +1,68 @@
+@import '../../styles/variables.scss';
+
+.End {
+  position: relative;
+  padding-top: 64px;
+  padding-left: 12px;
+  padding-right: 12px;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr minmax(100px, 800px) 1fr;
+  justify-items: center;
+  grid-gap: 12px;
+
+  @media (max-width: $mobile-width) {
+    grid-template-columns: none;
+    grid-template-rows: 90px 1fr 1fr;
+  }
+
+  svg {
+    min-width: 100%;
+  }
+
+  .header {
+    padding: 48px 16px;
+    border-radius: 8px;
+    background: linear-gradient(224deg, #353c52, #171c2f);
+    display: flex;
+    padding-right: 240px;
+    svg {
+      max-height: 100%;
+    }
+
+    background:
+      url('../../assets/letter-colored.svg') right no-repeat,
+      linear-gradient(224deg, #353c52, #171c2f);
+
+    @media (max-width: $mobile-width) {
+      grid-template-columns: none;
+      grid-template-rows: 100px 1fr 1fr;
+      padding-right: 0;
+      padding-bottom: 64px;
+      background:
+        url('../../assets/letter-colored.svg') calc(100%) calc(100% + 290px) no-repeat,
+        linear-gradient(224deg, #353c52, #171c2f);
+    }
+
+    .title {
+      margin-top: 0;
+      font-size: 32px;
+      font-weight: bold;
+      line-height: 1.13;
+      letter-spacing: -1.4px;
+      color: white;
+    }
+  }
+
+  .paragraph {
+    font-size: 16px;
+    line-height: 1.25;
+    color: #c8cbd3;
+  }
+
+  .paragraphLight {
+    font-size: 16px;
+    line-height: 1.25;
+    color: #5c6f84;
+  }
+}

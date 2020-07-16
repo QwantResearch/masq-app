@@ -7,7 +7,7 @@ import DetectBrowser from 'detect-browser'
 import { withTranslation } from 'react-i18next'
 import * as common from 'masq-common'
 
-import { Login, Applications, Devices, Settings, Navbar, Loading } from './containers'
+import { Login, Applications, Devices, Settings, Navbar, Loading, End } from './containers'
 import { Notification } from './components'
 import { addDevice, setCurrentAppRequest, setLoading, setNotification } from './actions'
 import { AuthApp, PersistentStorageRequest, UnsupportedBrowser } from './modals'
@@ -159,6 +159,7 @@ class App extends Component {
           <Route exact path='/link/:hash' component={Login} />
           <Route exact path='/' component={Login} />
           <Route path='/loading' component={Loading} />
+          <Route path='/end' component={End} />
 
           <div className={styles.layout}>
             {authenticatedRoutes.map((route, index) => (
