@@ -83,7 +83,7 @@ class App extends Component {
       error: true,
       title: (
         <span>
-          {t('Masq by Qwant will be disabled starting from') + ` ${masqAlertDate}.`}
+          {t('Masq by Qwant will be disabled starting from') + ` ${(new Date(masqAlertDate)).toLocaleDateString()}.`}
           {' '}
           <a href={masqLink} rel='noopener noreferrer'>{t('Learn more')}</a>
         </span>
