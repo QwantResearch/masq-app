@@ -7,7 +7,9 @@ import { ReactComponent as Logo } from '../../assets/logo-colored.svg'
 
 const End = () => (
   <div className={styles.End}>
-    <Logo />
+    <aside className={styles.Logo}>
+      <Logo />
+    </aside>
 
     <div style={{ maxWidth: 800 }}>
       <div className={styles.header}>
@@ -15,7 +17,6 @@ const End = () => (
           <p className={styles.title}>Masq by Qwant sera désactivé à partir du XX.</p>
           <p className={styles.paragraph}>À partir de cette date, l’accès à la fonctionnalité Masq ainsi que les lieux enregistrés sur vos appareils connectés à votre Masq ne seront plus accessibles.</p>
         </div>
-        {/* <M className={styles.M} /> */}
       </div>
 
       <div className={styles.content}>

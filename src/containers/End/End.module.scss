@@ -1,6 +1,7 @@
 @import '../../styles/variables.scss';
 
 .End {
+  max-width: 1400px;
   position: relative;
   padding-top: 64px;
   padding-left: 12px;
@@ -10,34 +11,39 @@
   grid-template-columns: 1fr minmax(100px, 800px) 1fr;
   justify-items: center;
   grid-gap: 12px;
+  margin: auto;
 
   @media (max-width: $mobile-width) {
     grid-template-columns: none;
     grid-template-rows: 90px 1fr 1fr;
   }
 
-  svg {
-    min-width: 100%;
+  .Logo {
+    justify-self: start;
+    svg {
+      min-width: 100%;
+    }
   }
 
   .header {
-    padding: 48px 16px;
+    padding: 56px 232px 56px 58px;
+    margin-bottom: 56px;
     border-radius: 8px;
     background: linear-gradient(224deg, #353c52, #171c2f);
     display: flex;
-    padding-right: 240px;
     svg {
       max-height: 100%;
     }
 
     background:
-      url('../../assets/letter-colored.svg') right no-repeat,
+      url('../../assets/letter-colored.svg') calc(100% + 64px) calc(100% + 32px) no-repeat,
       linear-gradient(224deg, #353c52, #171c2f);
 
     @media (max-width: $mobile-width) {
       grid-template-columns: none;
       grid-template-rows: 100px 1fr 1fr;
-      padding-right: 0;
+      padding-left: 16px;
+      padding-right: 16px;
       padding-bottom: 64px;
       background:
         url('../../assets/letter-colored.svg') calc(100%) calc(100% + 290px) no-repeat,
