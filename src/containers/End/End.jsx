@@ -3,7 +3,8 @@ import React from 'react'
 import styles from './End.module.scss'
 
 import { ReactComponent as Logo } from '../../assets/logo-colored.svg'
-// import { ReactComponent as M } from '../../assets/letter-colored.svg'
+
+const { REACT_APP_ALERT_DATE: masqAlertDate } = process.env
 
 const End = () => (
   <div className={styles.End}>
@@ -14,7 +15,7 @@ const End = () => (
     <div style={{ maxWidth: 800 }}>
       <div className={styles.header}>
         <div>
-          <p className={styles.title}>Masq by Qwant sera désactivé à partir du XX.</p>
+          <p className={styles.title}>{`Masq by Qwant sera désactivé à partir du ${(new Date(masqAlertDate)).toLocaleDateString()}.`}</p>
           <p className={styles.paragraph}>À partir de cette date, l’accès à la fonctionnalité Masq ainsi que les lieux enregistrés sur vos appareils connectés à votre Masq ne seront plus accessibles.</p>
         </div>
       </div>
