@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import styles from './End.module.scss'
 
@@ -6,28 +7,32 @@ import { ReactComponent as Logo } from '../../assets/logo-colored.svg'
 
 const { REACT_APP_ALERT_DATE: masqAlertDate } = process.env
 
-const End = () => (
-  <div className={styles.End}>
-    <aside className={styles.Logo}>
-      <Logo />
-    </aside>
+const End = () => {
+  const { t } = useTranslation()
 
-    <div style={{ maxWidth: 800 }}>
-      <div className={styles.header}>
-        <div>
-          <p className={styles.title}>{`Masq by Qwant sera désactivé à partir du ${(new Date(masqAlertDate)).toLocaleDateString()}.`}</p>
-          <p className={styles.paragraph}>À partir de cette date, l’accès à la fonctionnalité Masq ainsi que les lieux enregistrés sur vos appareils connectés à votre Masq ne seront plus accessibles.</p>
+  return (
+    <div className={styles.End}>
+      <aside className={styles.Logo}>
+        <Logo />
+      </aside>
+
+      <div style={{ maxWidth: 800 }}>
+        <div className={styles.header}>
+          <div>
+            <p className={styles.title}>{`${t('Masq by Qwant will be disabled from')} ${(new Date(masqAlertDate)).toLocaleDateString()}.`}</p>
+            <p className={styles.paragraph}>{t('From this date, access to Masq features and locations stored on your devices connected to your Masq will no longer be accessible.')}</p>
+          </div>
+        </div>
+
+        <div className={styles.content}>
+          <p className={styles.paragraphLight}>{t('Masq by Qwant has been released in alpha version to allow you to test this innovation in the field of online service personalization, with data encrypted and stored locally on the user\'s device.')}</p>
+          <p className={styles.paragraphLight}>
+            {t('After several months of testing, Qwant has decided to suspend Masq because it doesn\'t meet the expectations of most of you. The technology developed by Qwant is shared under a free license on our repository and can be reused by anyone who wants to take advantage of it or improve it. Qwant will of course continue to invest in solutions that protect the privacy of its users.')}
+          </p>
         </div>
       </div>
-
-      <div className={styles.content}>
-        <p className={styles.paragraphLight}>Masq by Qwant a été rendu public en version alpha afin de vous permettre de tester cette innovation dans le domaine de la personnalisation de services en ligne, avec des données chiffrées et stockées localement chez l'utilisateur.</p>
-        <p className={styles.paragraphLight}>
-        Après plusieurs mois de tests, Qwant a décidé de suspendre Masq car il ne répond pas en l'état aux attentes de la plupart d'entre vous. La technologie développée par Qwant est partagée sous licence libre sur notre dépôt et peut être réutilisée par quiconque souhaite en profiter ou l'améliorer. Qwant continuera bien-sûr à investir dans des solutions protectrices de la vie privée de ses utilisateurs.
-        </p>
-      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default End
