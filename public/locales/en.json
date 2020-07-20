@@ -121,5 +121,9 @@
   "You can choose from": "You can choose from",
   "1 special character ": "1 special character ",
   "Masq by Qwant will be disabled starting from": "Masq by Qwant will be disabled starting from",
-  "Learn more": "Learn more"
+  "Learn more": "Learn more",
+  "Masq by Qwant will be disabled from": "Masq by Qwant will be disabled from",
+  "From this date, access to Masq features and locations stored on your devices connected to your Masq will no longer be accessible.": "From this date, access to Masq features and locations stored on your devices connected to your Masq will no longer be accessible.",
+  "Masq by Qwant has been released in alpha version to allow you to test this innovation in the field of online service personalization, with data encrypted and stored locally on the user's device.": "Masq by Qwant has been released in alpha version to allow you to test this innovation in the field of online service personalization, with data encrypted and stored locally on the user's device.",
+  "After several months of testing, Qwant has decided to suspend Masq because it doesn't meet the expectations of most of you. The technology developed by Qwant is shared under a free license on our repository and can be reused by anyone who wants to take advantage of it or improve it. Qwant will of course continue to invest in solutions that protect the privacy of its users.": "After several months of testing, Qwant has decided to suspend Masq because it doesn't meet the expectations of most of you. The technology developed by Qwant is shared under a free license on our repository and can be reused by anyone who wants to take advantage of it or improve it. Qwant will of course continue to invest in solutions that protect the privacy of its users."
 }
