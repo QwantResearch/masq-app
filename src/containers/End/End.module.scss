@@ -15,7 +15,7 @@
 
   @media (max-width: $mobile-width) {
     grid-template-columns: none;
-    grid-template-rows: 90px 1fr 1fr;
+    grid-template-rows: 90px 1fr;
   }
 
   .Logo {
