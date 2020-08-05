@@ -67,8 +67,13 @@
   }
 
   .paragraphLight {
+    padding: 0 56px;
     font-size: 16px;
     line-height: 1.25;
     color: #5c6f84;
+
+    @media (max-width: $mobile-width) {
+      padding: 0 16px;
+    }
   }
 }
