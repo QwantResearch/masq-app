@@ -81,7 +81,7 @@ class App extends Component {
 
     this.props.setNotification({
       error: true,
-      withoutIcon: true,
+      omitIcon: true,
       title: (
         <span>
           {t('Masq by Qwant will be disabled starting from') + ` ${(new Date(masqAlertDate)).toLocaleDateString()}.`}
