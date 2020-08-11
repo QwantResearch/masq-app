@@ -86,7 +86,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "gh-pages": "^2.0.1",
     "hyperdb": "^3.5.0",
-    "i18next-scanner": "^2.10.1",
+    "i18next-scanner": "^2.11",
     "karma": "^4.4.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",

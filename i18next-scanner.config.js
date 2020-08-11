@@ -26,6 +26,11 @@ module.exports = {
     interpolation: {
       prefix: '{{',
       suffix: '}}'
+    },
+    trans: {
+      fallbackKey: (ns, value) => {
+        return value;
+      }
     }
   }
 }
