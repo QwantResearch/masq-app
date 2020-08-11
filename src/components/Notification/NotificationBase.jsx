@@ -5,7 +5,7 @@ import { Check, X } from 'react-feather'
 
 import styles from './NotificationBase.module.scss'
 
-const NotificationBase = ({ error, title, onClose }) => {
+const NotificationBase = ({ error, title, omitIcon = false, onClose }) => {
   const Icon = error
     ? <X width={14} color='#e74538' />
     : <Check width={13} color='#308251' />
@@ -15,9 +15,10 @@ const NotificationBase = ({ error, title, onClose }) => {
   return (
     <div className={styles.Notification}>
       <div className={styles.title}>
-        <div className={styles.iconContainer}>
-          {Icon}
-        </div>
+        {!omitIcon &&
+          <div className={styles.iconContainer}>
+            {Icon}
+          </div>}
         <p>{title}</p>
       </div>
       <X className={styles.closeBtn} onClick={onClose} />
@@ -28,6 +29,7 @@ const NotificationBase = ({ error, title, onClose }) => {
 NotificationBase.propTypes = {
   error: PropTypes.bool,
   onClose: PropTypes.func,
+  omitIcon: PropTypes.bool,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
 }
 

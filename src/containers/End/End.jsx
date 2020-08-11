@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import styles from './End.module.scss'
 
@@ -27,7 +27,11 @@ const End = () => {
         <div className={styles.content}>
           <p className={styles.paragraphLight}>{t('Masq by Qwant has been released in alpha version to allow you to test this innovation in the field of online service personalization, with data encrypted and stored locally on the user\'s device.')}</p>
           <p className={styles.paragraphLight}>
-            {t('After several months of testing, Qwant has decided to suspend Masq because it doesn\'t meet the expectations of most of you. The technology developed by Qwant is shared under a free license on our repository and can be reused by anyone who wants to take advantage of it or improve it. Qwant will of course continue to invest in solutions that protect the privacy of its users.')}
+            <Trans>
+              After several months of testing, Qwant has decided to suspend Masq because it doesn't meet the expectations of most of you.
+              The technology developed by Qwant is shared under a free license on <a href='https://github.com/QwantResearch/masq-app'>our repository</a> and can be reused by anyone who wants to take advantage of it or improve it.
+              Qwant will of course continue to invest in solutions that protect the privacy of its users.
+            </Trans>
           </p>
         </div>
       </div>
